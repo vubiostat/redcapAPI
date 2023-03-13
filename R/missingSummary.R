@@ -102,9 +102,6 @@ missingSummary.redcapApiConnection <- function(rcon,
                                len = 1, 
                                add = coll)
   
-  checkmate::assert_character(x = fixed_fields, 
-                              add = coll)
-  
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
                                         add = coll)
