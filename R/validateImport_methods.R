@@ -13,7 +13,7 @@ validate_import_form_complete <- function(x, field_name, logfile)
             replacement = "2", 
             x = x)
   
-  w <- which(!grepl("[0-2]", x = x))
+  w <- which(!grepl("[0-2]", x = x) & !is.na(x))
   x[w] <- NA
   
   print_validation_message(
@@ -40,7 +40,7 @@ validate_import_date <- function(x, field_name, field_min, field_max, logfile)
                                                  "dmy", "dmy HMS"))
     )
   }
-
+  
   w_low <- which(as.POSIXct(x) < as.POSIXct(field_min, origin = "1970-01-01"))
   print_validation_message(
     field_name,
@@ -60,9 +60,9 @@ validate_import_date <- function(x, field_name, field_min, field_max, logfile)
   )
   
   
-  x <- format(x, format = "%Y-%m-%d")
+  x_import <- format(x, format = "%Y-%m-%d")
   
-  w <- which(is.na(x))
+  w <- which(is.na(x_import) & !x %in% c('', NA))
   
   print_validation_message(
     field_name, 
@@ -72,7 +72,7 @@ validate_import_date <- function(x, field_name, field_min, field_max, logfile)
                      "Value not imported"),
     logfile = logfile)
   
-  x
+  x_import
 }
 
 # validate_import_datetime ------------------------------------------
@@ -107,9 +107,9 @@ validate_import_datetime <- function(x, field_name, field_min, field_max, logfil
     logfile = logfile
   )
   
-  x <- format(x, format = "%Y-%m-%d %H:%M")
+  x_import <- format(x, format = "%Y-%m-%d %H:%M")
   
-  w <- which(is.na(x))
+  w <- which(is.na(x_import) & !x %in% c('', NA))
   
   print_validation_message(
     field_name, 
@@ -119,7 +119,7 @@ validate_import_datetime <- function(x, field_name, field_min, field_max, logfil
                      "Value not imported"),
     logfile = logfile)
   
-  x
+  x_import
 }
 
 # validate_import_datetime_seconds ----------------------------------
@@ -154,9 +154,9 @@ validate_import_datetime_seconds <- function(x, field_name, field_min, field_max
     logfile = logfile
   )
   
-  x <- format(x, format = "%Y-%m-%d %H:%M:%S")
+  x_import <- format(x, format = "%Y-%m-%d %H:%M:%S")
   
-  w <- which(is.na(x))
+  w <- which(is.na(x_import) & !x %in% c('', NA))
   
   print_validation_message(
     field_name, 
@@ -166,7 +166,7 @@ validate_import_datetime_seconds <- function(x, field_name, field_min, field_max
                      "Value not imported"),
     logfile = logfile)
   
-  x
+  x_import
 }
 
 # validate_import_time ----------------------------------------------
@@ -226,7 +226,7 @@ validate_import_time_mm_ss <- function(x, field_name, field_min, field_max, logf
   x[grepl("^\\d{2}:\\d{2}:\\d{2}$", x)] <- 
     sub("^\\d{2}:", "", x[grepl("^\\d{2}:\\d{2}:\\d{2}$", x)])
   
-  w_invalid <- !grepl("^\\d{2}:\\d{2}$", x)
+  w_invalid <- !grepl("^\\d{2}:\\d{2}$", x) & !is.na(x)
   x[w_invalid] <- NA
   
   count_second <- function(t)
@@ -384,7 +384,7 @@ validate_import_select_dropdown_radio <- function(x, field_name, field_choice, l
   for (i in seq_len(nrow(mapping))){
     x[x==mapping[i, 2]] <- mapping[i, 1]  
   }
-
+  
   w <- which(!x %in% mapping[, 1] & !x %in% c('', NA))
   
   print_validation_message(
@@ -412,7 +412,7 @@ validate_import_checkbox <- function(x, field_name, field_choice, logfile)
   checkChoice <- checkChoice[checkChoice[, 1] == unlist(strsplit(field_name, "___"))[2], ]
   
   w <- which(!x %in% c("Checked", "Unchecked", "0", "1", checkChoice, "") & !is.na(x))
-
+  
   x <- gsub("checked", "1", x)
   x <- gsub("unchecked", "0", x)
   x[x %in% checkChoice] <- 1
