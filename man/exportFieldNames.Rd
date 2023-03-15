@@ -14,7 +14,7 @@ exportFieldNames(
 
 \method{exportFieldNames}{redcapDbConnection}(
   rcon,
-  fields = NULL,
+  fields = character(0),
   bundle = NULL,
   ...,
   error_handling = getOption("redcap_error_handling")
@@ -22,10 +22,12 @@ exportFieldNames(
 
 \method{exportFieldNames}{redcapApiConnection}(
   rcon,
-  fields = NULL,
+  fields = character(0),
   bundle = NULL,
   ...,
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -36,9 +38,18 @@ exportFieldNames(
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
 
-\item{fields}{Field name to be returned.  If \code{NULL}, all fields are returned.}
+\item{fields}{\code{character} with maximum length of 1. Field name to be returned.  By 
+default, all fields are returned.}
 
 \item{bundle}{A \code{redcapProject} object as created by \code{redcapProjectInfo}.}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 A data frame containing three fields: 
