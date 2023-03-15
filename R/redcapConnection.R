@@ -3,15 +3,12 @@
 #' 
 #' @title Connect to a REDCap Database
 #' @description Creates an object of class \code{redcapApiConnection} for 
-#' using the REDCap API [or a direct connection through an SQL server]
+#' using the REDCap API 
 #' 
 #' @param url URL for a REDCap database API.  Check your institution's REDCap 
 #'   documentation for this address.  Either \code{url} or \code{conn} must 
 #'   be specified.
 #' @param token REDCap API token
-#' @param conn The database connection to be used. If used, \code{project}
-#'   must also be used.
-#' @param project The project ID in the REDCap tables.
 #' @param config A list to be passed to \code{httr::POST}.  This allows the 
 #'   user to set additional configurations for the API calls, such as 
 #'   certificates, ssl version, etc. For the majority of users, this does 
@@ -57,32 +54,94 @@
 #' }
 #' 
 
-redcapConnection <-
-function(url=getOption('redcap_api_url'),token,conn,project, 
-         config=httr::config())
+redcapConnection <- function(url = getOption('redcap_api_url'),
+                             token,
+                             config = httr::config())
 {
-   if (is.na(url) && missing(conn))
-      stop("Need one of url or conn")
-   if (!is.na(url))
-   {
-      if (missing(token))
-         stop("Need an API token")
-      return(
-         structure(
-            list(url=url,token=token, config=config),
-            class='redcapApiConnection'
-         )
-      )
-   }
-   else
-   {
-      if (missing(project))
-         stop("Need a project_id specified in project variable")
-      return(
-         structure(
-            list(conn=conn,project=project),
-            class='redcapDbConnection'
-         )
-      )
-   }
+  u <- url
+  t <- token
+  md <- NULL
+  arm <- NULL
+  evt <- NULL
+  fldnm <- NULL
+  map <- NULL
+  users <- NULL
+  vrsn <- NULL
+  proj <- NULL
+  
+  metadata <- function(){ 
+    if (is.null(md)){
+      message("Fetching Meta Data Through the API")
+      md <<- exportMetaData(redcapConnection(u, t))
+    }
+    md 
+  }
+  
+  arms <- function(){ 
+    if (is.null(arm))
+    {
+      message("Fetching Arms Through the API")
+      arm <<- exportArms(redcapConnection(u, t)) 
+    }
+    arm }
+  
+  events <- function(){ 
+    if (is.null(evt)){
+      message("Fetching Events Through the API")
+      evt <<- exportEvents(redcapConnection(u, t))
+    }
+    evt }
+  
+  field_names <- function(){ 
+    if (is.null(fldnm)){
+      message("Fetching Field Names Through the API")
+      fldnm <<- exportFieldNames(redcapConnection(u, t))
+    }
+    fldnm 
+  }
+  
+  mapping <- function(){ 
+    if (is.null(map)){ 
+      message("Fetching Arm-Event Mappings Through the API")
+      map <<- exportFieldNames(redcapConnection(u, t))
+    }
+    map 
+  }
+  
+  users <- function(){ 
+    if (is.null(users)){
+      message("Fetching Users Through the API")
+      users <<- exportUsers(redcapConnection(u, t))
+    }  
+    users }
+  
+  version <- function(){ 
+    if (is.null(vrsn)){
+      message("Fetching Version Number Through the API")
+      vrsn <<- exportVersion(redcapConnection(u, t))
+    }
+    vrsn 
+  }
+  
+  project <- function(){
+    if (is.null(proj)){
+      message("Fetching the Project Information Through the API")
+      proj <<- exportProjectInformation(redcapConnection(u, t))
+    }
+    proj
+  }
+  
+  rc <- list(url = u, 
+             token = t, 
+             config = config, 
+             metadata = metadata, 
+             arms = arms, 
+             events = events, 
+             field_names = field_names, 
+             mapping = mapping, 
+             users = users, 
+             version = version, 
+             project_info = project)
+  class(rc) <- "redcapApiConnection"
+  rc
 }

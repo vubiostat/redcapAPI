@@ -7,8 +7,6 @@
 redcapConnection(
   url = getOption("redcap_api_url"),
   token,
-  conn,
-  project,
   config = httr::config()
 )
 }
@@ -19,16 +17,16 @@ be specified.}
 
 \item{token}{REDCap API token}
 
-\item{conn}{The database connection to be used. If used, \code{project}
-must also be used.}
-
-\item{project}{The project ID in the REDCap tables.}
-
 \item{config}{A list to be passed to \code{httr::POST}.  This allows the 
 user to set additional configurations for the API calls, such as 
 certificates, ssl version, etc. For the majority of users, this does 
 not need to be altered.  See Details for more about this argument's 
 purpose and the \code{redcapAPI} wiki for specifics on its use.}
+
+\item{conn}{The database connection to be used. If used, \code{project}
+must also be used.}
+
+\item{project}{The project ID in the REDCap tables.}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 
