@@ -2,6 +2,7 @@
 % Please edit documentation in R/redcapConnection.R
 \name{redcapConnection}
 \alias{redcapConnection}
+\alias{print.redcapApiConnection}
 \title{Connect to a REDCap Database}
 \usage{
 redcapConnection(
@@ -9,6 +10,8 @@ redcapConnection(
   token,
   config = httr::config()
 )
+
+\method{print}{redcapApiConnection}(x, ...)
 }
 \arguments{
 \item{url}{URL for a REDCap database API.  Check your institution's REDCap 
@@ -22,15 +25,10 @@ user to set additional configurations for the API calls, such as
 certificates, ssl version, etc. For the majority of users, this does 
 not need to be altered.  See Details for more about this argument's 
 purpose and the \code{redcapAPI} wiki for specifics on its use.}
-
-\item{conn}{The database connection to be used. If used, \code{project}
-must also be used.}
-
-\item{project}{The project ID in the REDCap tables.}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 
-using the REDCap API [or a direct connection through an SQL server]
+using the REDCap API
 }
 \details{
 For convenience, you may consider using 
