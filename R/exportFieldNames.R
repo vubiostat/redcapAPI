@@ -123,6 +123,14 @@ exportFieldNames.redcapApiConnection <- function(rcon,
                                         choices = c("null", "error"),
                                         add = coll)
   
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
   
   if (length(fields) > 0){
