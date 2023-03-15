@@ -12,11 +12,13 @@ exportMetaData(rcon, ...)
 
 \method{exportMetaData}{redcapApiConnection}(
   rcon,
-  fields = NULL,
-  forms = NULL,
+  fields = character(0),
+  forms = character(0),
   error_handling = getOption("redcap_error_handling"),
   ...,
-  drop_utf8 = FALSE
+  drop_utf8 = FALSE,
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -39,6 +41,14 @@ see \code{\link{redcap_error}}}
 \item{drop_utf8}{\code{logical(1)}. In some cases, UTF-8 characters can 
 pose problems for exporting the data dictionary.  Set this to \code{TRUE}
 to replace any UTF-8 characters with empty characters.}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 Retrieves the meta data for a REDcap database, including 
@@ -58,12 +68,6 @@ This function allows you to export the metadata for a project
 \section{REDCap Version}{
 
 5.8.2+ (and earlier, but we don't know how much earlier)
-}
-
-\section{Known REDCap Limitations}{
- 
-The API doesn't respond to the \code{fields} and \code{forms} arguments.  It
-always returns the full data dictionary.
 }
 
 \author{
