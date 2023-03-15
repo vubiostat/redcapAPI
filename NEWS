@@ -1,3 +1,8 @@
+## Changes in Versino 2.5.0
+
+* New method: exportLogging
+* Fixed minor bugs in validations and improved documentation
+
 ## Changes in Version 2.4.2
 
 * Added a missingSummary function that deals with branching logic.
