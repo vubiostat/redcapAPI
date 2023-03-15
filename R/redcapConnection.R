@@ -65,7 +65,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   evt <- NULL
   fldnm <- NULL
   map <- NULL
-  users <- NULL
+  usr <- NULL
   vrsn <- NULL
   proj <- NULL
   
@@ -109,11 +109,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   }
   
   users <- function(){ 
-    if (is.null(users)){
+    if (is.null(usr)){
       message("Fetching Users Through the API")
-      users <<- exportUsers(redcapConnection(u, t))
+      usr <<- exportUsers(redcapConnection(u, t))
     }  
-    users }
+    usr }
   
   version <- function(){ 
     if (is.null(vrsn)){
@@ -134,14 +134,41 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   rc <- list(url = u, 
              token = t, 
              config = config, 
-             metadata = metadata, 
+             metadata = metadata,
+             has_metadata = function() !is.null(md),
              arms = arms, 
+             has_arms = function() !is.null(arm), 
              events = events, 
+             has_events = function() !is.null(evt),
              field_names = field_names, 
+             has_field_names = function() !is.null(fldnm),
              mapping = mapping, 
+             has_mapping = function() !is.null(map),
              users = users, 
+             has_users = function() !is.null(usr), 
              version = version, 
-             project_info = project)
+             has_version = function() !is.null(vrsn),
+             project_info = project, 
+             has_project_info = function() !is.null(proj))
   class(rc) <- "redcapApiConnection"
   rc
 }
+
+#' @rdname redcapConnection
+#' @export
+
+print.redcapApiConnection <- function(x, ...){
+  is_cached <- function(l) if (l) "Cached" else "Not Cached" 
+  output <- 
+    c("REDCap API Connection Object:", 
+      sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
+      sprintf("Arms        : %s", is_cached(x$has_arms())), 
+      sprintf("Events      : %s", is_cached(x$has_events())),
+      sprintf("Field Names : %s", is_cached(x$has_field_names())), 
+      sprintf("Mapping     : %s", is_cached(x$has_mapping())),
+      sprintf("Users       : %s", is_cached(x$has_users())), 
+      sprintf("Version     : %s", is_cached(x$has_version())), 
+      sprintf("Project Info: %s", is_cached(x$has_project_info())))
+  cat(output, sep = "\n")
+}
+
