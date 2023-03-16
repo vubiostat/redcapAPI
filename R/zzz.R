@@ -7,7 +7,7 @@ packageStartupMessage(
 
 .onLoad <- function(libname,pkgname)
 {
-  options(redcap_api_url = NA,
+  options(redcap_api_url = character(0),
           redcap_error_handling = "null",
           redcap_bundle = 
             structure(

@@ -84,6 +84,18 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
                              config = httr::config())
 {
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = url, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::assert_character(x = token, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   u <- url
   t <- token
   this_metadata <- NULL
