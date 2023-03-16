@@ -128,11 +128,7 @@ exportFiles.redcapApiConnection <- function(rcon, record, field, event = NULL,
   checkmate::reportAssertions(coll)
   
   #* Secure the meta_data
-  meta_data <- 
-    if (is.null(bundle$meta_data)) 
-      exportMetaData(rcon)
-    else 
-      bundle$meta_data
+  meta_data <- rcon$metadata()
   
   #* make sure 'field' exist in the project and are 'file' fields
   if (!field %in% meta_data$field_name) 
@@ -145,11 +141,7 @@ exportFiles.redcapApiConnection <- function(rcon, record, field, event = NULL,
   }
   
   #* Secure the events list
-  events_list <- 
-    if (is.null(bundle$events))
-      exportEvents(rcon)
-    else
-      bundle$events
+  events_list <- rcon$events()
       
   #* make sure 'event' exists in the project
   if (inherits(events_list, "data.frame"))
