@@ -191,10 +191,12 @@ test_that(
   "Return an error if colClasses is not a named vector", 
   {
     local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            paste("Documentation claims that this is the expected type.", 
-                  "There is not argument validation, however.", 
-                  "A named list should also be acceptable"))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = list("character", "numeric", "character")))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = c("character", "numeric", "numeric")))
   }
 )
 
