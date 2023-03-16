@@ -1,0 +1,109 @@
+#' @name fieldChoiceMapping
+#' @title Splits a Field Choice Mapping Into a Two Column Matrix
+#' 
+#' @description Uses the string from the \code{select_choices_or_calculations}
+#'   for the meta data to create a matrix of codes and their mapped 
+#'   labels. 
+#'   
+#' @param field_choice Either a \code{character(1)} giving the string of choices to be 
+#'   converted; or a \code{redcapApiConnection} object.
+#' @param field_name \code{character(1)} gives the field name for which to 
+#'   make the choice mapping.
+#'   
+#' @return 
+#' Returns a matrix with two columns, \code{choice_value} and \code{choice_label}
+#' 
+#' @author Benjamin Nutter
+#' 
+#' @source 
+#' https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
+#' 
+#' @export
+
+fieldChoiceMapping <- function(object, ...){
+  UseMethod("fieldChoiceMapping")
+}
+
+#' @rdname fieldChoiceMapping
+#' @export
+
+fieldChoiceMapping.character <- function(object, 
+                                         ...){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = object, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  if (!(grepl(",", object) && grepl("[|]", object))){
+    coll$push("The field choice string does not appear to be formatted for choices.")
+    checkmate::reportAssertions(coll)
+  }
+  
+  mapping <- strsplit(object, 
+                      split = "[|]")
+  mapping <- unlist(mapping)
+  
+  # ^[^,]+: from the start of the string, match one or more character that are not a comma
+  # \\K: don't include those characters in the match (otherwise the code is deleted)
+  # ,: Match the comma
+  # *?: Make the comma match lazy so it stops at the first one.
+  # see: https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
+  mapping <- strsplit(mapping, 
+                      split = "^[^,]+\\K,*?", 
+                      perl = TRUE)
+  # stack into a matrix
+  mapping <- do.call("rbind", 
+                     mapping)     
+  # remove leading commas
+  mapping[, 2] <- sub(pattern = "^,", 
+                      replacement = "", 
+                      x = mapping[, 2]) 
+  # remove whitespace
+  mapping <- trimws(mapping) 
+  
+  # mapping <- as.data.frame(mapping)
+  colnames(mapping) <- c("choice_value", "choice_label")
+  mapping
+}
+
+#' @rdname fieldChoiceMapping
+#' @export
+
+fieldChoiceMapping.redcapApiConnection <- function(object, 
+                                                  field_name, 
+                                                  ...){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = object, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
+  
+  checkmate::assert_character(x = field_name, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  MetaData <- rcon$metadata()
+  
+  if (!field_name %in% MetaData$field_name){
+    coll$push(sprintf("'%s' is not a field listed in the meta data", 
+                      field_name))
+    checkmate::reportAssertions(coll)
+  }
+  
+  MetaData <- MetaData[MetaData$field_name == field_name, ]
+  
+  if (!MetaData$field_type %in% c("checkbox", "dropown", "radio")){
+    coll$push(sprintf("'%s' is not a checkbox, dropdown, or radio field", 
+                      field_name))
+    checkmate::reportAssertions(coll)
+  }
+  
+  field_choice <- MetaData$select_choices_or_calculations[MetaData$field_name == field_name]
+  
+  fieldChoiceMapping(field_choice)
+}

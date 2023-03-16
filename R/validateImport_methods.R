@@ -439,14 +439,11 @@ validate_import_truefalse <- function(x, field_name, logfile)
 validate_import_select_dropdown_radio <- function(x, field_name, field_choice, logfile)
 {
   x <- as.character(x)
-  mapping <- strsplit(field_choice, "[|]")
-  mapping <- unlist(mapping)
-  mapping <- stringr::str_split_fixed(mapping, ",", 2)
-  mapping <- trimws(mapping)
+  mapping <- fieldChoiceMapping(field_choice)  
   
   #* Return labeled values to coded values
   for (i in seq_len(nrow(mapping))){
-    x[x==mapping[i, 2]] <- mapping[i, 1]  
+    x[x == mapping[i, 2]] <- mapping[i, 1]  
   }
   
   w <- which(!x %in% mapping[, 1] & !x %in% c('', NA))
@@ -476,8 +473,9 @@ validate_import_checkbox <- function(x, field_name, field_choice, logfile)
 {
   x <- trimws(tolower(as.character(x)))
   
+  checkChoice <- fieldChoiceMapping(field_choice)
+  
   #* Select the labeled string from the options as a valid input for the import.
-  checkChoice <- trimws(stringr::str_split_fixed(unlist(strsplit(field_choice, "[|]")), ", ", 2))
   checkChoice <- checkChoice[checkChoice[, 1] == unlist(strsplit(field_name, "___"))[2], ]
   
   w <- which(!x %in% c("checked", "unchecked", "0", "1", tolower(checkChoice), "", NA))

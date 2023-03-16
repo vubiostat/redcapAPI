@@ -33,7 +33,6 @@ Imports:
     httr,
     labelVector,
     lubridate,
-    stringr,
     tidyr
 LazyLoad: yes
 Suggests: testthat (>= 3.0.0), getPass, keyring
