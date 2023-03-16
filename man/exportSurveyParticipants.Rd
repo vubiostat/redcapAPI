@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportSurveyParticipants.R
 \name{exportSurveyParticipants}
 \alias{exportSurveyParticipants}
-\alias{exportSurveyParticipants.redcapDbConnection}
 \alias{exportSurveyParticipants.redcapApiConnection}
 \title{Exports details of participants for a given survey}
 \usage{
 exportSurveyParticipants(rcon, instrument, event, ...)
-
-\method{exportSurveyParticipants}{redcapDbConnection}(rcon, instrument, event, ...)
 
 \method{exportSurveyParticipants}{redcapApiConnection}(
   rcon,

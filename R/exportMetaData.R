@@ -38,26 +38,19 @@
 #' 
 #' @export
 
-exportMetaData <- function(rcon, ...) UseMethod("exportMetaData")
-
-#' @rdname exportMetaData
-#' @export
-
-exportMetaData.redcapDbConnection <- 
-  function(rcon, ...)
-  {
-    message("Please accept my apologies.  The exportMetaData method for redcapDbConnection objects\n",
-            "has not yet been written.  Please consider using the API.")
+exportMetaData <- function(rcon, ...){
+  UseMethod("exportMetaData")
 }
 
 #' @rdname exportMetaData
 #' @export
 
-exportMetaData.redcapApiConnection <-
-function(rcon, fields=NULL, forms=NULL,
-         error_handling = getOption("redcap_error_handling"), ...,
-         drop_utf8 = FALSE)
-{
+exportMetaData.redcapApiConnection <- function(rcon, 
+                                               fields = NULL, 
+                                               forms = NULL,
+                                               error_handling = getOption("redcap_error_handling"), 
+                                               ...,
+                                               drop_utf8 = FALSE){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,

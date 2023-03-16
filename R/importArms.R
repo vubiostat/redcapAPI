@@ -42,23 +42,20 @@
 #' 
 #' @export
 
-importArms <- function(rcon, arms_data, override = FALSE, ...){
+importArms <- function(rcon, 
+                       arms_data, 
+                       override = FALSE, 
+                       ...){
   UseMethod("importArms")
 }
 
 #' @rdname importArms
 #' @export
 
-importArms.redcapDbConnection <- function(rcon, arms_data, override = FALSE, ...){
-  message("Please accept my apologies.  The importArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname importArms
-#' @export
-
-importArms.redcapApiConnection <- function(rcon, arms_data, 
-                                           override = FALSE, ...,
+importArms.redcapApiConnection <- function(rcon, 
+                                           arms_data, 
+                                           override = FALSE, 
+                                           ...,
                                            error_handling = getOption("redcap_error_handling")){
   coll <- checkmate::makeAssertCollection()
   

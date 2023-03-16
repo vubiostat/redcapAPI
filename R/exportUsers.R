@@ -65,20 +65,18 @@
 #'
 #' @export
 
-exportUsers <- function(rcon, ...) UseMethod("exportUsers")
-
-#' @rdname exportUsers
-#' @export
-
-exportUsers.redcapDbConnection <- function(rcon, dates=TRUE, labels=TRUE, ...){
-  message("Please accept my apologies.  The exportUsers method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
+exportUsers <- function(rcon, 
+                        ...){
+  UseMethod("exportUsers")
 }
 
 #' @rdname exportUsers
 #' @export
 
-exportUsers.redcapApiConnection <- function(rcon, dates=TRUE, labels=TRUE, ...,
+exportUsers.redcapApiConnection <- function(rcon, 
+                                            dates = TRUE, 
+                                            labels = TRUE, 
+                                            ...,
                                             bundle = getOption("redcap_bundle"),
                                             error_handling = getOption("redcap_error_handling")){
   if (!is.na(match("proj", names(list(...)))))
@@ -173,5 +171,3 @@ exportUsers.redcapApiConnection <- function(rcon, dates=TRUE, labels=TRUE, ...,
   
   x
 }
-
-utils::globalVariables(c("form_access", "form", "access"))

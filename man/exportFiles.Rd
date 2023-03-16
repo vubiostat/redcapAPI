@@ -2,22 +2,10 @@
 % Please edit documentation in R/exportFiles.R
 \name{exportFiles}
 \alias{exportFiles}
-\alias{exportFiles.redcapDbConnection}
 \alias{exportFiles.redcapApiConnection}
 \title{Exports a File attached to a Record}
 \usage{
 exportFiles(
-  rcon,
-  record,
-  field,
-  event,
-  dir,
-  filePrefix = TRUE,
-  ...,
-  bundle = getOption("redcap_bundle")
-)
-
-\method{exportFiles}{redcapDbConnection}(
   rcon,
   record,
   field,

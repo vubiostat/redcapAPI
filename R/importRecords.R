@@ -79,35 +79,28 @@
 #'
 #' @export
 
-importRecords <- function(rcon, data,
-                          overwriteBehavior=c('normal', 'overwrite'),
-                          returnContent=c('count', 'ids', 'nothing'),
-                          returnData=FALSE, logfile="", ...) 
-{
+importRecords <- function(rcon, 
+                          data,
+                          overwriteBehavior = c('normal', 'overwrite'),
+                          returnContent = c('count', 'ids', 'nothing'),
+                          returnData = FALSE, 
+                          logfile="", 
+                          ...){
   UseMethod("importRecords")
 }
 
 #' @rdname importRecords
 #' @export
 
-importRecords.redcapDbConnection <- function(rcon, data,
-                                             overwriteBehavior=c('normal', 'overwrite'),
-                                             returnContent=c('count', 'ids', 'nothing'),
-                                             returnData=FALSE, logfile="", ...){
-  message("Please accept my apologies.  The importRecords method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname importRecords
-#' @export
-
-importRecords.redcapApiConnection <- function(rcon, data,
+importRecords.redcapApiConnection <- function(rcon, 
+                                              data,
                                               overwriteBehavior = c('normal', 'overwrite'),
                                               returnContent = c('count', 'ids', 'nothing'),
-                                              returnData = FALSE, logfile = "", 
+                                              returnData = FALSE, 
+                                              logfile = "", 
                                               ...,
-                                              bundle = NULL, batch.size=-1)
-{
+                                              bundle = NULL, 
+                                              batch.size=-1){
   if (!is.na(match("proj", names(list(...)))))
   {
     message("The 'proj' argument is deprecated.  Please use 'bundle' instead")

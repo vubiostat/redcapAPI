@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportEvents.R
 \name{exportEvents}
 \alias{exportEvents}
-\alias{exportEvents.redcapDbConnection}
 \alias{exportEvents.redcapApiConnection}
 \title{Export the Events for a Project}
 \usage{
 exportEvents(rcon, ...)
-
-\method{exportEvents}{redcapDbConnection}(rcon, arms = NULL, ...)
 
 \method{exportEvents}{redcapApiConnection}(
   rcon,

@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportUsers.R
 \name{exportUsers}
 \alias{exportUsers}
-\alias{exportUsers.redcapDbConnection}
 \alias{exportUsers.redcapApiConnection}
 \title{Export the Users for a Project}
 \usage{
 exportUsers(rcon, ...)
-
-\method{exportUsers}{redcapDbConnection}(rcon, dates = TRUE, labels = TRUE, ...)
 
 \method{exportUsers}{redcapApiConnection}(
   rcon,

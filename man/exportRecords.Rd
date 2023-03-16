@@ -2,28 +2,11 @@
 % Please edit documentation in R/exportRecords.R, R/exportRecords_offline.R
 \name{exportRecords}
 \alias{exportRecords}
-\alias{exportRecords.redcapDbConnection}
 \alias{exportRecords.redcapApiConnection}
 \alias{exportRecords_offline}
 \title{Export Records from a REDCap Database}
 \usage{
 exportRecords(
-  rcon,
-  factors = TRUE,
-  fields = NULL,
-  forms = NULL,
-  records = NULL,
-  events = NULL,
-  labels = TRUE,
-  dates = TRUE,
-  survey = TRUE,
-  dag = TRUE,
-  checkboxLabels = FALSE,
-  colClasses = NA,
-  ...
-)
-
-\method{exportRecords}{redcapDbConnection}(
   rcon,
   factors = TRUE,
   fields = NULL,

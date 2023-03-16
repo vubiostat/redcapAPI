@@ -41,21 +41,17 @@
 #' 
 #' @export
 
-exportBundle <- function(rcon, date=TRUE, label=TRUE, 
-                              meta_data=TRUE, users=TRUE, instruments=TRUE,
-                              events=TRUE, arms=TRUE, mappings=TRUE,
-                              version=TRUE, ...) 
+exportBundle <- function(rcon, 
+                         date = TRUE, 
+                         label = TRUE, 
+                         meta_data = TRUE, 
+                         users = TRUE, 
+                         instruments = TRUE,
+                         events = TRUE, 
+                         arms = TRUE, 
+                         mappings = TRUE,
+                         version = TRUE, ...) {
   UseMethod("exportBundle")
-
-#' @rdname exportBundle
-#' @export
-
-exportBundle.redcapDbConnection <- function(rcon, date=TRUE, label=TRUE, 
-                                                 meta_data=TRUE, users=TRUE, instruments=TRUE,
-                                                 events=TRUE, arms=TRUE, mappings=TRUE,
-                                                 version=TRUE, ...){
-  message("Please accept my apologies.  The redcapProjectInfo method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname exportBundle

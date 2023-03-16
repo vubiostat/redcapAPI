@@ -58,17 +58,6 @@ missingSummary <- function(rcon,
 #' @rdname missingSummary
 #' @export
 
-missingSummary.redcapDbConnection <- function(rcon, 
-                                              excludeMissingForms=TRUE, 
-                                              ..., 
-                                              fixed_fields = REDCAP_SYSTEM_FIELDS){
-  message("Please accept my apologies.  The missingSummary method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname missingSummary
-#' @export
-
 missingSummary.redcapApiConnection <- function(rcon, 
                                                excludeMissingForms = TRUE, 
                                                ...,

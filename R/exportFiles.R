@@ -57,25 +57,27 @@
 #' 
 #' @export
 
-exportFiles <- function(rcon, record, field, event, dir, filePrefix=TRUE, ...,
-                        bundle = getOption("redcap_bundle"))
+exportFiles <- function(rcon, 
+                        record, 
+                        field, 
+                        event, 
+                        dir, 
+                        filePrefix = TRUE, 
+                        ...,
+                        bundle = getOption("redcap_bundle")){
   UseMethod("exportFiles")
-
-#' @rdname exportFiles
-#' @export
-
-exportFiles.redcapDbConnection <- function(rcon, record, field, event, dir, filePrefix=TRUE, ..., 
-                                           bundle = getOption("redcap_bundle")){
-  message("Please accept my apologies.  The exportFiles method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname exportFiles
 #' @export
 
-exportFiles.redcapApiConnection <- function(rcon, record, field, event = NULL, 
+exportFiles.redcapApiConnection <- function(rcon, 
+                                            record, 
+                                            field, 
+                                            event = NULL, 
                                             dir, 
-                                            filePrefix=TRUE, ...,
+                                            filePrefix = TRUE, 
+                                            ...,
                                             bundle = getOption("redcap_bundle"),
                                             error_handling = getOption("redcap_error_handling")){
   

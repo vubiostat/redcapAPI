@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportArms.R
 \name{exportArms}
 \alias{exportArms}
-\alias{exportArms.redcapDbConnection}
 \alias{exportArms.redcapApiConnection}
 \title{Export the Arms for a Project}
 \usage{
 exportArms(rcon, ...)
-
-\method{exportArms}{redcapDbConnection}(rcon, ...)
 
 \method{exportArms}{redcapApiConnection}(
   rcon,

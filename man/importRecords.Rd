@@ -2,21 +2,10 @@
 % Please edit documentation in R/importRecords.R
 \name{importRecords}
 \alias{importRecords}
-\alias{importRecords.redcapDbConnection}
 \alias{importRecords.redcapApiConnection}
 \title{Import Records to a REDCap Database}
 \usage{
 importRecords(
-  rcon,
-  data,
-  overwriteBehavior = c("normal", "overwrite"),
-  returnContent = c("count", "ids", "nothing"),
-  returnData = FALSE,
-  logfile = "",
-  ...
-)
-
-\method{importRecords}{redcapDbConnection}(
   rcon,
   data,
   overwriteBehavior = c("normal", "overwrite"),

@@ -67,27 +67,20 @@
 #' @export
 
 
-exportFieldNames <- function(rcon, ...,
-                             error_handling = getOption("redcap_error_handling")) 
+exportFieldNames <- function(rcon, 
+                             ...,
+                             error_handling = getOption("redcap_error_handling")){
   UseMethod("exportFieldNames")
-
-#' @rdname exportFieldNames
-#' @export
-
-exportFieldNames.redcapDbConnection <- function(rcon, fields = NULL, 
-                                                bundle = NULL, ...,
-                                                error_handling = getOption("redcap_error_handling")){
-  message("Please accept my apologies.  The exportFieldNames method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname exportFieldNames
 #' @export
 
-exportFieldNames.redcapApiConnection <- function(rcon, fields = NULL, 
-                                                 bundle = NULL, ...,
-                                                 error_handling = getOption("redcap_error_handling"))
-{
+exportFieldNames.redcapApiConnection <- function(rcon, 
+                                                 fields = NULL, 
+                                                 bundle = NULL, 
+                                                 ...,
+                                                 error_handling = getOption("redcap_error_handling")){
   if (!is.na(match("proj", names(list(...)))))
   {
     message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
