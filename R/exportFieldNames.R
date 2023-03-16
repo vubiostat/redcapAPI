@@ -120,11 +120,7 @@ exportFieldNames.redcapApiConnection <- function(rcon, fields = NULL,
                returnFormat = 'csv')
   
   ## Get project metadata
-  meta_data <- 
-    if(is.null(bundle$meta_data))
-      exportMetaData(rcon) 
-    else 
-      bundle$meta_data
+  meta_data <- rcon$metadata()
 
   ## Field was provided
   if(!is.null(fields)){
