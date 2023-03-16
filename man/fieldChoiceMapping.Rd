@@ -31,5 +31,5 @@ Uses the string from the \code{select_choices_or_calculations}
   labels.
 }
 \author{
-Benjamin Nutter
+Benjamin Nutter, Shawn Garbett
 }

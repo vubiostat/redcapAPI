@@ -4,7 +4,7 @@
 \alias{checkbox_suffixes}
 \title{Checkbox Suffixes}
 \usage{
-checkbox_suffixes(fields, meta_data, version)
+checkbox_suffixes(fields, meta_data)
 }
 \arguments{
 \item{fields}{The current field names of interest}

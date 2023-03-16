@@ -73,7 +73,7 @@ fieldChoiceMapping.redcapApiConnection <- function(object,
   
   checkmate::reportAssertions(coll)
   
-  MetaData <- rcon$metadata()
+  MetaData <- object$metadata()
   
   if (!field_name %in% MetaData$field_name){
     coll$push(sprintf("'%s' is not a field listed in the meta data", 
