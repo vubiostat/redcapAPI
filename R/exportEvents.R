@@ -83,6 +83,14 @@ exportEvents.redcapApiConnection <-
   
   checkmate::reportAssertions(coll)
   
+  if (rcon$projectInformation()$is_longitudinal == 0){
+    return(data.frame(event_name = character(0), 
+                      arm_num = numeric(0), 
+                      unique_event_name = character(0), 
+                      custom_event_label = character(0), 
+                      event_id = character(0)))
+  }
+  
   #* parameters for the Users File Export
   body <- list(token = rcon$token, 
                content = 'event', 

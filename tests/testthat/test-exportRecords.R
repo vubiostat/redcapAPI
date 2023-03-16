@@ -212,17 +212,6 @@ test_that(
 )
 
 test_that(
-  "Return an error if bundle is not a redcapBundle object", 
-  {
-    local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            "There is no argument validation on bundle. Address this test after fixing.")
-    expect_error(exportRecords(rcon, 
-                               bundle = "not a bundle"))
-  }
-)
-
-test_that(
   "Return an error if form_complete_auto is not logical(1)", 
   {
     local_reproducible_output(width = 200)
