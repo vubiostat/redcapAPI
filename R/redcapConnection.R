@@ -1,5 +1,4 @@
 #' @name redcapConnection
-#' @export redcapConnection
 #' 
 #' @title Connect to a REDCap Database
 #' @description Creates an object of class \code{redcapApiConnection} for 
@@ -53,6 +52,7 @@
 #' exportRecords(rcon)
 #' }
 #' 
+#' @export
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
@@ -60,96 +60,90 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
 {
   u <- url
   t <- token
-  md <- NULL
-  arm <- NULL
-  evt <- NULL
-  fldnm <- NULL
-  map <- NULL
-  usr <- NULL
-  vrsn <- NULL
-  proj <- NULL
+  this_metadata <- NULL
+  this_arm <- NULL
+  this_event <- NULL
+  this_fieldname <- NULL
+  this_mapping <- NULL
+  this_user <- NULL
+  this_version <- NULL
+  this_project <- NULL
   
-  metadata <- function(){ 
-    if (is.null(md)){
-      message("Fetching Meta Data Through the API")
-      md <<- exportMetaData(redcapConnection(u, t))
-    }
-    md 
+  getter <- function(export){
+    switch(export, 
+           "metadata" = exportMetaData(rc), 
+           "arm" = exportArms(rc), 
+           "event" = exportEvents(rc),
+           "fieldname" = exportFieldNames(rc), 
+           "mapping" = exportMappings(rc), 
+           "user" = exportUsers(rc), 
+           "version" = exportVersion(rc), 
+           "project" = exportProjectInformation(rc), 
+           NULL)
   }
   
-  arms <- function(){ 
-    if (is.null(arm))
-    {
-      message("Fetching Arms Through the API")
-      arm <<- exportArms(redcapConnection(u, t)) 
-    }
-    arm }
-  
-  events <- function(){ 
-    if (is.null(evt)){
-      message("Fetching Events Through the API")
-      evt <<- exportEvents(redcapConnection(u, t))
-    }
-    evt }
-  
-  field_names <- function(){ 
-    if (is.null(fldnm)){
-      message("Fetching Field Names Through the API")
-      fldnm <<- exportFieldNames(redcapConnection(u, t))
-    }
-    fldnm 
-  }
-  
-  mapping <- function(){ 
-    if (is.null(map)){ 
-      message("Fetching Arm-Event Mappings Through the API")
-      map <<- exportFieldNames(redcapConnection(u, t))
-    }
-    map 
-  }
-  
-  users <- function(){ 
-    if (is.null(usr)){
-      message("Fetching Users Through the API")
-      usr <<- exportUsers(redcapConnection(u, t))
-    }  
-    usr }
-  
-  version <- function(){ 
-    if (is.null(vrsn)){
-      message("Fetching Version Number Through the API")
-      vrsn <<- exportVersion(redcapConnection(u, t))
-    }
-    vrsn 
-  }
-  
-  project <- function(){
-    if (is.null(proj)){
-      message("Fetching the Project Information Through the API")
-      proj <<- exportProjectInformation(redcapConnection(u, t))
-    }
-    proj
-  }
-  
-  rc <- list(url = u, 
-             token = t, 
-             config = config, 
-             metadata = metadata,
-             has_metadata = function() !is.null(md),
-             arms = arms, 
-             has_arms = function() !is.null(arm), 
-             events = events, 
-             has_events = function() !is.null(evt),
-             field_names = field_names, 
-             has_field_names = function() !is.null(fldnm),
-             mapping = mapping, 
-             has_mapping = function() !is.null(map),
-             users = users, 
-             has_users = function() !is.null(usr), 
-             version = version, 
-             has_version = function() !is.null(vrsn),
-             project_info = project, 
-             has_project_info = function() !is.null(proj))
+  rc <- 
+    list(
+      url = u, 
+      token = t, 
+      config = config, 
+      
+      metadata = function(){ if (is.null(this_metadata)) this_metadata <<- getter("metadata"); this_metadata }, 
+      has_metadata = function() !is.null(this_metadata),
+      flush_metadata = function() this_metadata <<- NULL, 
+      refresh_metadata = function() this_metadata <<- getter("metadata"), 
+      
+      arms = function(){ if (is.null(this_arm)) this_arm <<- getter("arm"); this_arm }, 
+      has_arms = function() !is.null(this_arm), 
+      flush_arms = function() this_arm <<- NULL, 
+      refresh_arms = function() this_arm <<- getter("arm"), 
+      
+      events = function(){ if (is.null(this_event)) this_event <<- getter("event"); this_event}, 
+      has_events = function() !is.null(this_event), 
+      flush_events = function() this_event <<- NULL, 
+      refresh_events = function() this_event <<- getter("events"), 
+      
+      fieldnames = function(){ if (is.null(this_fieldname)) this_fieldname <<- getter("fieldname"); this_fieldname }, 
+      has_fieldnames = function() !is.null(this_fieldname), 
+      flush_fieldnames = function() this_fieldname <<- NULL, 
+      refresh_fieldnames = function() this_fieldname <<- getter("fieldname"), 
+      
+      mapping = function(){ if (is.null(this_mapping)) this_mapping <<- getter("mapping"); this_mapping }, 
+      has_mapping = function() !is.null(this_mapping), 
+      flush_mapping = function() this_mapping <<- NULL, 
+      refresh_mapping = function() this_mapping <<- getter("mapping"), 
+      
+      users = function(){ if (is.null(this_user)) this_user <<- getter("user"); this_user }, 
+      has_users = function() !is.null(this_user), 
+      flush_users = function() this_user <<- NULL, 
+      refresh_users = function() this_user <<- getter("user"), 
+      
+      version = function(){ if (is.null(this_version)) this_version <<- getter("version"); this_version }, 
+      has_version = function() !is.null(this_version), 
+      flush_version = function() this_version <<- NULL, 
+      refresh_version = function() this_version <<- getter("version"), 
+      
+      projectInformation = function(){ if (is.null(this_project)) this_project <<- getter("project"); this_project }, 
+      has_projectInformation = function() !is.null(this_project), 
+      flush_projectInformation = function() this_project <<- NULL, 
+      refresh_projectInformation = function() this_project <<- getter("project"), 
+      
+      flush_all = function(){ 
+        this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
+          this_mapping <<- this_user <<- this_version <<- this_project <<- NULL}, 
+      
+      refresh_all = function(){
+        this_metadata <<- getter("metadata")
+        this_arm <<- getter("arm")
+        this_event <<- getter("event")
+        this_fieldname <<- getter("fieldname")
+        this_mapping <<- getter("mapping")
+        this_user <<- getter("user")
+        this_version <<- getter("version")
+        this_project <<- getter("project")
+      }
+      
+    )
   class(rc) <- "redcapApiConnection"
   rc
 }
@@ -164,11 +158,11 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
       sprintf("Arms        : %s", is_cached(x$has_arms())), 
       sprintf("Events      : %s", is_cached(x$has_events())),
-      sprintf("Field Names : %s", is_cached(x$has_field_names())), 
+      sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
       sprintf("Mapping     : %s", is_cached(x$has_mapping())),
       sprintf("Users       : %s", is_cached(x$has_users())), 
       sprintf("Version     : %s", is_cached(x$has_version())), 
-      sprintf("Project Info: %s", is_cached(x$has_project_info())))
+      sprintf("Project Info: %s", is_cached(x$has_projectInformation())))
   cat(output, sep = "\n")
 }
 
