@@ -107,8 +107,6 @@ test_that(
 test_that(
   "caching of users", 
   {
-    skip_if(TRUE, 
-            "There is a bug in exportUsers reported in #31. Revisit this test after fixing that.")
     rcon$flush_all()
     expect_false(rcon$has_users())
     
