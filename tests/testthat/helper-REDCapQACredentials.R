@@ -27,3 +27,5 @@ if(!exists("API_KEY")){
   keyring::keyring_unlock('TestRedcapAPI', password)
   API_KEY <- keyring::key_get('TestRedcapAPI', 'TestRedcapAPI', 'TestRedcapAPI')
 }
+
+library(checkmate) # for additional expect_* functions.
