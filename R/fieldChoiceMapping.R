@@ -13,7 +13,7 @@
 #' @return 
 #' Returns a matrix with two columns, \code{choice_value} and \code{choice_label}
 #' 
-#' @author Benjamin Nutter
+#' @author Benjamin Nutter, Shawn Garbett
 #' 
 #' @source 
 #' https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
@@ -42,29 +42,15 @@ fieldChoiceMapping.character <- function(object,
     checkmate::reportAssertions(coll)
   }
   
-  mapping <- strsplit(object, 
-                      split = "[|]")
-  mapping <- unlist(mapping)
-  
-  # ^[^,]+: from the start of the string, match one or more character that are not a comma
-  # \\K: don't include those characters in the match (otherwise the code is deleted)
-  # ,: Match the comma
-  # *?: Make the comma match lazy so it stops at the first one.
-  # see: https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
-  mapping <- strsplit(mapping, 
-                      split = "^[^,]+\\K,*?", 
-                      perl = TRUE)
-  # stack into a matrix
-  mapping <- do.call("rbind", 
-                     mapping)     
-  # remove leading commas
-  mapping[, 2] <- sub(pattern = "^,", 
-                      replacement = "", 
-                      x = mapping[, 2]) 
-  # remove whitespace
-  mapping <- trimws(mapping) 
-  
-  # mapping <- as.data.frame(mapping)
+  mapping <- unlist(strsplit(object, "[|]"))
+  # split on only the first comma. This allows commas to remain in the field label.
+  mapping <- regmatches(mapping, 
+                        regexec("([^,]*),(.*)", 
+                                mapping, 
+                                perl=TRUE))
+  mapping <- do.call("rbind", mapping)
+  mapping <- trimws(mapping[, -1]) # the first column is the original string. 
+
   colnames(mapping) <- c("choice_value", "choice_label")
   mapping
 }
