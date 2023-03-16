@@ -43,9 +43,10 @@ fieldToVar <- function(records,
     field_text_type <- meta_data$text_validation_type_or_show_slider_number[meta_data$field_name == field_base]
     field_type <- meta_data$field_type[meta_data$field_name == field_base]
     
-    withCallingHandlers(warning=function(w) {w$message<-paste(field_name,":", w$message);
-                                             warning(w);
-                                             invokeRestart("muffleWarning")},
+    withCallingHandlers(
+      warning=function(w) {w$message<-paste(field_name,":", w$message);
+                           warning(w);
+                           invokeRestart("muffleWarning")},
     {
       #* If the variable isn't in the data dictionary (usually it's a field added by REDCap,
       #* such as redcap_event_name, instrument_complete, etc), give it a generic name to
