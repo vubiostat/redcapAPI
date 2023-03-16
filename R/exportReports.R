@@ -104,23 +104,15 @@ exportReports.redcapApiConnection <- function(rcon, report_id, factors = TRUE, l
   checkmate::reportAssertions(coll)
   
   #* Secure the meta data.
-  meta_data <- 
-    if (is.null(bundle$meta_data)) 
-      exportMetaData(rcon) 
-  else 
-    bundle$meta_data
-  
+  meta_data <- rcon$metadata()
+
   #* for purposes of the export, we don't need the descriptive fields. 
   #* Including them makes the process more error prone, so we'll ignore them.
   meta_data <- meta_data[!meta_data$field_type %in% "descriptive", ]  
   
   #* Secure the REDCap version
-  version <- 
-    if (is.null(bundle$version))
-      exportVersion(rcon)
-  else
-    bundle$version
-  
+  version <- rcon$version()
+
   body <- list(token = rcon$token, 
                content = 'report',
                format = 'csv', 

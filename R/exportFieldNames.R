@@ -157,6 +157,7 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   if (response$status_code != 200){
     redcap_error(response, 
                  error_handling = error_handling)
+
   }
   
   utils::read.csv(text = as.character(response), 
