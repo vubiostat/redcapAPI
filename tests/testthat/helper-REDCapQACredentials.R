@@ -6,7 +6,7 @@
 # This helper will pull the required values from a keyring
 # similar to how `rccola` works for securitiy purposes.
 # This package cannot depend on `rccola` without creating 
-# a circular dependency so minimal code is copyied locally
+# a circular dependency so minimal code is copied locally
 # 
 # To duplicate our test database see: inst/extdata
 #

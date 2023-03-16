@@ -19,6 +19,8 @@
 #'   types are supported: date_, datetime_, datetime_seconds_, time_mm_ss, time,
 #'   float,number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 #'   checkbox, and form_complete.
+#' @param mChoice logical; defaults to TRUE. Convert checkboxes to mChoice if
+#'   Hmisc is installed.
 #' @param ..., additional arguments that are ignored. 
 #'   
 #' @details This function is called internally by \code{exportRecords} and 
@@ -31,12 +33,14 @@ fieldToVar <- function(records,
                        dates          = TRUE,
                        checkboxLabels = FALSE,
                        handlers=list(),
+                       mChoice        = TRUE,
                        ...)
 { 
+  recordnames <- names(records)
   for (i in seq_along(records))
   {
     # Establish basic info about field/record
-    field_name <- names(records)[i]
+    field_name <- recordnames[i]
     field_base <- gsub(pattern     = "___.+$",
                        replacement = "",
                        x           = field_name)
@@ -172,6 +176,30 @@ fieldToVar <- function(records,
         } # End of Records[[i]] if
     }) # End of withCallingHandlers
   } # End for loop
+  
+  # Convert checkboxes to mChoice if Hmisc is installed
+  if(requireNamespace("Hmisc", quietly = TRUE) && mChoice)
+  {
+    checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
+    for(i in seq(nrow(checkbox_meta)))
+    {
+      checkbox_fieldname <- checkbox_meta[i, 'field_name']
+      fname  <- sub("checkbox$", "", checkbox_fieldname)
+      fields <- recordnames[grepl(checkbox_fieldname, recordnames)]
+      opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
+                         "\\s*,\\s*")
+      levels <- sapply(opts, function(x) x[2])
+      opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+      checked <- records[,fields] != 'Checked'
+      opts[which(checked,arr.ind=TRUE)] <- ""
+      z <- structure(gsub(";{2,}",";",gsub(";$|^;", "", do.call('paste', c(opts, sep=";"))))
+                     , label=fname, levels=levels, class=c("mChoice", "labelled"))
+
+      records[,fname] <- z
+
+    }
+  }
+  
   records
 }    
 
