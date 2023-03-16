@@ -63,6 +63,7 @@ test_that(
   {
     # We will alter the project information and push it into the 
     # cached value in order to mimic the state of a non-longitudinal project
+    # This only works because the API isn't every called for a non-longitudinal project
     tmp_proj <- rcon$projectInformation()
     tmp_proj$is_longitudinal <- 0
     
