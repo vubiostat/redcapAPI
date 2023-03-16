@@ -139,7 +139,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       events = function(){ if (is.null(this_event)) this_event <<- getter("event"); this_event}, 
       has_events = function() !is.null(this_event), 
       flush_events = function() this_event <<- NULL, 
-      refresh_events = function() this_event <<- getter("events"), 
+      refresh_events = function() this_event <<- getter("event"), 
       
       fieldnames = function(){ if (is.null(this_fieldname)) this_fieldname <<- getter("fieldname"); this_fieldname }, 
       has_fieldnames = function() !is.null(this_fieldname), 
