@@ -148,17 +148,9 @@ importRecords.redcapApiConnection <- function(rcon, data,
   
   checkmate::reportAssertions(coll)
   
-  meta_data <- 
-    if (is.null(bundle$meta_data)) 
-      exportMetaData(rcon) 
-    else 
-      bundle$meta_data
-  
-  version <- 
-    if (is.null(bundle$version))
-      exportVersion(rcon)
-    else 
-      bundle$version
+  meta_data <- rcon$metadata()
+
+  version <- rcon$version()
 
   if (utils::compareVersion(version, "5.5.21") == -1 )
     meta_data <- syncUnderscoreCodings(data, 

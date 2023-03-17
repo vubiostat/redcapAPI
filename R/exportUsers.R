@@ -134,11 +134,7 @@ exportUsers.redcapApiConnection <- function(rcon, dates=TRUE, labels=TRUE, ...,
              levels = c(0, 2, 1), 
              labels = c("No access", "De-identified", "Full data set"))
     
-    meta_data <- 
-      if (is.null(bundle$meta_data)) 
-        exportMetaData(rcon)
-      else 
-        bundle$meta_data
+    meta_data <- rcon$metadata()
     
     form_names <- unique(meta_data$form)
 
