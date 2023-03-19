@@ -301,8 +301,7 @@ exportRecords.redcapApiConnection <-
       # The subset prevents `[form]_complete` fields from
       # being included here.
       fields = field_names[field_names %in% meta_data$field_name],
-      meta_data = meta_data,
-      version = version)
+      meta_data = meta_data)
 
   # Identify the forms from which the chosen fields are found
   included_form <-
