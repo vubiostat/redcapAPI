@@ -20,8 +20,3 @@ Issues may be reported at [Issues](https://github.com/vubiostat/redcapAPI/issues
 
 This package was developed under REDCap Version 13.2.4. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
 
-### Supplemental Gists
-
-* [Generate a Report of Fields with Missing Values in a REDCap Database Using the redcapAPI package](https://gist.github.com/nutterb/501c370418abb58bee78) (includes a version for "offline" use).
-
-*DEPRECATED* redcapDbConnection. This will be deleted soon.
