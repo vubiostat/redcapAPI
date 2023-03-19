@@ -191,10 +191,12 @@ test_that(
   "Return an error if colClasses is not a named vector", 
   {
     local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            paste("Documentation claims that this is the expected type.", 
-                  "There is not argument validation, however.", 
-                  "A named list should also be acceptable"))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = list("character", "numeric", "character")))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = c("character", "numeric", "numeric")))
   }
 )
 
@@ -208,17 +210,6 @@ test_that(
     expect_error(exportRecords(rcon, 
                                batch.size = "-1"), 
                  "'batch.size'[:] Must be of type 'integerish'")
-  }
-)
-
-test_that(
-  "Return an error if bundle is not a redcapBundle object", 
-  {
-    local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            "There is no argument validation on bundle. Address this test after fixing.")
-    expect_error(exportRecords(rcon, 
-                               bundle = "not a bundle"))
   }
 )
 

@@ -19,6 +19,9 @@
 #' error message that isn't as descriptive of the nature of the problem as 
 #' we might like.
 #' 
+#' If the project information reports that the project is not longitudinal, 
+#' a data frame with 0 rows is returned without calling the API. 
+#' 
 #' @section REDCap API Documentation:
 #' This function allows you to export the events for a project
 #' 
@@ -82,6 +85,14 @@ exportEvents.redcapApiConnection <-
                                         add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  if (rcon$projectInformation()$is_longitudinal == 0){
+    return(data.frame(event_name = character(0), 
+                      arm_num = numeric(0), 
+                      unique_event_name = character(0), 
+                      custom_event_label = character(0), 
+                      event_id = character(0)))
+  }
   
   #* parameters for the Users File Export
   body <- list(token = rcon$token, 

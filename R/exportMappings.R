@@ -11,11 +11,9 @@
 #' 
 #' @details The data frame that is returned shows the arm number, unique 
 #' event name, and forms mapped in a project.
-#' 
-#' When this function is called for a classic project, a character string is
-#'  returned giving the API error message, '400: You cannot export form-event 
-#'  mappings for classic projects' but without casting an error in R. This is 
-#'  by design and allows more flexible error checks in certain functions.
+#'  
+#' If the project information reports that the project is not longitudinal, 
+#' a data frame with 0 rows is returned without calling the API. 
 #' 
 #' @section REDCap API Documentation:
 #' This function allows you to export the instrument-event mappings for a project 
@@ -70,6 +68,12 @@ exportMappings.redcapApiConnection <- function(rcon, arms = NULL, ...,
                                         add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  if (rcon$projectInformation()$is_longitudinal == 0){
+    return(data.frame(arm_num = numeric(0), 
+                      unique_event_name = character(0), 
+                      form = character(0)))
+  }
   
   body <- list(token = rcon$token, 
                content = 'formEventMapping', 

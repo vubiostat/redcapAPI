@@ -25,11 +25,8 @@ test_that("Returns a data frame with two rows for a study with two arms",{
   is_longitudinal <- 
     as.logical(exportProjectInformation(rcon)$is_longitudinal)
   
-  skip_if(!is_longitudinal, 
-          "Test project is not a longitudinal project. This test is skipped")
-  
   expect_data_frame(exportArms(rcon), 
-                    nrows = 2)
+                    nrows = if (is_longitudinal) 2 else 0)
 })
 
 
@@ -39,27 +36,30 @@ test_that(
     is_longitudinal <- 
       as.logical(exportProjectInformation(rcon)$is_longitudinal)
     
-    skip_if(TRUE,
-            "Throwing an error when arms is specified. Revisit this test after correcting.")
-    
     skip_if(!is_longitudinal, 
             "Test project is not a longitudinal project. This test is skipped")
     
-    exportArms(rcon, arms = c("1"))
+    expect_data_frame(exportArms(rcon, arms = c("1")), 
+                      ncols = 2, 
+                      nrows = 1)
   }
 )
 
 
 test_that(
-  "Returns NULL for a classic project",
+  "Returns empty data frame for a classic project",
   {
-    is_longitudinal <- 
-      as.logical(exportProjectInformation(rcon)$is_longitudinal)
+    # We will alter the project information and push it into the 
+    # cached value in order to mimic the state of a non-longitudinal project
+    tmp_proj <- rcon$projectInformation()
+    tmp_proj$is_longitudinal <- 0
     
-    skip_if(is_longitudinal, 
-            "Test project is a longitudinal project. This test is skipped")
+    rcon$push_projectInformation(tmp_proj)
     
-    expect_null(exportArms(rcon))
+    expect_data_frame(exportArms(rcon),
+                      ncols = 2,
+                      nrows = 0)
+    rcon$flush_projectInformation()
   }
 )
 
