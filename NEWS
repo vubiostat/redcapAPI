@@ -1,5 +1,19 @@
-## Changes in Versino 2.5.0
+## Changes in Version 2.5.0
 
+* Metadata is cached in the connection object. In addition to token, url, and config elements, the following are also made available:
+   * metadata
+   * arms
+   * events
+   * fieldnames
+   * mapping
+   * users
+   * version
+   * projectInformation
+each of these has a companion function
+   * has_* (returns a logical indicating if the element has been cached)
+   * flush_* (removes the cached value)
+   * refresh_* (replaces the cached value with a fresh call to the API)
+There are also flush_all and refresh_all methods.
 * New method: exportLogging
 * Fixed minor bugs in validations and improved documentation
 

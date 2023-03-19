@@ -17,8 +17,6 @@
 #'  \item Throw an error if \code{x} is not an atomic vector
 #'  \item Throw an error if \code{parameter_name} is not a \code{character(1)}
 #' }
-#'
-#' @export
 
 vectorToApiBodyList <- function(vector, 
                                 parameter_name){
