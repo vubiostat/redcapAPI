@@ -165,6 +165,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_projectInformation = function() !is.null(this_project), 
       flush_projectInformation = function() this_project <<- NULL, 
       refresh_projectInformation = function() this_project <<- getter("project"), 
+      push_projectInformation = function(push) this_project <<- push, 
       
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 

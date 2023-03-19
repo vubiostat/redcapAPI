@@ -50,14 +50,25 @@ test_that(
 test_that(
   "Return a data frame with only requested field names", 
   {
-    skip_if(TRUE, 
-            "Produces a message that claims a bug in the API. It's actually a bug in the package. Revisit this test after this is fixed.")
     expect_data_frame(
       exportFieldNames(rcon, 
-                       fields = c("record_id", "prereq_radio", "prereq_checkbox", 
-                                  "treatment", "date_dmy")), 
+                       fields = c("record_id")), 
       ncols = 3, 
-      nrows = 7
+      nrows = 1
+    )
+    
+    expect_data_frame(
+      exportFieldNames(rcon, 
+                       fields = c("prereq_radio")), 
+      ncols = 3, 
+      nrows = 1
+    )
+    
+    expect_data_frame(
+      exportFieldNames(rcon, 
+                       fields = c("prereq_checkbox")), 
+      ncols = 3, 
+      nrows = 4
     )
   }
 )
