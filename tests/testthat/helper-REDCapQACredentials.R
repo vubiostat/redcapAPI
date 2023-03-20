@@ -29,3 +29,25 @@ if(!exists("API_KEY")){
 }
 
 library(checkmate) # for additional expect_* functions.
+
+
+
+# Helper copied from Hadley Wickham's helpr package
+# Used for testing mChoice
+installed_packages <- function() {
+  user_libPaths <- normalizePath(.libPaths())
+  uniqueLibPaths <- subset(user_libPaths, !duplicated(user_libPaths))
+  
+  paths <- unlist(lapply(uniqueLibPaths, dir, full.names = TRUE))
+  desc <- file.path(paths, "DESCRIPTION")
+  desc <- desc[file.exists(desc)]
+  
+  dcf <- lapply(desc, read.dcf, fields = c("Package", "Title", "Version"))
+  packages <- as.data.frame(do.call("rbind", dcf), stringsAsFactors = FALSE)
+  
+  packages$status <- ifelse(packages$Package %in% .packages(), "loaded", "installed")
+  class(packages) <- c("packages", class(packages))
+  packages <- packages[order(packages$Package), ]
+  packages[! duplicated(packages$Package), ]
+  packages$Package
+}

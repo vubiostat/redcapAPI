@@ -37,7 +37,15 @@ fieldToVar <- function(records,
                        ...)
 { 
   # See if mChoice argument is passed, otherwise default to state of Hmisc
-  if(is.null(mChoice)) mChoice = "Hmisc" %in% .packages()
+  if(is.null(mChoice)) mChoice <- "package:Hmisc" %in% search()
+  if(mChoice & !"package:Hmisc" %in% search())
+  {
+    if(!requireNamespace("Hmisc", quietly = TRUE))
+    {
+      warning("mChoice=TRUE requires the package Hmisc to be loaded to function.")
+      mChoice <- FALSE
+    }
+  }
   
   recordnames <- names(records)
   for (i in seq_along(records))
@@ -185,34 +193,29 @@ fieldToVar <- function(records,
   
   if(mChoice)
   {
-    if(!"Hmisc" %in% .packages())
+    # Convert checkboxes to mChoice if Hmisc is installed and requested
+    checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
+    for(i in seq_len(nrow(checkbox_meta)))
     {
-      warning("mChoice=TRUE requires the package Hmisc to be loaded to function.")
-    } else {
-      # Convert checkboxes to mChoice if Hmisc is installed and requested
-      checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
-      for(i in seq_len(nrow(checkbox_meta)))
-      {
-        checkbox_fieldname <- checkbox_meta$field_name[i]
-        fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
-        # FIXME: Issue-38 when merged will provide this as a function
-        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
-                           "\\s*,\\s*")
-        levels <- sapply(opts, function(x) x[2])
-        # END FIXME
-        opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
-        checked <- records[,fields] != 'Checked'
-        opts[which(checked,arr.ind=TRUE)] <- ""
-        z <- structure(
-          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-          label  = checkbox_fieldname,
-          levels = levels,
-          class  = c("mChoice", "labelled"))
-  
-        records[[checkbox_fieldname]] <- z
-  
-      }
-    } # Hmisc
+      checkbox_fieldname <- checkbox_meta$field_name[i]
+      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
+      # FIXME: Issue-38 when merged will provide this as a function
+      opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
+                         "\\s*,\\s*")
+      levels <- sapply(opts, function(x) x[2])
+      # END FIXME
+      opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+      checked <- records[,fields] != 'Checked'
+      opts[which(checked,arr.ind=TRUE)] <- ""
+      z <- structure(
+        gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+        label  = checkbox_fieldname,
+        levels = levels,
+        class  = c("mChoice", "labelled"))
+
+      records[[checkbox_fieldname]] <- z
+    }
+
   } # mChoice 
   
   records

@@ -3,7 +3,7 @@ context("fieldToVar mChoice")
 rcon <- redcapConnection(url = url, token = API_KEY)
 
 test_that("records can be exported with Hmisc attached",{
-  skip_if(!requireNamespace("Hmisc", quietly=TRUE), 
+  skip_if(!"Hmisc" %in% installed_packages(), 
           "Hmisc is required to test mChoice export")
   require(Hmisc)
   expect_silent(rec <- exportRecords(rcon))
@@ -12,10 +12,8 @@ test_that("records can be exported with Hmisc attached",{
 })
 
 test_that("mChoice type conversion for checkbox with Hmisc attached",{
-  skip_if(!requireNamespace("Hmisc", quietly=TRUE), 
+  skip_if(!"Hmisc" %in% installed_packages(), 
           "Hmisc is required to test mChoice type conversion")
-  
-  expect_warning(exportRecords(rcon, mChoice=TRUE), "requires the package Hmisc")
   
   require(Hmisc)
   rec <- exportRecords(rcon)
