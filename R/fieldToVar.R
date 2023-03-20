@@ -36,6 +36,12 @@ fieldToVar <- function(records,
                        mChoice        = TRUE,
                        ...)
 { 
+  if (mchoice) {
+    # It will be easier to create the mChoice style fields if we have the 
+    # raw (0/1 codings)
+    records_raw <- records
+  }
+  
   recordnames <- names(records)
   for (i in seq_along(records))
   {
@@ -186,28 +192,33 @@ fieldToVar <- function(records,
     checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
     for(i in seq(nrow(checkbox_meta)))
     {
-      checkbox_fieldname <- checkbox_meta[i, 'field_name']
-      fname  <- sub("checkbox$", "", checkbox_fieldname)
-      fields <- recordnames[grepl(checkbox_fieldname, recordnames)]
+      checkbox_fieldname <- checkbox_meta$field_name[i]
+      checkbox_fieldlabel <- checkbox_meta$field_label[i]
+      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
       opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
                          "\\s*,\\s*")
       levels <- sapply(opts, function(x) x[2])
-      opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
-      checked <- records[,fields] != 'Checked'
+      # From looking at the mChoice examples in Hmisc, I think using the labels
+      # is more consistent with mChoice than the coded values. I could be wrong.
+      # Another option is to make it contingent on the user input by using the following:
+      # levels <- sapply(opts, function(x) x[if (labels) 2 else 1]
+      opts <- as.data.frame(matrix(rep(levels, nrow(records)), nrow=nrow(records), byrow=TRUE))
+      checked <- records_raw[,fields] != '1'
       opts[which(checked,arr.ind=TRUE)] <- ""
-      z <- structure(gsub(";{2,}",";",gsub(";$|^;", "", do.call('paste', c(opts, sep=";"))))
-                     , label=fname, levels=levels, class=c("mChoice", "labelled"))
-
-      records[,fname] <- z
-
+      
+      z <- apply(opts, 
+                 MARGIN = 1,    # Apply the function over each row
+                 FUN = function(x){ # paste together non-empty strings
+                   paste0(x[x != ""], collapse = ";")
+                 })
+      
+      records[[checkbox_fieldname]] <- 
+        structure(z,
+                  label=checkbox_fieldlabel, 
+                  levels=levels, 
+                  class=c("mChoice", "labelled"))
     }
   }
   
   records
 }    
-
-
-
-  
-
-    
