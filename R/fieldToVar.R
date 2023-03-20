@@ -55,7 +55,7 @@ fieldToVar <- function(records,
     {
       if(!suppressMessages(requireNamespace("Hmisc", quietly = TRUE)))
       {
-        warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
+        warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
       }
     }
   }
