@@ -203,8 +203,11 @@ fieldToVar <- function(records,
         opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
         checked <- records[,fields] != 'Checked'
         opts[which(checked,arr.ind=TRUE)] <- ""
-        z <- structure(gsub(";{2,}",";",gsub(";$|^;", "", do.call('paste', c(opts, sep=";"))))
-                       , label=checkbox_fieldname, levels=levels, class=c("mChoice", "labelled"))
+        z <- structure(
+          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+          label  = checkbox_fieldname,
+          levels = levels,
+          class  = c("mChoice", "labelled"))
   
         records[[checkbox_fieldname]] <- z
   
