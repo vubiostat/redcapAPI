@@ -37,13 +37,21 @@ fieldToVar <- function(records,
                        ...)
 { 
   # See if mChoice argument is passed, otherwise default to state of Hmisc
-  if(is.null(mChoice)) mChoice <- "package:Hmisc" %in% search()
-  if(mChoice & !"package:Hmisc" %in% search())
+  if("package:Hmisc" %in% search()) # Hmisc Loaded?
   {
-    if(!requireNamespace("Hmisc", quietly = TRUE))
+    if(is.null(mChoice)) mChoice <- TRUE
+    # Otherwise do what user requests for mChoice
+  } else # Hmisc not loaded
+  {
+    # Does Hmisc exist?
+    if(requireNamespace("Hmisc", quietly = TRUE))
     {
-      warning("mChoice=TRUE requires the package Hmisc to be loaded to function.")
-      mChoice <- FALSE
+      if(is.null(mChoice)) mChoice <- TRUE
+      if(mChoice) require(Hmisc)
+    } else # No Hmisc, No mChoice
+    {
+      if(mChoice) warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
+      mChoice <- FALSE 
     }
   }
   
