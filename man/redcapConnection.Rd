@@ -31,10 +31,26 @@ Creates an object of class \code{redcapApiConnection} for
 using the REDCap API
 }
 \details{
+\code{redcapConnection} objects will retrieve and cache various forms of 
+project information. This can make metadata, arms, events, fieldnames, 
+arm-event mappings, users, version, and project information available
+directly from the \code{redcapConnection} object. Take note that 
+the retrieval of these objects uses the default values of the respective
+export functions. 
+
+For each of these objects, there are four methods that can be called from 
+the \code{redcapConnection} object: the get method (called via
+\code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}), 
+which returns a logical indicating if the metadata has been cached; 
+the flush method (\code{rcon$flush_metadata}), which removes the cached value; 
+and the refresh method (\code{rcon$refresh_metadata}), which replaces the 
+current value with a new call to the API. There is also a \code{flush_all}
+and \code{refresh_all} method.
+
 For convenience, you may consider using 
 \code{options(redcap_api_url=[your URL here])} in your RProfile.
 To obtain an API token for a project, do the following:\cr
-Enter the 'User Right' section of a project\cr
+Enter the 'User Rights' section of a project\cr
 Select a user\cr
 Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on 
 configuring REDCap to use the API can be found at \url{https://github.com/vubiostat/redcapAPI/wiki}
@@ -64,6 +80,16 @@ options(redcap_api_url=[YOUR_REDCAP_URL])
 rcon <- redcapConnection(token=[API_TOKEN])
 
 exportRecords(rcon)
+
+# Get the complete metadata for the project
+rcon$metadata()
+
+# Get the fieldnames for a project
+rcon$fieldnames()
+
+# remove a cached value for fieldnames
+rcon$flush_fieldnames()
+rcon$has_fieldnames()
 }
 
 }

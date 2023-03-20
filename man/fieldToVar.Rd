@@ -10,8 +10,9 @@ fieldToVar(
   factors = TRUE,
   dates = TRUE,
   checkboxLabels = FALSE,
+  labels = NULL,
   handlers = list(),
-  mChoice = TRUE,
+  mChoice = NULL,
   ...
 )
 }
@@ -29,6 +30,9 @@ variables are converted to factors}
 
 \item{checkboxLabels}{Logical, determines if checkbox variables are labeled as
 "Checked" or using the checkbox label.  Only applicable when \code{factors = TRUE}}
+
+\item{labels}{Logical.  Determines if the variable labels are applied to 
+the data frame.}
 
 \item{handlers}{List, Specify type conversion overrides for specific REDCap field types. 
 E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the

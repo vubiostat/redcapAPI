@@ -13,6 +13,8 @@
 #' @param dates Logical, determines if date variables are converted to POSIXct format
 #' @param checkboxLabels Logical, determines if checkbox variables are labeled as
 #'   "Checked" or using the checkbox label.  Only applicable when \code{factors = TRUE}
+#' @param labels Logical.  Determines if the variable labels are applied to 
+#'   the data frame.
 #' @param handlers List, Specify type conversion overrides for specific REDCap field types. 
 #'   E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the
 #'   datetime ordering directive from the tail is dropped. The following field
@@ -32,24 +34,12 @@ fieldToVar <- function(records,
                        factors        = TRUE, 
                        dates          = TRUE,
                        checkboxLabels = FALSE,
+                       labels         = NULL,
                        handlers=list(),
                        mChoice        = NULL,
                        ...)
 { 
-  # hmisc_loaded <- "package:Hmisc" %in% search()
-  # if(is.null(mChoice)) mChoice <- hmisc_loaded
-  # if(mChoice)
-  # {
-  #   if(!requireNamespace("Hmisc", quietly = TRUE))
-  #   {
-  #     warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
-  #     mChoice <- FALSE
-  #   } else if(!hmisc_loaded)
-  #   {
-  #     require
-  #     mChoice <- FALSE
-  #   }
-  # }
+  records_raw <- records
   
   # See if mChoice argument is passed, otherwise default to state of Hmisc
   if("package:Hmisc" %in% search()) # Hmisc Loaded?
@@ -58,15 +48,15 @@ fieldToVar <- function(records,
     # Otherwise do what user requests for mChoice
   } else # Hmisc not loaded
   {
-    # Does Hmisc exist?
-    if(requireNamespace("Hmisc", quietly = TRUE))
+    if(is.null(mChoice))
     {
-      if(is.null(mChoice)) mChoice <- TRUE
-      if(mChoice) require(Hmisc)
-    } else # No Hmisc, No mChoice
+      mChoice <- suppressMessages(requireNamespace("Hmisc", quietly = TRUE))
+    } else if(mChoice)
     {
-      if(mChoice) warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
-      mChoice <- FALSE 
+      if(!suppressMessages(requireNamespace("Hmisc", quietly = TRUE)))
+      {
+        warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
+      }
     }
   }
   
@@ -227,10 +217,10 @@ fieldToVar <- function(records,
         # FIXME: Issue-38 when merged will provide this as a function
         opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
                            "\\s*,\\s*")
-        levels <- sapply(opts, function(x) x[2])
+        levels <- sapply(opts, function(x) x[1+labels])
         # END FIXME
         opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
-        checked <- records[,fields] != 'Checked'
+        checked <- records_raw[,fields] != '1'
         opts[which(checked,arr.ind=TRUE)] <- ""
         z <- structure(
           gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
