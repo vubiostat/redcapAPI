@@ -36,6 +36,21 @@ fieldToVar <- function(records,
                        mChoice        = NULL,
                        ...)
 { 
+  # hmisc_loaded <- "package:Hmisc" %in% search()
+  # if(is.null(mChoice)) mChoice <- hmisc_loaded
+  # if(mChoice)
+  # {
+  #   if(!requireNamespace("Hmisc", quietly = TRUE))
+  #   {
+  #     warning("mChoice=TRUE requires the package Hmisc to be installed to function.")
+  #     mChoice <- FALSE
+  #   } else if(!hmisc_loaded)
+  #   {
+  #     require
+  #     mChoice <- FALSE
+  #   }
+  # }
+  
   # See if mChoice argument is passed, otherwise default to state of Hmisc
   if("package:Hmisc" %in% search()) # Hmisc Loaded?
   {
@@ -207,21 +222,24 @@ fieldToVar <- function(records,
     {
       checkbox_fieldname <- checkbox_meta$field_name[i]
       fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
-      # FIXME: Issue-38 when merged will provide this as a function
-      opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
-                         "\\s*,\\s*")
-      levels <- sapply(opts, function(x) x[2])
-      # END FIXME
-      opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
-      checked <- records[,fields] != 'Checked'
-      opts[which(checked,arr.ind=TRUE)] <- ""
-      z <- structure(
-        gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-        label  = checkbox_fieldname,
-        levels = levels,
-        class  = c("mChoice", "labelled"))
-
-      records[[checkbox_fieldname]] <- z
+      if(length(fields) > 0)
+      {
+        # FIXME: Issue-38 when merged will provide this as a function
+        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
+                           "\\s*,\\s*")
+        levels <- sapply(opts, function(x) x[2])
+        # END FIXME
+        opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+        checked <- records[,fields] != 'Checked'
+        opts[which(checked,arr.ind=TRUE)] <- ""
+        z <- structure(
+          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+          label  = checkbox_fieldname,
+          levels = levels,
+          class  = c("mChoice", "labelled"))
+  
+        records[[checkbox_fieldname]] <- z
+      }
     }
 
   } # mChoice 
