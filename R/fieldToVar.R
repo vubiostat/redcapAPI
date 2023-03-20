@@ -33,9 +33,12 @@ fieldToVar <- function(records,
                        dates          = TRUE,
                        checkboxLabels = FALSE,
                        handlers=list(),
-                       mChoice        = TRUE,
+                       mChoice        = NULL,
                        ...)
 { 
+  # See if mChoice argument is passed, otherwise default to state of Hmisc
+  if(is.null(mChoice)) mChoice = requireNamespace("Hmisc", quietly = TRUE)
+  
   recordnames <- names(records)
   for (i in seq_along(records))
   {
@@ -180,25 +183,28 @@ fieldToVar <- function(records,
     }) # End of withCallingHandlers
   } # End for loop
   
-  # Convert checkboxes to mChoice if Hmisc is installed
-  if(requireNamespace("Hmisc", quietly = TRUE) && mChoice)
+  if(mChoice && !requireNamespace("Hmisc", quietly = TRUE))
+    warning("mChoice=TRUE requires the package Hmisc to be loaded to function.")
+  if(mChoice && requireNamespace("Hmisc", quietly = TRUE))
   {
+    # Convert checkboxes to mChoice if Hmisc is installed and requested
     checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
-    for(i in seq(nrow(checkbox_meta)))
+    for(i in seq_len(nrow(checkbox_meta)))
     {
-      checkbox_fieldname <- checkbox_meta[i, 'field_name']
-      fname  <- sub("checkbox$", "", checkbox_fieldname)
-      fields <- recordnames[grepl(checkbox_fieldname, recordnames)]
+      checkbox_fieldname <- checkbox_meta$field_name[i]
+      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
+      # FIXME: Issue-38 when merged will provide this as a function
       opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
                          "\\s*,\\s*")
       levels <- sapply(opts, function(x) x[2])
+      # END FIXME
       opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
       checked <- records[,fields] != 'Checked'
       opts[which(checked,arr.ind=TRUE)] <- ""
       z <- structure(gsub(";{2,}",";",gsub(";$|^;", "", do.call('paste', c(opts, sep=";"))))
-                     , label=fname, levels=levels, class=c("mChoice", "labelled"))
+                     , label=checkbox_fieldname, levels=levels, class=c("mChoice", "labelled"))
 
-      records[,fname] <- z
+      records[[checkbox_fieldname]] <- z
 
     }
   }
