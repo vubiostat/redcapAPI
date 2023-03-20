@@ -48,15 +48,13 @@ fieldToVar <- function(records,
     # Otherwise do what user requests for mChoice
   } else # Hmisc not loaded
   {
-    if(is.null(mChoice))
+    if(is.null(mChoice)) 
     {
-      mChoice <- suppressMessages(requireNamespace("Hmisc", quietly = TRUE))
+      mChoice <- FALSE
     } else if(mChoice)
     {
-      if(!suppressMessages(requireNamespace("Hmisc", quietly = TRUE)))
-      {
-        warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
-      }
+      warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
+      mChoice <- FALSE
     }
   }
   
