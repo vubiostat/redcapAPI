@@ -177,7 +177,7 @@ exportReports.redcapApiConnection <- function(rcon, report_id, factors = TRUE, l
   
   # drop
   if(length(drop)) {
-    x <- x[,!names(x) %in% drop]
+    x <- x[!names(x) %in% drop]
   } # end drop
   
   x 

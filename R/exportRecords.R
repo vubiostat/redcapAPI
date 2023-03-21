@@ -378,7 +378,7 @@ exportRecords.redcapApiConnection <-
   
   # drop
   if(length(drop)) {
-    x <- x[,!names(x) %in% drop]
+    x <- x[!names(x) %in% drop]
   } # end drop
   
   x
