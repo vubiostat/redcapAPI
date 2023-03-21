@@ -2,13 +2,10 @@
 % Please edit documentation in R/importArms.R
 \name{importArms}
 \alias{importArms}
-\alias{importArms.redcapDbConnection}
 \alias{importArms.redcapApiConnection}
 \title{Import Study Arm Names}
 \usage{
 importArms(rcon, arms_data, override = FALSE, ...)
-
-\method{importArms}{redcapDbConnection}(rcon, arms_data, override = FALSE, ...)
 
 \method{importArms}{redcapApiConnection}(
   rcon,

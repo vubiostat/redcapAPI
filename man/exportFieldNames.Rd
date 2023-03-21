@@ -2,20 +2,11 @@
 % Please edit documentation in R/exportFieldNames.R
 \name{exportFieldNames}
 \alias{exportFieldNames}
-\alias{exportFieldNames.redcapDbConnection}
 \alias{exportFieldNames.redcapApiConnection}
 \title{Export the Export Field Names for a Project}
 \usage{
 exportFieldNames(
   rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling")
-)
-
-\method{exportFieldNames}{redcapDbConnection}(
-  rcon,
-  fields = character(0),
-  bundle = NULL,
   ...,
   error_handling = getOption("redcap_error_handling")
 )

@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportMetaData.R
 \name{exportMetaData}
 \alias{exportMetaData}
-\alias{exportMetaData.redcapDbConnection}
 \alias{exportMetaData.redcapApiConnection}
 \title{Export Meta Data from a REDCap Database}
 \usage{
 exportMetaData(rcon, ...)
-
-\method{exportMetaData}{redcapDbConnection}(rcon, ...)
 
 \method{exportMetaData}{redcapApiConnection}(
   rcon,

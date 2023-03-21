@@ -2,13 +2,10 @@
 % Please edit documentation in R/deleteRecords.R
 \name{deleteRecords}
 \alias{deleteRecords}
-\alias{deleteRecords.redcapDbConnection}
 \alias{deleteRecords.redcapApiConnection}
 \title{Delete Records From a Project}
 \usage{
 deleteRecords(rcon, records, arm = NULL, ...)
-
-\method{deleteRecords}{redcapDbConnection}(rcon, records, arm = NULL, ...)
 
 \method{deleteRecords}{redcapApiConnection}(
   rcon,

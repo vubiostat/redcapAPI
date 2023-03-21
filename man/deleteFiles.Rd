@@ -2,13 +2,10 @@
 % Please edit documentation in R/deleteFiles.R
 \name{deleteFiles}
 \alias{deleteFiles}
-\alias{deleteFiles.redcapDbConnection}
 \alias{deleteFiles.redcapApiConnection}
 \title{Delete a File attached to a Record}
 \usage{
 deleteFiles(rcon, record, field, event, ...)
-
-\method{deleteFiles}{redcapDbConnection}(rcon, record, field, event, ...)
 
 \method{deleteFiles}{redcapApiConnection}(
   rcon,

@@ -56,15 +56,8 @@
 #' @export
 #'
 
-
-exportArms <- function(rcon, ...) UseMethod("exportArms")
-
-#' @rdname exportArms
-#' @export
-
-exportArms.redcapDbConnection <- function(rcon, ...){
-  message("Please accept my apologies.  The exportArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
+exportArms <- function(rcon, ...){
+  UseMethod("exportArms")
 }
 
 #' @rdname exportArms

@@ -40,16 +40,8 @@
 #' 
 #' @export
 
-exportMetaData <- function(rcon, ...) UseMethod("exportMetaData")
-
-#' @rdname exportMetaData
-#' @export
-
-exportMetaData.redcapDbConnection <- 
-  function(rcon, ...)
-  {
-    message("Please accept my apologies.  The exportMetaData method for redcapDbConnection objects\n",
-            "has not yet been written.  Please consider using the API.")
+exportMetaData <- function(rcon, ...){
+  UseMethod("exportMetaData")
 }
 
 #' @rdname exportMetaData

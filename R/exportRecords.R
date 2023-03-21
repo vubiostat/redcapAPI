@@ -161,19 +161,6 @@ exportRecords <-
 
 #' @rdname exportRecords
 #' @export
-#' 
-exportRecords.redcapDbConnection <- 
-  function(rcon, factors = TRUE, fields = NULL, forms = NULL, records = NULL,
-           events = NULL, labels = TRUE, dates = TRUE, drop = NULL,
-           survey = TRUE, dag = TRUE, checkboxLabels = FALSE, 
-           colClasses = character(0), ...)
-  {
-    message("Please accept my apologies.  The exportRecords method for redcapDbConnection objects\n",
-            "has not yet been written.  Please consider using the API.")
-  }
-
-#' @rdname exportRecords
-#' @export
 
 exportRecords.redcapApiConnection <- 
   function(rcon, factors = TRUE, fields = NULL, forms = NULL,

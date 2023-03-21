@@ -34,21 +34,21 @@
 #' @references
 #' Please refer to your institution's API documentation.
 #' 
+#' @export
 
-deleteArms <- function(rcon, arms, ...){
+deleteArms <- function(rcon, 
+                       arms, 
+                       ...){
   UseMethod("deleteArms")
 }
 
-#' @rdname deleteArms
-
-deleteArms.redcapDbConnection <- function(rcon, arms, ...){
-  message("Please accept my apologies.  The deleteArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
 
 #' @rdname deleteArms
+#' @export
 
-deleteArms.redcapApiConnection <- function(rcon, arms, ...,
+deleteArms.redcapApiConnection <- function(rcon, 
+                                           arms, 
+                                           ...,
                                            error_handling = getOption("redcap_error_handling")){
   checkmate::assert_integerish(arms)
   

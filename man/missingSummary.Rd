@@ -3,18 +3,10 @@
 \name{missingSummary}
 \alias{missingSummary}
 \alias{missingSummary_offline}
-\alias{missingSummary.redcapDbConnection}
 \alias{missingSummary.redcapApiConnection}
 \title{Report of Missing Values}
 \usage{
 missingSummary(
-  rcon,
-  excludeMissingForms = TRUE,
-  ...,
-  fixed_fields = REDCAP_SYSTEM_FIELDS
-)
-
-\method{missingSummary}{redcapDbConnection}(
   rcon,
   excludeMissingForms = TRUE,
   ...,

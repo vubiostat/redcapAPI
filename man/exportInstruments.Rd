@@ -3,12 +3,9 @@
 \name{exportInstruments}
 \alias{exportInstruments}
 \alias{exportInstruments.redcapApiConnection}
-\alias{exportInstruments.redcapDbConnection}
 \title{Exports the REDCap Instruments}
 \usage{
 exportInstruments(rcon, ...)
-
-\method{exportInstruments}{redcapDbConnection}(rcon, ...)
 
 \method{exportInstruments}{redcapApiConnection}(
   rcon,

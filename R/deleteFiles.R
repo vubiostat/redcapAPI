@@ -25,21 +25,20 @@
 #'  
 #' @export
 
-deleteFiles <- function(rcon, record, field, event, ...)
+deleteFiles <- function(rcon, 
+                        record, 
+                        field, 
+                        event, ...){
   UseMethod("deleteFiles")
-
-#' @rdname deleteFiles
-#' @export 
-deleteFiles.redcapDbConnection <- function(rcon, record, field, event, ...){
-  message("Please accept my apologies.  The deleteFiles method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname deleteFiles
 #' @export
 
-deleteFiles.redcapApiConnection <- function(rcon, record = NULL, 
-                                            field = NULL, event = NULL, ..., 
+deleteFiles.redcapApiConnection <- function(rcon, 
+                                            record = NULL, 
+                                            field = NULL, 
+                                            event = NULL, ..., 
                                             bundle = getOption("redcap_bundle"),
                                             error_handling = getOption("redcap_error_handling")){
   if (is.numeric(record)) record <- as.character(record)

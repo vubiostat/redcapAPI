@@ -22,42 +22,49 @@
 #' @param ... Arguments to be passed to other methods
 #' @param v.number A character string given the desired version number should the
 #'  API method not be available.
-#'   
-#' @aliases redcapProjectInfo
-#' @aliases redcapProjectInfo.redcapApiConnection
-#' @aliases redcapProjectInfo.redcapDbConnection
-#' @export redcapProjectInfo
-#' 
+#'  
+#' @export 
 
-redcapProjectInfo <- function(rcon, date=TRUE, label=TRUE, 
-                              meta_data=TRUE, users=TRUE, instruments=TRUE,
-                              events=TRUE, arms=TRUE, mappings=TRUE,
-                              version=TRUE, ...) UseMethod("redcapProjectInfo")
-
-#' @rdname deprecated_redcapProjectInfo
-#' @export
-
-redcapProjectInfo.redcapDbConnection <- function(rcon, date=TRUE, label=TRUE, 
-                                                 meta_data=TRUE, users=TRUE, instruments=TRUE,
-                                                 events=TRUE, arms=TRUE, mappings=TRUE,
-                                                 version=TRUE, ...){
-  message("The 'redcapDbConnection' methods have been deprecated. ",
-          "Please use the 'redcapApiConnection' methods.")
-  message("'redcapProjectInfo' has been deprected.  Please use 'exportBundle'")
+redcapProjectInfo <- function(rcon, 
+                              date = TRUE, 
+                              label = TRUE, 
+                              meta_data = TRUE, 
+                              users = TRUE, 
+                              instruments = TRUE,
+                              events = TRUE, 
+                              arms = TRUE, 
+                              mappings = TRUE,
+                              version = TRUE, ...){
+  UseMethod("redcapProjectInfo")
 }
 
 #' @rdname deprecated_redcapProjectInfo
 #' @export
 
-redcapProjectInfo.redcapApiConnection <- function(rcon, date=TRUE, label=TRUE, 
-                                                  meta_data=TRUE, users=TRUE, instruments=TRUE,
-                                                  events=TRUE, arms=TRUE, mappings=TRUE,
-                                                  version=TRUE, ...,
+redcapProjectInfo.redcapApiConnection <- function(rcon, 
+                                                  date = TRUE, 
+                                                  label = TRUE, 
+                                                  meta_data = TRUE, 
+                                                  users = TRUE, 
+                                                  instruments = TRUE,
+                                                  events = TRUE, 
+                                                  arms = TRUE, 
+                                                  mappings = TRUE,
+                                                  version = TRUE, ...,
                                                   v.number = ""){
   
   message("'redcapProjectInfo' has been deprected.  Please use 'exportBundle'")
-  exportBundle.redcapApiConnection(rcon, date, label, meta_data,
-                                   users, instruments, events, arms, mappings,
-                                   version, ..., v.number = "")
+  exportBundle.redcapApiConnection(rcon, 
+                                   date, 
+                                   label, 
+                                   meta_data,
+                                   users, 
+                                   instruments, 
+                                   events, 
+                                   arms, 
+                                   mappings,
+                                   version, 
+                                   ..., 
+                                   v.number = "")
   
 }

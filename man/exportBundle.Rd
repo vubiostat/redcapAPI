@@ -2,25 +2,10 @@
 % Please edit documentation in R/exportBundle.R
 \name{exportBundle}
 \alias{exportBundle}
-\alias{exportBundle.redcapDbConnection}
 \alias{exportBundle.redcapApiConnection}
 \title{Perform a bundle of API calls.}
 \usage{
 exportBundle(
-  rcon,
-  date = TRUE,
-  label = TRUE,
-  meta_data = TRUE,
-  users = TRUE,
-  instruments = TRUE,
-  events = TRUE,
-  arms = TRUE,
-  mappings = TRUE,
-  version = TRUE,
-  ...
-)
-
-\method{exportBundle}{redcapDbConnection}(
   rcon,
   date = TRUE,
   label = TRUE,

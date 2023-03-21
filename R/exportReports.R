@@ -52,24 +52,28 @@
 #' 
 #' @export
 
-exportReports <- function(rcon, report_id, factors=TRUE, labels=TRUE, 
-                          dates=TRUE, drop=NULL, checkboxLabels=FALSE, ...)
+exportReports <- function(rcon, 
+                          report_id, 
+                          factors = TRUE, 
+                          labels = TRUE, 
+                          dates = TRUE, 
+                          drop = NULL,
+                          checkboxLabels = FALSE, 
+                          ...){
   UseMethod("exportReports")
-
-#' @rdname exportReports
-#' @export
-
-exportReports.redcapDbConnection <- function(rcon, report_id, factors=TRUE, labels=TRUE, 
-                                             dates=TRUE, drop=NULL, checkboxLabels=FALSE, ...){
-  message("Please accept my apologies.  The exportMappings method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")          
 }
 
 #' @rdname exportReports
 #' @export
 
-exportReports.redcapApiConnection <- function(rcon, report_id, factors = TRUE, labels = TRUE, 
-                                              dates = TRUE, drop = NULL, checkboxLabels = FALSE, ...,
+exportReports.redcapApiConnection <- function(rcon, 
+                                              report_id, 
+                                              factors = TRUE, 
+                                              labels = TRUE, 
+                                              dates = TRUE, 
+                                              drop = NULL, 
+                                              checkboxLabels = FALSE, 
+                                              ...,
                                               bundle = getOption("redcap_bundle"),
                                               error_handling = getOption("redcap_error_handling")){
   

@@ -49,32 +49,29 @@
 #' 
 #' @export
 
-exportPdf <- function(rcon, dir, filename = "redcap_forms_download", 
-                      record = NULL, events = NULL, 
-                      instruments = NULL, all_records = FALSE, ...)
+exportPdf <- function(rcon, 
+                      dir, 
+                      filename = "redcap_forms_download", 
+                      record = NULL, 
+                      events = NULL, 
+                      instruments = NULL, 
+                      all_records = FALSE, 
+                      ...){
   UseMethod("exportPdf")
-
-#' @rdname exportPdf
-#' @export
-
-exportPdf.redcapDbConnection <- 
-function(rcon, dir, filename = "redcap_forms_download", 
-         record = NULL, events = NULL,
-         instruments = NULL, all_records = FALSE, ...)
-{
-  message("Please accept my apologies.  The exportPdf method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname exportPdf
 #' @export
 
-exportPdf.redcapApiConnection <- 
-function(rcon, dir, filename = "redcap_forms_download",
-         record = NULL, events = NULL,
-         instruments = NULL, all_records = FALSE, ...,
-         error_handling = getOption("redcap_error_handling"))
-{
+exportPdf.redcapApiConnection <- function(rcon, 
+                                          dir, 
+                                          filename = "redcap_forms_download",
+                                          record = NULL, 
+                                          events = NULL,
+                                          instruments = NULL, 
+                                          all_records = FALSE, 
+                                          ...,
+                                          error_handling = getOption("redcap_error_handling")){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,

@@ -34,22 +34,18 @@
 #' 
 #' @export
 
-deleteRecords <- function(rcon, records, arm = NULL, ...){
+deleteRecords <- function(rcon, 
+                          records, 
+                          arm = NULL, ...){
   UseMethod("deleteRecords")
 }
 
 #' @rdname deleteRecords
 #' @export
 
-deleteRecords.redcapDbConnection <- function(rcon, records, arm = NULL, ...){
-  message("Please accept my apologies.  The deleteRecords method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname deleteRecords
-#' @export
-
-deleteRecords.redcapApiConnection <- function(rcon, records, arm = NULL, ...,
+deleteRecords.redcapApiConnection <- function(rcon, 
+                                              records, 
+                                              arm = NULL, ...,
                                               error_handling = getOption("redcap_error_handling")){
   
   coll <- checkmate::makeAssertCollection()
