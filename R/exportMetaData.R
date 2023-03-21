@@ -116,7 +116,7 @@ exportMetaData.redcapApiConnection <- function(rcon,
   response <- as.character(response)
   if (drop_utf8)
   {
-    response <- iconv(x, "utf8", "ASCII", sub = "")
+    response <- iconv(response, "utf8", "ASCII", sub = "")
   }
   
   utils::read.csv(text = response, 

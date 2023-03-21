@@ -25,6 +25,10 @@ user to set additional configurations for the API calls, such as
 certificates, ssl version, etc. For the majority of users, this does 
 not need to be altered.  See Details for more about this argument's 
 purpose and the \code{redcapAPI} wiki for specifics on its use.}
+
+\item{x}{\code{redcapConnection} object to be printed}
+
+\item{...}{arguments to pass to other methods}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 
