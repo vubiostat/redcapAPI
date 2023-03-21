@@ -1,5 +1,6 @@
 ## Changes in Version 2.5.0
 
+* Added a drop= argument to exportRecords and exportReports. These columns are dropped before returning.
 * Metadata is cached in the connection object. In addition to token, url, and config elements, the following are also made available:
    * metadata
    * arms
