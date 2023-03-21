@@ -14,9 +14,12 @@ exportUsers(rcon, ...)
   rcon,
   dates = TRUE,
   labels = TRUE,
+  form_rights = TRUE,
   ...,
   bundle = getOption("redcap_bundle"),
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -24,16 +27,29 @@ exportUsers(rcon, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{dates}{Logical. Indicates if the expiration date is converted to a
+\item{dates}{\code{logical(1)} Indicates if the expiration date is converted to a
 \code{POSIXct} object.}
 
-\item{labels}{Logical. Indicates if the data export and form access rights are
+\item{labels}{\code{logical(1)} Indicates if the data export and form access rights are
 converted to factor objects.}
+
+\item{form_rights}{\code{logical(1)} Indicates if the form rights should be 
+transformed to one column per form. The API-provided character string
+is always returned with the format [form_name]:[access_code] and a comma separating
+each form.}
 
 \item{bundle}{A \code{redcap_bundle} object.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame. The number of columns in the data frame will depend on your 

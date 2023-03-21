@@ -180,10 +180,12 @@ exportUsers.redcapApiConnection <- function(rcon,
   
   # Establish columns for the form rights ---------------------------
   if (form_rights){
-    FormAccess <- .exportUsers_separateFormAccess(Users$forms, 
+    FormAccess <- .exportUsers_separateFormAccess(rcon = rcon, 
+                                                  Users$forms, 
                                                   nrow = nrow(Users),
                                                   export = FALSE)
-    ExportAccess <- .exportUsers_separateFormAccess(Users$forms_export, 
+    ExportAccess <- .exportUsers_separateFormAccess(rcon = rcon, 
+                                                    form_access = Users$forms_export, 
                                                     nrow = nrow(Users), 
                                                     export = TRUE)
     Users <- 
@@ -210,7 +212,7 @@ exportUsers.redcapApiConnection <- function(rcon,
 
 # Unexported --------------------------------------------------------
 
-.exportUsers_separateFormAccess <- function(form_access, nrow, export = FALSE){
+.exportUsers_separateFormAccess <- function(rcon, form_access, nrow, export = FALSE){
   forms <- unique(rcon$metadata()$form_name)
   
   FormAccess <- replicate(rep(NA_character_, nrow), 

@@ -5,10 +5,12 @@
 #'   for the meta data to create a matrix of codes and their mapped 
 #'   labels. 
 #'   
-#' @param field_choice Either a \code{character(1)} giving the string of choices to be 
-#'   converted; or a \code{redcapApiConnection} object.
+#' @param object May be either a \code{character(1)} with the content of the 
+#'   field choices (i.e. \code{meta_data$select_choices_or_calculations}), 
+#'   or a \code{redcapConnection} object.
 #' @param field_name \code{character(1)} gives the field name for which to 
 #'   make the choice mapping.
+#' @param ... arguments to pass to other methods.
 #'   
 #' @return 
 #' Returns a matrix with two columns, \code{choice_value} and \code{choice_label}

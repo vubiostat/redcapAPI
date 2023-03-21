@@ -8,7 +8,6 @@
 #'   
 #' @param fields The current field names of interest
 #' @param meta_data The meta data data frame.
-#' @param version The REDCap version number.
 #' 
 #' @export
 
