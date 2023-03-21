@@ -13,7 +13,6 @@
 #'   certificates, ssl version, etc. For the majority of users, this does 
 #'   not need to be altered.  See Details for more about this argument's 
 #'   purpose and the \code{redcapAPI} wiki for specifics on its use.
-#' 
 #' @param x \code{redcapConnection} object to be printed
 #' @param ... arguments to pass to other methods
 #'   

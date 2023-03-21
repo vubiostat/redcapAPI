@@ -105,6 +105,7 @@ exportRecords_offline <- function(dataFile, metaDataFile,
                   meta_data = meta_data, 
                   factors = factors, 
                   dates = dates, 
+                  labels=labels,
                   checkboxLabels = checkboxLabels,
                   ...)
   

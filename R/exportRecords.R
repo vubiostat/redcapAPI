@@ -354,6 +354,7 @@ exportRecords.redcapApiConnection <-
                   meta_data = meta_data,
                   factors = factors,
                   dates = dates,
+                  labels = labels,
                   checkboxLabels = checkboxLabels,
                   ...)
 
