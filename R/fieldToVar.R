@@ -13,12 +13,16 @@
 #' @param dates Logical, determines if date variables are converted to POSIXct format
 #' @param checkboxLabels Logical, determines if checkbox variables are labeled as
 #'   "Checked" or using the checkbox label.  Only applicable when \code{factors = TRUE}
+#' @param labels Logical.  Determines if the variable labels are applied to 
+#'   the data frame.
 #' @param handlers List, Specify type conversion overrides for specific REDCap field types. 
 #'   E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the
 #'   datetime ordering directive from the tail is dropped. The following field
 #'   types are supported: date_, datetime_, datetime_seconds_, time_mm_ss, time,
 #'   float,number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 #'   checkbox, and form_complete.
+#' @param mChoice logical; defaults to TRUE. Convert checkboxes to mChoice if
+#'   Hmisc is installed.
 #' @param ..., additional arguments that are ignored. 
 #'   
 #' @details This function is called internally by \code{exportRecords} and 
@@ -30,13 +34,35 @@ fieldToVar <- function(records,
                        factors        = TRUE, 
                        dates          = TRUE,
                        checkboxLabels = FALSE,
+                       labels         = TRUE,
                        handlers=list(),
+                       mChoice        = NULL,
                        ...)
 { 
+  records_raw <- records
+  
+  # See if mChoice argument is passed, otherwise default to state of Hmisc
+  if("package:Hmisc" %in% search()) # Hmisc Loaded?
+  {
+    if(is.null(mChoice)) mChoice <- TRUE
+    # Otherwise do what user requests for mChoice
+  } else # Hmisc not loaded
+  {
+    if(is.null(mChoice)) 
+    {
+      mChoice <- FALSE
+    } else if(mChoice)
+    {
+      warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
+      mChoice <- FALSE
+    }
+  }
+  
+  recordnames <- names(records)
   for (i in seq_along(records))
   {
     # Establish basic info about field/record
-    field_name <- names(records)[i]
+    field_name <- recordnames[i]
     field_base <- gsub(pattern     = "___.+$",
                        replacement = "",
                        x           = field_name)
@@ -175,6 +201,37 @@ fieldToVar <- function(records,
         } # End of Records[[i]] if
     }) # End of withCallingHandlers
   } # End for loop
+  
+  if(mChoice)
+  {
+    # Convert checkboxes to mChoice if Hmisc is installed and requested
+    checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
+    for(i in seq_len(nrow(checkbox_meta)))
+    {
+      checkbox_fieldname <- checkbox_meta$field_name[i]
+      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
+      if(length(fields) > 0)
+      {
+        # FIXME: Issue-38 when merged will provide this as a function
+        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
+                           "\\s*,\\s*")
+        levels <- sapply(opts, function(x) x[1+labels])
+        # END FIXME
+        opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+        checked <- records_raw[,fields] != '1'
+        opts[which(checked,arr.ind=TRUE)] <- ""
+        z <- structure(
+          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+          label  = checkbox_fieldname,
+          levels = levels,
+          class  = c("mChoice", "labelled"))
+  
+        records[[checkbox_fieldname]] <- z
+      }
+    }
+
+  } # mChoice 
+  
   records
 }    
 
