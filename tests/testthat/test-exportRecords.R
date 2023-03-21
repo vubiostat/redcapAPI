@@ -36,6 +36,16 @@ test_that(
 )
 
 test_that(
+  "fields in the drop= arg are not returned", 
+  {
+    forms_to_drop <- c("treatment")
+    Records <- exportRecords(rcon, 
+                             drop = forms_to_drop)
+    expect_false("treatment" %in% names(Records))
+  }
+)
+
+test_that(
   "records returned only for designated records", 
   {
     records_to_get <- 1:3
