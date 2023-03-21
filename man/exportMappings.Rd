@@ -34,11 +34,9 @@ Retrieve a data frame giving the events-form mapping for a project.
 \details{
 The data frame that is returned shows the arm number, unique 
 event name, and forms mapped in a project.
-
-When this function is called for a classic project, a character string is
- returned giving the API error message, '400: You cannot export form-event 
- mappings for classic projects' but without casting an error in R. This is 
- by design and allows more flexible error checks in certain functions.
+ 
+If the project information reports that the project is not longitudinal, 
+a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{
 

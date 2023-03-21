@@ -19,7 +19,7 @@ exportRecords(
   survey = TRUE,
   dag = TRUE,
   checkboxLabels = FALSE,
-  colClasses = NA,
+  colClasses = character(0),
   ...
 )
 
@@ -35,7 +35,7 @@ exportRecords(
   survey = TRUE,
   dag = TRUE,
   checkboxLabels = FALSE,
-  colClasses = NA,
+  colClasses = character(0),
   ...
 )
 
@@ -51,7 +51,7 @@ exportRecords(
   survey = TRUE,
   dag = TRUE,
   checkboxLabels = FALSE,
-  colClasses = NA,
+  colClasses = character(0),
   ...,
   batch.size = -1,
   bundle = getOption("redcap_bundle"),

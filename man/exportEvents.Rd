@@ -50,6 +50,9 @@ neither of these conditions are satisfied, the API will return a message
 such as \code{ERROR: You cannot export arms for classic projects}, an 
 error message that isn't as descriptive of the nature of the problem as 
 we might like.
+
+If the project information reports that the project is not longitudinal, 
+a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{
 

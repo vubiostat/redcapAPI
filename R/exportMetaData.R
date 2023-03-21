@@ -20,6 +20,12 @@
 #' @param drop_utf8 \code{logical(1)}. In some cases, UTF-8 characters can 
 #'   pose problems for exporting the data dictionary.  Set this to \code{TRUE}
 #'   to replace any UTF-8 characters with empty characters.
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details A record of this export is placed in the REDCap logging page, 
 #' but the file that is exported is not stored in the database.
@@ -29,10 +35,6 @@
 #' 
 #' @section REDCap Version:
 #' 5.8.2+ (and earlier, but we don't know how much earlier)
-#' 
-#' @section Known REDCap Limitations: 
-#' The API doesn't respond to the \code{fields} and \code{forms} arguments.  It
-#' always returns the full data dictionary.
 #' 
 #' @author Jeffrey Horner
 #' 
@@ -53,48 +55,71 @@ exportMetaData.redcapDbConnection <-
 #' @rdname exportMetaData
 #' @export
 
-exportMetaData.redcapApiConnection <-
-function(rcon, fields=NULL, forms=NULL,
-         error_handling = getOption("redcap_error_handling"), ...,
-         drop_utf8 = FALSE)
-{
+exportMetaData.redcapApiConnection <- function(rcon, 
+                                               fields = character(0), 
+                                               forms = character(0),
+                                               error_handling = getOption("redcap_error_handling"), 
+                                               ...,
+                                               drop_utf8 = FALSE, 
+                                               config = list(), 
+                                               api_param = list()){
+  # Argument validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
   
-  massert(~ fields + forms,
-          fun = checkmate::assert_character,
-          fixed = list(null.ok = TRUE,
-                       add = coll))
+  checkmate::assert_character(x = fields, 
+                              add = coll)
+  
+  checkmate::assert_character(x = forms, 
+                              add = coll)
   
   checkmate::assert_logical(x = drop_utf8,
                             len = 1,
                             add = coll)
+
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
-  body <- list(token = rcon$token,
+  # Build the Body List ---------------------------------------------
+  body <- c(list(token = rcon$token,
                content = "metadata",
                format = "csv",
-               returnFormat = "csv")
-
-  if (!is.null(fields)) body[['fields']] <- fields
-  if (!is.null(forms)) body[['forms']] <- forms
- 
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
-
-  if (x$status_code != 200) return(redcap_error(x, error_handling))
+               returnFormat = "csv"), 
+            vectorToApiBodyList(fields, 
+                                parameter_name = "fields"), 
+            vectorToApiBodyList(forms, 
+                                parameter_name = "forms"))
   
-  x <- as.character(x)
+  body <- body[lengths(body) > 0]
+ 
+  # API Call --------------------------------------------------------
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200){
+    redcap_error(response, 
+                 error_handling = error_handling)
+  }
+  
+  # Post processing -------------------------------------------------
+  response <- as.character(response)
   if (drop_utf8)
   {
-    x <- iconv(x, "utf8", "ASCII", sub = "")
+    response <- iconv(response, "utf8", "ASCII", sub = "")
   }
-  utils::read.csv(text = x, 
-                  stringsAsFactors = FALSE, 
+  
+  utils::read.csv(text = response, 
+                  stringsAsFactors = FALSE,
                   na.strings = "")
 }

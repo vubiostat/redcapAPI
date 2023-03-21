@@ -3,7 +3,7 @@ context("deleteRecords")
 rcon <- redcapConnection(url = url, token = API_KEY)
 
 test_that("records can be deleted",{
-  rec <- exportRecords(rcon)
+  rec <- exportRecords(rcon, mChoice=FALSE)
   rows <- nrow(rec)
   
   rec <- rbind(rec[1,], rec[1,])
@@ -22,7 +22,7 @@ test_that("error when trying to delete something that doesn't exist",{
 })
 
 test_that("arm restrictions are honored",{
-  rec <- exportRecords(rcon)
+  rec <- exportRecords(rcon, mChoice=FALSE)
   rows <- nrow(rec)
   
   rec <- rec[1:2,]

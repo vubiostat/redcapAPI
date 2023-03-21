@@ -13,6 +13,8 @@
 #'   certificates, ssl version, etc. For the majority of users, this does 
 #'   not need to be altered.  See Details for more about this argument's 
 #'   purpose and the \code{redcapAPI} wiki for specifics on its use.
+#' @param x \code{redcapConnection} object to be printed
+#' @param ... arguments to pass to other methods
 #'   
 #' @details
 #' \code{redcapConnection} objects will retrieve and cache various forms of 
@@ -165,6 +167,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_projectInformation = function() !is.null(this_project), 
       flush_projectInformation = function() this_project <<- NULL, 
       refresh_projectInformation = function() this_project <<- getter("project"), 
+      push_projectInformation = function(push) this_project <<- push, 
       
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 

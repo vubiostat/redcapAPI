@@ -153,7 +153,7 @@ exportRecords <-
   function(rcon, factors = TRUE, fields = NULL, forms = NULL, records = NULL,
            events = NULL, labels = TRUE, dates = TRUE,
            survey = TRUE, dag = TRUE, checkboxLabels = FALSE, 
-           colClasses = NA, ...)
+           colClasses = character(0), ...)
     
     UseMethod("exportRecords")
 
@@ -164,7 +164,7 @@ exportRecords.redcapDbConnection <-
   function(rcon, factors = TRUE, fields = NULL, forms = NULL, records = NULL,
            events = NULL, labels = TRUE, dates = TRUE,
            survey = TRUE, dag = TRUE, checkboxLabels = FALSE, 
-           colClasses = NA, ...)
+           colClasses = character(0), ...)
   {
     message("Please accept my apologies.  The exportRecords method for redcapDbConnection objects\n",
             "has not yet been written.  Please consider using the API.")
@@ -177,7 +177,7 @@ exportRecords.redcapApiConnection <-
   function(rcon, factors = TRUE, fields = NULL, forms = NULL,
            records = NULL, events = NULL, labels = TRUE, dates = TRUE,
            survey = TRUE, dag = TRUE, checkboxLabels = FALSE,
-           colClasses = NA, ...,
+           colClasses = character(0), ...,
            batch.size = -1,
            bundle = getOption("redcap_bundle"),
            error_handling = getOption("redcap_error_handling"),
@@ -216,9 +216,17 @@ exportRecords.redcapApiConnection <-
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
                                         add = coll)
+  
+  if (is.list(colClasses)){
+    colClasses <- unlist(colClasses)
+  }
+  
+    checkmate::assert_character(x = colClasses, 
+                                names = "named", 
+                                add = coll)
 
   checkmate::reportAssertions(coll)
-
+  
   meta_data <- rcon$metadata()
   
   #* for purposes of the export, we don't need the descriptive fields.
@@ -293,8 +301,7 @@ exportRecords.redcapApiConnection <-
       # The subset prevents `[form]_complete` fields from
       # being included here.
       fields = field_names[field_names %in% meta_data$field_name],
-      meta_data = meta_data,
-      version = version)
+      meta_data = meta_data)
 
   # Identify the forms from which the chosen fields are found
   included_form <-
@@ -320,7 +327,7 @@ exportRecords.redcapApiConnection <-
   if (!is.null(forms)) body[['forms']] <- paste0(forms, collapse=",")
   if (!is.null(events)) body[['events']] <- paste0(events, collapse=",")
   if (!is.null(records)) body[['records']] <- paste0(records, collapse=",")
-
+  
   if (batch.size < 1){
     x <- unbatched(rcon = rcon,
                    body = body,
@@ -347,6 +354,7 @@ exportRecords.redcapApiConnection <-
                   meta_data = meta_data,
                   factors = factors,
                   dates = dates,
+                  labels = labels,
                   checkboxLabels = checkboxLabels,
                   ...)
 

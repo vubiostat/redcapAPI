@@ -94,8 +94,7 @@ exportRecords_offline <- function(dataFile, metaDataFile,
   }  
   
   suffixed <- checkbox_suffixes(fields = field_names,
-                                meta_data = meta_data, 
-                                version = version)
+                                meta_data = meta_data)
   
   
   x <- utils::read.csv(dataFile, 
@@ -106,6 +105,7 @@ exportRecords_offline <- function(dataFile, metaDataFile,
                   meta_data = meta_data, 
                   factors = factors, 
                   dates = dates, 
+                  labels=labels,
                   checkboxLabels = checkboxLabels,
                   ...)
   

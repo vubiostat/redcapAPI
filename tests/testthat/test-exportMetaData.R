@@ -41,8 +41,6 @@ test_that(
 test_that(
   "Return a data frame of only selected fields", 
   {
-    skip_if (TRUE, 
-             "exportMetaData is not responding to the fields argument. Review this test after correcting.")
     expect_data_frame(
       exportMetaData(rcon, 
                      fields = c("record_id", "date_dmy", "prereq_radio")), 
@@ -55,8 +53,6 @@ test_that(
 test_that(
   "Return a data frame of only selected forms", 
   {
-    skip_if (TRUE, 
-             "exportMetaData is not responding to the forms argument. Review this test after correcting.")
     expect_data_frame(
       exportMetaData(rcon, 
                      forms = c("fieldtovar_datetimes", "randomization")), 

@@ -12,9 +12,11 @@ exportArms(rcon, ...)
 
 \method{exportArms}{redcapApiConnection}(
   rcon,
-  arms = NULL,
+  arms = character(0),
   ...,
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -22,11 +24,19 @@ exportArms(rcon, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{arms}{A numeric vector or arm numbers to retrieve. In REDCap 6.5.0, 
+\item{arms}{\code{character} identifying the arm numbers to retrieve. In REDCap 6.5.0, 
 using this argument results in an empty data frame being returned.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame with two columns
@@ -48,6 +58,9 @@ neither of these conditions are satisfied, the API will return a message
 such as \code{ERROR: You cannot export arms for classic projects}, an 
 error message that isn't as descriptive of the nature of the problem as 
 we might like.
+
+If the project information reports that the project is not longitudinal, 
+a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{
 
@@ -59,19 +72,6 @@ NOTE: this only works for longitudinal projects.
 \section{REDCap Version}{
 
 5.8.2+
-}
-
-\section{Known REDCap Limitations}{
-
-In versions earlier than 5.9.15, providing a value to the \code{arms} argument
-had no effect and the entire data frame of arms is returned.
-
-This was fixed in version 5.9.15.  Sometime before 6.5.0, using the \code{arms}
-argument resulted in empty data frames being returned.
-
-In most cases, the number or arms is fairly small, so there is no real performance 
-benefit to only selecting a subset of the arms.  The safest course of action is 
-to export all of the arms (the default behavior)
 }
 
 \references{
