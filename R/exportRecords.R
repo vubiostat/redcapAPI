@@ -378,10 +378,7 @@ exportRecords.redcapApiConnection <-
   
   # drop
   if(length(drop)) {
-    todrop <- intersect(names(x), drop)
-    if(length(todrop)) {
-      x <- x[,!names(x) %in% todrop]
-    }
+    x <- x[,!names(x) %in% drop]
   } # end drop
   
   x
