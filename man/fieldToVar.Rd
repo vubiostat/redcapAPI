@@ -10,7 +10,7 @@ fieldToVar(
   factors = TRUE,
   dates = TRUE,
   checkboxLabels = FALSE,
-  labels = NULL,
+  labels = TRUE,
   handlers = list(),
   mChoice = NULL,
   ...
