@@ -1,5 +1,6 @@
 ## Changes in Version 2.5.0
 
+* Added a drop= argument to exportRecords and exportReports. These columns are dropped before returning.
 * Metadata is cached in the connection object. In addition to token, url, and config elements, the following are also made available:
    * metadata
    * arms
@@ -16,6 +17,11 @@ each of these has a companion function
 There are also flush_all and refresh_all methods.
 * New method: exportLogging
 * Fixed minor bugs in validations and improved documentation
+* Fixed bug in formating vectors for API calls in multiple places #33
+* Removed stringr and tidyr as dependencies
+* Removed unused version argument from checkbox_suffix
+* Fixed error thrown in export_users when labels=TRUE
+* Greatly expanded test coverage
 
 ## Changes in Version 2.4.2
 

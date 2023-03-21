@@ -151,8 +151,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                        export = FALSE)
   
   suffixed <- checkbox_suffixes(fields = meta_data$field_name,
-                                meta_data = meta_data, 
-                                version = version)
+                                meta_data = meta_data)
   
   form_names <- unique(meta_data$form_name)
   

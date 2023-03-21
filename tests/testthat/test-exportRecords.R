@@ -36,6 +36,16 @@ test_that(
 )
 
 test_that(
+  "fields in the drop= arg are not returned", 
+  {
+    forms_to_drop <- c("treatment")
+    Records <- exportRecords(rcon, 
+                             drop = forms_to_drop)
+    expect_false("treatment" %in% names(Records))
+  }
+)
+
+test_that(
   "records returned only for designated records", 
   {
     records_to_get <- 1:3
@@ -191,10 +201,12 @@ test_that(
   "Return an error if colClasses is not a named vector", 
   {
     local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            paste("Documentation claims that this is the expected type.", 
-                  "There is not argument validation, however.", 
-                  "A named list should also be acceptable"))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = list("character", "numeric", "character")))
+    
+    expect_error(exportRecords(rcon, 
+                               colClasses = c("character", "numeric", "numeric")))
   }
 )
 
@@ -208,17 +220,6 @@ test_that(
     expect_error(exportRecords(rcon, 
                                batch.size = "-1"), 
                  "'batch.size'[:] Must be of type 'integerish'")
-  }
-)
-
-test_that(
-  "Return an error if bundle is not a redcapBundle object", 
-  {
-    local_reproducible_output(width = 200)
-    skip_if(TRUE, 
-            "There is no argument validation on bundle. Address this test after fixing.")
-    expect_error(exportRecords(rcon, 
-                               bundle = "not a bundle"))
   }
 )
 

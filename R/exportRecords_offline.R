@@ -99,8 +99,7 @@ exportRecords_offline <- function(dataFile,
   }  
   
   suffixed <- checkbox_suffixes(fields = field_names,
-                                meta_data = meta_data, 
-                                version = version)
+                                meta_data = meta_data)
   
   
   x <- utils::read.csv(dataFile, 
@@ -111,6 +110,7 @@ exportRecords_offline <- function(dataFile,
                   meta_data = meta_data, 
                   factors = factors, 
                   dates = dates, 
+                  labels=labels,
                   checkboxLabels = checkboxLabels,
                   ...)
   
@@ -127,5 +127,12 @@ exportRecords_offline <- function(dataFile,
              },
              SIMPLIFY = FALSE)
   }
+  
+  
+  # drop
+  if(length(drop)) {
+    x <- x[!names(x) %in% drop]
+  } # end drop
+  
   x  
 }

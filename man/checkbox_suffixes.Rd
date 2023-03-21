@@ -4,14 +4,12 @@
 \alias{checkbox_suffixes}
 \title{Checkbox Suffixes}
 \usage{
-checkbox_suffixes(fields, meta_data, version)
+checkbox_suffixes(fields, meta_data)
 }
 \arguments{
 \item{fields}{The current field names of interest}
 
 \item{meta_data}{The meta data data frame.}
-
-\item{version}{The REDCap version number.}
 }
 \description{
 Checkbox variables return one vector of data for each option defined

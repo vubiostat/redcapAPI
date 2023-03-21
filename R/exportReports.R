@@ -16,6 +16,9 @@
 #'   is the label assigned to the level in the data dictionary. This option 
 #'   is only available after REDCap version 6.0.
 #' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
+#' @param drop An optional character vector of REDCap variable names to remove from the 
+#'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
+#'   It is OK for drop to contain variables not present; these names are ignored.
 #' @param ... Additional arguments to be passed between methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -141,6 +144,7 @@ exportReports.redcapApiConnection <- function(rcon,
                   meta_data = meta_data, 
                   factors = factors, 
                   dates = dates, 
+                  labels=labels,
                   checkboxLabels = checkboxLabels,
                   ...)
   
@@ -158,8 +162,7 @@ exportReports.redcapApiConnection <- function(rcon,
     field_names <- field_names[field_names %in% meta_data$field_name]
 
     suffixed <- checkbox_suffixes(fields = field_names,
-                                  meta_data = meta_data, 
-                                  version = version)
+                                  meta_data = meta_data)
 
     x[suffixed$name_suffix] <-
       mapply(nm = suffixed$name_suffix,
@@ -173,6 +176,11 @@ exportReports.redcapApiConnection <- function(rcon,
              },
              SIMPLIFY = FALSE)
   }
+  
+  # drop
+  if(length(drop)) {
+    x <- x[!names(x) %in% drop]
+  } # end drop
   
   x 
   

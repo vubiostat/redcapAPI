@@ -11,6 +11,7 @@ exportReports(
   factors = TRUE,
   labels = TRUE,
   dates = TRUE,
+  drop = NULL,
   checkboxLabels = FALSE,
   ...
 )
@@ -21,6 +22,7 @@ exportReports(
   factors = TRUE,
   labels = TRUE,
   dates = TRUE,
+  drop = NULL,
   checkboxLabels = FALSE,
   ...,
   bundle = getOption("redcap_bundle"),
@@ -39,6 +41,10 @@ is returned as numeric codes or labelled factors.}
 \item{labels}{Logical.  Determines if the variable labels are applied to the data frame.}
 
 \item{dates}{Logical. Determines if date variables are converted to POSIXlt format during the download.}
+
+\item{drop}{An optional character vector of REDCap variable names to remove from the 
+dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
+It is OK for drop to contain variables not present; these names are ignored.}
 
 \item{checkboxLabels}{Logical. Determines the format of labels in checkbox 
 variables.  If \code{FALSE} labels are applies as "Unchecked"/"Checked".  

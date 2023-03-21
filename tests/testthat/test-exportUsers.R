@@ -36,6 +36,18 @@ test_that(
 )
 
 test_that(
+  "Return an error if form_rights is not logical(1)", 
+  {
+    expect_error(exportUsers(rcon, 
+                             form_rights = c(TRUE, FALSE)), 
+                 "'form_rights'[:] Must have length 1")
+    expect_error(exportUsers(rcon, 
+                             form_rights = "TRUE"), 
+                 "'form_rights'[:] Must be of type 'logical'")
+  }
+)
+
+test_that(
   "Return an error if bundle is not a redcapBundle", 
   {
     expect_error(exportUsers(rcon, 
@@ -44,13 +56,25 @@ test_that(
   }
 )
 
+test_that(
+  "Return an error if config or api_param are not named lists", 
+  {
+    expect_error(exportUsers(rcon, 
+                             config = list("parameter")), 
+                 "'config'[:] Must have names")
+    expect_error(exportUsers(rcon, 
+                             api_param = list("parameter")), 
+                 "'api_param'[:] Must have names")
+  }
+)
+
 
 test_that(
   "Returns a data frame when called with defaults", 
   {
-    skip_if(TRUE, 
-            "There is an error when labels = TRUE. Revisit this test when corrected.")
-    expect_data_frame(exportUsers(rcon))
+    User <- exportUsers(rcon)
+    expect_data_frame(User)
+    expect_true(ncol(User) > 36)
   }
 )
 
@@ -58,8 +82,7 @@ test_that(
   "Returns a data frame with dates = FALSE", 
   {
     expect_data_frame(exportUsers(rcon, 
-                                  dates = FALSE, 
-                                  labels = FALSE))
+                                  dates = FALSE))
   }
 )
 
@@ -71,3 +94,10 @@ test_that(
   }
 )
 
+test_that(
+  "Returns a data frame with form_rights = FALSE", 
+  {
+    expect_data_frame(exportUsers(rcon,  
+                                  form_rights = FALSE))
+  }
+)

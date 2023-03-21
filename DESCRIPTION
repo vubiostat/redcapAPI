@@ -32,11 +32,9 @@ Imports:
     chron,
     httr,
     labelVector,
-    lubridate,
-    stringr,
-    tidyr
+    lubridate
 LazyLoad: yes
-Suggests: testthat (>= 3.0.0), getPass, keyring
+Suggests: testthat (>= 3.0.0), getPass, keyring, Hmisc
 URL: https://github.com/vubiostat/redcapAPI,https://projectredcap.org
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8
