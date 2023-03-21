@@ -3,7 +3,7 @@
 
 exportRecords_offline <- function(dataFile, metaDataFile, 
                                   factors = TRUE, fields = NULL,
-                                  forms=NULL, labels = TRUE,
+                                  forms=NULL, labels = TRUE, drop = NULL,
                                   dates = TRUE, checkboxLabels = FALSE, 
                                   colClasses = NA,
                                   ..., meta_data)
@@ -122,5 +122,12 @@ exportRecords_offline <- function(dataFile, metaDataFile,
              },
              SIMPLIFY = FALSE)
   }
+  
+  
+  # drop
+  if(length(drop)) {
+    x <- x[,!names(x) %in% drop]
+  } # end drop
+  
   x  
 }

@@ -16,6 +16,9 @@
 #'   is the label assigned to the level in the data dictionary. This option 
 #'   is only available after REDCap version 6.0.
 #' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
+#' @param drop An optional character vector of REDCap variable names to remove from the 
+#'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
+#'   It is OK for drop to contain variables not present; these names are ignored.
 #' @param ... Additional arguments to be passed between methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -50,14 +53,14 @@
 #' @export
 
 exportReports <- function(rcon, report_id, factors=TRUE, labels=TRUE, 
-                          dates=TRUE, checkboxLabels=FALSE, ...)
+                          dates=TRUE, drop=NULL, checkboxLabels=FALSE, ...)
   UseMethod("exportReports")
 
 #' @rdname exportReports
 #' @export
 
 exportReports.redcapDbConnection <- function(rcon, report_id, factors=TRUE, labels=TRUE, 
-                                             dates=TRUE, checkboxLabels=FALSE, ...){
+                                             dates=TRUE, drop=NULL, checkboxLabels=FALSE, ...){
   message("Please accept my apologies.  The exportMappings method for redcapDbConnection objects\n",
           "has not yet been written.  Please consider using the API.")          
 }
@@ -66,7 +69,7 @@ exportReports.redcapDbConnection <- function(rcon, report_id, factors=TRUE, labe
 #' @export
 
 exportReports.redcapApiConnection <- function(rcon, report_id, factors = TRUE, labels = TRUE, 
-                                              dates = TRUE, checkboxLabels = FALSE, ...,
+                                              dates = TRUE, drop = NULL, checkboxLabels = FALSE, ...,
                                               bundle = getOption("redcap_bundle"),
                                               error_handling = getOption("redcap_error_handling")){
   
@@ -171,6 +174,11 @@ exportReports.redcapApiConnection <- function(rcon, report_id, factors = TRUE, l
              },
              SIMPLIFY = FALSE)
   }
+  
+  # drop
+  if(length(drop)) {
+    x <- x[,!names(x) %in% drop]
+  } # end drop
   
   x 
   

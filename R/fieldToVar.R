@@ -35,7 +35,7 @@ fieldToVar <- function(records,
                        dates          = TRUE,
                        checkboxLabels = FALSE,
                        labels         = TRUE,
-                       handlers=list(),
+                       handlers       =list(),
                        mChoice        = NULL,
                        ...)
 { 
