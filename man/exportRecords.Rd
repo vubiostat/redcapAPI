@@ -51,7 +51,6 @@ exportRecords_offline(
   fields = NULL,
   forms = NULL,
   labels = TRUE,
-  drop = NULL,
   dates = TRUE,
   checkboxLabels = FALSE,
   colClasses = NA,
