@@ -23,6 +23,8 @@
 #'   checkbox, and form_complete.
 #' @param mChoice logical; defaults to TRUE. Convert checkboxes to mChoice if
 #'   Hmisc is installed.
+#' @param drop An optional character vector of REDCap variable names to remove from the 
+#'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")}
 #' @param ..., additional arguments that are ignored. 
 #'   
 #' @details This function is called internally by \code{exportRecords} and 
@@ -35,8 +37,9 @@ fieldToVar <- function(records,
                        dates          = TRUE,
                        checkboxLabels = FALSE,
                        labels         = TRUE,
-                       handlers=list(),
+                       handlers       =list(),
                        mChoice        = NULL,
+                       drop           = NULL,
                        ...)
 { 
   records_raw <- records
@@ -231,6 +234,15 @@ fieldToVar <- function(records,
     }
 
   } # mChoice 
+  
+  
+  # drop
+  if(length(drop)) {
+    todrop <- intersect(names(records), drop)
+    if(length(todrop)) {
+      records[,!names(records) %in% todrop]
+    }
+  } # end drop
   
   records
 }    

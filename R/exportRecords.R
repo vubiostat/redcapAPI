@@ -28,7 +28,7 @@
 #' @param survey specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-#'   If you do not pass in this flag, it will default to "false". If set to 
+#'   If you do not pass in this flag, it will default to "true". If set to 
 #'   "true", it will return the redcap_survey_identifier field and also the 
 #'   survey timestamp field for a particular survey when at least 
 #'   one field from that survey is being exported. NOTE: If the survey 
