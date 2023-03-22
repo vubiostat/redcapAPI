@@ -2,13 +2,10 @@
 % Please edit documentation in R/deleteArms.R
 \name{deleteArms}
 \alias{deleteArms}
-\alias{deleteArms.redcapDbConnection}
 \alias{deleteArms.redcapApiConnection}
 \title{Delete Arms From a Project}
 \usage{
 deleteArms(rcon, arms, ...)
-
-\method{deleteArms}{redcapDbConnection}(rcon, arms, ...)
 
 \method{deleteArms}{redcapApiConnection}(
   rcon,

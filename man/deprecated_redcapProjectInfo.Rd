@@ -4,24 +4,9 @@
 \alias{deprecated_redcapProjectInfo}
 \alias{redcapProjectInfo}
 \alias{redcapProjectInfo.redcapApiConnection}
-\alias{redcapProjectInfo.redcapDbConnection}
 \title{Deprecated Functions}
 \usage{
 redcapProjectInfo(
-  rcon,
-  date = TRUE,
-  label = TRUE,
-  meta_data = TRUE,
-  users = TRUE,
-  instruments = TRUE,
-  events = TRUE,
-  arms = TRUE,
-  mappings = TRUE,
-  version = TRUE,
-  ...
-)
-
-\method{redcapProjectInfo}{redcapDbConnection}(
   rcon,
   date = TRUE,
   label = TRUE,

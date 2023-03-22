@@ -35,20 +35,15 @@
 #' @export
 
 
-exportVersion <- function(rcon, ...) UseMethod("exportVersion")
-
-#' @rdname exportVersion
-#' @export
-
-exportVersion.redcapDbConnection <- function(rcon, ...){
-  message("Please accept my apologies.  The exportVersion method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
+exportVersion <- function(rcon, ...){
+  UseMethod("exportVersion")
 }
 
 #' @rdname exportVersion
 #' @export
 
-exportVersion.redcapApiConnection <- function(rcon, ...,
+exportVersion.redcapApiConnection <- function(rcon, 
+                                              ...,
                                               error_handling = getOption("redcap_error_handling")){
   coll <- checkmate::makeAssertCollection()
   

@@ -53,23 +53,18 @@
 #' 
 #' @export
 
-exportEvents <- function(rcon, ...) UseMethod("exportEvents")
-
-#' @rdname exportEvents
-#' @export
-
-exportEvents.redcapDbConnection <- function(rcon, arms = NULL, ...){
-  message("Please accept my apologies.  The exportArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
+exportEvents <- function(rcon, 
+                         ...){
+  UseMethod("exportEvents")
 }
 
 #' @rdname exportEvents
 #' @export
 
-exportEvents.redcapApiConnection <- 
-  function(rcon, arms = NULL, ...,
-           error_handling = getOption("redcap_error_handling"))
-{
+exportEvents.redcapApiConnection <- function(rcon, 
+                                             arms = NULL, 
+                                             ...,
+                                             error_handling = getOption("redcap_error_handling")){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,

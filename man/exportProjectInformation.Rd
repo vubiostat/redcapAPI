@@ -3,12 +3,9 @@
 \name{exportProjectInformation}
 \alias{exportProjectInformation}
 \alias{exportProjectInformation.redcapApiConnection}
-\alias{exportProjectInformation.redcapDbConnection}
 \title{Exports the Project Information}
 \usage{
 exportProjectInformation(rcon, ...)
-
-\method{exportProjectInformation}{redcapDbConnection}(rcon, ...)
 
 \method{exportProjectInformation}{redcapApiConnection}(
   rcon,

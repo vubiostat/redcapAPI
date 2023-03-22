@@ -1,12 +1,17 @@
 #' @rdname exportRecords
 #' @export
 
-exportRecords_offline <- function(dataFile, metaDataFile, 
-                                  factors = TRUE, fields = NULL,
-                                  forms=NULL, labels = TRUE, drop = NULL,
-                                  dates = TRUE, checkboxLabels = FALSE, 
+exportRecords_offline <- function(dataFile, 
+                                  metaDataFile, 
+                                  factors = TRUE, 
+                                  fields = NULL,
+                                  forms=NULL, 
+                                  labels = TRUE,
+                                  dates = TRUE, 
+                                  checkboxLabels = FALSE, 
                                   colClasses = NA,
-                                  ..., meta_data)
+                                  ..., 
+                                  meta_data)
 {
   if (!missing(meta_data)){
     warning("Argument `meta_data` has been deprecated. Please use `metaDataFile` instead.")

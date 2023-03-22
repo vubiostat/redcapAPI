@@ -2,22 +2,10 @@
 % Please edit documentation in R/exportReports.R
 \name{exportReports}
 \alias{exportReports}
-\alias{exportReports.redcapDbConnection}
 \alias{exportReports.redcapApiConnection}
 \title{Export Reports from a REDCap Database}
 \usage{
 exportReports(
-  rcon,
-  report_id,
-  factors = TRUE,
-  labels = TRUE,
-  dates = TRUE,
-  drop = NULL,
-  checkboxLabels = FALSE,
-  ...
-)
-
-\method{exportReports}{redcapDbConnection}(
   rcon,
   report_id,
   factors = TRUE,

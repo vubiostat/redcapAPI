@@ -16,23 +16,20 @@
 #' @author Paddy Tobias
 #' @export
 
-exportSurveyParticipants <- function(rcon, instrument, event, ...){
+exportSurveyParticipants <- function(rcon, 
+                                     instrument, 
+                                     event, ...){
   UseMethod("exportSurveyParticipants")
 }
 
 #' @rdname exportSurveyParticipants
 #' @export
 
-exportSurveyParticipants.redcapDbConnection <- function(rcon, instrument, event, ...){
-  message("Please accept my apologies.  The importArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname exportSurveyParticipants
-#' @export
-
-exportSurveyParticipants.redcapApiConnection <- function(rcon, instrument, event, ...,
-                                    error_handling = getOption("redcap_error_handling")){
+exportSurveyParticipants.redcapApiConnection <- function(rcon, 
+                                                         instrument, 
+                                                         event,
+                                                         ...,
+                                                         error_handling = getOption("redcap_error_handling")){
   .params <- list(token=rcon$token, 
                   instrument = instrument,
                   event = event,

@@ -72,40 +72,38 @@
 #' \url{https://github.com/vubiostat/redcapAPI/wiki/REDCap-API-Parameters}
 #' @export
 
-allocationTable <- function(rcon, random, strata = NULL, 
-                            group = NULL, dag.id = NULL, 
-                            replicates, block.size, 
+allocationTable <- function(rcon, 
+                            random, 
+                            strata = NULL, 
+                            group = NULL, 
+                            dag.id = NULL, 
+                            replicates, 
+                            block.size, 
                             block.size.shift = 0,
-                            seed.dev = NULL, seed.prod = NULL,  
+                            seed.dev = NULL, 
+                            seed.prod = NULL,  
                             bundle = NULL, 
-                            weights = NULL, ...)
+                            weights = NULL, 
+                            ...){
   UseMethod("allocationTable")
-
-#' @rdname allocationTable
-#' @export
-
-allocationTable.redcapDbConnection <- function(rcon, random, strata = NULL, 
-                                               group = NULL, dag.id = NULL, 
-                                               replicates, block.size, 
-                                               block.size.shift = 0,
-                                               seed.dev = NULL, seed.prod = NULL,  
-                                               bundle = NULL, 
-                                               weights = c(1, 1), ...){
-  message("Please accept my apologies.  The exportUsers method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
 }
 
 #' @rdname allocationTable
 #' @export
 
-allocationTable.redcapApiConnection <- function(rcon, random, strata = NULL, 
-                                                group = NULL, dag.id = NULL, 
-                                                replicates, block.size, 
+allocationTable.redcapApiConnection <- function(rcon, 
+                                                random, 
+                                                strata = NULL, 
+                                                group = NULL, 
+                                                dag.id = NULL, 
+                                                replicates, 
+                                                block.size, 
                                                 block.size.shift = 0,
-                                                seed.dev = NULL, seed.prod = NULL,  
+                                                seed.dev = NULL, 
+                                                seed.prod = NULL,  
                                                 bundle = NULL, 
-                                                weights = c(1, 1), ...)
-{
+                                                weights = c(1, 1), 
+                                                ...){
   if (!is.na(match("proj", names(list(...)))))
   {
     message("The 'proj' argument is deprecated.  Please use 'bundle' instead")

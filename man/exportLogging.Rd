@@ -2,22 +2,10 @@
 % Please edit documentation in R/exportLogging.R
 \name{exportLogging}
 \alias{exportLogging}
-\alias{exportLogging.redcapDbConnection}
 \alias{exportLogging.redcapApiConnection}
 \title{Export Logging Records}
 \usage{
 exportLogging(
-  rcon,
-  logtype = character(0),
-  user = character(0),
-  record = character(0),
-  dag = character(0),
-  beginTime = .POSIXct(character(0)),
-  endTime = .POSIXct(character(0)),
-  ...
-)
-
-\method{exportLogging}{redcapDbConnection}(
   rcon,
   logtype = character(0),
   user = character(0),

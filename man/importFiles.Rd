@@ -2,23 +2,10 @@
 % Please edit documentation in R/importFiles.R
 \name{importFiles}
 \alias{importFiles}
-\alias{importFiles.redcapDbConnection}
 \alias{importFiles.redcapApiConnection}
 \title{Imports a File to REDCap to Attach to a Record}
 \usage{
 importFiles(
-  rcon,
-  file,
-  record,
-  field,
-  event,
-  overwrite = TRUE,
-  ...,
-  bundle = NULL,
-  repeat_instance = NULL
-)
-
-\method{importFiles}{redcapDbConnection}(
   rcon,
   file,
   record,

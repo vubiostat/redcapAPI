@@ -38,20 +38,18 @@
 #' 
 #' @export 
 
-exportMappings <- function(rcon, arms, ...) UseMethod("exportMappings")
-
-#' @rdname exportMappings
-#' @export
-
-exportMappings.redcapDbConnection <- function(rcon, arms, ...){
-  message("Please accept my apologies.  The exportMappings method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
+exportMappings <- function(rcon, 
+                           arms, 
+                           ...){
+  UseMethod("exportMappings")
 }
 
 #' @rdname exportMappings
 #' @export
 
-exportMappings.redcapApiConnection <- function(rcon, arms = NULL, ...,
+exportMappings.redcapApiConnection <- function(rcon, 
+                                               arms = NULL, 
+                                               ...,
                                                error_handling = getOption("redcap_error_handling")){
   coll <- checkmate::makeAssertCollection()
   

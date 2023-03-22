@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportNextRecordName.R
 \name{exportNextRecordName}
 \alias{exportNextRecordName}
-\alias{exportNextRecordName.redcapDbConnection}
 \alias{exportNextRecordName.redcapApiConnection}
 \title{Generate Next Record Name from a REDCap Database}
 \usage{
 exportNextRecordName(rcon, ...)
-
-\method{exportNextRecordName}{redcapDbConnection}(rcon, ...)
 
 \method{exportNextRecordName}{redcapApiConnection}(
   rcon,

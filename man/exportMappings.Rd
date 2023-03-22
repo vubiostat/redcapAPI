@@ -2,13 +2,10 @@
 % Please edit documentation in R/exportMappings.R
 \name{exportMappings}
 \alias{exportMappings}
-\alias{exportMappings.redcapDbConnection}
 \alias{exportMappings.redcapApiConnection}
 \title{Exports the Event-Form Mappings for a Project}
 \usage{
 exportMappings(rcon, arms, ...)
-
-\method{exportMappings}{redcapDbConnection}(rcon, arms, ...)
 
 \method{exportMappings}{redcapApiConnection}(
   rcon,

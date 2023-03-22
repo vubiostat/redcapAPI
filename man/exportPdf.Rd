@@ -2,22 +2,10 @@
 % Please edit documentation in R/exportPDF.R
 \name{exportPdf}
 \alias{exportPdf}
-\alias{exportPdf.redcapDbConnection}
 \alias{exportPdf.redcapApiConnection}
 \title{Export PDF file of Data Collection Instruments (either as blank or with data)}
 \usage{
 exportPdf(
-  rcon,
-  dir,
-  filename = "redcap_forms_download",
-  record = NULL,
-  events = NULL,
-  instruments = NULL,
-  all_records = FALSE,
-  ...
-)
-
-\method{exportPdf}{redcapDbConnection}(
   rcon,
   dir,
   filename = "redcap_forms_download",
