@@ -2,20 +2,10 @@
 % Please edit documentation in R/genericApiCall.R
 \name{genericApiCall}
 \alias{genericApiCall}
-\alias{genericApiCall.redcapDbConnection}
 \alias{genericApiCall.redcapApiConnection}
 \title{Generic Interface the REDCap API.}
 \usage{
 genericApiCall(
-  rcon,
-  content,
-  make_data_frame = TRUE,
-  colClasses = NA,
-  returnFormat = "csv",
-  ...
-)
-
-\method{genericApiCall}{redcapDbConnection}(
   rcon,
   content,
   make_data_frame = TRUE,
