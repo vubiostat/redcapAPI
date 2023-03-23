@@ -58,5 +58,5 @@ This method allows you to export a list of all files and
   file will have an associated doc_id number.
 }
 \author{
-Benjamin Nutter
+Cole Beck
 }

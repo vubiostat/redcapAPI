@@ -48,3 +48,13 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
     "random_setup", 
     "random_dashboard", 
     "random_perform")
+
+# This is used for File Repository methods. Some calls result in a
+# result of an empty string or an error. At times we prefer to return
+# the empty frame to maintain consistency in outputs with recursive calls
+FILE_REPOSITORY_EMPTY_FRAME <- 
+  data.frame(folder_id = numeric(0), 
+             doc_id = numeric(0), 
+             name = character(0), 
+             parent_folder = numeric(0),
+             stringsAsFactors = FALSE)

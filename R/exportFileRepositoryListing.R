@@ -129,11 +129,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
     response$parent_folder <- rep(parent, 
                                   nrow(response))
   } else {
-    response <- data.frame(folder_id = numeric(0), 
-                           doc_id = numeric(0), 
-                           name = character(0), 
-                           parent_folder = numeric(0),
-                           stringsAsFactors = FALSE)
+    response <- FILE_REPOSITORY_EMPTY_FRAME # defined in constants.R
   }
   response
 }
