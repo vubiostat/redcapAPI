@@ -122,7 +122,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "version" = exportVersion(rc), 
            "project" = exportProjectInformation(rc), 
            "instrument" = exportInstruments(rc), 
-           "fileRepo" = exportFileRepositoryListing(rc),
+           "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            NULL)
   }
   

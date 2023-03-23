@@ -106,7 +106,8 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   # Recursive Call --------------------------------------------------
   
   if(recursive) {
-    FileRepository <- .fileRepositoryRecursive(FileRepository)
+    FileRepository <- .fileRepositoryRecursive(FileRepository, 
+                                               rcon = rcon)
   }
   
   FileRepository
@@ -134,7 +135,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   response
 }
 
-.fileRepositoryRecursive <- function(FileRepository){
+.fileRepositoryRecursive <- function(FileRepository, rcon){
   # Get folder IDs
   fids <- FileRepository$folder_id  
   fids <- fids[!is.na(fids)]
