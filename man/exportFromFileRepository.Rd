@@ -43,6 +43,10 @@ see \code{\link{redcap_error}}}
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
+\value{
+Invisibly returns a \code{data.frame} with the directory and 
+  filename of the saved file.
+}
 \description{
 This method allows you to download a single file stored in the 
   File Repository by providing the file's \code{doc_id number}. For options

@@ -24,6 +24,9 @@
 #'   
 #' @author Benjamin Nutter
 #' 
+#' @return Invisibly returns a \code{data.frame} with the directory and 
+#'   filename of the saved file.
+#' 
 #' @export
 
 exportFromFileRepository <- function(rcon, 
@@ -112,4 +115,6 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
   message(sprintf("File Saved: %s", 
                   file.path(ExportedFile$directory, 
                             ExportedFile$filename)))
+  
+  return(invisible(ExportedFile))
 }
