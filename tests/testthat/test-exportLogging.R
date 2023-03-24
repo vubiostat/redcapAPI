@@ -20,6 +20,7 @@ test_that(
 test_that(
   "Return an error when log_type is not one of event types",
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     logtype = "abc"), 
@@ -32,6 +33,7 @@ test_that(
 test_that(
   "Return an error when user is not character", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     user = 1:2), 
@@ -44,6 +46,7 @@ test_that(
 test_that(
   "Return an error when dag is not a character", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     dag = 1:2), 
@@ -56,6 +59,7 @@ test_that(
 test_that(
   "Return an error when beginTime is not POSIXct", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     beginTime = "2023-01-01 00:00:00"), 
@@ -68,6 +72,7 @@ test_that(
 test_that(
   "Return an error when beginTime has length > 1", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     beginTime = rep(Sys.time(), 2)), 
@@ -80,6 +85,7 @@ test_that(
 test_that(
   "Return an error when endTime is not POSIXct", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     endTime = "2023-01-01 00:00:00"), 
@@ -92,6 +98,7 @@ test_that(
 test_that(
   "Return an error when endTime has length > 1", 
   {
+    local_reproducible_output(width = 200)
     expect_error(
       exportLogging(rcon, 
                     endTime = rep(Sys.time(), 2)), 

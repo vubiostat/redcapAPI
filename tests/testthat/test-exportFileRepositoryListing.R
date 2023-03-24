@@ -54,6 +54,7 @@ test_that(
 test_that(
   "Return an error if config or api_param are not named lists", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportFileRepositoryListing(rcon, 
                                              config = list("parameter")), 
                  "'config'[:] Must have names")

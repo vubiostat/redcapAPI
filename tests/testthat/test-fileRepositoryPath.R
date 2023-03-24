@@ -30,6 +30,7 @@ test_that(
 test_that(
   "Returns an error if doc_id is not integerish(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fileRepositoryPath(doc_id = c(1, 2), 
                                     fileRepo = FileRepository), 
                  "'doc_id'[:] Must have length <= 1")
@@ -42,6 +43,7 @@ test_that(
 test_that(
   "Returns an error if folder_id is not integerish(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fileRepositoryPath(folder_id = c(1, 2), 
                                     fileRepo = FileRepository), 
                  "'folder_id'[:] Must have length <= 1")
@@ -54,6 +56,7 @@ test_that(
 test_that(
   "Returns an error if both doc_id and folder_id have positive length", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fileRepositoryPath(folder_id = 1, 
                                     doc_id = 2, 
                                     fileRepo = FileRepository), 

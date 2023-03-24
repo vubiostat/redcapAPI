@@ -58,3 +58,11 @@ FILE_REPOSITORY_EMPTY_FRAME <-
              name = character(0), 
              parent_folder = numeric(0),
              stringsAsFactors = FALSE)
+
+# This is used for cases when an import/export/delete to the file repository
+# results in no changes and an empty frame is needed for the return
+
+FILE_IMPORT_EXPORT_EMPTY_FRAME <- 
+  data.frame(directory = character(0), 
+             filename = character(0), 
+             stringsAsFactors = FALSE)
