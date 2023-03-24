@@ -14,6 +14,8 @@
 #' @param role_id \code{integerish(0/1)} The ID of a role. If provided, 
 #'   access to the folder will be restricted to users with that role.
 #' @param ... Additional arguments to be passed between methods
+#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
+#'   File Repository data on \code{rcon} will be refreshed. 
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
