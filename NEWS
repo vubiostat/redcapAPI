@@ -1,5 +1,7 @@
 ## Changes in Version 2.5.0
 
+* IMPORTANT: The upcoming 3.0.0 release will be a breaking change for exportRecords. This is needed for full inversion of control to the user over type casting.
+* Fully removed deprecated redcapDbConnection
 * Added a drop= argument to exportRecords and exportReports. These columns are dropped before returning.
 * Metadata is cached in the connection object. In addition to token, url, and config elements, the following are also made available:
    * metadata
@@ -22,6 +24,7 @@ There are also flush_all and refresh_all methods.
 * Removed unused version argument from checkbox_suffix
 * Fixed error thrown in export_users when labels=TRUE
 * Greatly expanded test coverage
+* mChoice class addition if Hmisc is installed
 
 ## Changes in Version 2.4.2
 
