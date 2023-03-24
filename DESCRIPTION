@@ -13,7 +13,8 @@ Authors@R: c(
     person("Jeffrey", "Horner", role = "aut"),
     person("Will", "Gray", role = "ctb"),
     person("Jeremy", "Stephens", role = "ctb"), 
-    person("Marcus", "Lehr", role = "ctb", email = "marcus.j.lehr@gmail.com"))
+    person("Marcus", "Lehr", role = "ctb", email = "marcus.j.lehr@gmail.com"), 
+    person("Cole", "Beck", role = "ctb"))
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
