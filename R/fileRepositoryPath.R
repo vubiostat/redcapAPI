@@ -55,10 +55,20 @@ fileRepositoryPath <- function(doc_id = numeric(0),
   # the top-level folder.
   parent_id <- Path$parent_folder
   
+  iter <- 0
+  
   while(parent_id != "top-level"){
     next_level <- fileRepo[fileRepo$folder_id %in% Path$parent_folder[1], ]
     Path <- rbind(next_level, Path)
     parent_id <- Path$parent_folder[1]
+    
+    # When the File Repository isn't recursive, we might not ever reach
+    # top-level. This breaks the loop if it tries to run more times than
+    # there are rows in the fileRepo.
+    iter <- iter + 1
+    if (iter > nrow(fileRepo)){
+      break 
+    }
   }
 
   # construct the file path.

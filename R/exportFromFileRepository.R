@@ -58,6 +58,7 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
   
   checkmate::assert_integerish(x = doc_id, 
                                len = 1, 
+                               any.missing = FALSE,
                                add = coll)
   
   checkmate::assert_character(x = dir, 

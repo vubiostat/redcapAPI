@@ -58,6 +58,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   
   checkmate::assert_integerish(x = folder_id, 
                                max.len = 1, 
+                               any.missing = FALSE,
                                add = coll)
   
   checkmate::assert_logical(x = recursive, 

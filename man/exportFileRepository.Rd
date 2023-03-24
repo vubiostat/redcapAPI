@@ -35,6 +35,10 @@ download. If length 0, defaults to the top-level directory.}
 \item{dir}{\code{character(1)}. A directory on the local system to which 
 the file is to be saved. Defaults to the working directory.}
 
+\item{dir_create}{\code{logical(1)}. Create the directory \code{dir} if it 
+does not already exist. Defaults to \code{FALSE}. If \code{dir} does 
+not exist and \code{dir_create = FALSE}, an error is thrown.}
+
 \item{recursive}{\code{logical(1)}. If \code{TRUE}, export all subfolders 
 and their files as well}
 
@@ -50,10 +54,6 @@ see \code{\link{redcap_error}}}
 \item{api_param}{\code{list} Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
-
-\item{di_create}{\code{logical(1)}. Create the directory \code{dir} if it 
-does not already exist. Defaults to \code{FALSE}. If \code{dir} does 
-not exist and \code{dir_create = FALSE}, an error is thrown.}
 }
 \value{
 Returns a data frame listing the files that were downloaded and the 

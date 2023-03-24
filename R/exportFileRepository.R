@@ -11,7 +11,7 @@
 #'   download. If length 0, defaults to the top-level directory.
 #' @param dir \code{character(1)}. A directory on the local system to which 
 #'   the file is to be saved. Defaults to the working directory.
-#' @param di_create \code{logical(1)}. Create the directory \code{dir} if it 
+#' @param dir_create \code{logical(1)}. Create the directory \code{dir} if it 
 #'   does not already exist. Defaults to \code{FALSE}. If \code{dir} does 
 #'   not exist and \code{dir_create = FALSE}, an error is thrown.
 #' @param recursive \code{logical(1)}. If \code{TRUE}, export all subfolders 
@@ -65,6 +65,7 @@ exportFileRepository.redcapApiConnection <- function(rcon,
   
   checkmate::assert_integerish(x = folder_id, 
                                max.len = 1, 
+                               any.missing = FALSE,
                                add = coll)
   
   checkmate::assert_character(x = dir, 
