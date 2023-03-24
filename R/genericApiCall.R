@@ -37,20 +37,6 @@ genericApiCall <- function(rcon,
 #' @rdname genericApiCall
 #' @export
 
-genericApiCall.redcapDbConnection <- function(rcon, 
-                                              content,
-                                              make_data_frame = TRUE,
-                                              colClasses = NA,
-                                              returnFormat = "csv",
-                                              ...)
-{
-  message("Please accept my apologies.  The exportArms method for redcapDbConnection objects\n",
-          "has not yet been written.  Please consider using the API.")
-}
-
-#' @rdname genericApiCall
-#' @export
-
 genericApiCall.redcapApiConnection <- function(rcon,
                                                content,
                                                make_data_frame = TRUE,
