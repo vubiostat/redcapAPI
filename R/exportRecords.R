@@ -177,6 +177,7 @@ exportRecords.redcapApiConnection <-
     message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
     bundle <- list(...)[["proj"]]
   }
+  message("The call syntax of exportRecords will undergo a breaking change in the upcoming 3.0.0 release. See Issue #10")
 
   if (is.numeric(records)) records <- as.character(records)
 
