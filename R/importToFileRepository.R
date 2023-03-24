@@ -61,6 +61,10 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                max.len = 1, 
                                add = coll)
   
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            add = coll)
+  
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
                                         add = coll)
@@ -96,16 +100,19 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  # Get the path of the file in the File Repository -----------------
-  fileRepo <- rcon$fileRepository()
-  
-  file_path <- file.path(fileRepositoryPath(folder_id = folder_id, 
-                                            fileRepo = fileRepo), 
-                         basename(file))
-  message(sprintf("File saved to: %s", file_path))
-  
   # Refresh the cached File Repository ------------------------------
   if (refresh && rcon$has_fileRepository()){
     rcon$refresh_fileRepository()
   }
+  
+  # Get the path of the file in the File Repository -----------------
+  fileRepo <- rcon$fileRepository()
+  
+  file_path <- file.path(fileRepositoryPath(folder_id = folder_id, 
+                                            fileRepo = fileRepo))
+  message(sprintf("File saved to: %s", file_path))
+  
+  data.frame(directory = dirname(file_path), 
+             filename = basename(file_path), 
+             stringsAsFactors = FALSE)
 }
