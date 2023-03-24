@@ -39,3 +39,11 @@ test_that(
     
   }
 )
+
+
+# test_that(
+#   "deleteFileRepository: folder has no files", 
+#   {
+#     
+#   }
+# )
