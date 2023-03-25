@@ -5,6 +5,7 @@ rcon <- redcapConnection(url = url, token = API_KEY)
 test_that(
   "Return an error if object is neither character nor redcapApiConnection", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fieldChoiceMapping(mtcars), 
                  "no applicable method for 'fieldChoiceMapping'")
   }
@@ -13,6 +14,7 @@ test_that(
 test_that(
   "Return an error if the character string has length > 1", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fieldChoiceMapping(c("1, Red | 2, Blue", 
                                       "a, Lasagna | b, Spaghetti")), 
                  "'object'[:] Must have length 1")
@@ -24,6 +26,7 @@ test_that(
 test_that(
   "Return an error if the string provided doesn't have an approximate format", 
   {
+    local_reproducible_output(width = 200)
     # To pass this test, the string must have at least one comma (,) and one pipe (|)
     expect_error(fieldChoiceMapping("This only has, a comma"), 
                  "The field choice string does not appear to be formatted for choices.")
@@ -37,6 +40,7 @@ test_that(
 test_that(
   "Return an error if field_name is not in the metadata", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fieldChoiceMapping(rcon, "..Variable..not..found.."), 
                  "'..Variable..not..found..' is not a field listed in the meta data")
   }
@@ -45,6 +49,7 @@ test_that(
 test_that(
   "Return an error if the field_name is not a checkbox, dropdown, or radio", 
   {
+    local_reproducible_output(width = 200)
     expect_error(fieldChoiceMapping(rcon, "record_id"), 
                  "'record_id' is not a checkbox, dropdown, or radio field")
   }

@@ -170,6 +170,8 @@ exportFiles.redcapApiConnection <- function(rcon,
 
   if (x$status_code != 200) redcap_error(x, error_handling)
   
+  # FIXME: Make use of `reconstituteFileFromExport`
+  
   #* strip the returned character string to just the file name.
   filename <- sub(pattern = "[[:print:]]+; name=", 
                  replacement = "", 

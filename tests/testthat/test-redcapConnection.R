@@ -155,4 +155,37 @@ test_that(
   }
 )
 
+test_that(
+  "caching of instruments", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_instruments())
+    
+    rcon$instruments()
+    expect_true(rcon$has_instruments())
+    
+    rcon$flush_instruments()
+    expect_false(rcon$has_instruments())
+    
+    rcon$refresh_instruments()
+    expect_true(rcon$has_instruments())
+  }
+)
+
+test_that(
+  "caching of fileRepository", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_fileRepository())
+    
+    rcon$fileRepository()
+    expect_true(rcon$has_fileRepository())
+    
+    rcon$flush_fileRepository()
+    expect_false(rcon$has_fileRepository())
+    
+    rcon$refresh_fileRepository()
+    expect_true(rcon$has_fileRepository())
+  }
+)
 
