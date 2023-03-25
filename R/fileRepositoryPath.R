@@ -57,7 +57,7 @@ fileRepositoryPath <- function(doc_id = numeric(0),
   
   iter <- 0
   
-  while(parent_id != "top-level"){
+  while(parent_id != 0){
     next_level <- fileRepo[fileRepo$folder_id %in% Path$parent_folder[1], ]
     Path <- rbind(next_level, Path)
     parent_id <- Path$parent_folder[1]

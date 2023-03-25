@@ -108,6 +108,27 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
     checkmate::reportAssertions(coll)
   }
   
+  # Determine if folder already exists ------------------------------
+  
+  ref_folder_id <- 
+    if (length(folder_id) == 0){
+      0
+    } else {
+      folder_id
+    }
+  
+  RepoRef <- FileRepo[FileRepo$parent_folder == ref_folder_id, ]
+  
+  if (nrow(RepoRef) > 0 && 
+      name %in% RepoRef$name){
+    
+    message(sprintf("A folder named '%s' already exists. No action taken.", 
+                    name))
+    
+    return(data.frame(folder_id = RepoRef$folder_id[RepoRef$name == name], 
+                      name = name))
+  }
+  
   # Build the API Body List -----------------------------------------
   
   body <- list(content = "fileRepository", 

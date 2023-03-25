@@ -120,7 +120,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
 .fileRepositoryFrame <- function(response, 
                                  folder_id){
   # If folder_id has length 0, set the parent to top-level
-  parent <- if (length(folder_id) == 0) "top-level" else folder_id
+  parent <- if (length(folder_id) == 0) 0 else folder_id
   
   
   response <- as.character(response)

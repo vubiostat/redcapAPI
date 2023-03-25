@@ -41,9 +41,53 @@ test_that(
 )
 
 
-# test_that(
-#   "deleteFileRepository: folder has no files", 
-#   {
-#     
-#   }
-# )
+test_that(
+  "deleteFileRepository: folder has no files",
+  {
+    expect_message(Deleted <- deleteFileRepository(rcon, 
+                                                   folder_id = 0), 
+                   "No files to delete")
+    
+    expect_data_frame(Deleted, 
+                      nrows = 0, 
+                      ncols = 4)
+  }
+)
+
+test_that(
+  "deleteFileRepository: a file exists to delete; reimport the Repository", 
+  {
+    td <- file.path(tempdir(), "FileRepoTesting")
+    files <- list.files(td, 
+                        recursive = TRUE, 
+                        full.names = TRUE, 
+                        all.files = TRUE, 
+                        include.dirs = TRUE)
+    unlink(td, recursive = TRUE, force = TRUE)
+    exportFileRepository(rcon, 
+                         dir = td, 
+                         dir_create = TRUE,
+                         recursive = TRUE)
+    
+    expect_message(Deleted <- deleteFileRepository(rcon, 
+                                                   folder_id = 0, 
+                                                   recursive = TRUE, 
+                                                   confirm = "yes"), 
+                   "File deleted[:]")
+    
+    expect_data_frame(Deleted, 
+                      ncols = 4)
+    
+    # Replace the file that was deleted.
+    Imported <- importFileRepository(rcon, 
+                                     dir = td, 
+                                     recursive = TRUE)
+    
+    expect_data_frame(Imported, 
+                      ncols = 6)
+    unlink(list.files(td, 
+                      recursive = TRUE, 
+                      full.names = TRUE, 
+                      all.file = TRUE))
+  }
+)

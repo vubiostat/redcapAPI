@@ -66,6 +66,6 @@ test_that(
     expect_error(deleteFileRepository(rcon, 
                                       folder_id = 123,
                                       confirm = "different"),
-                 'confirm'[:] Must be element of set)
+                 "'confirm'[:] Must be element of set")
   }
 )
