@@ -30,7 +30,8 @@ createFileRepositoryFolder(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{name}{\code{character(1)} The name of the folder.}
+\item{name}{\code{character(1)} The name of the folder. If a folder by 
+this name already exists, no action will be taken.}
 
 \item{folder_id}{\code{integerish(0/1)}. The ID of the parent folder. If
 length is 0, the new folder is placed in the top-level.}

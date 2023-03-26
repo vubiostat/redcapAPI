@@ -2,7 +2,7 @@
 #' @title Export a File from the File Repository
 #' 
 #' @description This method allows you to download a single file stored in the 
-#'   File Repository by providing the file's \code{doc_id number}. For options
+#'   File Repository by providing the file's \code{doc_id} number. For options
 #'   to export multiple files, see \code{exportFileRepository}.
 #'   
 #' @param rcon \code{redcapApiConnection} object. 
@@ -24,7 +24,7 @@
 #'   
 #' @author Benjamin Nutter
 #' 
-#' @return Invisibly returns a \code{data.frame} with the directory and 
+#' @return Returns a \code{data.frame} with the directory and 
 #'   filename of the saved file.
 #' 
 #' @export
@@ -98,6 +98,8 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                returnFormat = "csv", 
                doc_id = doc_id)
   
+  body <- body[lengths(body) > 0]
+  
   # Make the API Call -----------------------------------------------
 
   response <- makeApiCall(rcon, 
@@ -117,5 +119,5 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                   file.path(ExportedFile$directory, 
                             ExportedFile$filename)))
   
-  return(invisible(ExportedFile))
+  ExportedFile
 }

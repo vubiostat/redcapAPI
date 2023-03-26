@@ -84,8 +84,6 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
   
   # Get the file path of the file repository file -------------------
   
-  FileRepo <- rcon$fileRepository()
-  
   file_path <- fileRepositoryPath(doc_id = doc_id, 
                                   fileRepo = FileRepo)
   
@@ -95,6 +93,8 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                action = "delete", 
                returnFormat = "csv", 
                doc_id = doc_id)
+  
+  body <- body[lengths(body) > 0]
   
   # Make the API Call -----------------------------------------------
   

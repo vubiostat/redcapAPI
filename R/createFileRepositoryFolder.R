@@ -6,7 +6,8 @@
 #'   folder.
 #'   
 #' @param rcon A \code{redcapConnection} object.
-#' @param name \code{character(1)} The name of the folder. 
+#' @param name \code{character(1)} The name of the folder. If a folder by 
+#'   this name already exists, no action will be taken.
 #' @param folder_id \code{integerish(0/1)}. The ID of the parent folder. If
 #'   length is 0, the new folder is placed in the top-level.
 #' @param dag_id \code{integerish(0/1)} The ID of a data access group. If 
