@@ -62,9 +62,10 @@ fileRepositoryPath <- function(doc_id = numeric(0),
     Path <- rbind(next_level, Path)
     parent_id <- Path$parent_folder[1]
     
-    # When the File Repository isn't recursive, we might not ever reach
-    # top-level. This breaks the loop if it tries to run more times than
-    # there are rows in the fileRepo.
+    # When the File Repository listing doesn't include the top-level, this
+    # loop will never terminate. This provides an escape which terminates if
+    # the loop iterates more times than the we have folders in our 
+    # Repository listing.
     iter <- iter + 1
     if (iter > nrow(fileRepo)){
       break 

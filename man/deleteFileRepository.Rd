@@ -24,7 +24,9 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
 
 \item{folder_id}{\code{integerish(1)}. The folder ID from which files
 should be deleted. Use \code{folder_id = 0} to delete from the top-level
-folder.}
+folder (this is different from other File Repository methods, which 
+default to the top-level folder. The difference here is to prevent 
+deleting an entire File Repository using a default argument.)}
 
 \item{recursive}{\code{logical(1)}. If \code{TRUE}, files in all subfolders
 will be deleted as well.}

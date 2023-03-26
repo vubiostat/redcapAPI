@@ -9,12 +9,12 @@
 #' @param rcon A \code{redcapConnection} object. 
 #' @param folder_id \code{integerish(1)}. The folder ID from which files
 #'   should be deleted. Use \code{folder_id = 0} to delete from the top-level
-#'   folder. 
+#'   folder (this is different from other File Repository methods, which 
+#'   default to the top-level folder. The difference here is to prevent 
+#'   deleting an entire File Repository using a default argument.)
 #' @param recursive \code{logical(1)}. If \code{TRUE}, files in all subfolders
 #'   will be deleted as well. 
 #' @param refresh \code{logical(1)}. If \code{TRUE} and the file repository
-#'   is cached, the cache will be refreshed after running completion of 
-#'   the delete.
 #' @param ... Arguments to pass to other methods.
 #' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
 #'   File Repository data on \code{rcon} will be refreshed. 
