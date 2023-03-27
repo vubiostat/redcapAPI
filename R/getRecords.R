@@ -32,6 +32,8 @@ val_rx <- function(rx) { function(x, ...) grepl(rx, x) }
 val_choice <- function(x, field_name, coding) grepl(paste0(coding,col='|'), x)
 
 default_na <- list(
+  text               = is_na_or_blank,
+  notes              = is_na_or_blank,
   date_              = is_na_or_blank,
   datetime_          = is_na_or_blank,
   datetime_seconds_  = is_na_or_blank,
@@ -271,14 +273,14 @@ default_cast <- list(
 #' Users who are exporting de-identified data will have to settle for using unbatched
 #' calls to the API (ie, \code{batch_size = -1})
 #' 
+#' @importFrom utils modifyList
 #' @export
 
 getRecords <-
   function(rcon,        
-           config=NULL, api_parm=NULL,    csv_delimiter=",", batch_size=0,
-           fields=NULL, drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
-           survey=TRUE, dag=TRUE,         date_begin=NULL,   date_end=NULL,
-           na=NULL,     validation=NULL,  cast=NULL, ...)
+           config=list(), api_parm=NULL,    csv_delimiter=",", batch_size=NULL,
+           fields=NULL,   drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
+           survey=TRUE,   dag=TRUE,         date_begin=NULL,   date_end=NULL, ...)
     
     UseMethod("exportRecords")
 
@@ -287,10 +289,10 @@ getRecords <-
 
 getRecords.redcapApiConnection <- 
   function(rcon,        
-           config=NULL, api_parm=NULL,    csv_delimiter=",", batch_size=0,
-           fields=NULL, drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
-           survey=TRUE, dag=TRUE,         date_begin=NULL,   date_end=NULL,
-           na=NULL,     validation=NULL,  cast=NULL,         ...)
+           config=list(), api_parm=NULL,    csv_delimiter=",", batch_size=NULL,
+           fields=NULL,   drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
+           survey=TRUE,   dag=TRUE,         date_begin=NULL,   date_end=NULL,
+           na=list(),     validation=list(),cast=list(),       ...)
 {
   if (is.numeric(records)) records <- as.character(records)
 
@@ -301,294 +303,341 @@ getRecords.redcapApiConnection <-
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
-
-  massert(~ factors + labels + dates + survey + dag + checkboxLabels +
-            form_complete_auto,
-          fun = checkmate::assert_logical,
-          fixed = list(len = 1,
-                       add = coll))
-
-  massert(~ fields + forms + records + events,
-          fun = checkmate::assert_character,
-          fixed = list(null.ok = TRUE,
-                       add = coll))
-
-  checkmate::assert_integerish(x = batch.size,
-                               len = 1,
+  
+  checkmate::assert_character(x = fields, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = drop_fields, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = forms, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = events, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = records, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = survey, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
+  checkmate::assert_logical(x = dag, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
+  checkmate::assert_posixct(x = date_begin, 
+                            max.len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_posixct(x = date_end, 
+                            max.len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_integerish(x = batch_size,
+                               lower = 1, 
+                               max.len = 1, 
+                               any.missing = FALSE, 
                                add = coll)
-
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        add = coll)
   
-  if (is.list(colClasses)){
-    colClasses <- unlist(colClasses)
-  }
+  csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
+                                       choices = c(",", "\t", ";", "|", "^"),
+                                       .var.name = "csv_delimiter",
+                                       add = coll)
   
-    checkmate::assert_character(x = colClasses, 
-                                names = "named", 
-                                add = coll)
-
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = na, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = validation, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = cast, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_function(x = field_label, 
+                             null.ok = TRUE, 
+                             add = coll)
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
   # Begin main processing
+  # API Phase
+  
+  # We don't need to pass forms to the API because we have 
+  # absorbed that information directly into fields
+  body <- c(list(content = "record", 
+                 format = "csv", 
+                 returnFormat = "csv", 
+                 type = "flat", 
+                 exportSurveyFields = tolower(survey), 
+                 exportDataAccessGroups = tolower(dag), 
+                 dateRangeBegin = format(date_begin, 
+                                         format = "%Y-%m-%d %H:%M:S"), 
+                 dateRangeEnd = format(date_end, 
+                                       format = "%Y-%m-%d %H:M%:%S"), 
+                 csvDelimiter = csv_delimiter), 
+            vectorToApiBodyList(fields, "fields"), 
+            vectorToApiBodyList(events, "events"))
+  
+  body <- body[lengths(body) > 0]
+  
+  records <- 
+    if (length(batch_size) == 0){
+      .exportRecordsFormatted_unbatched(rcon = rcon, 
+                                        body = body, 
+                                        records = records, 
+                                        config = config, 
+                                        api_param = api_param, 
+                                        csv_delimiter = csv_delimiter)
+    } else {
+      .exportRecordsFormatted_batched(rcon = rcon, 
+                                      body = body, 
+                                      records = records, 
+                                      config = config, 
+                                      api_param = api_param, 
+                                      csv_delimiter = csv_delimiter, 
+                                      batch_size = batch_size)
+    }
+  
   meta_data <- rcon$metadata()
   
-  #* for purposes of the export, we don't need the descriptive fields.
-  #* Including them makes the process more error prone, so we'll ignore them.
-  meta_data <- meta_data[!meta_data$field_type %in% "descriptive", ]
+  field_names <- names(records)
+  field_bases <- gsub("___.+$", "", field_names)
+  field_text_types <- meta_data$text_validation_type_or_show_slider_number[match(field_bases, meta_data$field_name)]
+  field_types <- meta_data$field_type[match(field_bases, meta_data$field_name)]
+  field_types[grepl("_complete$", field_bases)] <- "form_complete"
 
-  #* Secure the events table
-  events_list <- rcon$events()
-
-  #* Secure the REDCap version
-  version <- rcon$version()
-
-  form_complete_fields <-
-    sprintf("%s_complete",
-            unique(meta_data$form_name))
-  form_complete_fields <-
-    form_complete_fields[!is.na(form_complete_fields)]
-
-  #* Check that all fields exist in the meta data
-  if (!is.null(fields))
-  {
-    bad_fields <- fields[!fields %in% c(meta_data$field_name,
-                                        form_complete_fields)]
-    if (length(bad_fields))
-      coll$push(paste0("The following are not valid field names: ",
-                       paste0(bad_fields, collapse = ", ")))
-  }
-
-  #* Check that all form names exist in the meta data
-  if (!is.null(forms))
-  {
-    bad_forms <- forms[!forms %in% meta_data$form_name]
-    if (length(bad_forms))
-      coll$push(paste0("The following are not valid form names: ",
-                       paste0(bad_forms, collapse = ", ")))
-  }
-
-  #* Check that all event names exist in the events list
-  if (!is.null(events) && inherits(events_list, "data.frame"))
-  {
-    bad_events <- events[!events %in% events_list$unique_event_name]
-    if (length(bad_events))
-      coll$push(paste0("The following are not valid event names: ",
-                       paste0(bad_events, collapse = ", ")))
-  }
-
-  checkmate::reportAssertions(coll)
-
-  #* Create the vector of field names
-  if (!is.null(fields)) #* fields were provided
-  {
-    # redcap_event_name is automatically included in longitudinal projects
-    field_names <- fields[!fields %in% "redcap_event_name"]
-  }
-  else if (!is.null(forms))
-  {
-    field_names <- meta_data$field_name[meta_data$form_name %in% forms]
-  }
-  else
-    #* fields were not provided, default to all fields.
-    field_names <- meta_data$field_name
-
-  #* Expand 'field_names' to include fields from specified forms.
-  if (!is.null(forms))
-    field_names <-
-    unique(c(field_names,
-             meta_data$field_name[meta_data$form_name %in% forms]))
-
-
-  suffixed <-
-    checkbox_suffixes(
-      # The subset prevents `[form]_complete` fields from
-      # being included here.
-      fields = field_names[field_names %in% meta_data$field_name],
-      meta_data = meta_data)
-
-  # Identify the forms from which the chosen fields are found
-  included_form <-
-    unique(
-      meta_data$form_name[meta_data$field_name %in% field_names]
-    )
-
-  # Add the form_name_complete column to the export
-  if (form_complete_auto){
-    field_names <- c(field_names,
-                     sprintf("%s_complete", included_form))
-  }
-
-  body <- list(token = rcon$token,
-               content = 'record',
-               format = 'csv',
-               type = 'flat',
-               exportSurveyFields = tolower(survey),
-               exportDataAccessGroups = tolower(dag),
-               returnFormat = 'csv')
-
-  body[['fields']] <- paste0(field_names, collapse=",")
-  if (!is.null(forms)) body[['forms']] <- paste0(forms, collapse=",")
-  if (!is.null(events)) body[['events']] <- paste0(events, collapse=",")
-  if (!is.null(records)) body[['records']] <- paste0(records, collapse=",")
+  # autocomplete was added to the text_validation... column for
+  # dropdown menus with the autocomplete feature.
+  # field_type[is.na(field_type)] <- 
+  #   meta_data$field_type[meta_data$field_name == field_base]
+  field_types[field_types == "text" & !is.na(field_text_types)] <- field_text_types[field_types == "text" & !is.na(field_text_types)]
   
-  if (batch.size < 1){
-    x <- unbatchedGet(rcon = rcon,
-                   body = body,
-                   id = meta_data$field_name[1],
-                   colClasses = colClasses,
-                   error_handling = error_handling)
-  }
-  else
-  {
-    x <- batchedGet(rcon = rcon,
-                 body = body,
-                 batch.size = batch.size,
-                 id = meta_data$field_name[1],
-                 colClasses = colClasses,
-                 error_handling = error_handling)
-  }
-
-  #* synchronize underscore codings between records and meta data
-  #* Only affects calls in REDCap versions earlier than 5.5.21
-  if (utils::compareVersion(version, "6.0.0") == -1)
-    meta_data <- syncUnderscoreCodings(x, meta_data)
-
-  x <- fieldToVar(records = x,
-                  meta_data = meta_data,
-                  factors = factors,
-                  dates = dates,
-                  labels = labels,
-                  checkboxLabels = checkboxLabels,
-                  ...)
-
-  if (labels){
-    x[,suffixed$name_suffix] <-
-      mapply(nm = suffixed$name_suffix,
-             lab = suffixed$label_suffix,
-             FUN = function(nm, lab){
-               if(is.null(x[[nm]])){
-                  warning("Missing field for suffix ", nm)
-               } else {
-                  labelVector::set_label(x[[nm]], lab)
-               }
-             },
-             SIMPLIFY = FALSE)
-  }
-
+  field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
+  field_types[is.na(field_types)] <- "text"
+  
+  ###################################################################
+  # Validation Phase 
+  na         <- modifyList(default_na,       na)
+  validate   <- modifyList(default_validate, validate)
+  cast       <- modifyList(default_cast,     cast)
+  
+  # This doesn't "feel" right. Probably a simpler way
+  nas <- as.data.frame(lapply(seq_along(field_types), function(i) {
+    if(field_types[i] %in% names(na))
+      na[[field_types[i]]](x=records[i], field_name=field_names[i], coding="FIXME")
+    else
+      is_na_or_blank(records[i])
+  }))
+  
+  validations <- as.data.frame(lapply(seq_along(field_types), function(i) {
+    if(field_types[i] %in% names(validate))
+      nas[i] | validate[[field_types[i]]](x=records[i], field_name=field_names[i], coding="FIXME") 
+    else 
+      rep(TRUE, nrow(records))
+  }))
+   
+  # Do the cast
+  ##casts <- 
   
   
-  # drop
-  if(length(drop)) {
-    x <- x[!names(x) %in% drop]
+  
+  ###################################################################
+  # Processing Phase
+  
+  # drop_fields
+  if(length(drop_fields)) {
+    records <- records[!names(records) %in% drop_fields]
   } # end drop
   
-  x
+  ###################################################################
+  # Return Results 
+  
+  records
 }
 
+# Unexported --------------------------------------------------------
 
-
-#*** UNBATCHED EXPORT
-unbatchedGet <- function(rcon, body, id, colClasses, error_handling)
-{
-  colClasses[[id]] <- "character"
-  colClasses <- colClasses[!vapply(colClasses,
-                                   is.na,
-                                   logical(1))]
+.exportRecordsFormatted_fieldsArray <- function(rcon = rcon, 
+                                                fields = fields, 
+                                                drop_fields = drop_fields, 
+                                                forms = forms){
+  FieldFormMap <- rcon$metadata()[c("field_name", "form_name")]
+  ProjectFields <- rcon$fieldnames()
+  ProjectFields$index <- seq_len(nrow(ProjectFields))
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+  # Make a reference table between fields and forms
+  FieldFormMap <- 
+    merge(ProjectFields, 
+          FieldFormMap, 
+          by.x = c("original_field_name"), 
+          by.y = "field_name", 
+          all.x = TRUE)
   
-  if (x$status_code != 200) redcap_error(x, error_handling = error_handling)
+  # Assign [form]_complete fields to their forms
+  FieldFormMap$form_name <- 
+    ifelse(is.na(FieldFormMap$form_name) &   # if form name is missing and end in _complete
+             grepl(pattern = "_complete$", 
+                   x = FieldFormMap$original_field_name), 
+           yes = sub(pattern = "(^.+)(_complete$)", 
+                     replacement = "\\1", # replace with anything before _complete 
+                     FieldFormMap$original_field_name), 
+           no = FieldFormMap$form_name)
   
-  x <- as.character(x)
-  # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-  # x <- iconv(x, "utf8", "ASCII", sub = "")
-  utils::read.csv(text = x, 
-                  stringsAsFactors = FALSE, 
-                  na.strings = "",
-                  colClasses = colClasses)
+  # By default, we include all fields, so set all is_in_fields to TRUE to start
+  FieldFormMap$is_in_fields <- rep(TRUE, nrow(FieldFormMap))
+  
+  # For the forms, we can't assume they are in forms. Instead, we initialize
+  # this to FALSE and have to provide positive proof that they are in forms.
+  FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
+  
+  # Change is_in_fields to FALSE for those not in fields
+  if (length(fields) > 0){
+    FieldFormMap$is_in_fields <- 
+      FieldFormMap$original_field_name %in% fields | 
+      FieldFormMap$export_field_name %in% fields
+  }
+  
+  # Change is_in_forms to TRUE for fields that are in one of forms.
+  if (length(forms) > 0){
+    FieldFormMap$is_in_forms <- 
+      FieldFormMap$form_name %in% forms
+  }
+  
+  FieldFormMap <- 
+    split(FieldFormMap, 
+          FieldFormMap$original_field_name)
+  
+  # If any of the checkbox options are included in fields, 
+  # mark all of the options for inclusion
+  FieldFormMap <- lapply(FieldFormMap, 
+                         function(FFM){
+                           if (any(FFM$is_in_fields)){
+                             FFM$is_in_fields <- rep(TRUE, nrow(FFM))
+                           }
+                           FFM
+                         })
+  
+  # If any of the checkbox options are listed if drop_fields
+  # Remove all of the checkbox options.
+  # Also sets the is_in_forms to FALSE to ensure it isn't 
+  # included in the API call.
+  
+  if (length(drop_fields) > 0){
+    FieldFormMap <- 
+      lapply(FieldFormMap, 
+             function(FFM, drop){
+               all_field <- c(FFM$original_field_name, 
+                              FFM$export_field_name)
+               if (any(all_field %in% drop)){
+                 FFM$is_in_fields <- rep(FALSE, nrow(FFM))
+                 FFM$is_in_forms <- rep(FALSE, nrow(FFM))
+               }
+               FFM
+             }, 
+             drop = drop_fields)
+  }
+  
+  # Combine the list
+  FieldFormMap <- do.call("rbind", FieldFormMap)
+  rownames(FieldFormMap) <- NULL
+  
+  FieldFormMap <- FieldFormMap[!duplicated(FieldFormMap$original_field_name), ]
+  
+  # Reduce to fields in either fields or forms
+  Fields <- FieldFormMap[FieldFormMap$is_in_fields | 
+                           FieldFormMap$is_in_forms, ]
+  Fields <- Fields[order(Fields$index), ]
+  Fields$original_field_name
 }
 
+.exportRecordsFormatted_unbatched <- function(rcon, 
+                                              body, 
+                                              records, 
+                                              config, 
+                                              api_param, 
+                                              csv_delimiter){
+  response <- makeApiCall(rcon, 
+                          body = c(body, 
+                                   api_param, 
+                                   vectorToApiBodyList(records, "records")), 
+                          config = config)
+  
+  read.csv(text = as.character(response), 
+           stringsAsFactors = FALSE, 
+           na.strings = "", 
+           colClasses = "character", 
+           sep = csv_delimiter)
+}
 
-#*** BATCHED EXPORT
-batchedGet <- function(rcon, body, batch.size, id, colClasses, error_handling)
-{
-  colClasses[[id]] <- "character"
-  colClasses <- colClasses[!vapply(colClasses,
-                                   is.na,
-                                   logical(1))]
-  
-  #* 1. Get the IDs column
-  #* 2. Restrict to unique IDs
-  #* 3. Determine if the IDs look hashed (de-identified)
-  #* 4. Give warning about potential problems joining hashed IDs
-  #* 5. Read batches
-  #* 6. Combine tables
-  #* 7. Return full data frame
-  
-  
-  #* 1. Get the IDs column
-  id_body <- body
-  id_body[['fields']] <- id
-  IDs <- httr::POST(url = rcon$url,
-                    body = id_body,
-                    config = rcon$config)
-  
-  if (IDs$status_code != 200) redcap_error(IDs, error_handling)
-  
-  IDs <- as.character(IDs)
-  # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-  # IDs <- iconv(IDs, "utf8", "ASCII", sub = "")
-  IDs <- utils::read.csv(text = IDs,
-                         stringsAsFactors = FALSE,
-                         na.strings = "",
-                         colClasses = colClasses[id])
-  
-  #* 2. Restrict to unique IDs
-  unique_id <- unique(IDs[[id]])
-  
-  #* 3. Determine if the IDs look hashed (de-identified)
-  #* 4. Give warning about potential problems joining hashed IDs
-  if (all(nchar(unique_id) == 32L))
-  {
-    warning("The record IDs in this project appear to be de-identified. ",
-            "Subject data may not match across batches. ",
-            "See 'Deidentified Batched Calls' in '?exportRecords'")
+.exportRecordsFormatted_batched <- function(rcon, 
+                                            body, 
+                                            records, 
+                                            config, 
+                                            api_param, 
+                                            csv_delimiter, 
+                                            batch_size){
+  # If records were not provided, get all the record IDs from the project
+  if (length(records) == 0){
+    target_field <- rcon$metadata()$field_name[1]
+    record_response <- makeApiCall(rcon, 
+                                   body = c(list(content = "record", 
+                                                 format = "csv", 
+                                                 outputFormat = "csv"), 
+                                            vectorToApiBodyList(target_field, 
+                                                                "fields")))
+    
+    records <- read.csv(text = as.character(record_response), 
+                        stringsAsFactors = FALSE, 
+                        na.strings = "", 
+                        sep = csv_delimiter)
+    records <- records[[target_field]]
   }
   
-  #* Determine batch numbers for the IDs.
-  batch.number <- rep(seq_len(ceiling(length(unique_id) / batch.size)),
-                      each = batch.size,
-                      length.out = length(unique_id))
+  # group is a vector of integers where each integer is repeated up to 
+  # batch_size times. Used to separate records into a list where
+  # each element has a maximum length of batch_size
+  group <- rep(seq((length(records) %/% batch_size) + 1), 
+               each = batch_size, 
+               length.out = length(records))
   
-  #* Make a list to hold each of the batched calls
-  #* Borrowed from http://stackoverflow.com/a/8099431/1017276
-  batch_list <- vector("list", max(batch.number))
-
-  #* 5. Read batches
-  for (i in unique(batch.number))
-  {
-    body[['records']] <- paste0(unique_id[batch.number == i], collapse = ",")
-    x <- httr::POST(url = rcon$url, 
-                    body = body, 
-                    config = rcon$config)
-    
-    if (x$status_code != 200) redcap_error(x, error_handling = "error")
-    
-    x <- as.character(x)
-    # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-    # x <- iconv(x, "utf8", "ASCII", sub = "")
-    batch_list[[i]] <- utils::read.csv(text = x,
-                                       stringsAsFactors = FALSE,
-                                       na.strings = "",
-                                       colClasses = colClasses)
-    Sys.sleep(1)
-  }
+  records <- split(records, group)
   
-  #* 6. Combine tables and return
-  do.call("rbind", batch_list)
+  # Call the API for each batch of records
+  Batched <- 
+    lapply(records, 
+           function(r){ 
+             .exportRecordsFormatted_unbatched(rcon = rcon, 
+                                               body = body, 
+                                               records = r, 
+                                               config = config, 
+                                               api_param = api_param, 
+                                               csv_delimiter = csv_delimiter)})
+  
+  # Combine the data
+  Batched <- do.call("rbind", Batched)
+  rownames(Batched) <- NULL
+  Batched
 }
