@@ -125,6 +125,8 @@ exportPdf.redcapApiConnection <- function(rcon,
   
   if (x$status_code != 200) return(redcap_error(x, error_handling))
   
+  # FIXME: Make use of `reconstituteFileFromExport`
+  
   filename <- 
     if (all_records)
       paste0(filename, "_all_records.pdf")

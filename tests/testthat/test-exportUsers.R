@@ -5,6 +5,7 @@ rcon <- redcapConnection(url = url, token = API_KEY)
 test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers("not an rcon"), 
                  "no applicable method for 'exportUsers'")
   }
@@ -13,6 +14,7 @@ test_that(
 test_that(
   "Return an error if dates is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
                              dates = c(TRUE, FALSE)), 
                  "'dates'[:] Must have length 1")
@@ -26,6 +28,7 @@ test_that(
 test_that(
   "Return an error if labels is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
                              labels = c(TRUE, FALSE)), 
                  "'labels'[:] Must have length 1")
@@ -38,6 +41,7 @@ test_that(
 test_that(
   "Return an error if form_rights is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
                              form_rights = c(TRUE, FALSE)), 
                  "'form_rights'[:] Must have length 1")
@@ -50,6 +54,7 @@ test_that(
 test_that(
   "Return an error if bundle is not a redcapBundle", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
                              bundle = "not a bundle"), 
                  "'bundle'[:] Must inherit from class 'redcapBundle'")
@@ -59,6 +64,7 @@ test_that(
 test_that(
   "Return an error if config or api_param are not named lists", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
                              config = list("parameter")), 
                  "'config'[:] Must have names")
