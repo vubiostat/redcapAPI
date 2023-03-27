@@ -104,7 +104,7 @@ default_cast <- list(
   date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
   datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
   datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
-  time_mm_ss         = function(x, ...) chron::times(paste0("00:",x), format=c(times="h:m:s")),
+  time_mm_ss         = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
   time_hh_mm_ss      = function(x, ...) chron::times(x, format=c(times="h:m:s")),
   time               = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
                                                      format=c(times="h:m:s")),
@@ -466,24 +466,21 @@ getRecords.redcapApiConnection <-
       rep(TRUE, nrow(records))
   }))
    
+  ###################################################################
+  # Processing Phase
   # Do the cast
   for(i in seq_along(records))
   {
     records[i] <- 
       if(field_types[i] %in% names(cast))
       {
-        x <- rep(NA, nrow(records))
-        y <- cast[[field_types[i]]](raw[!nas[i] & validations[i], i], field_name=field_names[i])
-        class(x) <- class(y)
-        x[!nas[i] & validations[i]] <- y
-        x
+        x <- raw[,i]
+        x[nas[i] | !validations[i]] <- NA
+        cast[[field_types[i]]](raw[,i], field_name=field_names[i])
       } else raw[i]
   }
   names(records) <- names(raw)
   
-  
-  ###################################################################
-  # Processing Phase
   
   # drop_fields
   if(length(drop_fields)) {
