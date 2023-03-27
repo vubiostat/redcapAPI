@@ -404,14 +404,16 @@ getRecords.redcapApiConnection <-
   body <- body[lengths(body) > 0]
   
   raw <- 
-    if (length(batch_size) == 0){
+    if (length(batch_size) == 0)
+    {
       .exportRecordsFormatted_unbatched(rcon = rcon, 
                                         body = body, 
                                         records = records, 
                                         config = config, 
                                         api_param = api_param, 
                                         csv_delimiter = csv_delimiter)
-    } else {
+    } else
+    {
       .exportRecordsFormatted_batched(rcon = rcon, 
                                       body = body, 
                                       records = records, 
@@ -445,27 +447,21 @@ getRecords.redcapApiConnection <-
   validate   <- modifyList(default_validate, validate)
   cast       <- modifyList(default_cast,     cast)
   
-  # This doesn't "feel" right. Probably a simpler way
-  # Idea from Cole:
-  # args <- list(list(10), list(1:5, 2))
-  # funs <- list(seq, rep)
-  # as.data.frame(mapply(do.call, funs, args))
-  # where args is basically your columns and funs is the function to use for each column
-  # you'd need to write your own check for missing keys regardless
-  nas <- as.data.frame(lapply(seq_along(field_types), function(i) {
-    if(field_types[i] %in% names(na))
-      na[[field_types[i]]](x=records[i], field_name=field_names[i], coding="FIXME")
-    else
-      is_na_or_blank(records[i])
-  }))
+  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) is_na_or_blank else na[[x]])
+  args <- lapply(seq_along(raw), function(x) list(x=raw[,x], field_name=field_names[x]))
+  nas  <- as.data.frame(mapply(do.call, funs, args))
+  names(nas) <- names(raw)
   
-  validations <- as.data.frame(lapply(seq_along(field_types), function(i) {
-    if(field_types[i] %in% names(validate))
-      nas[i] | validate[[field_types[i]]](x=records[i], field_name=field_names[i], coding="FIXME") 
-    else 
-      rep(TRUE, nrow(records))
-  }))
-   
+  funs <- lapply( field_types,
+                  function(x)
+                  { 
+                    f <- validate[[x]]
+                    if(is.null(f)) function(...) TRUE else f
+                  })
+  args <- lapply(seq_along(raw), function(x) list(x=raw[,x], field_name=field_names[x], coding="FIXME"))
+  validations  <- as.data.frame(mapply(do.call, funs, args))
+  names(validations) <- names(raw)
+  
   ###################################################################
   # Processing Phase
   # Do the cast
