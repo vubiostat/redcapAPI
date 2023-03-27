@@ -403,7 +403,7 @@ getRecords.redcapApiConnection <-
   
   body <- body[lengths(body) > 0]
   
-  records <- 
+  raw <- 
     if (length(batch_size) == 0){
       .exportRecordsFormatted_unbatched(rcon = rcon, 
                                         body = body, 
@@ -433,7 +433,8 @@ getRecords.redcapApiConnection <-
   # dropdown menus with the autocomplete feature.
   # field_type[is.na(field_type)] <- 
   #   meta_data$field_type[meta_data$field_name == field_base]
-  field_types[field_types == "text" & !is.na(field_text_types)] <- field_text_types[field_types == "text" & !is.na(field_text_types)]
+  field_types[field_types == "text" & !is.na(field_text_types)] <-
+    field_text_types[field_types == "text" & !is.na(field_text_types)]
   
   field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
   field_types[is.na(field_types)] <- "text"
@@ -445,6 +446,12 @@ getRecords.redcapApiConnection <-
   cast       <- modifyList(default_cast,     cast)
   
   # This doesn't "feel" right. Probably a simpler way
+  # Idea from Cole:
+  # args <- list(list(10), list(1:5, 2))
+  # funs <- list(seq, rep)
+  # as.data.frame(mapply(do.call, funs, args))
+  # where args is basically your columns and funs is the function to use for each column
+  # you'd need to write your own check for missing keys regardless
   nas <- as.data.frame(lapply(seq_along(field_types), function(i) {
     if(field_types[i] %in% names(na))
       na[[field_types[i]]](x=records[i], field_name=field_names[i], coding="FIXME")
@@ -460,8 +467,19 @@ getRecords.redcapApiConnection <-
   }))
    
   # Do the cast
-  ##casts <- 
-  
+  for(i in seq_along(records))
+  {
+    records[i] <- 
+      if(field_types[i] %in% names(cast))
+      {
+        x <- rep(NA, nrow(records))
+        y <- cast[[field_types[i]]](raw[!nas[i] & validations[i], i], field_name=field_names[i])
+        class(x) <- class(y)
+        x[!nas[i] & validations[i]] <- y
+        x
+      } else raw[i]
+  }
+  names(records) <- names(raw)
   
   
   ###################################################################
