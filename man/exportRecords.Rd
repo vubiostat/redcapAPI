@@ -62,10 +62,10 @@ exportRecords_offline(
 
 \method{getRecords}{redcapApiConnection}(
   rcon,
-  config = NULL,
+  config = list(),
   api_parm = NULL,
   csv_delimiter = ",",
-  batch_size = 0,
+  batch_size = NULL,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -75,9 +75,9 @@ exportRecords_offline(
   dag = TRUE,
   date_begin = NULL,
   date_end = NULL,
-  na = NULL,
-  validation = NULL,
-  cast = NULL,
+  na = list(),
+  validation = list(),
+  cast = list(),
   ...
 )
 }

@@ -6,10 +6,10 @@
 \usage{
 getRecords(
   rcon,
-  config = NULL,
+  config = list(),
   api_parm = NULL,
   csv_delimiter = ",",
-  batch_size = 0,
+  batch_size = NULL,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -19,9 +19,6 @@ getRecords(
   dag = TRUE,
   date_begin = NULL,
   date_end = NULL,
-  na = NULL,
-  validation = NULL,
-  cast = NULL,
   ...
 )
 }
@@ -73,6 +70,17 @@ flag will revert to its default value.}
 
 \item{date_end}{POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.}
 
+\item{data_file}{For the offline version, a character string giving the location
+of the dataset downloaded from REDCap.  Note that this should be the raw
+(unlabeled) data set.}
+
+\item{meta_data_file}{A text string giving the location of the data dictionary 
+downloaded from REDCap.}
+
+\item{api_param}{named list. Additional API parameters to pass into the body of the
+API call. This provides users to execute calls with options that may not
+otherwise be supported by redcapAPI.}
+
 \item{na}{list. A list of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
@@ -94,17 +102,6 @@ are not identified as NA will be passed to validation functions.}
 same named keys are supported as the na argument. The function will be 
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length.}
-
-\item{data_file}{For the offline version, a character string giving the location
-of the dataset downloaded from REDCap.  Note that this should be the raw
-(unlabeled) data set.}
-
-\item{meta_data_file}{A text string giving the location of the data dictionary 
-downloaded from REDCap.}
-
-\item{api_param}{named list. Additional API parameters to pass into the body of the
-API call. This provides users to execute calls with options that may not
-otherwise be supported by redcapAPI.}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

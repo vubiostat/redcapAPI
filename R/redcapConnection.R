@@ -108,6 +108,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_user <- NULL
   this_version <- NULL
   this_project <- NULL
+  this_instrument <- NULL
+  this_fileRepository <- NULL
   
   getter <- function(export){
     switch(export, 
@@ -119,6 +121,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "user" = exportUsers(rc), 
            "version" = exportVersion(rc), 
            "project" = exportProjectInformation(rc), 
+           "instrument" = exportInstruments(rc), 
+           "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            NULL)
   }
   
@@ -169,9 +173,20 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       refresh_projectInformation = function() this_project <<- getter("project"), 
       push_projectInformation = function(push) this_project <<- push, 
       
+      instruments = function(){ if (is.null(this_instrument)) this_instrument <<- getter("instrument"); this_instrument },
+      has_instruments = function() !is.null(this_instrument), 
+      flush_instruments = function() this_instrument <<- NULL, 
+      refresh_instruments = function() this_instrument <<- getter("instrument"), 
+      
+      fileRepository = function(){ if (is.null(this_fileRepository)) this_fileRepository <<- getter("fileRepo"); this_fileRepository },
+      has_fileRepository = function() !is.null(this_fileRepository),
+      flush_fileRepository = function() this_fileRepository <<- NULL,
+      refresh_fileRepository = function() this_fileRepository <<- getter("fileRepo"),
+      
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
-          this_mapping <<- this_user <<- this_version <<- this_project <<- NULL}, 
+          this_mapping <<- this_user <<- this_version <<- this_project <<- 
+          this_instrument <<- this_fileRepository <<- NULL}, 
       
       refresh_all = function(){
         this_metadata <<- getter("metadata")
@@ -182,6 +197,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_user <<- getter("user")
         this_version <<- getter("version")
         this_project <<- getter("project")
+        this_instrument <<- getter("instrument")
+        this_fileRepository <<- getter("fileRepo")
       }
       
     )
