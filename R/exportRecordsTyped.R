@@ -8,7 +8,7 @@
 # Function variables: snake_case
 #  * (exception) data.frame variable: CamelCase
 
-#' @name is_na_or_blank
+#' @name isNAorBlank
 #' @title Helper function for exportRecords to determine if NA or blank.
 #' @description returns TRUE/FALSE if field is NA or blank. Helper
 #' function for constructing na overrides in \code{\link{exportRecords}}.
@@ -18,9 +18,9 @@
 #' coding.
 #' @return logical.
 #' @export
-is_na_or_blank <- function(x, ...) is.na(x) | x==''
+isNAorBlank <- function(x, ...) is.na(x) | x==''
 
-#' @name val_rx
+#' @name valRx
 #' @title Construct a validate function from a regex.
 #' @description returns function that will validate using the given regex.
 #' 
@@ -28,9 +28,9 @@ is_na_or_blank <- function(x, ...) is.na(x) | x==''
 #' @param ... Consumes anything else passed to function. I.e., field_name and coding.
 #' @return logical.
 #' @export
-val_rx <- function(rx) { function(x, ...) grepl(rx, x) }
+valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
-#' @name val_choice
+#' @name valChoice
 #' @title Validate function for choice variables.
 #' @description returns TRUE/FALSE if field matches the coding. Helper for
 #' \code{\link{exportRecords}}
@@ -39,28 +39,28 @@ val_rx <- function(rx) { function(x, ...) grepl(rx, x) }
 #' @param ... Consumes anything else passed to function. I.e., field_name and coding.
 #' @return logical.
 #' @export
-val_choice <- function(x, field_name, coding) grepl(paste0(coding,col='|'), x)
+valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)[[1]]
 
 .default_validate <- list(
-  date_              = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
-  datetime_          = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
-  datetime_seconds_  = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time_mm_ss         = val_rx("[0-5][0-9]:[0-5][0-9]"),
-  time_hh_mm_ss      = val_rx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time               = val_rx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  float              = val_rx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  number             = val_rx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  calc               = val_rx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  int                = val_rx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
-  integer            = val_rx("[-+]?[0-9]+"),
-  yesno              = val_rx("^(?i)(0|1|yes|no)$"),
-  truefalse          = val_rx("(0|1|true|false)"),
-  checkbox           = val_rx("^(?i)(0|1|yes|no)$"),
-  form_complete      = val_rx("[012]"),
-  select             = val_choice,
-  radio              = val_choice,
-  dropdown           = val_choice,
-  sql                = val_choice # This requires a bit more effort !?
+  date_              = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
+  datetime_          = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
+  datetime_seconds_  = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
+  time_mm_ss         = valRx("[0-5][0-9]:[0-5][0-9]"),
+  time_hh_mm_ss      = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
+  time               = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
+  float              = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
+  number             = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
+  calc               = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
+  int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
+  integer            = valRx("[-+]?[0-9]+"),
+  yesno              = valRx("^(?i)(0|1|yes|no)$"),
+  truefalse          = valRx("(0|1|true|false)"),
+  checkbox           = valRx("^(?i)(0|1|yes|no)$"),
+  form_complete      = valRx("[012]"),
+  select             = valChoice,
+  radio              = valChoice,
+  dropdown           = valChoice,
+  sql                = valChoice # This requires a bit more effort !?
 )
 
 #' @export
@@ -169,13 +169,13 @@ val_choice <- function(x, field_name, coding) grepl(paste0(coding,col='|'), x)
 #'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 #'   checkbox, form_complete, sql}. The function will be provided the variables
 #'   (x, field_name, coding). The function must return a vector of logicals
-#'   matching the input. It defaults to \code{\link{is_na_or_blank}} for all
+#'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
 #' @param validation list. A list of user specified validation functions. The 
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
-#'   these are \code{\link{val_rx}} and \code{\link{val_choice}}. Only fields that
+#'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
 #' @param cast list. A list of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
@@ -472,23 +472,35 @@ exportRecordsTyped.redcapApiConnection <-
   field_types[is.na(field_types)] <- "text"
   
    ###################################################################
-  # Derive codings
-  codings <- as.list(rep(NA, ncol(Raw)))
-  
-  # FIXME FIXME HERE  
-  # FIXME FIXME HERE
-  # FIXME FIXME HERE
+  # Derive codings (This is probably a good internal helper)
+  codings <- lapply(
+    MetaData$select_choices_or_calculations[match(field_bases, MetaData$field_name)],
+    function(x)
+    {
+      if(is.na(x) | is.null(x)) return(NA)
+      
+      x <- strsplit(x, "\\s*\\|\\s*")[[1]]
+      y <- gsub("^\\s*.*,\\s*(.*)$", "\\1", x)
+      names(y) <- gsub("^\\s*(.*),\\s*.*$", "\\1", x)
+      y
+    }
+  )
+                 
+   ###################################################################
+  # Common provided args for na / validate functions
+  args <- lapply(seq_along(Raw),
+                 function(x) list(x          = Raw[,x],
+                                  field_name = field_names[x],
+                                  coding     = codings[[x]]))
   
    ###################################################################
   # Locate NA's
-  funs <- lapply(field_types,    function(x) if(is.null(na[[x]])) is_na_or_blank else na[[x]])
-  args <- lapply(seq_along(Raw), function(x) list(x=Raw[,x], field_name=field_names[x], coding=codings))
-  nas  <- as.data.frame(mapply(do.call, funs, args))
-  names(nas) <- names(Raw)
+  funs <- lapply(field_types,    function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
+  nas  <- mapply(do.call, funs, args)
 
    ###################################################################
   # Run Validation Functions
-  validate <- modifyList(default_validate, validate)
+  validate <- modifyList(.default_validate, validate)
   funs <- lapply(
     field_types,
     function(x)
@@ -497,22 +509,21 @@ exportRecordsTyped.redcapApiConnection <-
       # No validate function is an auto pass
       if(is.null(f)) function(...) TRUE else f 
     })
-  args <- lapply(seq_along(Raw), function(x) list(x=Raw[,x], field_name=field_names[x], coding=codings))
-  validations <- as.data.frame(mapply(do.call, funs, args))
-  names(validations) <- names(Raw)
+  validations <- mapply(do.call, funs, args)
   
    ###################################################################
   # Type Casting
-  cast <- modifyList(default_cast, cast)
+  Records <- data.frame()
+  cast <- modifyList(.default_cast, cast)
   for(i in seq_along(Raw))
   {
-    Records[i] <- 
+    Records[,i] <- 
       if(field_types[i] %in% names(cast))
       {
         x <- Raw[,i]
-        x[nas[i] | !validations[i]] <- NA
-        cast[[field_types[i]]](Raw[,i], field_name=field_names[i], coding=codings)
-      } else Raw[i]
+        x[nas[,i] | !validations[,i]] <- NA
+        cast[[field_types[i]]](x, field_name=field_names[i], coding=codings)
+      } else Raw[,i]
   }
   names(Records) <- names(Raw)
   
