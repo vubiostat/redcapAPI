@@ -1,3 +1,13 @@
+
+# Style Guideline Note
+# 
+# Exported function names: dromedaryCase
+# Internal function names: .dromedaryCase
+# Constant data exported: UPPERCASE
+# Function parameters: snake_case
+# Function variables: snake_case
+#  * (exception) data.frame variable: CamelCase
+
 #' @name is_na_or_blank
 #' @title Helper function for exportRecords to determine if NA or blank.
 #' @description returns TRUE/FALSE if field is NA or blank. Helper
@@ -31,31 +41,7 @@ val_rx <- function(rx) { function(x, ...) grepl(rx, x) }
 #' @export
 val_choice <- function(x, field_name, coding) grepl(paste0(coding,col='|'), x)
 
-default_na <- list(
-  text               = is_na_or_blank,
-  notes              = is_na_or_blank,
-  date_              = is_na_or_blank,
-  datetime_          = is_na_or_blank,
-  datetime_seconds_  = is_na_or_blank,
-  time_mm_ss         = is_na_or_blank,
-  time_hh_mm_ss      = is_na_or_blank,
-  time               = is_na_or_blank,
-  float              = is_na_or_blank,
-  number             = is_na_or_blank,
-  calc               = is_na_or_blank,
-  int                = is_na_or_blank,
-  integer            = is_na_or_blank,
-  yesno              = is_na_or_blank,
-  truefalse          = is_na_or_blank,
-  checkbox           = is_na_or_blank,
-  form_complete      = is_na_or_blank,
-  select             = is_na_or_blank,
-  radio              = is_na_or_blank,
-  dropdown           = is_na_or_blank,
-  sql                = is_na_or_blank
-)
-
-default_validate <- list(
+.default_validate <- list(
   date_              = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
   datetime_          = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
   datetime_seconds_  = val_rx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
@@ -78,7 +64,7 @@ default_validate <- list(
 )
 
 #' @export
-raw_cast <- list(
+.raw_cast <- list(
   date_              = NA,
   datetime_          = NA,
   datetime_seconds_  = NA,
@@ -100,7 +86,7 @@ raw_cast <- list(
   sql                = NA
 )
 
-default_cast <- list(
+.default_cast <- list(
   date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
   datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
   datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
@@ -124,12 +110,14 @@ default_cast <- list(
 )
 
 
-#' @name getRecords
+#' @name exportRecordsTypes
 #' 
-#' @title A replacement for \code{\link{exportRecords}} with full inversion of control over casting.
+#' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 
+#'        type casting.
 #' @description Exports records from a REDCap Database, allowing for 
-#'   subsets of subjects, fields, records, and events.
-#'   
+#'   subsets of subjects, fields, records, and events. This function is
+#'   the long term replacement for exportRecords. 
+#'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
 #' @param data_file For the offline version, a character string giving the location
 #'   of the dataset downloaded from REDCap.  Note that this should be the raw
@@ -193,6 +181,11 @@ default_cast <- list(
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length.
+#' @param assign list of functions. These functions are provided, field_name,
+#'   label, description and field_type and return a list of attributes to assign
+#'   to the column. Defaults to creating a label attribute from the stripped
+#'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
+#'   to use as a units attribute.
 #'  
 #' @details
 #' A record of exports through the API is recorded in the Logging section 
@@ -276,27 +269,62 @@ default_cast <- list(
 #' @importFrom utils modifyList
 #' @export
 
-getRecords <-
-  function(rcon,        
-           config=list(), api_parm=NULL,    csv_delimiter=",", batch_size=NULL,
-           fields=NULL,   drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
-           survey=TRUE,   dag=TRUE,         date_begin=NULL,   date_end=NULL, ...)
+exportRecordsTyped <-
+  function(
+    # API Call parameters
+    rcon,
+    config        = list(),
+    api_parm      = NULL,
+    csv_delimiter = ",",
+    batch_size    = NULL,
+    
+    # Limiters
+    fields        = NULL,
+    drop_fields   = NULL,
+    forms         = NULL,
+    records       = NULL,
+    events        = NULL,
+    survey        = TRUE,
+    dag           = TRUE,
+    date_begin    = NULL,
+    date_end      = NULL,
+    ...)
     
     UseMethod("exportRecords")
 
 #' @rdname exportRecords
 #' @export
 
-getRecords.redcapApiConnection <- 
-  function(rcon,        
-           config=list(), api_parm=NULL,    csv_delimiter=",", batch_size=NULL,
-           fields=NULL,   drop_fields=NULL, forms=NULL,        records=NULL,  events=NULL,
-           survey=TRUE,   dag=TRUE,         date_begin=NULL,   date_end=NULL,
-           na=list(),     validation=list(),cast=list(),       ...)
+exportRecordsTyped.redcapApiConnection <- 
+  function(
+    # API Call parameters
+    rcon,  
+    config        = list(),
+    api_parm      = NULL,
+    csv_delimiter = ",",
+    batch_size    = NULL,
+    
+    # Limiters
+    fields        = NULL,
+    drop_fields   = NULL,
+    forms         = NULL,
+    records       = NULL,
+    events        = NULL,
+    survey        = TRUE,
+    dag           = TRUE,
+    date_begin    = NULL,
+    date_end      = NULL,
+    
+    # Type Casting Default Overrides Function Lists
+    na            = list(),
+    validation    = list(),
+    cast          = list(),
+    assign        = list(),
+    ...)
 {
   if (is.numeric(records)) records <- as.character(records)
 
-  ###########################################################################
+   ###########################################################################
   # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
 
@@ -350,8 +378,8 @@ getRecords.redcapApiConnection <-
                                any.missing = FALSE, 
                                add = coll)
   
-  csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
-                                       choices = c(",", "\t", ";", "|", "^"),
+  csv_delimiter <- checkmate::matchArg(x         = csv_delimiter, 
+                                       choices   = c(",", "\t", ";", "|", "^"),
                                        .var.name = "csv_delimiter",
                                        add = coll)
   
@@ -381,54 +409,56 @@ getRecords.redcapApiConnection <-
   
   checkmate::reportAssertions(coll)
   
-  ###################################################################
-  # Begin main processing
-  # API Phase
+   ###################################################################
+  # Call API for Raw Results
   
   # We don't need to pass forms to the API because we have 
   # absorbed that information directly into fields
-  body <- c(list(content = "record", 
-                 format = "csv", 
-                 returnFormat = "csv", 
-                 type = "flat", 
-                 exportSurveyFields = tolower(survey), 
+  body <- c(list(content                = "record", 
+                 format                 = "csv", 
+                 returnFormat           = "csv", 
+                 type                   = "flat", 
+                 exportSurveyFields     = tolower(survey), 
                  exportDataAccessGroups = tolower(dag), 
-                 dateRangeBegin = format(date_begin, 
-                                         format = "%Y-%m-%d %H:%M:S"), 
-                 dateRangeEnd = format(date_end, 
-                                       format = "%Y-%m-%d %H:M%:%S"), 
-                 csvDelimiter = csv_delimiter), 
+                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
+                 dateRangeEnd           = format(date_end, format = "%Y-%m-%d %H:M%:%S"), 
+                 csvDelimiter           = csv_delimiter), 
             vectorToApiBodyList(fields, "fields"), 
             vectorToApiBodyList(events, "events"))
   
   body <- body[lengths(body) > 0]
   
-  raw <- 
+  Raw <- 
     if (length(batch_size) == 0)
     {
-      .exportRecordsFormatted_unbatched(rcon = rcon, 
-                                        body = body, 
-                                        records = records, 
-                                        config = config, 
-                                        api_param = api_param, 
+      .exportRecordsFormattedUnbatched( rcon          = rcon, 
+                                        body          = body, 
+                                        records       = records, 
+                                        config        = config, 
+                                        api_param     = api_param, 
                                         csv_delimiter = csv_delimiter)
     } else
     {
-      .exportRecordsFormatted_batched(rcon = rcon, 
-                                      body = body, 
-                                      records = records, 
-                                      config = config, 
-                                      api_param = api_param, 
-                                      csv_delimiter = csv_delimiter, 
-                                      batch_size = batch_size)
+      .exportRecordsFormattedBatched(  rcon           = rcon, 
+                                       body           = body, 
+                                       records        = records, 
+                                       config         = config, 
+                                       api_param      = api_param, 
+                                       csv_delimiter  = csv_delimiter, 
+                                       batch_size     = batch_size)
     }
   
-  meta_data <- rcon$metadata()
+   ###################################################################
+  # Process meta data for useful information
+  MetaData <- rcon$metadata()
   
-  field_names <- names(records)
+   ###################################################################
+  # Derive field information
+  field_names <- names(Raw)
   field_bases <- gsub("___.+$", "", field_names)
-  field_text_types <- meta_data$text_validation_type_or_show_slider_number[match(field_bases, meta_data$field_name)]
-  field_types <- meta_data$field_type[match(field_bases, meta_data$field_name)]
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  
+  field_types <- MetaData$field_type[match(field_bases, MetaData$field_name)]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
 
   # autocomplete was added to the text_validation... column for
@@ -441,60 +471,82 @@ getRecords.redcapApiConnection <-
   field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
   field_types[is.na(field_types)] <- "text"
   
-  ###################################################################
-  # Validation Phase 
-  na         <- modifyList(default_na,       na)
-  validate   <- modifyList(default_validate, validate)
-  cast       <- modifyList(default_cast,     cast)
+   ###################################################################
+  # Derive codings
+  codings <- as.list(rep(NA, ncol(Raw)))
   
-  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) is_na_or_blank else na[[x]])
-  args <- lapply(seq_along(raw), function(x) list(x=raw[,x], field_name=field_names[x]))
+  # FIXME FIXME HERE  
+  # FIXME FIXME HERE
+  # FIXME FIXME HERE
+  
+   ###################################################################
+  # Locate NA's
+  funs <- lapply(field_types,    function(x) if(is.null(na[[x]])) is_na_or_blank else na[[x]])
+  args <- lapply(seq_along(Raw), function(x) list(x=Raw[,x], field_name=field_names[x], coding=codings))
   nas  <- as.data.frame(mapply(do.call, funs, args))
-  names(nas) <- names(raw)
+  names(nas) <- names(Raw)
+
+   ###################################################################
+  # Run Validation Functions
+  validate <- modifyList(default_validate, validate)
+  funs <- lapply(
+    field_types,
+    function(x)
+    { 
+      f <- validate[[x]]
+      # No validate function is an auto pass
+      if(is.null(f)) function(...) TRUE else f 
+    })
+  args <- lapply(seq_along(Raw), function(x) list(x=Raw[,x], field_name=field_names[x], coding=codings))
+  validations <- as.data.frame(mapply(do.call, funs, args))
+  names(validations) <- names(Raw)
   
-  funs <- lapply( field_types,
-                  function(x)
-                  { 
-                    f <- validate[[x]]
-                    if(is.null(f)) function(...) TRUE else f
-                  })
-  args <- lapply(seq_along(raw), function(x) list(x=raw[,x], field_name=field_names[x], coding="FIXME"))
-  validations  <- as.data.frame(mapply(do.call, funs, args))
-  names(validations) <- names(raw)
-  
-  ###################################################################
-  # Processing Phase
-  # Do the cast
-  for(i in seq_along(records))
+   ###################################################################
+  # Type Casting
+  cast <- modifyList(default_cast, cast)
+  for(i in seq_along(Raw))
   {
-    records[i] <- 
+    Records[i] <- 
       if(field_types[i] %in% names(cast))
       {
-        x <- raw[,i]
+        x <- Raw[,i]
         x[nas[i] | !validations[i]] <- NA
-        cast[[field_types[i]]](raw[,i], field_name=field_names[i])
-      } else raw[i]
+        cast[[field_types[i]]](Raw[,i], field_name=field_names[i], coding=codings)
+      } else Raw[i]
   }
-  names(records) <- names(raw)
+  names(Records) <- names(Raw)
   
+   ###################################################################
+  # Handle Attributes assignments on columns
   
+  # FIXME FIXME HERE  
+  # FIXME FIXME HERE
+  # FIXME FIXME HERE
+  
+   ###################################################################
   # drop_fields
-  if(length(drop_fields)) {
-    records <- records[!names(records) %in% drop_fields]
-  } # end drop
+  if(length(drop_fields)) Records <- Records[!names(Records) %in% drop_fields]
   
-  ###################################################################
+   ###################################################################
+  # Attach invalid record information
+  # attribute(Records, "invalid") <- ???
+  
+  # FIXME FIXME HERE  
+  # FIXME FIXME HERE
+  # FIXME FIXME HERE
+  
+   ###################################################################
   # Return Results 
-  
-  records
+  Records
 }
 
 # Unexported --------------------------------------------------------
 
-.exportRecordsFormatted_fieldsArray <- function(rcon = rcon, 
-                                                fields = fields, 
-                                                drop_fields = drop_fields, 
-                                                forms = forms){
+.exportRecordsFormattedFieldsArray <- function(rcon = rcon, 
+                                               fields = fields, 
+                                               drop_fields = drop_fields, 
+                                               forms = forms)
+{
   FieldFormMap <- rcon$metadata()[c("field_name", "form_name")]
   ProjectFields <- rcon$fieldnames()
   ProjectFields$index <- seq_len(nrow(ProjectFields))
@@ -584,12 +636,13 @@ getRecords.redcapApiConnection <-
   Fields$original_field_name
 }
 
-.exportRecordsFormatted_unbatched <- function(rcon, 
+.exportRecordsFormattedUnbatched <- function( rcon, 
                                               body, 
                                               records, 
                                               config, 
                                               api_param, 
-                                              csv_delimiter){
+                                              csv_delimiter)
+{
   response <- makeApiCall(rcon, 
                           body = c(body, 
                                    api_param, 
@@ -603,15 +656,17 @@ getRecords.redcapApiConnection <-
            sep = csv_delimiter)
 }
 
-.exportRecordsFormatted_batched <- function(rcon, 
+.exportRecordsFormattedBatched <- function( rcon, 
                                             body, 
                                             records, 
                                             config, 
                                             api_param, 
                                             csv_delimiter, 
-                                            batch_size){
+                                            batch_size)
+{
   # If records were not provided, get all the record IDs from the project
-  if (length(records) == 0){
+  if (length(records) == 0)
+  {
     target_field <- rcon$metadata()$field_name[1]
     record_response <- makeApiCall(rcon, 
                                    body = c(list(content = "record", 
@@ -640,7 +695,7 @@ getRecords.redcapApiConnection <-
   Batched <- 
     lapply(records, 
            function(r){ 
-             .exportRecordsFormatted_unbatched(rcon = rcon, 
+             .exportRecordsFormattedUnbatched(rcon = rcon, 
                                                body = body, 
                                                records = r, 
                                                config = config, 
