@@ -8,6 +8,18 @@
 # Function variables: snake_case
 #  * (exception) data.frame variable: CamelCase
 
+# Punch List
+# [DONE] Agree on name/naming and change code to match
+# Finish cleanup of main typing processing
+# Deal with coding
+# Solve checkbox so all previous outputs are still supported easily
+# Review existing code and handle all the odd cases
+# Need a callback for cleanup of html and unicode on labels.
+# Massive cleanup / review pass
+# Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
+# Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
+# Change message from prior to recommend using the new method.
+
 #' @name isNAorBlank
 #' @title Helper function for exportRecords to determine if NA or blank.
 #' @description returns TRUE/FALSE if field is NA or blank. Helper
@@ -39,7 +51,7 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 #' @param ... Consumes anything else passed to function. I.e., field_name and coding.
 #' @return logical.
 #' @export
-valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)[[1]]
+valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
 
 .default_validate <- list(
   date_              = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
@@ -47,7 +59,7 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   datetime_seconds_  = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
   time_mm_ss         = valRx("[0-5][0-9]:[0-5][0-9]"),
   time_hh_mm_ss      = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time               = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
+  time               = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
   float              = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
   number             = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
   calc               = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
@@ -480,8 +492,8 @@ exportRecordsTyped.redcapApiConnection <-
       if(is.na(x) | is.null(x)) return(NA)
       
       x <- strsplit(x, "\\s*\\|\\s*")[[1]]
-      y <- gsub("^\\s*.*,\\s*(.*)$", "\\1", x)
-      names(y) <- gsub("^\\s*(.*),\\s*.*$", "\\1", x)
+      y <- gsub("^\\s*(.*),\\s*.*$", "\\1", x)
+      names(y) <- gsub("^\\s*.*,\\s*(.*)$", "\\1", x)
       y
     }
   )
@@ -495,9 +507,14 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Locate NA's
-  funs <- lapply(field_types,    function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
-  nas  <- mapply(do.call, funs, args)
-
+  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
+  nas  <- as.data.frame(mapply(do.call, funs, args))
+  if(!is.matrix(nas) && !is.logical(nas[1,1])) # FIXEME: Question with no rows this would fail how to cope
+  {
+    # FIXME -- Need to provide user the exact failing validate
+    stop("User supplied na method not returning vector of logical of correct length")
+  }
+  
    ###################################################################
   # Run Validation Functions
   validate <- modifyList(.default_validate, validate)
@@ -507,13 +524,18 @@ exportRecordsTyped.redcapApiConnection <-
     { 
       f <- validate[[x]]
       # No validate function is an auto pass
-      if(is.null(f)) function(...) TRUE else f 
+      if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
     })
   validations <- mapply(do.call, funs, args)
+  if(!is.matrix(validations) && !is.logical(validations[1,1]))
+  {
+    # FIXME -- Need to provide user the exact failing validate
+    stop("User supplied validation method not returning vector of logical of appropriate length")
+  }
   
    ###################################################################
   # Type Casting
-  Records <- data.frame()
+  Records <- Raw
   cast <- modifyList(.default_cast, cast)
   for(i in seq_along(Raw))
   {
@@ -540,6 +562,7 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Attach invalid record information
+  # This is all records !validations & !nas
   # attribute(Records, "invalid") <- ???
   
   # FIXME FIXME HERE  
