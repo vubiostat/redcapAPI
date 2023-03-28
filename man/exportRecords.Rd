@@ -49,7 +49,7 @@ exportRecords(
 \method{exportRecordsTyped}{redcapApiConnection}(
   rcon,
   config = list(),
-  api_parm = NULL,
+  api_parm = list(),
   csv_delimiter = ",",
   batch_size = NULL,
   fields = NULL,
@@ -64,7 +64,7 @@ exportRecords(
   na = list(),
   validation = list(),
   cast = list(),
-  assign = list(),
+  assignment = list(),
   ...
 )
 

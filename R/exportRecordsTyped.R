@@ -10,8 +10,8 @@
 
 # Punch List
 # [DONE] Agree on name/naming and change code to match
-# Finish cleanup of main typing processing
-# Deal with coding
+# [DONE] Finish cleanup of main typing processing
+# [DONE] Deal with coding
 # Solve checkbox so all previous outputs are still supported easily
 # Review existing code and handle all the odd cases
 # Need a callback for cleanup of html and unicode on labels.
@@ -19,6 +19,8 @@
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
 # Change message from prior to recommend using the new method.
+# Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
+# `sql` coding type needs adding
 
 #' @name isNAorBlank
 #' @title Helper function for exportRecords to determine if NA or blank.
@@ -111,18 +113,18 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   calc               = as.numeric,
   int                = as.integer,
   integer            = as.numeric,
-  yesno              = function(x, coding, ...) factor(x, levels=coding, labels=coding),
+  yesno              = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
   truefalse          = function(x, ...) x == 'true',
   checkbox           = function(x, ...) x == '1', # FIXME!! Under discussion
-  form_complete      = function(x, coding, ...) factor(x, levels=coding, labels=coding),
-  select             = function(x, coding, ...) factor(x, levels=coding, labels=coding),
-  radio              = function(x, coding, ...) factor(x, levels=coding, labels=coding),
-  dropdown           = function(x, coding, ...) factor(x, levels=coding, labels=coding),
-  sql                = function(x, coding, ...) factor(x, levels=coding, labels=coding)
+  form_complete      = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
+  select             = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
+  radio              = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
+  dropdown           = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
+  sql                = function(x, coding, ...) factor(x, levels=coding, labels=names(coding))
 )
 
 
-#' @name exportRecordsTypes
+#' @name exportRecordsTyped
 #' 
 #' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 
 #'        type casting.
@@ -193,7 +195,7 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length.
-#' @param assign list of functions. These functions are provided, field_name,
+#' @param assignment list of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
@@ -286,7 +288,7 @@ exportRecordsTyped <-
     # API Call parameters
     rcon,
     config        = list(),
-    api_parm      = NULL,
+    api_parm      = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
     
@@ -312,7 +314,7 @@ exportRecordsTyped.redcapApiConnection <-
     # API Call parameters
     rcon,  
     config        = list(),
-    api_parm      = NULL,
+    api_parm      = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
     
@@ -331,7 +333,7 @@ exportRecordsTyped.redcapApiConnection <-
     na            = list(),
     validation    = list(),
     cast          = list(),
-    assign        = list(),
+    assignment    = list(),
     ...)
 {
   if (is.numeric(records)) records <- as.character(records)
@@ -433,7 +435,7 @@ exportRecordsTyped.redcapApiConnection <-
                  exportSurveyFields     = tolower(survey), 
                  exportDataAccessGroups = tolower(dag), 
                  dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
-                 dateRangeEnd           = format(date_end, format = "%Y-%m-%d %H:M%:%S"), 
+                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
                  csvDelimiter           = csv_delimiter), 
             vectorToApiBodyList(fields, "fields"), 
             vectorToApiBodyList(events, "events"))
@@ -473,10 +475,9 @@ exportRecordsTyped.redcapApiConnection <-
   field_types <- MetaData$field_type[match(field_bases, MetaData$field_name)]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
 
+
   # autocomplete was added to the text_validation... column for
   # dropdown menus with the autocomplete feature.
-  # field_type[is.na(field_type)] <- 
-  #   meta_data$field_type[meta_data$field_name == field_base]
   field_types[field_types == "text" & !is.na(field_text_types)] <-
     field_text_types[field_types == "text" & !is.na(field_text_types)]
   
@@ -485,8 +486,10 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Derive codings (This is probably a good internal helper)
+  codebook <- MetaData$select_choices_or_calculations[match(field_bases, MetaData$field_name)]
+  codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codings <- lapply(
-    MetaData$select_choices_or_calculations[match(field_bases, MetaData$field_name)],
+    codebook,
     function(x)
     {
       if(is.na(x) | is.null(x)) return(NA)
@@ -497,7 +500,7 @@ exportRecordsTyped.redcapApiConnection <-
       y
     }
   )
-                 
+
    ###################################################################
   # Common provided args for na / validate functions
   args <- lapply(seq_along(Raw),
@@ -508,8 +511,8 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Locate NA's
   funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
-  nas  <- as.data.frame(mapply(do.call, funs, args))
-  if(!is.matrix(nas) && !is.logical(nas[1,1])) # FIXEME: Question with no rows this would fail how to cope
+  nas  <- mapply(do.call, funs, args)
+  if(!is.matrix(nas) || (nrow(nas) > 0 && !is.logical(nas[1,1])))
   {
     # FIXME -- Need to provide user the exact failing validate
     stop("User supplied na method not returning vector of logical of correct length")
@@ -527,7 +530,7 @@ exportRecordsTyped.redcapApiConnection <-
       if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
     })
   validations <- mapply(do.call, funs, args)
-  if(!is.matrix(validations) && !is.logical(validations[1,1]))
+  if(!is.matrix(validations) || (nrow(validations) > 0 && !is.logical(validations[1,1])))
   {
     # FIXME -- Need to provide user the exact failing validate
     stop("User supplied validation method not returning vector of logical of appropriate length")
@@ -539,13 +542,13 @@ exportRecordsTyped.redcapApiConnection <-
   cast <- modifyList(.default_cast, cast)
   for(i in seq_along(Raw))
   {
-    Records[,i] <- 
-      if(field_types[i] %in% names(cast))
-      {
-        x <- Raw[,i]
-        x[nas[,i] | !validations[,i]] <- NA
-        cast[[field_types[i]]](x, field_name=field_names[i], coding=codings)
-      } else Raw[,i]
+    cat(i,"\n")
+    if(field_types[i] %in% names(cast))
+    {
+      x <- Raw[,i]
+      x[nas[,i] | !validations[,i]] <- NA
+      Records[,i] <- cast[[field_types[i]]](x, field_name=field_names[i], coding=codings[[i]])
+    }
   }
   names(Records) <- names(Raw)
   
