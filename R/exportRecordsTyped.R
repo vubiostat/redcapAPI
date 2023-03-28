@@ -567,10 +567,20 @@ exportRecordsTyped.redcapApiConnection <-
   # Attach invalid record information
   # This is all records !validations & !nas
   # attribute(Records, "invalid") <- ???
-  
-  # FIXME FIXME HERE  
-  # FIXME FIXME HERE
-  # FIXME FIXME HERE
+  selector <- !validations & !nas
+  attr(Records, "invalid") <-
+    do.call(rbind, lapply(seq_along(Raw), function(i)
+    {
+      sel <- selector[,i]
+      if(any(sel))
+      {
+        data.frame(row=(1:nrow(Raw))[sel],
+                   record_id=Raw[sel, 1],
+                   field_name=field_names[i],
+                   value=Raw[sel, i])
+      } else NULL
+    }))
+  if(!is.null(Records, "invalid")) warning("Some records failed validation. See 'invalid' attr.")
   
    ###################################################################
   # Return Results 
