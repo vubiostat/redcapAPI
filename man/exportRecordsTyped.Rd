@@ -2,13 +2,14 @@
 % Please edit documentation in R/exportRecordsTyped.R
 \name{exportRecordsTyped}
 \alias{exportRecordsTyped}
+\alias{exportRecordsTyped.redcapApiConnection}
 \title{A replacement for \code{\link{exportRecords}} with full inversion of control over 
        type casting.}
 \usage{
 exportRecordsTyped(
   rcon,
   config = list(),
-  api_parm = list(),
+  api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL,
   fields = NULL,
@@ -22,6 +23,28 @@ exportRecordsTyped(
   date_end = NULL,
   ...
 )
+
+\method{exportRecordsTyped}{redcapApiConnection}(
+  rcon,
+  config = list(),
+  api_param = list(),
+  csv_delimiter = ",",
+  batch_size = NULL,
+  fields = NULL,
+  drop_fields = NULL,
+  forms = NULL,
+  records = NULL,
+  events = NULL,
+  survey = TRUE,
+  dag = TRUE,
+  date_begin = NULL,
+  date_end = NULL,
+  na = list(),
+  validation = list(),
+  cast = list(),
+  assignment = list(),
+  ...
+)
 }
 \arguments{
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
@@ -29,7 +52,11 @@ exportRecordsTyped(
 \item{config}{named list. Additional configuration parameters to pass to httr::POST,
 These are appended to any parameters in rcon$config}
 
-\item{csv_delimiter}{character. One of c(",", "\t", ";", "|", "^"). Designates the
+\item{api_param}{named list. Additional API parameters to pass into the body of the
+API call. This provides users to execute calls with options that may not
+otherwise be supported by redcapAPI.}
+
+\item{csv_delimiter}{character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
 delimiter for the CSV file received from the API.}
 
 \item{batch_size}{integerish(0/1). If length 0, all records are pulled.
@@ -71,17 +98,6 @@ flag will revert to its default value.}
 
 \item{date_end}{POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.}
 
-\item{data_file}{For the offline version, a character string giving the location
-of the dataset downloaded from REDCap.  Note that this should be the raw
-(unlabeled) data set.}
-
-\item{meta_data_file}{A text string giving the location of the data dictionary 
-downloaded from REDCap.}
-
-\item{api_param}{named list. Additional API parameters to pass into the body of the
-API call. This provides users to execute calls with options that may not
-otherwise be supported by redcapAPI.}
-
 \item{na}{list. A list of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
@@ -109,6 +125,13 @@ label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
+
+\item{data_file}{For the offline version, a character string giving the location
+of the dataset downloaded from REDCap.  Note that this should be the raw
+(unlabeled) data set.}
+
+\item{meta_data_file}{A text string giving the location of the data dictionary 
+downloaded from REDCap.}
 }
 \description{
 Exports records from a REDCap Database, allowing for 
