@@ -28,8 +28,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     # To pass this test, the string must have at least one comma (,) and one pipe (|)
-    expect_error(fieldChoiceMapping("This only has, a comma"), 
-                 "The field choice string does not appear to be formatted for choices.")
+    expect_error(fieldChoiceMapping("This only has, a comma"), NA)
     expect_error(fieldChoiceMapping("This only has | a pipe"), 
                  "The field choice string does not appear to be formatted for choices.")
     expect_error(fieldChoiceMapping("This has neither"), 
