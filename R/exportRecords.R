@@ -312,11 +312,19 @@ exportRecords.redcapApiConnection <-
                exportSurveyFields = tolower(survey),
                exportDataAccessGroups = tolower(dag),
                returnFormat = 'csv')
+  
+  body <- c(body, 
+            vectorToApiBodyList(field_names, "fields"), 
+            vectorToApiBodyList(forms, "forms"), 
+            vectorToApiBodyList(events, "events"), 
+            vectorToApiBodyList(records, "records"))
+  
+  body <- body[lengths(body) > 0]
 
-  body[['fields']] <- paste0(field_names, collapse=",")
-  if (!is.null(forms)) body[['forms']] <- paste0(forms, collapse=",")
-  if (!is.null(events)) body[['events']] <- paste0(events, collapse=",")
-  if (!is.null(records)) body[['records']] <- paste0(records, collapse=",")
+  # body[['fields']] <- paste0(field_names, collapse=",")
+  # if (!is.null(forms)) body[['forms']] <- paste0(forms, collapse=",")
+  # if (!is.null(events)) body[['events']] <- paste0(events, collapse=",")
+  # if (!is.null(records)) body[['records']] <- paste0(records, collapse=",")
   
   if (batch.size < 1){
     x <- unbatched(rcon = rcon,
@@ -416,8 +424,9 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling)
   
   
   #* 1. Get the IDs column
-  id_body <- body
-  id_body[['fields']] <- id
+  id_body <- c(body[!grepl("^fields", names(body))], 
+               vectorToApiBodyList(id, "fields"))
+  
   IDs <- httr::POST(url = rcon$url,
                     body = id_body,
                     config = rcon$config)
@@ -456,7 +465,9 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling)
   #* 5. Read batches
   for (i in unique(batch.number))
   {
-    body[['records']] <- paste0(unique_id[batch.number == i], collapse = ",")
+    this_body <- c(body[!grepl("^records", names(body))], 
+                   vectorToApiBodyList(unique_id[batch.number == i], "records"))
+    
     x <- httr::POST(url = rcon$url, 
                     body = body, 
                     config = rcon$config)
