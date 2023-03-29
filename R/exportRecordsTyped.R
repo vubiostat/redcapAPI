@@ -27,36 +27,59 @@
 # Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
 # `sql` coding type needs adding
 
-#' @name isNAorBlank
-#' @title Helper function for exportRecords to determine if NA or blank.
-#' @description returns TRUE/FALSE if field is NA or blank. Helper
-#' function for constructing na overrides in \code{\link{exportRecords}}.
-#' 
-#' @param x character. A vector to check for NA or blank.
+#' @name fieldValidationAndCasting
+#' @title Helper functions for \code{exportRecordsTyped} Validation and Casting
+#' @description This set of functions assists in validating that the content of 
+#'   fields coming from REDCap match the MetaData, allowing for a 
+#'   validation report to provided. The cast helpers allow for transforming
+#'   the REDCap data into R data types and allowing the user to customize 
+#'   the end product.
+#'   
+#' @param x character. A vector to check.
+#' @param rx character. The regular expression pattern to check.
+#' @param coding named character vector. The defined coding from the meta data.
+#' @param field_name character(1). Name of the field
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
-#' @return logical.
+#'
+#' @details \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
+#' function for constructing na overrides in \code{\link{exportRecordsTyped}}.
+#' 
+#' \code{valRx} constructs a validation function from a regular expression pattern. 
+#' The function returns a TRUE/FALSE if the value matches the pattern.
+#' 
+#' \code{valchoice} constructs a validation function from a set of choices 
+#' defined in the MetaData. The functions returns a TRUE/FALSE if the value
+#' matches one of the choices.
+#' 
+#' \code{castLabel} constructs a casting function for multiple choice variables. 
+#' The field will be cast to return the choice label (generally more human readable)
+#' 
+#' \code{castCode} constructs a casting function for multiple choice variables.
+#' Similar to \code{castLabel}, but the choice value is returned instead. The
+#' values are typically more compact and their meaning may not be obvious.
+#' 
+#' \code{castRaw} constructs a casting function that returns the content
+#' from REDCap as it was received. It is functionally equivalent to \code{identity}
+#' 
+#' \code{castChecked} constructs a casting function for checkbox fields. It
+#' returns values in the form of Unchecked/Checked.
+#' 
+#' \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
+#' for checkbox fields. For both, unchecked variables are cast to an empty 
+#' string (""). Checked variables are cast to the option label and option code, 
+#' respectively.
+#' 
+#' @author Shawn Garbett
+#' 
 #' @export
 isNAorBlank <- function(x, ...) is.na(x) | x==''
 
-#' @name valRx
-#' @title Construct a validate function from a regex.
-#' @description returns function that will validate using the given regex.
-#' 
-#' @param rx character. The regular expression to check.
-#' @param ... Consumes anything else passed to function. I.e., field_name and coding.
-#' @return logical.
+#' @rdname fieldValidationAndCasting
 #' @export
 valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
-#' @name valChoice
-#' @title Validate function for choice variables.
-#' @description returns TRUE/FALSE if field matches the coding. Helper for
-#' \code{\link{exportRecords}}
-#' 
-#' @param rx character. The regular expression to check.
-#' @param ... Consumes anything else passed to function. I.e., field_name and coding.
-#' @return logical.
+#' @rdname fieldValidationAndCasting
 #' @export
 valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
 
@@ -105,30 +128,22 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   sql                = NA
 )
 
-#' @name castHelper
-#' @title Cast REDCap data helper functions
-#' @description returns a type cast of a character field. Helper for
-#' \code{\link{exportRecordsTyped}}
-#' 
-#' @param x character vector. The raw data to cast.
-#' @param coding named character vector. The defined coding from the meta data.
-#' @param field_name character(1). Name of the field
-#' @return type cast vector
+#' @rdname fieldValidationAndCasting
 #' @export
 castLabel      <- function(x, coding, field_name) factor(x, levels=coding, labels=names(coding))
-#' @rdname castHelper
+#' @rdname fieldValidationAndCasting
 #' @export
-caseCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
-#' @rdname castHelper
+castCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
+#' @rdname fieldValidationAndCasting
 #' @export
 castRaw        <- function(x, coding, field_name) x
-#' @rdname castHelper
+#' @rdname fieldValidationAndCasting
 #' @export
 castChecked    <- function(x, coding, field_name) factor(c("Unchecked", "Checked")[(x=='1'|x=='yes')+1], levels=c("Unchecked", "Checked"))
-#' @rdname castHelper
+#' @rdname fieldValidationAndCasting
 #' @export
 castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=names(coding))
-#' @rdname castHelper
+#' @rdname fieldValidationAndCasting
 #' @export
 castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
 
@@ -226,7 +241,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' @param cast list. A list of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length.
+#'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
 #' @param assignment list of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped
@@ -234,6 +249,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #'   to use as a units attribute.
 #'  
 #' @details
+#' 
 #' A record of exports through the API is recorded in the Logging section 
 #' of the project.
 #' 
