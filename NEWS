@@ -1,3 +1,16 @@
+## Changes in Version 2.6.0
+
+* A set of functions to deal with file import / export in REDCap
+  * exportFileRepositoryListing
+  * exportFromFileRepository
+  * exportFileRepository
+  * importToFileRepository
+  * deleteFromFileRepository
+  * createFileRepositoryFolder
+  * importFileRepository
+  * deleteFileRepository
+
+
 ## Changes in Version 2.5.0
 
 * IMPORTANT: The upcoming 3.0.0 release will be a breaking change for exportRecords. This is needed for full inversion of control to the user over type casting.
