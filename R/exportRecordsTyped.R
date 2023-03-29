@@ -27,36 +27,38 @@
 # Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
 # `sql` coding type needs adding
 
-#' @name fieldValidationAndCasting
-#' @title Helper functions for \code{exportRecordsTyped} Validation and Casting
+#' @name isNAorBlank
+#' @title Helper function for exportRecords to determine if NA or blank.
+#' @description returns TRUE/FALSE if field is NA or blank. Helper
+#' function for constructing na overrides in \code{\link{exportRecords}}.
 #' 
-#' @param x \code{character}. A vector to check for NA or blank.
-#' @param rx \code{character}. The regular expression to check.
-#' @param field_name \code{character}. The name of the field being checked.
-#' @param coding \code{character}. The choices supported by the MetaData.
+#' @param x character. A vector to check for NA or blank.
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
-#' 
-#' @details \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
-#' function for constructing na overrides in \code{\link{exportRecordsTyped}}.
-#' 
-#' \code{valRx} returns a function that will validate a field using the given
-#' regular expression. Returns a logical (TRUE/FALSE)
-#' 
-#' \code{valChoice} Validation function for choice variables. Returns 
-#' TRUE/FALSE if fields matches the coding. 
-#' 
+#' @return logical.
 #' @export
 isNAorBlank <- function(x, ...) is.na(x) | x==''
 
-#' @rdname fieldValidationAndCasting
+#' @name valRx
+#' @title Construct a validate function from a regex.
+#' @description returns function that will validate using the given regex.
+#' 
+#' @param rx character. The regular expression to check.
+#' @param ... Consumes anything else passed to function. I.e., field_name and coding.
+#' @return logical.
 #' @export
 valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
-#' @rdname fieldValidationAndCasting
+#' @name valChoice
+#' @title Validate function for choice variables.
+#' @description returns TRUE/FALSE if field matches the coding. Helper for
+#' \code{\link{exportRecords}}
+#' 
+#' @param rx character. The regular expression to check.
+#' @param ... Consumes anything else passed to function. I.e., field_name and coding.
+#' @return logical.
 #' @export
 valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
-
 
 .default_validate <- list(
   date_              = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
@@ -80,6 +82,7 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   sql                = valChoice # This requires a bit more effort !?
 )
 
+#' @export
 .raw_cast <- list(
   date_              = NA,
   datetime_          = NA,
