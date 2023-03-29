@@ -14,13 +14,14 @@
 # [DONE] Deal with coding
 # [DONE] Attach error report to "invalid" attr
 # [DONE] Solve checkbox so all previous outputs are still supported easily
-# Review existing code and handle all the odd cases
+# [DONE] Review existing code and handle all the odd cases
 #   * Check that all fields exist in the meta data
 #   * Check that all form names exist in the meta data
 #   * Check that all event names exist in the events list
 #   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
 # Need a callback for cleanup of html and unicode on labels.
-# Massive cleanup / review pass
+# Offline version
+# Massive cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
 # Change message from prior to recommend using the new method.
@@ -102,11 +103,11 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
-  sql                = valChoice # This requires a bit more effort !?
+  sql                = NA # This requires a bit more effort !?
 )
 
 #' @export
-.raw_cast <- list(
+raw_cast <- list(
   date_              = NA,
   datetime_          = NA,
   datetime_seconds_  = NA,
@@ -180,18 +181,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #'   the long term replacement for exportRecords. 
 #'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#' @param data_file For the offline version, a character string giving the location
-#'   of the dataset downloaded from REDCap.  Note that this should be the raw
-#'   (unlabeled) data set.
-#' @param meta_data_file A text string giving the location of the data dictionary 
-#'   downloaded from REDCap.
-#' @param config named list. Additional configuration parameters to pass to httr::POST,
-#' These are appended to any parameters in rcon$config
-#' @param api_param named list. Additional API parameters to pass into the body of the
-#' API call. This provides users to execute calls with options that may not
-#' otherwise be supported by redcapAPI.
-#' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-#' delimiter for the CSV file received from the API.
+#'
 #' @param batch_size integerish(0/1). If length 0, all records are pulled.
 #' Otherwise, the records all pulled in batches of this size.
 #' 
@@ -247,6 +237,18 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
+#' @param data_file For the offline version, a character string giving the location
+#'   of the dataset downloaded from REDCap.  Note that this should be the raw
+#'   (unlabeled) data set.
+#' @param meta_data_file A text string giving the location of the data dictionary 
+#'   downloaded from REDCap.
+#' @param config named list. Additional configuration parameters to pass to httr::POST,
+#' These are appended to any parameters in rcon$config
+#' @param api_param named list. Additional API parameters to pass into the body of the
+#' API call. This provides users to execute calls with options that may not
+#' otherwise be supported by redcapAPI.
+#' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
+#' delimiter for the CSV file received from the API.
 #'  
 #' @details
 #' 
@@ -277,6 +279,32 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' there are four records per patient, each batch will consist of 40 records.  
 #' Thus, if you are concerned about tying up the server with a large, 
 #' longitudinal project, it would be prudent to use a smaller batch size.
+#' 
+#' @section Inversion of Control
+#' 
+#' The final product of calling this is a \code{data.frame} with columns
+#' that have been type cast to most commonly used analysis class (e.g. factor).
+#' This version allows the user to override any step of this process by
+#' specifying a different function for each of the stages of the type casting.
+#' The algorithm is as follows:
+#' 
+#' 1. Detect NAs in returned data (\code{na} argument).
+#' 2. Run \code{validate} functions for the field_types.
+#' 3. On the fields that are not NA and pass validate do the specified cast.
+#' 
+#' It is expected that the \code{na} and \code{validate} overrides should
+#' rarely be used. Their exposure via the function parameters is to future
+#' proof against possible bugs in the defaults, and allows for things that
+#' higher versions of REDCap add as possible field types. I.e., the overrides
+#' are for use to continue using the library when errors or changes to REDCap
+#' occur. 
+#' 
+#' The cast override is one were users can specify things that were controlled
+#' by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
+#' an addition to allow dates in the previous version to be overridden if the 
+#' user wanted to use the Date class. In this version, it would appear called
+#' like \code{cast=list(_date=as.Date)). See \code{\link{fieldValidationAndCasting}}
+#' for a full listing of package provided cast functions.
 #' 
 #' @section REDCap API Documentation (6.5.0):
 #' This function allows you to export a set of records for a project
