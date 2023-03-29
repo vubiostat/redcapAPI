@@ -12,6 +12,7 @@
 # [DONE] Agree on name/naming and change code to match
 # [DONE] Finish cleanup of main typing processing
 # [DONE] Deal with coding
+# [DONE] Attach error report to "invalid" attr
 # Solve checkbox so all previous outputs are still supported easily
 # Review existing code and handle all the odd cases
 # Need a callback for cleanup of html and unicode on labels.
@@ -99,6 +100,13 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   dropdown           = NA,
   sql                = NA
 )
+
+castLabel      <- function(x, coding, field_name) factor(x, levels=coding, labels=names(coding))
+caseCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
+castRaw        <- function(x, coding, field_name) x
+castChecked    <- function(x, coding, field_name) factor(c("Unchecked", "Checked")[(x=='1')+1], levels=c("Unchecked", "Checked"))
+castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1')+1], levels=coding, labels=names(coding))
+castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1')+1], levels=coding, labels=coding)
 
 .default_cast <- list(
   date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
@@ -555,9 +563,8 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Handle Attributes assignments on columns
   
-  # FIXME FIXME HERE  
-  # FIXME FIXME HERE
-  # FIXME FIXME HERE
+  # FIXME FIXME HERE  GOAL 1: label (stripped HTML / UNICODE)
+  # FIXME FIXME HERE  GOAL 2: units
   
    ###################################################################
   # drop_fields
