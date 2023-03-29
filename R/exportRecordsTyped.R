@@ -462,6 +462,42 @@ exportRecordsTyped.redcapApiConnection <-
   
   checkmate::reportAssertions(coll)
   
+  # Check that fields (and drop_fields) exist in the project
+  
+  ProjectFields <- rcon$fieldnames()
+  available_fields <- unique(c(ProjectFields$original_field_name, 
+                               ProjectFields$export_field_name))
+  
+  checkmate::assert_subset(x = fields, 
+                           choices = available_fields, 
+                           add = coll)
+  
+  checkmate::assert_subset(x = drop_fields, 
+                           choices = available_fields, 
+                           add = coll)
+  
+  # Check that the forms exist in the project
+  
+  checkmate::assert_subset(x = forms, 
+                           choices = rcon$instruments()$instrument_name, 
+                           add = coll)
+  
+  # Check that the events exist in the project
+  
+  checkmate::assert_subset(x = events, 
+                           choices = rcon$events()$unique_event_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  # Combine fields, drop_fields, and forms into the fields that will 
+  # be exported
+  
+  fields <- .exportRecordsFormatted_fieldsArray(rcon = rcon, 
+                                                fields = fields, 
+                                                drop_fields = drop_fields, 
+                                                forms = forms)
+  
    ###################################################################
   # Call API for Raw Results
   
@@ -627,10 +663,10 @@ exportRecordsTyped.redcapApiConnection <-
 
 # Unexported --------------------------------------------------------
 
-.exportRecordsFormattedFieldsArray <- function(rcon = rcon, 
-                                               fields = fields, 
-                                               drop_fields = drop_fields, 
-                                               forms = forms)
+.exportRecordsTyped_fieldsArray <- function(rcon = rcon, 
+                                           fields = fields, 
+                                           drop_fields = drop_fields, 
+                                           forms = forms)
 {
   FieldFormMap <- rcon$metadata()[c("field_name", "form_name")]
   ProjectFields <- rcon$fieldnames()
