@@ -556,7 +556,6 @@ exportRecordsTyped.redcapApiConnection <-
   cast <- modifyList(.default_cast, cast)
   for(i in seq_along(Raw))
   {
-    cat(i,"\n")
     if(field_types[i] %in% names(cast))
     {
       x <- Raw[,i]
@@ -578,8 +577,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Attach invalid record information
-  # This is all records !validations & !nas
-  # attribute(Records, "invalid") <- ???
   selector <- !validations & !nas
   attr(Records, "invalid") <-
     do.call(rbind, lapply(seq_along(Raw), function(i)
