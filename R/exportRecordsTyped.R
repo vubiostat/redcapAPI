@@ -190,7 +190,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' @param api_param named list. Additional API parameters to pass into the body of the
 #' API call. This provides users to execute calls with options that may not
 #' otherwise be supported by redcapAPI.
-#' @param csv_delimiter character. One of c(",", "\t", ";", "|", "^"). Designates the
+#' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
 #' delimiter for the CSV file received from the API.
 #' @param batch_size integerish(0/1). If length 0, all records are pulled.
 #' Otherwise, the records all pulled in batches of this size.
@@ -319,7 +319,7 @@ exportRecordsTyped <-
     # API Call parameters
     rcon,
     config        = list(),
-    api_parm      = list(),
+    api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
     
@@ -337,14 +337,14 @@ exportRecordsTyped <-
     
     UseMethod("exportRecords")
 
-#' @rdname exportRecords
+#' @rdname exportRecordsTyped
 #' @export
 exportRecordsTyped.redcapApiConnection <- 
   function(
     # API Call parameters
     rcon,  
     config        = list(),
-    api_parm      = list(),
+    api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
     
@@ -378,22 +378,27 @@ exportRecordsTyped.redcapApiConnection <-
   
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
+                              null.ok = TRUE,
                               add = coll)
-  
+
   checkmate::assert_character(x = drop_fields, 
-                              any.missing = FALSE, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_character(x = forms, 
-                              any.missing = FALSE, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_character(x = events, 
-                              any.missing = FALSE, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_character(x = records, 
-                              any.missing = FALSE, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_logical(x = survey, 
@@ -408,18 +413,21 @@ exportRecordsTyped.redcapApiConnection <-
   
   checkmate::assert_posixct(x = date_begin, 
                             max.len = 1, 
-                            any.missing = FALSE, 
+                            any.missing = FALSE,
+                            null.ok = TRUE, 
                             add = coll)
   
   checkmate::assert_posixct(x = date_end, 
                             max.len = 1, 
-                            any.missing = FALSE, 
+                            any.missing = FALSE,
+                            null.ok = TRUE, 
                             add = coll)
   
   checkmate::assert_integerish(x = batch_size,
                                lower = 1, 
                                max.len = 1, 
-                               any.missing = FALSE, 
+                               any.missing = FALSE,
+                               null.ok = TRUE, 
                                add = coll)
   
   csv_delimiter <- checkmate::matchArg(x         = csv_delimiter, 
@@ -447,9 +455,10 @@ exportRecordsTyped.redcapApiConnection <-
                          names = "named", 
                          add = coll)
   
-  checkmate::assert_function(x = field_label, 
-                             null.ok = TRUE, 
-                             add = coll)
+  # FIXME: Is field label supposed to be an argument?
+  # checkmate::assert_function(x = field_label, 
+  #                            null.ok = TRUE, 
+  #                            add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -534,7 +543,7 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Common provided args for na / validate functions
   args <- lapply(seq_along(Raw),
-                 function(x) list(x          = Raw[,x],
+                 function(x) list(x          = Raw[[x]],
                                   field_name = field_names[x],
                                   coding     = codings[[x]]))
   
@@ -575,9 +584,9 @@ exportRecordsTyped.redcapApiConnection <-
     cat(i,"\n")
     if(field_types[i] %in% names(cast))
     {
-      x <- Raw[,i]
-      x[nas[,i] | !validations[,i]] <- NA
-      Records[,i] <- cast[[field_types[i]]](x, field_name=field_names[i], coding=codings[[i]])
+      x <- Raw[[i]]
+      x[ nas[[i]] | !validations[[i]] ] <- NA
+      Records[[i]] <- cast[[ field_types[i] ]](x, field_name=field_names[i], coding=codings[[i]])
     }
   }
   names(Records) <- names(Raw)
@@ -600,10 +609,10 @@ exportRecordsTyped.redcapApiConnection <-
   attr(Records, "invalid") <-
     do.call(rbind, lapply(seq_along(Raw), function(i)
     {
-      sel <- selector[,i]
+      sel <- selector[[i]]
       if(any(sel))
       {
-        data.frame(row=(1:nrow(Raw))[sel],
+        data.frame(row=seq_len(nrow(Raw))[sel],
                    record_id=Raw[sel, 1],
                    field_name=field_names[i],
                    value=Raw[sel, i])
@@ -684,6 +693,7 @@ exportRecordsTyped.redcapApiConnection <-
   # Also sets the is_in_forms to FALSE to ensure it isn't 
   # included in the API call.
   
+  # FIXME: If we drop fields in the post processing, this block needs to be removed.
   if (length(drop_fields) > 0){
     FieldFormMap <- 
       lapply(FieldFormMap, 
