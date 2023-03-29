@@ -6,6 +6,8 @@
 redcapAPI
 ======
 
+redcapAPI version 2.6.1 has an emergency patch to deal with the latest version of REDCap enforcing arrays for it's API calls. We are still assessing if this fixes the issue.
+
 *NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.
 Existing tickets in the older git repo will be transitioned over the next couple months.
 
