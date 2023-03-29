@@ -12,8 +12,13 @@
 # [DONE] Agree on name/naming and change code to match
 # [DONE] Finish cleanup of main typing processing
 # [DONE] Deal with coding
-# Solve checkbox so all previous outputs are still supported easily
+# [DONE] Attach error report to "invalid" attr
+# [DONE] Solve checkbox so all previous outputs are still supported easily
 # Review existing code and handle all the odd cases
+#   * Check that all fields exist in the meta data
+#   * Check that all form names exist in the meta data
+#   * Check that all event names exist in the events list
+#   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
 # Need a callback for cleanup of html and unicode on labels.
 # Massive cleanup / review pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
@@ -97,6 +102,33 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   sql                = NA
 )
 
+#' @name castHelper
+#' @title Cast REDCap data helper functions
+#' @description returns a type cast of a character field. Helper for
+#' \code{\link{exportRecordsTyped}}
+#' 
+#' @param x character vector. The raw data to cast.
+#' @param coding named character vector. The defined coding from the meta data.
+#' @param field_name character(1). Name of the field
+#' @return type cast vector
+#' @export
+castLabel      <- function(x, coding, field_name) factor(x, levels=coding, labels=names(coding))
+#' @rdname castHelper
+#' @export
+caseCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
+#' @rdname castHelper
+#' @export
+castRaw        <- function(x, coding, field_name) x
+#' @rdname castHelper
+#' @export
+castChecked    <- function(x, coding, field_name) factor(c("Unchecked", "Checked")[(x=='1'|x=='yes')+1], levels=c("Unchecked", "Checked"))
+#' @rdname castHelper
+#' @export
+castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=names(coding))
+#' @rdname castHelper
+#' @export
+castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
+
 .default_cast <- list(
   date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
   datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
@@ -110,14 +142,14 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   calc               = as.numeric,
   int                = as.integer,
   integer            = as.numeric,
-  yesno              = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
-  truefalse          = function(x, ...) x == 'true',
-  checkbox           = function(x, ...) x == '1', # FIXME!! Under discussion
-  form_complete      = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
-  select             = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
-  radio              = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
-  dropdown           = function(x, coding, ...) factor(x, levels=coding, labels=names(coding)),
-  sql                = function(x, coding, ...) factor(x, levels=coding, labels=names(coding))
+  yesno              = castLabel,
+  truefalse          = function(x, ...) x=='1' | tolower(x) =='true',
+  checkbox           = castChecked,
+  form_complete      = castLabel,
+  select             = castLabel,
+  radio              = castLabel,
+  dropdown           = castLabel,
+  sql                = castLabel
 )
 
 
@@ -227,23 +259,6 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
 #' Thus, if you are concerned about tying up the server with a large, 
 #' longitudinal project, it would be prudent to use a smaller batch size.
 #' 
-#  #' @section Checkbox Variables:
-#  #' 
-#  #' There are four ways the data from checkbox variables may be
-#  #' represented depending on the values of \code{factors} and
-#  #' \code{checkboxLabels}. The most common are the first and third
-#  #' rows of the table below.  When \code{checkboxLabels = TRUE}, either
-#  #' the coded value or the labelled value is returned if the box is
-#  #' checked, or an empty string if it is not.
-#  #' 
-#  #' \tabular{lll}{
-#  #' \code{factors} \tab \code{checkboxLabels} \tab Output \cr
-#  #' \code{FALSE}   \tab \code{FALSE}          \tab 0 / 1 \cr
-#  #' \code{FALSE}   \tab \code{TRUE}           \tab "" / value \cr
-#  #' \code{TRUE}    \tab \code{FALSE}          \tab Unchecked / Checked \cr
-#  #' \code{TRUE}    \tab \code{TRUE}           \tab "" / label
-#  #' }
-#' 
 #' @section REDCap API Documentation (6.5.0):
 #' This function allows you to export a set of records for a project
 #' 
@@ -305,7 +320,6 @@ exportRecordsTyped <-
 
 #' @rdname exportRecordsTyped
 #' @export
-
 exportRecordsTyped.redcapApiConnection <- 
   function(
     # API Call parameters
@@ -561,9 +575,8 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Handle Attributes assignments on columns
   
-  # FIXME FIXME HERE  
-  # FIXME FIXME HERE
-  # FIXME FIXME HERE
+  # FIXME FIXME HERE  GOAL 1: label (stripped HTML / UNICODE)
+  # FIXME FIXME HERE  GOAL 2: units
   
    ###################################################################
   # drop_fields
