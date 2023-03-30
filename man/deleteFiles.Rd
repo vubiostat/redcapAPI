@@ -12,9 +12,12 @@ deleteFiles(rcon, record, field, event, ...)
   record = NULL,
   field = NULL,
   event = NULL,
+  repeat_instance = NULL,
   ...,
   bundle = getOption("redcap_bundle"),
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -30,10 +33,22 @@ supplied for a longitudinal project, the API will return an error message.}
 
 \item{...}{Arguments to be passed to other methods}
 
+\item{repeat_instance}{The repeat instance number of the repeating
+event or the repeating instrument. When available in your instance
+of REDCap, and passed as NULL, the API will assume a value of 1.}
+
 \item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 This function allows you to remove a document that has been 

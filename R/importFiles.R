@@ -23,6 +23,12 @@
 #' @param ... Arguments to be passed to other methods
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details The function may only import a single file
 #' 
@@ -35,9 +41,9 @@ importFiles <- function(rcon,
                         record, 
                         field, 
                         event, 
-                        overwrite=TRUE, 
+                        overwrite       = TRUE, 
                         ...,
-                        bundle=NULL, 
+                        bundle          = NULL, 
                         repeat_instance = NULL){
   UseMethod("importFiles")
 }
@@ -49,12 +55,14 @@ importFiles.redcapApiConnection <- function(rcon,
                                             file, 
                                             record, 
                                             field, 
-                                            event = NULL, 
-                                            overwrite = TRUE,
+                                            event           = NULL, 
+                                            overwrite       = TRUE,
                                             repeat_instance = NULL, 
                                             ...,
-                                            bundle = NULL,
-                                            error_handling = getOption("redcap_error_handling")){
+                                            bundle          = NULL,
+                                            error_handling  = getOption("redcap_error_handling"),
+                                            config          = list(), 
+                                            api_param       = list()){
   
   if (!is.na(match("proj", names(list(...)))))
   {
@@ -64,87 +72,136 @@ importFiles.redcapApiConnection <- function(rcon,
   
   if (is.numeric(record)) record <- as.character(record)
   
+   ###########################################################################
+  # Check parameters passed to function
+  
   coll <- checkmate::makeAssertCollection()
   
-  massert(~ rcon + bundle,
-          fun = checkmate::assert_class,
-          classes = list(rcon = "redcapApiConnection",
-                         bundle = "redcapBundle"),
-          null.ok = list(rcon = FALSE,
-                         bundle = TRUE),
-          fixed = list(add = coll))
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
   
-  massert(~ file + record + field + event,
-          fun = checkmate::assert_character,
-          null.ok = list(event = TRUE),
-          fixed = list(len = 1, 
-                       add = coll))
+  checkmate::assert_character(x = file, 
+                              len = 1, 
+                              any.missing = FALSE,
+                              add = coll)
   
-  checkmate::assert_logical(x = overwrite,
-                            len = 1,
+  checkmate::assert_character(x = record, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = field, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = event, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_logical(x = overwrite, 
+                            len = 1, 
+                            any.missing = FALSE, 
                             add = coll)
   
   checkmate::assert_integerish(x = repeat_instance,
                                len = 1,
+                               any.missing = FALSE,
+                               null.ok = TRUE,
                                add = coll)
+  
+  checkmate::assert_class(x = bundle, 
+                          classes = "redcapBundle", 
+                          null.ok = TRUE, 
+                          add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
+  checkmate::assert_file_exists(x = file,
+                                add = coll)
   
-  #* Use working directory if 'dir' is not specified
-  if (!file.exists(file)) 
-    coll$push(paste0("No file found at '", file, "'"))
-  
-  #* make sure 'field' exist in the project and are 'file' fields
-  meta_data <- rcon$metadata()
+  # make sure 'field' exists in the project and are 'file' fields
+  MetaData <- rcon$metadata()
 
-  if (!field %in% meta_data$field_name) 
+  if (!field %in% MetaData$field_name) 
     coll$push(paste("'", field, "' does not exist in the project.", sep=""))
   
-  if (meta_data$field_type[meta_data$field_name == field] != "file")
+  if (MetaData$field_type[MetaData$field_name == field] != "file")
     coll$push(paste0("'", field, "' is not of field type 'file'"))
   
-  #* make sure 'event' exists in the project
-  events_list <- rcon$events()
+  # make sure 'event' exists in the project
+  
+  is_project_longitudinal <- as.logical(rcon$projectInformation()$is_longitudinal)
 
-  if (inherits(events_list,'data.frame'))
+  if (is_project_longitudinal)
   {
-    if (!is.null(event) && !is.null(event) && !event %in% events_list$unique_event_name) 
-      coll$push(paste0("'", event, "' is not a valid event name in this project."))
+    EventsList <- rcon$events()
+    
+    if (nrow(EventsList) == 0)
+    {
+      message("No events defined in this project. Ignoring the 'event' argument.")
+      event <- NULL
+    } else {
+      checkmate::assert_subset(x = event, 
+                               choices = EventsList$unique_event_name, 
+                               add = coll)
+      checkmate::reportAssertions(coll)
+    }
+  } else {
+    event <- NULL
   }
   
-  if (!overwrite){
-    fileThere <- exportRecords(rcon, 
-                               records = record, 
-                               fields = field, 
-                               events = event)
+  if (!overwrite)
+  {
+    # FIXME: exportRecords is returning a warning about colClasses. 
+    #        we may want to utilize exportRecordsTyped when complete.
+    suppressWarnings({
+      fileThere <- exportRecords(rcon, 
+                                 records = record, 
+                                 fields = field, 
+                                 events = event)
+    })
+    
     if (!is.na(fileThere[field])) 
       coll$push("A file exists and overwrite=FALSE")
   }
   
   checkmate::reportAssertions(coll)
   
-  body <- list(token = rcon$token, 
-               content = 'file',
+   ###########################################################################
+  # Build the body list
+  body <- list(content = 'file',
                action = 'import', 
                record = record,
                field = field, 
                file = httr::upload_file(file), 
-               returnFormat = 'csv')
+               returnFormat = 'csv', 
+               event = event, 
+               repeat_instance = repeat_instance)
   
-  if (!is.null(event)) body[['event']] <- event
-  if (!is.null(repeat_instance)) body[['repeat_instance']] <- as.character(repeat_instance)
-  #* Export the file
-  file <- 
-    tryCatch(
-      httr::POST(
-        url = rcon$url, 
-        body = body,
-        config = rcon$config),
-      error = function(cond) list(status_code = "200"))
+  body <- body[lengths(body) > 0]
   
-  if (file$status_code != "200") 
-    redcap_error(file, error_handling)
+   ###########################################################################
+  # Make the API Call
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, 
+                                   api_param), 
+                          config = config)
+  
+  if (response$status_code != "200") 
+    redcap_error(response, error_handling)
   else 
     message("The file was successfully uploaded")
 }
