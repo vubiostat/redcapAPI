@@ -40,7 +40,7 @@ fieldChoiceMapping.character <- function(object,
   
   checkmate::reportAssertions(coll)
   
-  if (!(grepl("[^\\|]+,[^\\|]*(?:|[^\\|]+,[^\\|])*", object))){
+  if (!(grepl("[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*", object))){
     coll$push(
       sprintf("'%s' choice string does not appear to be formatted for choices.", 
               field_name))
