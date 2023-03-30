@@ -59,6 +59,7 @@ reconstituteFileFromExport <- function(response,
   filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
                    replacement = "", 
                    x = response$headers$'content-type')
+  filename <- sub("[;]charset.+$", "", filename)
   
   # Add Prefix to the file name -------------------------------------
   

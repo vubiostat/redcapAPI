@@ -9,7 +9,7 @@ exportFiles(
   rcon,
   record,
   field,
-  event,
+  event = NULL,
   dir,
   filePrefix = TRUE,
   ...,
@@ -23,9 +23,12 @@ exportFiles(
   event = NULL,
   dir,
   filePrefix = TRUE,
+  repeat_instance = NULL,
   ...,
   bundle = getOption("redcap_bundle"),
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -50,8 +53,20 @@ The file name is always the same name of the file as it exists in REDCap}
 
 \item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
+\item{repeat_instance}{The repeat instance number of the repeating
+event or the repeating instrument. When available in your instance
+of REDCap, and passed as NULL, the API will assume a value of 1.}
+
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 A single file from a single record is retrieved.  The behavior 
