@@ -37,7 +37,7 @@ manual_checkbox_suffixes <- function(x, meta_data)
   #* If x is a checkbox variable
   if (meta_data$field_type[meta_data$field_name %in% x] == "checkbox"){
     field_choice <- meta_data$select_choices_or_calculations[meta_data$field_name %in% x]
-    opts <- fieldChoiceMapping(field_choice)
+    opts <- fieldChoiceMapping(field_choice, x)
     opts <- tolower(opts)[, 1]
     
     x <- paste(x, opts, sep="___")
@@ -52,7 +52,7 @@ manual_checkbox_label_suffixes <- function(x, meta_data)
   if (meta_data$field_type[meta_data$field_name %in% x] == "checkbox"){
     #* Select choices
     field_choice <- meta_data$select_choices_or_calculations[meta_data$field_name %in% x]
-    opts <- fieldChoiceMapping(field_choice)[, 2]
+    opts <- fieldChoiceMapping(field_choice, x)[, 2]
 
     paste0(meta_data$field_label[meta_data$field_name %in% x], ": ", opts)
   }
