@@ -20,7 +20,8 @@
 #   * Check that all event names exist in the events list
 #   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
 # Need a callback for cleanup of html and unicode on labels.
-# Offline version
+# Handle retries--with batched backoff(?)
+# Offline version?
 # Massive cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
@@ -249,6 +250,9 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' otherwise be supported by redcapAPI.
 #' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
 #' delimiter for the CSV file received from the API.
+#' @param retries numeric. Default is 5. Number of times to retry a call to the
+#' API when it fails for timeout or resource not available. Will exponentially 
+#' backoff in a power series of 2 seconds. 
 #'  
 #' @details
 #' 
@@ -280,7 +284,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' Thus, if you are concerned about tying up the server with a large, 
 #' longitudinal project, it would be prudent to use a smaller batch size.
 #' 
-#' @section Inversion of Control
+#' @section Inversion of Control:
 #' 
 #' The final product of calling this is a \code{data.frame} with columns
 #' that have been type cast to most commonly used analysis class (e.g. factor).
@@ -303,7 +307,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
 #' an addition to allow dates in the previous version to be overridden if the 
 #' user wanted to use the Date class. In this version, it would appear called
-#' like \code{cast=list(_date=as.Date)). See \code{\link{fieldValidationAndCasting}}
+#' as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
 #' for a full listing of package provided cast functions.
 #' 
 #' @section REDCap API Documentation (6.5.0):
@@ -350,6 +354,7 @@ exportRecordsTyped <-
     api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
+    retries       = 5,
     
     # Limiters
     fields        = NULL,
@@ -375,6 +380,7 @@ exportRecordsTyped.redcapApiConnection <-
     api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
+    retries       = 5,
     
     # Limiters
     fields        = NULL,

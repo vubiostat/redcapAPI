@@ -12,6 +12,7 @@ exportRecordsTyped(
   api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL,
+  retries = 5,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -30,6 +31,7 @@ exportRecordsTyped(
   api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL,
+  retries = 5,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -61,6 +63,10 @@ delimiter for the CSV file received from the API.}
 
 \item{batch_size}{integerish(0/1). If length 0, all records are pulled.
 Otherwise, the records all pulled in batches of this size.}
+
+\item{retries}{numeric. Default is 5. Number of times to retry a call to the
+API when it fails for timeout or resource not available. Will exponentially 
+backoff in a power series of 2 seconds.}
 
 \item{fields}{A character vector of fields to be returned.  If \code{NULL}, 
 all fields are returned.}
@@ -167,6 +173,34 @@ there are four records per patient, each batch will consist of 40 records.
 Thus, if you are concerned about tying up the server with a large, 
 longitudinal project, it would be prudent to use a smaller batch size.
 }
+\section{Inversion of Control}{
+
+
+The final product of calling this is a \code{data.frame} with columns
+that have been type cast to most commonly used analysis class (e.g. factor).
+This version allows the user to override any step of this process by
+specifying a different function for each of the stages of the type casting.
+The algorithm is as follows:
+
+1. Detect NAs in returned data (\code{na} argument).
+2. Run \code{validate} functions for the field_types.
+3. On the fields that are not NA and pass validate do the specified cast.
+
+It is expected that the \code{na} and \code{validate} overrides should
+rarely be used. Their exposure via the function parameters is to future
+proof against possible bugs in the defaults, and allows for things that
+higher versions of REDCap add as possible field types. I.e., the overrides
+are for use to continue using the library when errors or changes to REDCap
+occur. 
+
+The cast override is one were users can specify things that were controlled
+by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
+an addition to allow dates in the previous version to be overridden if the 
+user wanted to use the Date class. In this version, it would appear called
+as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
+for a full listing of package provided cast functions.
+}
+
 \section{REDCap API Documentation (6.5.0)}{
 
 This function allows you to export a set of records for a project
