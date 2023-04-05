@@ -184,7 +184,7 @@ makeApiCall <- function(rcon,
     
     if (response$status_code == 200){
       break;
-    } else if (grepl(TIMEOUT_REGEX, as.character(response))){
+    } else if (!grepl(TIMEOUT_REGEX, as.character(response))){
       break;
     } 
     
