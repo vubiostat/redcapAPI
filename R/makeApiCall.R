@@ -134,7 +134,10 @@
 
 makeApiCall <- function(rcon, 
                         body = list(), 
-                        config = list()){
+                        config = list(), 
+                        retry = getOption("redcap_retry", 5),
+                        retry_freq = getOption("redcap_retry_freq", 3),
+                        retry_rate = getOption("redcap_retry_rate", 3)){
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -148,20 +151,67 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = config, 
                          add = coll)
   
+  checkmate::assert_integerish(x = retry, 
+                               len = 1, 
+                               any.missing = FALSE,
+                               add = coll)
+  
+  checkmate::assert_numeric(x = retry_freq, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
+  checkmate::assert_numeric(x = retry_rate, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
   checkmate::reportAssertions(coll)
   
   # Functional Code -------------------------------------------------
   
-  httr::POST(
-    url = rcon$url, 
-    body = c(list(token = rcon$token), 
-             body),
-    config = c(rcon$config, 
-               config) 
-  )
+  retry_time <- .makeApiCall_retryTime(retry = retry, 
+                                       retry_freq = retry_freq, 
+                                       retry_rate = retry_rate)
+  
+  for (i in seq_len(retry)){
+    response <-   
+      httr::POST(url = rcon$url, 
+                 body = c(list(token = rcon$token), 
+                          body),
+                 config = c(rcon$config, 
+                            config))
+    
+    if (response$status_code == 200){
+      break;
+    } else if (grepl(TIMEOUT_REGEX, as.character(response))){
+      break;
+    } 
+    
+    if (i < retry) {
+      Sys.sleep(retry_time[i])
+    }
+  }
+
+  response
 }
 
-# Tests to perform --------------------------------------------------
-# *  Throw an error if \code{rcon} is not a \code{redcapApiConnection}
-# * Throw an error if \code{body} is not a list.
-# *  Throw an error if \code{config} is not a list.
+ ####################################################################
+# Unexported
+
+.makeApiCall_retryTime <- function(retry,
+                                   retry_freq, 
+                                   retry_rate){
+  a <- 1
+  r <- retry_rate
+  k <- (seq_len(retry - 1) - 1)
+  3 + c(0, cumsum(a * r^k))
+}
+
+TIMEOUT_REGEX <- "(Remote end closed connection without response|The hostname.+combination could not connect)"
+
+
+
+
+
+
