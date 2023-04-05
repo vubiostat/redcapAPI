@@ -134,10 +134,7 @@
 
 makeApiCall <- function(rcon, 
                         body = list(), 
-                        config = list(), 
-                        retry = getOption("redcap_retry", 5),
-                        retry_freq = getOption("redcap_retry_freq", 3),
-                        retry_rate = getOption("redcap_retry_rate", 3)){
+                        config = list()){
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -151,30 +148,11 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = config, 
                          add = coll)
   
-  checkmate::assert_integerish(x = retry, 
-                               len = 1, 
-                               any.missing = FALSE,
-                               add = coll)
-  
-  checkmate::assert_numeric(x = retry_freq, 
-                            len = 1, 
-                            any.missing = FALSE,
-                            add = coll)
-  
-  checkmate::assert_numeric(x = retry_rate, 
-                            len = 1, 
-                            any.missing = FALSE,
-                            add = coll)
-  
   checkmate::reportAssertions(coll)
   
   # Functional Code -------------------------------------------------
   
-  retry_time <- .makeApiCall_retryTime(retry = retry, 
-                                       retry_freq = retry_freq, 
-                                       retry_rate = retry_rate)
-  
-  for (i in seq_len(retry)){
+  for (i in seq_len(rcon$retries())){
     response <-   
       httr::POST(url = rcon$url, 
                  body = c(list(token = rcon$token), 
@@ -184,12 +162,20 @@ makeApiCall <- function(rcon,
     
     if (response$status_code == 200){
       break;
-    } else if (!grepl(TIMEOUT_REGEX, as.character(response))){
+    } else if (!grepl(.TIMEOUT_REGEX, 
+                      as.character(response))){
       break;
-    } 
+    } else if (!rcon$retry_quietly()){
+      msg <- sprintf("API attempt %s of %s failed. Trying again in %s seconds. (%s)", 
+                     i, 
+                     rcon$retries(), 
+                     rcon$retry_interval()[i], 
+                     as.character(response))
+      message(msg)
+    }
     
-    if (i < retry) {
-      Sys.sleep(retry_time[i])
+    if (i < rcon$retries()) {
+      Sys.sleep(rcon$retry_interval()[i])
     }
   }
 
@@ -199,16 +185,7 @@ makeApiCall <- function(rcon,
  ####################################################################
 # Unexported
 
-.makeApiCall_retryTime <- function(retry,
-                                   retry_freq, 
-                                   retry_rate){
-  a <- 1
-  r <- retry_rate
-  k <- (seq_len(retry - 1) - 1)
-  3 + c(0, cumsum(a * r^k))
-}
-
-TIMEOUT_REGEX <- "(Remote end closed connection without response|The hostname.+combination could not connect)"
+.TIMEOUT_REGEX <- "(Remote end closed connection without response|The hostname.+combination could not connect)"
 
 
 
