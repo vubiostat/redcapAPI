@@ -13,16 +13,26 @@
 #'   certificates, ssl version, etc. For the majority of users, this does 
 #'   not need to be altered.  See Details for more about this argument's 
 #'   purpose and the \code{redcapAPI} wiki for specifics on its use.
+#' @param retries \code{integerish(1)}. Sets the number of attempts to make to the
+#'   API if a timeout error is encountered. Must be a positive value.
+#' @param retry_interval \code{numeric}. Sets the intervals (in seconds) at 
+#'   which retries are attempted. By default, set at a \code{2^r} where 
+#'   \code{r} is the \code{r}th retry (ie, 2, 4, 8, 16, ...). For fixed 
+#'   intervals, provide a single value. Values will be recycled to match
+#'   the number of retries.
+#' @param retry_quietly \code{logical(1)}. When \code{FALSE}, messages will 
+#'   be shown giving the status of the API calls. Defaults to \code{TRUE}.
 #' @param x \code{redcapConnection} object to be printed
 #' @param ... arguments to pass to other methods
 #'   
 #' @details
 #' \code{redcapConnection} objects will retrieve and cache various forms of 
-#' project information. This can make metadata, arms, events, fieldnames, 
-#' arm-event mappings, users, version, and project information available
+#' project information. This can make metadata, arms, events, instruments, fieldnames, 
+#' arm-event mappings, users, version, project information, and fileRepository available
 #' directly from the \code{redcapConnection} object. Take note that 
 #' the retrieval of these objects uses the default values of the respective
-#' export functions. 
+#' export functions (excepting the file repository, 
+#' which uses \code{recursive = TRUE}). 
 #' 
 #' For each of these objects, there are four methods that can be called from 
 #' the \code{redcapConnection} object: the get method (called via
@@ -32,6 +42,16 @@
 #' and the refresh method (\code{rcon$refresh_metadata}), which replaces the 
 #' current value with a new call to the API. There is also a \code{flush_all}
 #' and \code{refresh_all} method.
+#' 
+#' The \code{redcapConnection} object also stores the user preferences for 
+#' handling repeated attempts to call the API. In the event of a timeout 
+#' error or server unavailability, these settings allow a system pause before
+#' attempting another API call. In the event all of the retries fail, the 
+#' error message of the last attempt will be returned. These settings may 
+#' be altered at any time using the methods \code{rcon$set_retries(r)}, 
+#' \code{rcon$set_retry_interval(ri)}, and \code{rcon$set_retry_quietly(rq)}. 
+#' The argument to these functions have the same requirements as the 
+#' corresponding arguments to \code{redcapConnection}.
 #' 
 #' For convenience, you may consider using 
 #' \code{options(redcap_api_url=[your URL here])} in your RProfile.
@@ -84,7 +104,10 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = httr::config())
+                             config = httr::config(), 
+                             retries = 5, 
+                             retry_interval = 2^(seq_len(retries)), 
+                             retry_quietly = TRUE)
 {
   coll <- checkmate::makeAssertCollection()
   
@@ -95,6 +118,22 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   checkmate::assert_character(x = token, 
                               len = 1, 
                               add = coll)
+  
+  checkmate::assert_integerish(x = retries, 
+                               len = 1, 
+                               lower = 1, 
+                               any.missing = FALSE, 
+                               add = coll)
+  
+  checkmate::assert_numeric(x = retry_interval, 
+                            lower = 0,
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = retry_quietly, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -110,6 +149,10 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_project <- NULL
   this_instrument <- NULL
   this_fileRepository <- NULL
+  rtry <- retries
+  rtry_int <- rep(retry_interval, 
+                  length.out = rtry)
+  rtry_q <- retry_quietly
   
   getter <- function(export){
     switch(export, 
@@ -199,8 +242,32 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_project <<- getter("project")
         this_instrument <<- getter("instrument")
         this_fileRepository <<- getter("fileRepo")
-      }
+      },
       
+      retries = function() rtry, 
+      set_retries = function(r){
+        checkmate::assert_integerish(x = r, 
+                                     len = 1, 
+                                     lower = 1,
+                                     any.missing = FALSE) 
+        rtry <<- r
+      },
+      
+      retry_interval = function() rtry_int, 
+      set_retry_interval = function(ri){
+        checkmate::assert_numeric(x = ri, 
+                                  lower = 0,
+                                  any.missing = FALSE)
+        rtry_int <<- rep(ri, length.out = rtry)
+      }, 
+      
+      retry_quietly = function() rtry_q, 
+      set_retry_quietly = function(rq){
+        checkmate::assert_logical(x = rq, 
+                                  len = 1, 
+                                  any.missing = FALSE)
+        rtry_q <<- rq
+      }
     )
   class(rc) <- "redcapApiConnection"
   rc
@@ -216,11 +283,13 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
       sprintf("Arms        : %s", is_cached(x$has_arms())), 
       sprintf("Events      : %s", is_cached(x$has_events())),
+      sprintf("Instruments : %s", is_cached(x$has_instruments())),
       sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
       sprintf("Mapping     : %s", is_cached(x$has_mapping())),
       sprintf("Users       : %s", is_cached(x$has_users())), 
       sprintf("Version     : %s", is_cached(x$has_version())), 
-      sprintf("Project Info: %s", is_cached(x$has_projectInformation())))
+      sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
+      sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))
   cat(output, sep = "\n")
 }
 
