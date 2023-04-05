@@ -9,9 +9,9 @@
 https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
 }
 \usage{
-fieldChoiceMapping(object, ...)
+fieldChoiceMapping(object, field_name, ...)
 
-\method{fieldChoiceMapping}{character}(object, ...)
+\method{fieldChoiceMapping}{character}(object, field_name, ...)
 
 \method{fieldChoiceMapping}{redcapApiConnection}(object, field_name, ...)
 }
@@ -20,10 +20,10 @@ fieldChoiceMapping(object, ...)
 field choices (i.e. \code{meta_data$select_choices_or_calculations}), 
 or a \code{redcapConnection} object.}
 
-\item{...}{arguments to pass to other methods.}
-
 \item{field_name}{\code{character(1)} gives the field name for which to 
 make the choice mapping.}
+
+\item{...}{arguments to pass to other methods.}
 }
 \value{
 Returns a matrix with two columns, \code{choice_value} and \code{choice_label}

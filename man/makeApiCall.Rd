@@ -4,7 +4,14 @@
 \alias{makeApiCall}
 \title{Make REDCap API Calls}
 \usage{
-makeApiCall(rcon, body = list(), config = list())
+makeApiCall(
+  rcon,
+  body = list(),
+  config = list(),
+  retry = getOption("redcap_retry", 5),
+  retry_freq = getOption("redcap_retry_freq", 3),
+  retry_rate = getOption("redcap_retry_rate", 3)
+)
 }
 \arguments{
 \item{rcon}{\code{redcapApiConnection} object.}
