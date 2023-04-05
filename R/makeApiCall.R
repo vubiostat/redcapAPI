@@ -34,9 +34,9 @@
 #'   502 (Bad Gateway), 503 (Service Unavailable), or 504 (Gateway Timeout)
 #'   will prompt reattempts at calling the API. See \code{\link{redcapConnection}}
 #'   for details. If the API reaches its attempt limit without resolving to 
-#'   any other code, the last response is returned. If any other repsonse
+#'   any other code, the last response is returned. If any other response
 #'   code is returned at any point in the retry loop, the loop breaks and 
-#'   returns that resopnse.
+#'   returns that response.
 #'   
 #' @author Benjamin Nutter
 #' 
@@ -201,16 +201,20 @@ makeApiCall <- function(rcon,
   # we want to break the loop in cases where the response is anything that does
   # not justify a retry. 
   # It's somewhat silly to have this as a separate method, but it allows us
-  # to test that we can will hit the retry conditions based on the status code
+  # to test that we can hit the retry conditions based on the status code
   # without having to force one of these conditions onto the server. 
-  # See tests for .makeApiCall_validateResponse tests in test/testthat/test-makeApiCall.R
+  # See tests for .makeApiCall_isRetryEligible in test/testthat/test-makeApiCall.R
   
   retry_eligible <- response$status_code %in% c(408, 500, 502, 503, 504)
  
   return(retry_eligible)
 }
 
-.makeApiCall_retryMessage <- function(rcon, response, iteration){
+
+
+.makeApiCall_retryMessage <- function(rcon, 
+                                      response, 
+                                      iteration){
   msg_part1 <- sprintf("API attempt %s of %s failed. ", 
                        iteration, 
                        rcon$retries())
