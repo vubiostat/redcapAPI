@@ -1,5 +1,6 @@
 ## Changes in Version 2.6.2
 
+* Added retry parameter to connection object. On timeouts and gateway failures it retries 5 times now by default.
 * Cleanup from emergency patches.
 
 ## Changes in Version 2.6.1
