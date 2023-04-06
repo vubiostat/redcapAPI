@@ -123,7 +123,7 @@ allocationTable.redcapApiConnection <- function(rcon,
   {
     if (meta_data$field_type[meta_data$field_name == v] %in% c("dropdown", "radio")){
       choice_str <- meta_data$select_choices_or_calculations[meta_data$field_name == v]
-      choice_str <- fieldChoiceMapping(choice_str)
+      choice_str <- fieldChoiceMapping(choice_str, v)
       return(choice_str[, (2-raw)])
     }
     else if (meta_data$field_type[meta_data$field_name == v] %in% c("yesno", "true_false"))

@@ -22,7 +22,7 @@
 #' 
 #' @export
 
-fieldChoiceMapping <- function(object, ...){
+fieldChoiceMapping <- function(object,  field_name, ...){
   UseMethod("fieldChoiceMapping")
 }
 
@@ -30,6 +30,7 @@ fieldChoiceMapping <- function(object, ...){
 #' @export
 
 fieldChoiceMapping.character <- function(object, 
+                                         field_name,
                                          ...){
   coll <- checkmate::makeAssertCollection()
   
@@ -39,8 +40,10 @@ fieldChoiceMapping.character <- function(object,
   
   checkmate::reportAssertions(coll)
   
-  if (!(grepl(",", object) && grepl("[|]", object))){
-    coll$push("The field choice string does not appear to be formatted for choices.")
+  if (!(grepl("[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*", object))){
+    coll$push(
+      sprintf("'%s' choice string does not appear to be formatted for choices.", 
+              field_name))
     checkmate::reportAssertions(coll)
   }
   
@@ -51,7 +54,7 @@ fieldChoiceMapping.character <- function(object,
                                 mapping, 
                                 perl=TRUE))
   mapping <- do.call("rbind", mapping)
-  mapping <- trimws(mapping[, -1]) # the first column is the original string. 
+  mapping <- trimws(mapping[, -1, drop=FALSE]) # the first column is the original string. 
 
   colnames(mapping) <- c("choice_value", "choice_label")
   mapping
