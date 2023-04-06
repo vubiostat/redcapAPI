@@ -26,7 +26,7 @@ packageStartupMessage(
 
 .onUnload <- function(libPath)
 {
-  options(redcap_api_url=NULL,
+  options(redcap_api_url = NULL,
           redcap_error_handling = NULL,
           redcap_bundle = NULL)
 }

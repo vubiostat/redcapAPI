@@ -397,7 +397,6 @@ allocationTable_offline <- function(meta_data,
                                     block.size.shift = 0,
                                     seed.dev = NULL, 
                                     seed.prod = NULL,  
-                                    bundle = NULL, 
                                     weights = c(1, 1), 
                                     ...){
   MetaData <- utils::read.csv(MetaData,
@@ -437,7 +436,6 @@ allocationTable_offline <- function(meta_data,
                                       block.size.shift = block.size.shift,
                                       seed.dev = seed.dev,
                                       seed.prod = seed.prod,
-                                      bundle = list(meta_data = meta_data),
                                       weights = weights, 
                                       ...)
 }
