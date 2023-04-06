@@ -154,18 +154,18 @@ castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
 #' @rdname stripHTMLandUNICODE,
 #' @export
-stripHTMLandUNICODE <- function(x, field_name, field_label, field_annotation)
+stripHTMLandUNICODE <- function(field_name, field_label, field_annotation)
 {
   # FIXME FIXME
   x
 }
 #' @rdname unitsFieldAnnotation
 #' @export
-unitsFieldAnnotation <- function(x, field_name, field_label, field_annotation)
+unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 {
   m <- gsub('^.*units\\s*=\\s*\\{\\s*"([^"]*)"\\s*\\}.*$', "\\1", field_annotation)
 
-  if(length(m) == 0 || m == field_annotation) NULL else m
+  if(length(m) == 0 || m == field_annotation) NA else m
 }
 
 
@@ -547,7 +547,7 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
-  fields <- .exportRecordsFormatted_fieldsArray(rcon = rcon, 
+  fields <- .exportRecordsTyped_fieldsArray(rcon = rcon, 
                                                 fields = fields, 
                                                 drop_fields = drop_fields, 
                                                 forms = forms)
@@ -700,13 +700,19 @@ exportRecordsTyped.redcapApiConnection <-
   names(Records) <- names(Raw)
   
    ###################################################################
-  # Handle Attributes assignments on columns
-  
-  # FIXME FIXME HERE  GOAL 1: label (stripped HTML / UNICODE)
-  # FIXME FIXME HERE  GOAL 2: units
+  # Handle Attributes assignments on columns, #24, #45
+  for(i in names(assignment))
+  {
+    x <- assignment[[i]](field_names, ???Xfield_label, ???Xfield_annotation)
+    
+    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[j], i) <- x[j]
+  }
+
   
    ###################################################################
   # drop_fields
+  # FIXME: Benjamin it looks like you dealt with this elsewhere. 
+  # Should this be deleted?
   if(length(drop_fields)) Records <- Records[!names(Records) %in% drop_fields]
   
    ###################################################################
@@ -728,6 +734,8 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
+  # FIXME: Will this cause a failure if fields were "dropped" or
+  # simply not requested?
   if(mChoice)
   {
     checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
