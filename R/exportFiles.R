@@ -16,10 +16,19 @@
 #' @param filePrefix Logical.  Determines if a prefix is appended to the file 
 #'   name.  The prefix takes the form [record_id]-[event_name]-[file_name].  
 #'   The file name is always the same name of the file as it exists in REDCap
+#' @param repeat_instance The repeat instance number of the repeating
+#'   event or the repeating instrument. When available in your instance
+#'   of REDCap, and passed as NULL, the API will assume a value of 1.
 #' @param ... Arguments to be passed to other methods
 #' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details The function may only export a single file.  
 #' See the examples for suggestions on exporting multiple files.
@@ -60,11 +69,11 @@
 exportFiles <- function(rcon, 
                         record, 
                         field, 
-                        event, 
+                        event      = NULL, 
                         dir, 
                         filePrefix = TRUE, 
                         ...,
-                        bundle = getOption("redcap_bundle")){
+                        bundle     = getOption("redcap_bundle")){
   UseMethod("exportFiles")
 }
 
@@ -74,12 +83,15 @@ exportFiles <- function(rcon,
 exportFiles.redcapApiConnection <- function(rcon, 
                                             record, 
                                             field, 
-                                            event = NULL, 
+                                            event           = NULL, 
                                             dir, 
-                                            filePrefix = TRUE, 
+                                            filePrefix      = TRUE, 
+                                            repeat_instance = NULL,
                                             ...,
-                                            bundle = getOption("redcap_bundle"),
-                                            error_handling = getOption("redcap_error_handling")){
+                                            bundle          = getOption("redcap_bundle"),
+                                            error_handling  = getOption("redcap_error_handling"),
+                                            config          = list(), 
+                                            api_param       = list()){
   
   if (!is.na(match("proj", names(list(...)))))
   {
@@ -89,108 +101,126 @@ exportFiles.redcapApiConnection <- function(rcon,
 
   if (is.numeric(record)) record <- as.character(record)
   
-  #* Error Collection Object
+   ###########################################################################
+  # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
   
-  massert(~ rcon + bundle,
-          fun = checkmate::assert_class,
-          classes = list(rcon = "redcapApiConnection",
-                         bundle = "redcapBundle"),
-          null.ok = list(rcon = FALSE,
-                         bundle = TRUE),
-          fixed = list(add = coll))
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
   
-  massert(~ record + field + event,
-          fun = checkmate::assert_character,
-          null.ok = list(record = FALSE,
-                         field = FALSE,
-                         event = TRUE),
-          fixed = list(len = 1,
-                       add = coll))
+  checkmate::assert_character(x = record, 
+                              len = 1, 
+                              any.missing = FALSE,
+                              add = coll)
   
-  if (missing(dir)){
-    coll$push("'dir' must have a character(1) value")
-  }
-  else{
-    checkmate::assert_character(x = dir,
-                                len = 1, 
-                                add = coll)
-    
-    if (is.character(dir)){
-      if (!dir.exists(dir)){
-        coll$push("'dir' is not an existing directory")
-      }
-    }
-  }
+  checkmate::assert_character(x = field, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = event, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = dir, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
   
   checkmate::assert_logical(x = filePrefix,
                             len = 1,
                             add = coll)
   
+  checkmate::assert_integerish(x = repeat_instance, 
+                               len = 1, 
+                               any.missing = FALSE,
+                               null.ok = TRUE,
+                               add = coll)
+  
+  checkmate::assert_class(x = bundle, 
+                          classes = "redcapBundle", 
+                          add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
+ 
+  checkmate::assert_directory_exists(x = dir, 
+                                     add = coll)
+
+  # Secure the MetaData
+  MetaData <- rcon$metadata()
   
-  #* Secure the meta_data
-  meta_data <- rcon$metadata()
-  
-  #* make sure 'field' exist in the project and are 'file' fields
-  if (!field %in% meta_data$field_name) 
+  # make sure 'field' exist in the project and are 'file' fields
+  if (!field %in% MetaData$field_name) 
   {
     coll$push(paste("'", field, "' does not exist in the project.", sep=""))
   }
-  else if (meta_data$field_type[meta_data$field_name == field] != "file")
+  else if (MetaData$field_type[MetaData$field_name == field] != "file")
   {
     coll$push(paste0("'", field, "' is not of field type 'file'"))
   }
   
-  #* Secure the events list
-  events_list <- rcon$events()
-      
-  #* make sure 'event' exists in the project
-  if (inherits(events_list, "data.frame"))
+  # Check that event exists in the project
+  is_project_longitudinal <- as.logical(rcon$projectInformation()$is_longitudinal)
+  
+  if (is_project_longitudinal)
   {
-    if (!is.null(event) && !event %in% events_list$unique_event_name) 
-      coll$push(paste0("'", event, "' is not a valid event name in this project."))
+    EventsList <- rcon$events()
+    
+    if (nrow(EventsList) == 0)
+    {
+      message("No events defined in this project. Ignoring the 'event' argument.")
+      event <- NULL
+    } else {
+      checkmate::assert_subset(x = event, 
+                               choices = EventsList$unique_event_name, 
+                               add = coll)
+    }
+  } else {
+    event <- NULL
   }
   
   checkmate::reportAssertions(coll)
   
-  body <- list(token = rcon$token, 
-               content = 'file',
+   ###########################################################################
+  # Build the Body List
+  body <- list(content = 'file',
                action = 'export', 
                returnFormat = 'csv',
                record = record,
-               field = field)
+               field = field, 
+               event = event)
   
-  if (!is.null(event)) body[['event']] <- event
+  body <- body[lengths(body) > 0]
   
-  #* Export the file
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+   ###########################################################################
+  # Make the API Call
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
 
-  if (x$status_code != 200) redcap_error(x, error_handling)
+  if (response$status_code != 200) redcap_error(response, error_handling)
   
-  # FIXME: Make use of `reconstituteFileFromExport`
+  prefix <- 
+    if (filePrefix) sprintf("%s-%s", record, event) else ""
   
-  #* strip the returned character string to just the file name.
-  filename <- sub(pattern = "[[:print:]]+; name=", 
-                 replacement = "", 
-                 x = x$headers$'content-type')
-  filename <- gsub(pattern = "\"", 
-                   replacement = "", 
-                   filename)
-  filename <- sub(pattern = ";charset[[:print:]]+", 
-                  replacement = "", 
-                  x = filename)
-    
-  #* Add the prefix
-  if (filePrefix) filename <- paste(record, "-", event, "-", filename, sep="")
-    
-  #* Write to a file
-  writeBin(object = as.vector(x$content), 
-           con = file.path(dir, filename), 
-           useBytes=TRUE)
+  file_saved <- reconstituteFileFromExport(response = response, 
+                                           dir = dir, 
+                                           dir_create = FALSE, 
+                                           file_prefix = prefix)
   
-  message("The file was saved to '", filename, "'")
-
+  message(sprintf("The file was saved to '%s'", 
+                  file.path(file_saved$directory, 
+                            file_saved$filename)))
 }

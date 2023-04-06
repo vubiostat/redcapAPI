@@ -10,10 +10,19 @@
 #' @param event The event name for the file.  Must be length 1.  
 #'   This applies only to longitudinal projects.  If the event is not
 #'   supplied for a longitudinal project, the API will return an error message.
+#' @param repeat_instance The repeat instance number of the repeating
+#'   event or the repeating instrument. When available in your instance
+#'   of REDCap, and passed as NULL, the API will assume a value of 1.
 #' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param ... Arguments to be passed to other methods
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @author Benjamin Nutter
 #'
@@ -36,63 +45,107 @@ deleteFiles <- function(rcon,
 #' @export
 
 deleteFiles.redcapApiConnection <- function(rcon, 
-                                            record = NULL, 
-                                            field = NULL, 
-                                            event = NULL, ..., 
-                                            bundle = getOption("redcap_bundle"),
-                                            error_handling = getOption("redcap_error_handling")){
+                                            record          = NULL, 
+                                            field           = NULL, 
+                                            event           = NULL, 
+                                            repeat_instance = NULL,
+                                            ..., 
+                                            bundle          = getOption("redcap_bundle"),
+                                            error_handling  = getOption("redcap_error_handling"),
+                                            config          = list(), 
+                                            api_param       = list()){
+  
   if (is.numeric(record)) record <- as.character(record)
+  
+  ###########################################################################
+  # Check parameters passed to function
   
   coll <- checkmate::makeAssertCollection()
   
-  massert(~ rcon + bundle,
-          fun = checkmate::assert_class,
-          classes = list(rcon = "redcapApiConnection",
-                         bundle = "redcapBundle"),
-          null.ok = list(rcon = FALSE,
-                         bundle = TRUE),
-          fixed = list(add = coll))
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
   
-  massert(~ record + field + event,
-          fun = checkmate::assert_character,
-          null.ok = list(event = TRUE),
-          fixed = list(len = 1,
-                       add = coll))
+  checkmate::assert_character(x = record, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
   
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        add = coll)
+  checkmate::assert_character(x = field, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = event, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_integerish(x = repeat_instance, 
+                               len = 1, 
+                               any.missing = FALSE, 
+                               null.ok = TRUE,
+                               add = coll)
+  
+  checkmate::assert_class(x = bundle, 
+                          classes = "redcapBundle", 
+                          add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
-  #* make sure 'field' exist in the project and are 'file' fields
-  meta_data <- rcon$metadata()
+  # make sure 'field' exist in the project and are 'file' fields
+  MetaData <- rcon$metadata()
   
-  if (!field %in% meta_data$field_name) 
+  if (!field %in% MetaData$field_name) 
     coll$push(paste0("'", field, "' does not exist in the project."))
   
-  if (meta_data$field_type[meta_data$field_name == field] != "file")
+  if (MetaData$field_type[MetaData$field_name == field] != "file")
     coll$push(paste0("'", field, "' is not of field type 'file'"))
   
-  #* make sure 'event' exists in the project
-  events_list <- rcon$events()
+  # make sure 'event' exists in the project
   
-  if (inherits(events_list,"data.frame"))
+  is_project_longitudinal <- as.logical(rcon$projectInformation()$is_longitudinal)
+  
+  if (is_project_longitudinal)
   {
-    if (!is.null(event) && !event %in% events_list$unique_event_name) 
-      coll$push(paste0("'", event, "' is not a valid event name in this project."))
+    EventsList <- rcon$events()
+    
+    if (nrow(EventsList) == 0)
+    {
+      message("No events defined in this project. Ignoring the 'event' argument.")
+      event <- NULL
+    } else {
+      checkmate::assert_subset(x = event, 
+                               choices = EventsList$unique_event_name, 
+                               add = coll)
+      checkmate::reportAssertions(coll)
+    }
+  } else {
+    event <- NULL
   }
   
   checkmate::reportAssertions(coll)
   
-  body <- list(token = rcon$token, 
-               content = 'file',
+   ###########################################################################
+  # Build the body list
+  body <- list(content = 'file',
                action = 'delete', 
                record = record,
                field = field, 
-               returnFormat = 'csv')
+               returnFormat = 'csv', 
+               event = event, 
+               repeat_instance = repeat_instance)
   
-  if (is.null(event)) body[['event']] <- event
+  body <- body[lengths(body) > 0]
   
   #* Delete the file
   #* The tryCatch here seems a little quirky.  My best understanding is that since the API isn't returning
@@ -100,15 +153,22 @@ deleteFiles.redcapApiConnection <- function(rcon,
   #* case, an error means the action was successfully performed.  The tryCatch call negotiates that oddity to
   #* get the desired result.
   
-  x <- 
-    tryCatch(
-      httr::POST(url = rcon$url, 
-                 body = body, 
-                 config = rcon$config),
-      error = function(cond) list(status_code = 200))
+  ###########################################################################
+  # Make the API Call
   
-  if (x$status_code != "200")
-    redcap_error(x, error_handling)
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  # x <- 
+  #   tryCatch(
+  #     httr::POST(url = rcon$url, 
+  #                body = body, 
+  #                config = rcon$config),
+  #     error = function(cond) list(status_code = 200))
+  
+  if (response$status_code != "200")
+    redcap_error(response, error_handling)
   else 
     message("The file was successfully deleted")
   

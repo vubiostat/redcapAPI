@@ -27,7 +27,9 @@ importFiles(
   repeat_instance = NULL,
   ...,
   bundle = NULL,
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -58,6 +60,14 @@ of REDCap, and passed as NULL, the API will assume a value of 1.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 A single file may be attached to a single record.  The 
