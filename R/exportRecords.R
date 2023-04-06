@@ -51,7 +51,6 @@
 #'   is the label assigned to the level in the data dictionary. 
 #'   This option is only available after REDCap version 6.0.  See Checkbox Variables
 #'   for more on how this interacts with the \code{factors} argument.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param colClasses A (named) vector of colum classes passed to 
 #'   \code{\link[utils]{read.csv}} calls. 
 #'   Useful to force the interpretation of a column in a specific type and 
@@ -152,10 +151,20 @@
 #' @export
 
 exportRecords <-
-  function(rcon, factors = TRUE, fields = NULL, forms = NULL, records = NULL,
-           events = NULL, labels = TRUE, dates = TRUE, drop = NULL,
-           survey = TRUE, dag = TRUE, checkboxLabels = FALSE, 
-           colClasses = character(0), ...)
+  function(rcon, 
+           factors = TRUE, 
+           fields = NULL, 
+           forms = NULL, 
+           records = NULL,
+           events = NULL, 
+           labels = TRUE, 
+           dates = TRUE, 
+           drop = NULL,
+           survey = TRUE, 
+           dag = TRUE, 
+           checkboxLabels = FALSE, 
+           colClasses = character(0), 
+           ...)
     
     UseMethod("exportRecords")
 
@@ -163,20 +172,24 @@ exportRecords <-
 #' @export
 
 exportRecords.redcapApiConnection <- 
-  function(rcon, factors = TRUE, fields = NULL, forms = NULL,
-           records = NULL, events = NULL, labels = TRUE, dates = TRUE, drop = NULL,
-           survey = TRUE, dag = TRUE, checkboxLabels = FALSE,
-           colClasses = character(0), ...,
+  function(rcon, 
+           factors = TRUE, 
+           fields = NULL,
+           forms = NULL,
+           records = NULL, 
+           events = NULL, 
+           labels = TRUE, 
+           dates = TRUE, 
+           drop = NULL,
+           survey = TRUE, 
+           dag = TRUE, 
+           checkboxLabels = FALSE,
+           colClasses = character(0), 
+           ...,
            batch.size = -1,
-           bundle = getOption("redcap_bundle"),
            error_handling = getOption("redcap_error_handling"),
            form_complete_auto = TRUE)
 {
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
   message("The call syntax of exportRecords will undergo a breaking change in the upcoming 3.0.0 release. See Issue #10")
 
   if (is.numeric(records)) records <- as.character(records)

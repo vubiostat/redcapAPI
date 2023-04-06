@@ -16,7 +16,6 @@
 #'   file already exists for that record.  If a file exists, the function 
 #'   terminates to prevent overwriting.  When \code{TRUE}, no additional 
 #'   check is performed.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param repeat_instance The repeat instance number of the repeating
 #'   event or the repeating instrument. When available in your instance
 #'   of REDCap, and passed as NULL, the API will assume a value of 1.
@@ -43,7 +42,6 @@ importFiles <- function(rcon,
                         event, 
                         overwrite       = TRUE, 
                         ...,
-                        bundle          = NULL, 
                         repeat_instance = NULL){
   UseMethod("importFiles")
 }
@@ -59,16 +57,9 @@ importFiles.redcapApiConnection <- function(rcon,
                                             overwrite       = TRUE,
                                             repeat_instance = NULL, 
                                             ...,
-                                            bundle          = NULL,
                                             error_handling  = getOption("redcap_error_handling"),
                                             config          = list(), 
                                             api_param       = list()){
-  
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
   
   if (is.numeric(record)) record <- as.character(record)
   
@@ -112,11 +103,6 @@ importFiles.redcapApiConnection <- function(rcon,
                                any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
-  
-  checkmate::assert_class(x = bundle, 
-                          classes = "redcapBundle", 
-                          null.ok = TRUE, 
-                          add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
