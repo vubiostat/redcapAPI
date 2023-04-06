@@ -13,6 +13,12 @@
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param ... Additional arguments to pass to other methods.
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @section REDCap API Documentation:
 #' This method allows you to delete Arms from a project. 
@@ -49,17 +55,59 @@ deleteArms <- function(rcon,
 deleteArms.redcapApiConnection <- function(rcon, 
                                            arms, 
                                            ...,
-                                           error_handling = getOption("redcap_error_handling")){
-  checkmate::assert_integerish(arms)
+                                           error_handling = getOption("redcap_error_handling"), 
+                                           config          = list(), 
+                                           api_param       = list()){
   
-  body <- list(token = rcon$token,
-               content = "arm",
-               action = "delete",
-               arms = paste0(arms, collapse = ","))
+  if (is.character(arms)) arms <- as.numeric(arms)
+
+   ##################################################################
+  # Argument Validation
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+  coll <- checkmate::makeAssertCollection()
   
-  if (x$status_code != 200) return(redcap_error(x, error_handling))
+  checkmate::assert_integerish(arms, 
+                               add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  Arms <- rcon$arms()
+  
+  checkmate::assert_subset(x = arms, 
+                           choices = Arms$arm_num, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ##################################################################
+  # Make API Body List
+  body <- c(list(token = rcon$token,
+                 content = "arm",
+                 action = "delete"),
+            vectorToApiBodyList(arms, "arms"))
+
+  body <- body[lengths(body) > 0]
+  
+   ##################################################################
+  # Call the API
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) return(redcap_error(response, error_handling))
+  
+  message("Arms ", paste0(arms, collapse = ", "), " deleted.")
 }
