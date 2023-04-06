@@ -157,7 +157,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 stripHTMLandUNICODE <- function(field_name, field_label, field_annotation)
 {
   # FIXME FIXME
-  x
+  field_label
 }
 #' @rdname unitsFieldAnnotation
 #' @export
@@ -165,7 +165,7 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 {
   m <- gsub('^.*units\\s*=\\s*\\{\\s*"([^"]*)"\\s*\\}.*$', "\\1", field_annotation)
 
-  if(length(m) == 0 || m == field_annotation) NA else m
+  ifelse(is.na(m) | sapply(m, length) == 0 | m == field_annotation,NA,m)
 }
 
 
@@ -618,8 +618,9 @@ exportRecordsTyped.redcapApiConnection <-
   field_names <- names(Raw)
   field_bases <- gsub("___.+$", "", field_names)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  field_map <- match(field_bases, MetaData$field_name)
   
-  field_types <- MetaData$field_type[match(field_bases, MetaData$field_name)]
+  field_types <- MetaData$field_type[field_map]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
 
 
@@ -634,7 +635,7 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Derive codings (This is probably a good internal helper)
 # FIXME Could this be replaced with fieldChoiceMapping ?
-  codebook <- MetaData$select_choices_or_calculations[match(field_bases, MetaData$field_name)]
+  codebook <- MetaData$select_choices_or_calculations[field_map]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codings <- lapply(
     codebook,
@@ -668,7 +669,7 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Run Validation Functions
-  validate <- modifyList(.default_validate, validate)
+  validate <- modifyList(.default_validate, validation)
   funs <- lapply(
     field_types,
     function(x)
@@ -703,12 +704,11 @@ exportRecordsTyped.redcapApiConnection <-
   # Handle Attributes assignments on columns, #24, #45
   for(i in names(assignment))
   {
-    x <- assignment[[i]](field_names, ???Xfield_label, ???Xfield_annotation)
+    x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
     
-    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[j], i) <- x[j]
+    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
   }
 
-  
    ###################################################################
   # drop_fields
   # FIXME: Benjamin it looks like you dealt with this elsewhere. 
