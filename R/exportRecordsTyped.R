@@ -20,7 +20,7 @@
 #   * Check that all event names exist in the events list
 #   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
 # Need a callback for cleanup of html and unicode on labels.
-# Handle retries--with batched backoff(?)
+# [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
 # Offline version?
 # Massive cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
