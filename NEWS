@@ -1,4 +1,8 @@
-## Changes in Versino 2.6.1
+## Changes in Version 2.6.2
+
+* Cleanup from emergency patches.
+
+## Changes in Version 2.6.1
 
 * Emergency fix. REDCap latest version has changed it's API calling syntax.
 * Fix to choice name parsing when only a single choice is specified.
@@ -15,7 +19,6 @@
   * createFileRepositoryFolder
   * importFileRepository
   * deleteFileRepository
-
 
 ## Changes in Version 2.5.0
 
