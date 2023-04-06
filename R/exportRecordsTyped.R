@@ -8,26 +8,27 @@
 # Function variables: snake_case
 #  * (exception) data.frame variable: CamelCase
 
-# Punch List
+# Punch List #10, #25, #40
 # [DONE] Agree on name/naming and change code to match
 # [DONE] Finish cleanup of main typing processing
 # [DONE] Deal with coding
-# [DONE] Attach error report to "invalid" attr
+# [DONE] Attach error report to "invalid" attr #35
 # [DONE] Solve checkbox so all previous outputs are still supported easily
 # [DONE] Review existing code and handle all the odd cases
 #   * Check that all fields exist in the meta data
 #   * Check that all form names exist in the meta data
 #   * Check that all event names exist in the events list
 #   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
-# Need a callback for cleanup of html and unicode on labels.
+# Need a callback for cleanup of html and unicode on labels. #24
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# Offline version?
-# Massive cleanup / review / editing pass
+# Create default assignment function for attaching units
+# Offline version? testing?
+# Cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
-# Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
-# Change message from prior to recommend using the new method.
+# [DONE] Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
+# [DONE] Change message from prior to recommend using the new method.
 # Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
-# `sql` coding type needs adding
+# [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
 
 #' @name fieldValidationAndCasting
 #' @title Helper functions for \code{exportRecordsTyped} Validation and Casting
@@ -238,6 +239,10 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
+#' @param mChoice logical. Should a multiple choice variable
+#'   be summarized into an \code{Hmisc::mChoice} class and returned with the
+#'   \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE. 
+#'   
 #' @param data_file For the offline version, a character string giving the location
 #'   of the dataset downloaded from REDCap.  Note that this should be the raw
 #'   (unlabeled) data set.
@@ -350,8 +355,7 @@ exportRecordsTyped <-
     api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
-    retries       = 5,
-    
+
     # Limiters
     fields        = NULL,
     drop_fields   = NULL,
@@ -393,6 +397,8 @@ exportRecordsTyped.redcapApiConnection <-
     validation    = list(),
     cast          = list(),
     assignment    = list(),
+    
+    mChoice       = NULL,
     ...)
 {
   if (is.numeric(records)) records <- as.character(records)
@@ -519,13 +525,31 @@ exportRecordsTyped.redcapApiConnection <-
   
   checkmate::reportAssertions(coll)
   
+   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
-  
   fields <- .exportRecordsFormatted_fieldsArray(rcon = rcon, 
                                                 fields = fields, 
                                                 drop_fields = drop_fields, 
                                                 forms = forms)
+  
+   ###################################################################
+  # See if mChoice argument is passed, otherwise default to state of Hmisc
+  if("package:Hmisc" %in% search()) # Hmisc Loaded?
+  {
+    if(is.null(mChoice)) mChoice <- TRUE
+    # Otherwise do what user requests for mChoice
+  } else # Hmisc not loaded
+  {
+    if(is.null(mChoice)) 
+    {
+      mChoice <- FALSE
+    } else if(mChoice)
+    {
+      warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
+      mChoice <- FALSE
+    }
+  }
   
    ###################################################################
   # Call API for Raw Results
@@ -681,6 +705,37 @@ exportRecordsTyped.redcapApiConnection <-
       } else NULL
     }))
   if(!is.null(Records, "invalid")) warning("Some records failed validation. See 'invalid' attr.")
+  
+   ###################################################################
+  # Convert checkboxes to mChoice if Hmisc is installed and requested
+  if(mChoice)
+  {
+    checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
+    for(i in seq_len(nrow(checkbox_meta)))
+    {
+      checkbox_fieldname <- checkbox_meta$field_name[i]
+      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
+      if(length(fields) > 0)
+      {
+        # FIXME: Issue-38 when merged will provide this as a function
+        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
+                           "\\s*,\\s*")
+        levels <- sapply(opts, function(x) x[1+labels])
+        # END FIXME
+        opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+        checked <- records_raw[,fields] != '1'
+        opts[which(checked,arr.ind=TRUE)] <- ""
+        z <- structure(
+          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+          label  = checkbox_fieldname,
+          levels = levels,
+          class  = c("mChoice", "labelled"))
+  
+        records[[checkbox_fieldname]] <- z
+      }
+    }
+
+  } # mChoice 
   
    ###################################################################
   # Return Results 

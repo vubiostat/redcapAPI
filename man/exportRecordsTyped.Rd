@@ -12,7 +12,6 @@ exportRecordsTyped(
   api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL,
-  retries = 5,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -44,6 +43,7 @@ exportRecordsTyped(
   validation = list(),
   cast = list(),
   assignment = list(),
+  mChoice = NULL,
   ...
 )
 }
@@ -126,6 +126,10 @@ label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
+
+\item{mChoice}{logical. Should a multiple choice variable
+be summarized into an \code{Hmisc::mChoice} class and returned with the
+\code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE.}
 
 \item{data_file}{For the offline version, a character string giving the location
 of the dataset downloaded from REDCap.  Note that this should be the raw
