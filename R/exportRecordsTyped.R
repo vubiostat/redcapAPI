@@ -250,10 +250,6 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' otherwise be supported by redcapAPI.
 #' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
 #' delimiter for the CSV file received from the API.
-#' @param retries numeric. Default is 5. Number of times to retry a call to the
-#' API when it fails for timeout or resource not available. Will exponentially 
-#' backoff in a power series of 2 seconds. 
-#'  
 #' @details
 #' 
 #' A record of exports through the API is recorded in the Logging section 
@@ -380,7 +376,6 @@ exportRecordsTyped.redcapApiConnection <-
     api_param     = list(),
     csv_delimiter = ",",
     batch_size    = NULL,
-    retries       = 5,
     
     # Limiters
     fields        = NULL,

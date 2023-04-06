@@ -31,7 +31,6 @@ exportRecordsTyped(
   api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL,
-  retries = 5,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -63,10 +62,6 @@ delimiter for the CSV file received from the API.}
 
 \item{batch_size}{integerish(0/1). If length 0, all records are pulled.
 Otherwise, the records all pulled in batches of this size.}
-
-\item{retries}{numeric. Default is 5. Number of times to retry a call to the
-API when it fails for timeout or resource not available. Will exponentially 
-backoff in a power series of 2 seconds.}
 
 \item{fields}{A character vector of fields to be returned.  If \code{NULL}, 
 all fields are returned.}
