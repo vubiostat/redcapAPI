@@ -38,6 +38,15 @@ The intent of this function is to provide an approach to execute
   
   The config list is a list of parameters to pass to \code{\link[httr]{POST}}. 
   Refer to documentation there for details.
+  
+  Using the settings stored in the \code{redcapConnection} object, a response
+  code of 408 (Request Timeout), 500 (Internal Server Error), 
+  502 (Bad Gateway), 503 (Service Unavailable), or 504 (Gateway Timeout)
+  will prompt reattempts at calling the API. See \code{\link{redcapConnection}}
+  for details. If the API reaches its attempt limit without resolving to 
+  any other code, the last response is returned. If any other response
+  code is returned at any point in the retry loop, the loop breaks and 
+  returns that response.
 }
 \examples{
 \dontrun{
