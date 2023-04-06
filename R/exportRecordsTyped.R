@@ -15,13 +15,16 @@
 # [DONE] Attach error report to "invalid" attr #35
 # [DONE] Solve checkbox so all previous outputs are still supported easily
 # [DONE] Review existing code and handle all the odd cases
-#   * Check that all fields exist in the meta data
-#   * Check that all form names exist in the meta data
-#   * Check that all event names exist in the events list
-#   * synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
-# Need a callback for cleanup of html and unicode on labels. #24
+#   * [DONE] Check that all fields exist in the meta data
+#   * [DONE] Check that all form names exist in the meta data
+#   * [DONE] Check that all event names exist in the events list
+#   * [DONE] synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
+# Need a callback for cleanup of html and unicode on labels. #24 and Create default assignment function for attaching units #45
+#   * [DONE] Create interface
+#   * Code review interface
+#   * Documentation cleanup
+#   * Add actual functions to do work
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# Create default assignment function for attaching units
 # Offline version? testing?
 # Cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
@@ -149,6 +152,22 @@ castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' @rdname fieldValidationAndCasting
 #' @export
 castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
+#' @rdname stripHTMLandUNICODE,
+#' @export
+stripHTMLandUNICODE <- function(x, field_name, field_label, field_annotation)
+{
+  # FIXME FIXME
+  x
+}
+#' @rdname unitsFieldAnnotation
+#' @export
+unitsFieldAnnotation <- function(x, field_name, field_label, field_annotation)
+{
+  m <- gsub('^.*units\\s*=\\s*\\{\\s*"([^"]*)"\\s*\\}.*$', "\\1", field_annotation)
+
+  if(length(m) == 0 || m == field_annotation) NULL else m
+}
+
 
 .default_cast <- list(
   date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
@@ -396,8 +415,8 @@ exportRecordsTyped.redcapApiConnection <-
     na            = list(),
     validation    = list(),
     cast          = list(),
-    assignment    = list(),
-    
+    assignment    = list(label=stripHTMLandUNICODE,
+                         units=unitsFieldAnnotation),
     mChoice       = NULL,
     ...)
 {
@@ -614,6 +633,7 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Derive codings (This is probably a good internal helper)
+# FIXME Could this be replaced with fieldChoiceMapping ?
   codebook <- MetaData$select_choices_or_calculations[match(field_bases, MetaData$field_name)]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codings <- lapply(
