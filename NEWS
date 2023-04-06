@@ -1,4 +1,9 @@
-## Changes in Versino 2.6.1
+## Changes in Version 2.6.2
+
+* Added retry parameter to connection object. On timeouts and gateway failures it retries 5 times now by default.
+* Cleanup from emergency patches.
+
+## Changes in Version 2.6.1
 
 * Emergency fix. REDCap latest version has changed it's API calling syntax.
 * Fix to choice name parsing when only a single choice is specified.
@@ -15,7 +20,6 @@
   * createFileRepositoryFolder
   * importFileRepository
   * deleteFileRepository
-
 
 ## Changes in Version 2.5.0
 
