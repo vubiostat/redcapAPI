@@ -541,8 +541,10 @@ exportRecordsTyped.redcapApiConnection <-
     if(field_types[i] %in% names(cast))
     {
       x <- Raw[[i]]
-      x[ nas[[i]] | !validations[[i]] ] <- NA
-      Records[[i]] <- cast[[ field_types[i] ]](x, field_name=field_names[i], coding=codings[[i]])
+      x[ nas[,i] | !validations[,i] ] <- NA
+      typecast <- cast[[ field_types[i] ]]
+      if(is.function(typecast))
+        Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
     }
   }
   names(Records) <- names(Raw)

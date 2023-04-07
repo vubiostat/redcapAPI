@@ -337,3 +337,36 @@ test_that(
   "Units are assigned from annotations",
   expect_equal(attr(rec$date_dmy, "units"), "time")
 )
+rm(rec)
+
+ ###################################################################
+# NA Detection
+test_that(
+  "NA can be override for user definitions",
+  {
+    rec <- exportRecordsTyped(rcon, na=list(date_=function(x, ...) is.na(x) | x=="" | x == "2023-02-24"))
+    expect_true(is.na(rec$date_dmy[1]))
+  }
+)
+
+ ###################################################################
+# Validation
+
+ ###################################################################
+# Casting
+test_that(
+  "Dates can be cast using as.Date",
+  {
+    rec <- exportRecordsTyped(rcon, cast=list(date_=as.Date))
+    expect_class(rec$date_dmy, "Date")
+  }
+)
+
+test_that(
+  "Raw cast works",
+  { 
+    rec <- exportRecordsTyped(rcon, cast=raw_cast)
+    expect_equal(rec$date_dmy[1], "2023-02-24")
+    expect_class(rec$date_dmy[1], "character")
+  }
+)
