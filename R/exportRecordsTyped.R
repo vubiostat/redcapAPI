@@ -25,7 +25,8 @@
 #   * Documentation cleanup
 #   * Add actual functions to do work
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# Offline version? testing?
+# Offline version? testing? [This could be deferred. A lot of the code could be reused if we can
+#                            identify pieces to turn into subroutines.]
 # Cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # [DONE] Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
@@ -157,7 +158,9 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 stripHTMLandUNICODE <- function(field_name, field_label, field_annotation)
 {
   # FIXME FIXME
-  field_label
+  removeUnicode(
+    removeHtmlTags(field_label)
+  )
 }
 #' @rdname unitsFieldAnnotation
 #' @export
@@ -509,6 +512,17 @@ exportRecordsTyped.redcapApiConnection <-
                          names = "named", 
                          add = coll)
   
+  checkmate::assert_list(x = assignment, 
+                         names = "named", 
+                         types = "function",
+                         add = coll)
+  
+  checkmate::assert_logical(x = mchoice, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            null.ok = TRUE, 
+                            add = coll)
+
   checkmate::reportAssertions(coll)
   
   # Check that fields (and drop_fields) exist in the project
@@ -632,6 +646,27 @@ exportRecordsTyped.redcapApiConnection <-
 # FIXME Could this be replaced with fieldChoiceMapping ?
   codebook <- MetaData$select_choices_or_calculations[field_map]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
+  
+  # # FROM BENJAMIN: This is how you would get it from fieldChoiceMapping
+  # #  NOTE that it returns matrices instead of named vectors. 
+  # #  IF the named vector is important, that should be obtainable with something like
+  # # tmp <- fieldChoiceMapping(...)
+  # # out <- tmp[, 1]
+  # # names(out) <- tmp[, 2]
+  # # out
+  # codings <- vector("list", length = length(codebook))
+  # 
+  # for (i in seq_along(codings)){
+  #   codings[[i]] <- 
+  #     if (is.na(codebook[i])){
+  #       NA_character_
+  #     } else {
+  #       fieldChoiceMapping(object = codebook[i], 
+  #                          field_name = field_names[i])
+  #     }
+  # }
+  
+  
   codings <- lapply(
     codebook,
     function(x)
@@ -719,7 +754,8 @@ exportRecordsTyped.redcapApiConnection <-
   # drop_fields
   # FIXME: Benjamin it looks like you dealt with this elsewhere. 
   # Should this be deleted?
-  if(length(drop_fields)) Records <- Records[!names(Records) %in% drop_fields]
+  # Yes. I kind of like handling it in the fields and not even pulling the dropped fields off the server
+  # if(length(drop_fields)) Records <- Records[!names(Records) %in% drop_fields]
   
    ###################################################################
   # Attach invalid record information
@@ -741,48 +777,126 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
   # FIXME: Will this cause a failure if fields were "dropped" or
-  # simply not requested? I.e. meta data versus retrieved mismatch
+  # simply not requested?
+  # FROM NUTTER: Something like this should work without concern for
+  # what might have been dropped. It's drawing off of the fields
+  # value, which already accounted for dropping fields. This will
+  # only have an effect on checkbox fields actually in the data.
+  
+  # PROBLEMS: 
+  #   1. We don't have an argument to control whether we use the coded or labelled values
+  #      I think we can probably assume the labelled
+  #   2. mChoiceField (as written, see below) is dependent on Raw data
+  #      I had hoped it might be generalized and be suitable for export
+  #      but that reliance on raw data could make it tricky for the user
+  #
+  # If you can live with assuming labelled data, I think this is the route
+  # to go, and having a submethod makes this look a bit cleaner.
   if(mChoice)
   {
-    checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
-    for(i in seq_len(nrow(checkbox_meta)))
-    {
-      checkbox_fieldname <- checkbox_meta$field_name[i]
-      fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
-      if(length(fields) > 0)
-      {
-        # FIXME: Issue-38 when merged will provide this as a function
-        # I.e. is this fieldChoiceMapping?
-        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
-                           "\\s*,\\s*")
-        levels <- sapply(opts, function(x) x[1+labels])
-        # END FIXME
-        opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
-        checked <- records_raw[,fields] != '1'
-        opts[which(checked,arr.ind=TRUE)] <- ""
-        z <- structure(
-          gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-          label  = checkbox_fieldname,
-          levels = levels,
-          class  = c("mChoice", "labelled"))
-  
-        records[[checkbox_fieldname]] <- z
-      }
+    CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
+    
+    checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
+    
+    for (i in seq_along(checkbox_fields)){
+      Records[[ checkbox_fields[i] ]] <- 
+        mChoiceField(rcon, 
+                     records_raw = Raw, 
+                     checkbox_fieldname = checkbox_fields[i], 
+                     style = "labelled")
+      
     }
-
   } # mChoice 
   
-   ###################################################################
+  ###################################################################
   # Return Results 
   Records
+}
+
+
+#######################################################################
+# mchoice Function
+
+mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded", "labelled")){
+  # FIXME: If we aren't going to export this, we probably don't need to 
+  # bother with argument validation.
+  ##################################################################
+  # Argument Validation 
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
+  
+  checkmate::assert_data_frame(records, 
+                               add = coll)
+  
+  checkmate::assert_character(x = checkbox_fieldname, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  style <- checkmate::matchArg(x = style, 
+                               choices = c("coded", "labelled"), 
+                               add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  FieldNames <- rcon$fieldnames()
+  
+  checkmate::assert_subset(x = checkbox_fieldname, 
+                           choices = FieldNames$original_field_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  MetaData <- rcon$metadata()
+  
+  field_type <- MetaData$field_type[MetaData$field_name == checkbox_fieldname]
+  
+  if (field_type != "checkbox"){
+    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mchoice field", 
+                      checkbox_fieldname))
+    
+    checkmate::reportAssertions(coll)
+  }
+  
+  ##################################################################
+  # Make the mchoice field
+  
+  # get the suffixed field names
+  fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
+  
+  if (fields > 0){
+    # get the options
+    opts <- fieldChoiceMapping(rcon, checkbox_fieldname)
+    levels <- opts[, 1+(style == "labelled"), drop = TRUE]
+    
+    # Make the data frame to store the status of the options
+    opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+    checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
+    opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
+    
+    # Consolidate choices into the mchoice object
+    z <- structure(
+      gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+      label  = checkbox_fieldname,
+      levels = levels,
+      class  = c("mChoice", "labelled"))
+    
+    return(z)
+  } else {
+    return(NULL)
+  }
 }
 
 # Unexported --------------------------------------------------------
 
 .exportRecordsTyped_fieldsArray <- function(rcon = rcon, 
-                                           fields = fields, 
-                                           drop_fields = drop_fields, 
-                                           forms = forms)
+                                            fields = fields, 
+                                            drop_fields = drop_fields, 
+                                            forms = forms)
 {
   FieldFormMap <- rcon$metadata()[c("field_name", "form_name")]
   ProjectFields <- rcon$fieldnames()
@@ -944,4 +1058,82 @@ exportRecordsTyped.redcapApiConnection <-
   Batched <- do.call("rbind", Batched)
   rownames(Batched) <- NULL
   Batched
+}
+
+#' @name stringCleanup
+#' @title Remove Undesired Characters From Strings
+#' 
+#' @description These functions are utilities to clear undesired characters
+#' from REDCap output.
+#' 
+#' @param x \code{character}, vector of content to be cleaned.
+#' @param tags \code{character}, vector of HTML tags to remove from \code{x}
+#' @param ignore.case \code{logical(1)}, should cases be ignored when matching
+#'   patterns? Defaults to \code{TRUE}.
+#'   
+#' @export
+
+
+removeHtmlTags <- function(x, 
+                           tags = c("p", "br", "div", "span", "b", "font", "sup", "sub"), 
+                           ignore.case = TRUE){
+  ###################################################################
+  # Argument Validation
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = x, 
+                              add = coll)
+  
+  checkmate::assert_character(x = tags, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = ignore.case, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Regex explanation 
+  # < : match the opening of the tag
+  # ([/]|) : The pipe (|) is an or operator. So this is a match of either nothing or /
+  #          This makes sure that both <p> and </p> tags are matched, for example
+  # (%s) : filled with the tags argument, but collapsed to (p|br|...). This is
+  #        matching the tags listed in the tags argument
+  # (|.+) : matches either nothing following the tag identifier, or any number of characters
+  #         until it reaches the closing >
+  # *? : Make the match 'non-greedy', that is, it will start the search at < and stop
+  #      at the first > it encounters.
+  regex <- sprintf("<([/]|)(%s)(|.+)*?>", 
+                   paste0(tags, 
+                          collapse = "|"))
+  x <- trimws(gsub(regex, "", x, ignore.case = ignore.case))
+  x <- gsub("\\n", "", x)
+  x
+}
+
+#' @rdname stringCleanup
+#' @export
+
+removeUnicode <- function(x){
+  ###################################################################
+  # Argument Validation
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = x, 
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Regex explanation
+  # See: https://stackoverflow.com/questions/39993715/how-to-remove-unicode-u00a6-from-string
+  # <U\\+ - a literal char sequence <U+
+  # \\w+ - 1 or more letters, digits or underscores
+  # > - a literal >
+  
+  gsub("<(U}u)\\+\\w+>", "", x)
 }
