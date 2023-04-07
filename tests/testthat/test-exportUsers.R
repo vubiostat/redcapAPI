@@ -51,15 +51,6 @@ test_that(
   }
 )
 
-test_that(
-  "Return an error if bundle is not a redcapBundle", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(exportUsers(rcon, 
-                             bundle = "not a bundle"), 
-                 "'bundle'[:] Must inherit from class 'redcapBundle'")
-  }
-)
 
 test_that(
   "Return an error if config or api_param are not named lists", 

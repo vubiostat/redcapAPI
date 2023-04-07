@@ -23,7 +23,6 @@ importRecords(
   returnData = FALSE,
   logfile = "",
   ...,
-  bundle = NULL,
   batch.size = -1
 )
 }
@@ -53,9 +52,6 @@ log of errors and warnings about the data.
 If \code{""}, the log is printed to the console.}
 
 \item{...}{Arguments to be passed to other methods.}
-
-\item{bundle}{A \code{redcapBundle} object as created by
-\code{exportBundle}.}
 
 \item{batch.size}{Specifies size of batches.  A negative value
 indicates no batching.}

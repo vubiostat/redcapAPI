@@ -18,7 +18,6 @@ allocationTable(
   block.size.shift = 0,
   seed.dev = NULL,
   seed.prod = NULL,
-  bundle = NULL,
   weights = NULL,
   ...
 )
@@ -34,7 +33,6 @@ allocationTable(
   block.size.shift = 0,
   seed.dev = NULL,
   seed.prod = NULL,
-  bundle = NULL,
   weights = c(1, 1),
   ...
 )
@@ -52,7 +50,6 @@ allocationTable_offline(
   block.size.shift = 0,
   seed.dev = NULL,
   seed.prod = NULL,
-  bundle = NULL,
   weights = c(1, 1),
   ...
 )
@@ -94,8 +91,6 @@ This may also have length equal to the number of strata.}
 allocation.  No pairwise elements of \code{seed.dev} and \code{seed.prod}
 may be equal.  This guarantees that the two randomization schemes are 
 unique.}
-
-\item{bundle}{A \code{redcapBundle} object.}
 
 \item{weights}{An optional vector giving the sampling weights for each of the randomization 
 groups.  There must be one number for each level of the randomization variable.  If named, 

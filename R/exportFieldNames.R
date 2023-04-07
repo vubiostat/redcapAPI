@@ -151,7 +151,7 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   # Get project metadata
   MetaData <- rcon$metadata()
   
-  if (!all(fields %in% meta_data$field_name)){
+  if (!all(fields %in% MetaData$field_name)){
     coll$push(sprintf("Field does not exist in the database: %s", 
                       fields))
     checkmate::reportAssertions(coll)
