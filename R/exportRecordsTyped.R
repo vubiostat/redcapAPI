@@ -18,16 +18,17 @@
 #   * [DONE] Check that all fields exist in the meta data
 #   * [DONE] Check that all form names exist in the meta data
 #   * [DONE] Check that all event names exist in the events list
-#   * [DONE] synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
-# Need a callback for cleanup of html and unicode on labels. #24 and Create default assignment function for attaching units #45
+#   * [DONE] synchronize underscore codings between records and meta data. NOTE:
+#            Only affects calls in REDCap versions earlier than 5.5.21
+# [DONE] Need a callback for cleanup of html and unicode on labels. #24 and Create default assignment function for attaching units #45
 #   * [DONE] Create interface
 #   * [DONE] Code review interface
-#   * Documentation cleanup
-#   * Add actual functions to do work
+#   * [DONE] Documentation cleanup
+#   * [DONE] Add actual functions to do work
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# Offline version? testing? [This could be deferred. A lot of the code could be reused if we can
-#                            identify pieces to turn into subroutines.]
-# Cleanup / review / editing pass
+# [DEFERRED] Offline version? testing? [A lot of the code could be reused if we
+#            can identify pieces to turn into subroutines.]
+# [DONE] Cleanup / review / editing pass
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # [DONE] Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
 # [DONE] Change message from prior to recommend using the new method.
@@ -45,11 +46,18 @@
 #' @param x character. A vector to check.
 #' @param rx character. The regular expression pattern to check.
 #' @param coding named character vector. The defined coding from the meta data.
-#' @param field_name character(1). Name of the field
+#' @param field_name character(1). Name of the field(s)
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
 #'
-#' @details \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
+#' @details Functions passed to the \code{na}, \code{validation}, and
+#' \code{cast} parameter of \code{\link{exportRecordsTyped}} all take the form
+#' of \code{function(x, coding, field_name)}. \code{na} and \code{validation}
+#' functions are expected to return a logical vector of the same length as the
+#' column processed. Helper routines
+#' are provided here for common cases to construct these functions. 
+#' 
+#' \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
 #' function for constructing na overrides in \code{\link{exportRecordsTyped}}.
 #' 
 #' \code{valRx} constructs a validation function from a regular expression pattern. 
@@ -77,7 +85,10 @@
 #' string (""). Checked variables are cast to the option label and option code, 
 #' respectively.
 #' 
-#' @author Shawn Garbett
+#' \code{raw_cast} overrides all casting if passed as the \code{cast}
+#' parameter.
+#' 
+#' @author Shawn Garbett, Benjamin Nutter
 #' 
 #' @export
 isNAorBlank <- function(x, ...) is.na(x) | x==''
@@ -112,6 +123,7 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
   sql                = NA # This requires a bit more effort !?
 )
 
+#' @rdname fieldValidationAndCasting
 #' @export
 raw_cast <- list(
   date_              = NA,
@@ -153,16 +165,37 @@ castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' @rdname fieldValidationAndCasting
 #' @export
 castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
-#' @rdname stripHTMLandUNICODE,
+
+
+
+
+#' @rdname attributeAssignment
+#' @title Helper functions for \code{exportRecordsTyped} attributes
+#' @description This set of functions helps in setting attributes for
+#' columns of the resulting type cast data.frame.
+#'   
+#' @param field_name character(n). Name of the fields.
+#' @param field_label character(n). Labels from meta data.
+#' @param field_annotation character(n). Annotations from meta_data.
+#' @details Functions passed int the \code{assignment} parameter list of 
+#' \code{\link{exportRecordsTyped}} construct attributes on a column. 
+#' They are expected to have a signature of \code{function(field_name,
+#' field_label, field_annotation)} and return the attribute to assign or NA. 
+#' They must be vectorized.
+#' 
+#' Useful utilities are provided in \code{\link{stringCleanup}}
+#' 
+#' \code{stripHTMLandUnicode} strips both HTML and UNICODE from the field_label.
+#' 
+#' \code{unitsFieldAnnotation} pulls a units string from the field_annotation. 
+#' An example of the form searched for is \code{units=\{"meters"\}}
+#' 
 #' @export
-stripHTMLandUNICODE <- function(field_name, field_label, field_annotation)
+stripHTMLandUnicode <- function(field_name, field_label, field_annotation)
 {
-  # FIXME FIXME
-  removeUnicode(
-    removeHtmlTags(field_label)
-  )
+  stripUnicode(stripHTMLTags(field_label))
 }
-#' @rdname unitsFieldAnnotation
+#' @rdname attributeAssignment
 #' @export
 unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 {
@@ -192,7 +225,7 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
   select             = castLabel,
   radio              = castLabel,
   dropdown           = castLabel,
-  sql                = castLabel
+  sql                = NA
 )
 
 
@@ -264,12 +297,6 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #' @param mChoice logical. Should a multiple choice variable
 #'   be summarized into an \code{Hmisc::mChoice} class and returned with the
 #'   \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE. 
-#'   
-#' @param data_file For the offline version, a character string giving the location
-#'   of the dataset downloaded from REDCap.  Note that this should be the raw
-#'   (unlabeled) data set.
-#' @param meta_data_file A text string giving the location of the data dictionary 
-#'   downloaded from REDCap.
 #' @param config named list. Additional configuration parameters to pass to httr::POST,
 #' These are appended to any parameters in rcon$config
 #' @param api_param named list. Additional API parameters to pass into the body of the
@@ -277,6 +304,7 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #' otherwise be supported by redcapAPI.
 #' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
 #' delimiter for the CSV file received from the API.
+#' @param ... Consumes any additional parameters passed. Not used.
 #' @details
 #' 
 #' A record of exports through the API is recorded in the Logging section 
@@ -418,7 +446,7 @@ exportRecordsTyped.redcapApiConnection <-
     na            = list(),
     validation    = list(),
     cast          = list(),
-    assignment    = list(label=stripHTMLandUNICODE,
+    assignment    = list(label=stripHTMLandUnicode,
                          units=unitsFieldAnnotation),
     mChoice       = NULL,
     ...)
@@ -517,7 +545,7 @@ exportRecordsTyped.redcapApiConnection <-
                          types = "function",
                          add = coll)
   
-  checkmate::assert_logical(x = mchoice, 
+  checkmate::assert_logical(x = mChoice, 
                             len = 1, 
                             any.missing = FALSE, 
                             null.ok = TRUE, 
@@ -666,7 +694,6 @@ exportRecordsTyped.redcapApiConnection <-
   #     }
   # }
   
-  
   codings <- lapply(
     codebook,
     function(x)
@@ -751,13 +778,6 @@ exportRecordsTyped.redcapApiConnection <-
   }
 
    ###################################################################
-  # drop_fields
-  # FIXME: Benjamin it looks like you dealt with this elsewhere. 
-  # Should this be deleted?
-  # Yes. I kind of like handling it in the fields and not even pulling the dropped fields off the server
-  # if(length(drop_fields)) Records <- Records[!names(Records) %in% drop_fields]
-  
-   ###################################################################
   # Attach invalid record information
   selector <- !validations & !nas
   attr(Records, "invalid") <-
@@ -772,26 +792,10 @@ exportRecordsTyped.redcapApiConnection <-
                    value=Raw[sel, i])
       } else NULL
     }))
-  if(!is.null(Records, "invalid")) warning("Some records failed validation. See 'invalid' attr.")
+  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
   
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
-  # FIXME: Will this cause a failure if fields were "dropped" or
-  # simply not requested?
-  # FROM NUTTER: Something like this should work without concern for
-  # what might have been dropped. It's drawing off of the fields
-  # value, which already accounted for dropping fields. This will
-  # only have an effect on checkbox fields actually in the data.
-  
-  # PROBLEMS: 
-  #   1. We don't have an argument to control whether we use the coded or labelled values
-  #      I think we can probably assume the labelled
-  #   2. mChoiceField (as written, see below) is dependent on Raw data
-  #      I had hoped it might be generalized and be suitable for export
-  #      but that reliance on raw data could make it tricky for the user
-  #
-  # If you can live with assuming labelled data, I think this is the route
-  # to go, and having a submethod makes this look a bit cleaner.
   if(mChoice)
   {
     CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
@@ -814,12 +818,10 @@ exportRecordsTyped.redcapApiConnection <-
 }
 
 
-#######################################################################
-# mchoice Function
-
+ #######################################################################
+# mChoice Function
 mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded", "labelled")){
-  # FIXME: If we aren't going to export this, we probably don't need to 
-  # bother with argument validation.
+
   ##################################################################
   # Argument Validation 
   
@@ -829,7 +831,7 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
                           classes = "redcapApiConnection", 
                           add = coll)
   
-  checkmate::assert_data_frame(records, 
+  checkmate::assert_data_frame(records_raw, 
                                add = coll)
   
   checkmate::assert_character(x = checkbox_fieldname, 
@@ -856,14 +858,14 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
   field_type <- MetaData$field_type[MetaData$field_name == checkbox_fieldname]
   
   if (field_type != "checkbox"){
-    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mchoice field", 
+    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mChoice field", 
                       checkbox_fieldname))
     
     checkmate::reportAssertions(coll)
   }
   
   ##################################################################
-  # Make the mchoice field
+  # Make the mChoice field
   
   # get the suffixed field names
   fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
@@ -874,11 +876,11 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
     levels <- opts[, 1+(style == "labelled"), drop = TRUE]
     
     # Make the data frame to store the status of the options
-    opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
+    opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
     checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
     opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
     
-    # Consolidate choices into the mchoice object
+    # Consolidate choices into the mChoice object
     z <- structure(
       gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
       label  = checkbox_fieldname,
@@ -1072,9 +1074,7 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
 #'   patterns? Defaults to \code{TRUE}.
 #'   
 #' @export
-
-
-removeHtmlTags <- function(x, 
+stripHTMLTags <- function(x, 
                            tags = c("p", "br", "div", "span", "b", "font", "sup", "sub"), 
                            ignore.case = TRUE){
   ###################################################################
@@ -1116,8 +1116,8 @@ removeHtmlTags <- function(x,
 
 #' @rdname stringCleanup
 #' @export
-
-removeUnicode <- function(x){
+stripUnicode <- function(x)
+{
   ###################################################################
   # Argument Validation
   

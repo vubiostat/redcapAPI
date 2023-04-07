@@ -42,7 +42,7 @@ exportRecordsTyped(
   na = list(),
   validation = list(),
   cast = list(),
-  assignment = list(),
+  assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
   mChoice = NULL,
   ...
 )
@@ -99,6 +99,8 @@ flag will revert to its default value.}
 
 \item{date_end}{POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.}
 
+\item{...}{Consumes any additional parameters passed. Not used.}
+
 \item{na}{list. A list of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
@@ -130,13 +132,6 @@ to use as a units attribute.}
 \item{mChoice}{logical. Should a multiple choice variable
 be summarized into an \code{Hmisc::mChoice} class and returned with the
 \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE.}
-
-\item{data_file}{For the offline version, a character string giving the location
-of the dataset downloaded from REDCap.  Note that this should be the raw
-(unlabeled) data set.}
-
-\item{meta_data_file}{A text string giving the location of the data dictionary 
-downloaded from REDCap.}
 }
 \description{
 Exports records from a REDCap Database, allowing for 
