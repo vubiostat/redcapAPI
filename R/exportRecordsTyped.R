@@ -1,4 +1,3 @@
-
 # Style Guideline Note
 # 
 # Exported function names: dromedaryCase
@@ -14,200 +13,6 @@
 #            can identify pieces to turn into subroutines.]
 # [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
 
-#' @name fieldValidationAndCasting
-#' @title Helper functions for \code{exportRecordsTyped} Validation and Casting
-#' @description This set of functions assists in validating that the content of 
-#'   fields coming from REDCap match the MetaData, allowing for a 
-#'   validation report to provided. The cast helpers allow for transforming
-#'   the REDCap data into R data types and allowing the user to customize 
-#'   the end product.
-#'   
-#' @param x character. A vector to check.
-#' @param rx character. The regular expression pattern to check.
-#' @param coding named character vector. The defined coding from the meta data.
-#' @param field_name character(1). Name of the field(s)
-#' @param ... Consumes anything else passed to function. I.e., field_name and 
-#' coding.
-#'
-#' @details Functions passed to the \code{na}, \code{validation}, and
-#' \code{cast} parameter of \code{\link{exportRecordsTyped}} all take the form
-#' of \code{function(x, coding, field_name)}. \code{na} and \code{validation}
-#' functions are expected to return a logical vector of the same length as the
-#' column processed. Helper routines
-#' are provided here for common cases to construct these functions. 
-#' 
-#' \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
-#' function for constructing na overrides in \code{\link{exportRecordsTyped}}.
-#' 
-#' \code{valRx} constructs a validation function from a regular expression pattern. 
-#' The function returns a TRUE/FALSE if the value matches the pattern.
-#' 
-#' \code{valchoice} constructs a validation function from a set of choices 
-#' defined in the MetaData. The functions returns a TRUE/FALSE if the value
-#' matches one of the choices.
-#' 
-#' \code{castLabel} constructs a casting function for multiple choice variables. 
-#' The field will be cast to return the choice label (generally more human readable)
-#' 
-#' \code{castCode} constructs a casting function for multiple choice variables.
-#' Similar to \code{castLabel}, but the choice value is returned instead. The
-#' values are typically more compact and their meaning may not be obvious.
-#' 
-#' \code{castRaw} constructs a casting function that returns the content
-#' from REDCap as it was received. It is functionally equivalent to \code{identity}
-#' 
-#' \code{castChecked} constructs a casting function for checkbox fields. It
-#' returns values in the form of Unchecked/Checked.
-#' 
-#' \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
-#' for checkbox fields. For both, unchecked variables are cast to an empty 
-#' string (""). Checked variables are cast to the option label and option code, 
-#' respectively.
-#' 
-#' \code{raw_cast} overrides all casting if passed as the \code{cast}
-#' parameter.
-#' 
-#' @author Shawn Garbett, Benjamin Nutter
-#' 
-#' @export
-isNAorBlank <- function(x, ...) is.na(x) | x==''
-
-#' @rdname fieldValidationAndCasting
-#' @export
-valRx <- function(rx) { function(x, ...) grepl(rx, x) }
-
-#' @rdname fieldValidationAndCasting
-#' @export
-valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
-
-.default_validate <- list(
-  date_              = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
-  datetime_          = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
-  datetime_seconds_  = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time_mm_ss         = valRx("[0-5][0-9]:[0-5][0-9]"),
-  time_hh_mm_ss      = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time               = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
-  float              = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  number             = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  calc               = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
-  integer            = valRx("[-+]?[0-9]+"),
-  yesno              = valRx("^(?i)(0|1|yes|no)$"),
-  truefalse          = valRx("(0|1|true|false)"),
-  checkbox           = valRx("^(?i)(0|1|yes|no)$"),
-  form_complete      = valRx("[012]"),
-  select             = valChoice,
-  radio              = valChoice,
-  dropdown           = valChoice,
-  sql                = NA # This requires a bit more effort !?
-)
-
-#' @rdname fieldValidationAndCasting
-#' @export
-raw_cast <- list(
-  date_              = NA,
-  datetime_          = NA,
-  datetime_seconds_  = NA,
-  time_mm_ss         = NA,
-  time_hh_mm_ss      = NA,
-  time               = NA,
-  float              = NA,
-  number             = NA,
-  calc               = NA,
-  int                = NA,
-  integer            = NA,
-  yesno              = NA,
-  truefalse          = NA,
-  checkbox           = NA,
-  form_complete      = NA,
-  select             = NA,
-  radio              = NA,
-  dropdown           = NA,
-  sql                = NA
-)
-
-#' @rdname fieldValidationAndCasting
-#' @export
-castLabel      <- function(x, coding, field_name) factor(x, levels=coding, labels=names(coding))
-#' @rdname fieldValidationAndCasting
-#' @export
-castCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
-#' @rdname fieldValidationAndCasting
-#' @export
-castRaw        <- function(x, coding, field_name) x
-#' @rdname fieldValidationAndCasting
-#' @export
-castChecked    <- function(x, coding, field_name) factor(c("Unchecked", "Checked")[(x=='1'|x=='yes')+1], levels=c("Unchecked", "Checked"))
-#' @rdname fieldValidationAndCasting
-#' @export
-castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=names(coding))
-#' @rdname fieldValidationAndCasting
-#' @export
-castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
-
-
-
-
-#' @rdname attributeAssignment
-#' @title Helper functions for \code{exportRecordsTyped} attributes
-#' @description This set of functions helps in setting attributes for
-#' columns of the resulting type cast data.frame.
-#'   
-#' @param field_name character(n). Name of the fields.
-#' @param field_label character(n). Labels from meta data.
-#' @param field_annotation character(n). Annotations from meta_data.
-#' @details Functions passed int the \code{assignment} parameter list of 
-#' \code{\link{exportRecordsTyped}} construct attributes on a column. 
-#' They are expected to have a signature of \code{function(field_name,
-#' field_label, field_annotation)} and return the attribute to assign or NA. 
-#' They must be vectorized.
-#' 
-#' Useful utilities are provided in \code{\link{stringCleanup}}
-#' 
-#' \code{stripHTMLandUnicode} strips both HTML and UNICODE from the field_label.
-#' 
-#' \code{unitsFieldAnnotation} pulls a units string from the field_annotation. 
-#' An example of the form searched for is \code{units=\{"meters"\}}
-#' 
-#' @export
-stripHTMLandUnicode <- function(field_name, field_label, field_annotation)
-{
-  stripUnicode(stripHTMLTags(field_label))
-}
-#' @rdname attributeAssignment
-#' @export
-unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
-{
-  m <- gsub('^.*units\\s*=\\s*\\{\\s*"([^"]*)"\\s*\\}.*$', "\\1", field_annotation)
-
-  ifelse(is.na(m) | sapply(m, length) == 0 | m == field_annotation,NA,m)
-}
-
-
-.default_cast <- list(
-  date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
-  datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
-  datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
-  time_mm_ss         = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
-  time_hh_mm_ss      = function(x, ...) chron::times(x, format=c(times="h:m:s")),
-  time               = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
-                                                     format=c(times="h:m:s")),
-  float              = as.numeric,
-  number             = as.numeric,
-  calc               = as.numeric,
-  int                = as.integer,
-  integer            = as.numeric,
-  yesno              = castLabel,
-  truefalse          = function(x, ...) x=='1' | tolower(x) =='true',
-  checkbox           = castChecked,
-  form_complete      = castLabel,
-  select             = castLabel,
-  radio              = castLabel,
-  dropdown           = castLabel,
-  sql                = NA
-)
-
-
 #' @name exportRecordsTyped
 #' 
 #' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 
@@ -217,20 +22,17 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #'   the long term replacement for exportRecords. 
 #'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#'
-#' @param batch_size integerish(0/1). If length 0, all records are pulled.
-#' Otherwise, the records all pulled in batches of this size.
-#' 
-#' @param fields A character vector of fields to be returned.  If \code{NULL}, 
-#'   all fields are returned.
-#' @param drop_fields character.: A vector of field names to remove from the export. Ignore if length = 0.
-#' @param forms A character vector of forms to be returned.  If \code{NULL}, 
-#'   all forms are returned.
-#' @param records A vector of study id's to be returned.  If \code{NULL}, all 
-#'   subjects are returned.
-#' @param events A character vector of events to be returned from a 
+#' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
+#'   all fields are returned (unless \code{forms} is specified).
+#' @param drop_fields \code{character} A vector of field names to remove from 
+#'   the export. Ignore if length = 0.
+#' @param forms \code{character} vector of forms to be returned.  If \code{NULL}, 
+#'   all forms are returned (unless \code{fields} is specified.
+#' @param records \code{character} or \code{integerish}. A vector of study id's 
+#'   to be returned.  If \code{NULL}, all subjects are returned.
+#' @param events A \code{character} vector of events to be returned from a 
 #'   longitudinal database.  If \code{NULL}, all events are returned.
-#' @param survey specifies whether or not to export the survey identifier field 
+#' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
 #'   If you do not pass in this flag, it will default to "true". If set to 
@@ -240,16 +42,18 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #'   identifier field or survey timestamp fields are imported via API data 
 #'   import, they will simply be ignored since they are not real fields in 
 #'   the project but rather are pseudo-fields.
-#' @param dag specifies whether or not to export the "redcap_data_access_group" 
+#' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
 #'   field when data access groups are utilized in the project. If you do not 
 #'   pass in this flag, it will default to "false". NOTE: This flag is only 
 #'   viable if the user whose token is being used to make the API request is 
 #'   *not* in a data access group. If the user is in a group, then this 
 #'   flag will revert to its default value.
-#' @param date_begin POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified after this date will be returned.
-#' @param date_end POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.
+#' @param date_begin \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+#'   Otherwise, records created or modified after this date will be returned.
+#' @param date_end \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+#'   Otherwise, records created or modified before this date will be returned.
 #'
-#' @param na list. A list of user specified functions to determine if the
+#' @param na  A named \code{list} of user specified functions to determine if the
 #'   data is NA. This is useful when data is loaded that has coding for NA, e.g.
 #'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
@@ -258,17 +62,17 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #'   (x, field_name, coding). The function must return a vector of logicals
 #'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
-#' @param validation list. A list of user specified validation functions. The 
+#' @param validation A named \code{list} of user specified validation functions. The 
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
 #'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
-#' @param cast list. A list of user specified class casting functions. The
+#' @param cast A named \code{list} of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
-#' @param assignment list of functions. These functions are provided, field_name,
+#' @param assignment A named \code{list} of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
@@ -279,13 +83,15 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #'   do no conversion. If FALSE it is disabled. The summarized
 #'   \code{Hmisc::mChoice} class is returned as an additional column in the
 #'   \code{data.frame}.
-#' @param config named list. Additional configuration parameters to pass to httr::POST,
-#' These are appended to any parameters in rcon$config
-#' @param api_param named list. Additional API parameters to pass into the body of the
-#' API call. This provides users to execute calls with options that may not
-#' otherwise be supported by redcapAPI.
+#' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
+#'   These are appended to any parameters in \code{rcon$config}
+#' @param api_param named \code{list}. Additional API parameters to pass into the body of the
+#'   API call. This provides users to execute calls with options that may not
+#'   otherwise be supported by redcapAPI.
 #' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-#' delimiter for the CSV file received from the API.
+#'   delimiter for the CSV file received from the API.
+#' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
+#'   all records are pulled. Otherwise, the records all pulled in batches of this size.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @details
 #' 
@@ -383,10 +189,6 @@ exportRecordsTyped <-
   function(
     # API Call parameters
     rcon,
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL,
 
     # Limiters
     fields        = NULL,
@@ -398,20 +200,21 @@ exportRecordsTyped <-
     dag           = TRUE,
     date_begin    = NULL,
     date_end      = NULL,
-    ...)
+    ...,
+    config        = list(),
+    api_param     = list(),
+    csv_delimiter = ",",
+    batch_size    = NULL)
     
     UseMethod("exportRecordsTyped")
 
 #' @rdname exportRecordsTyped
 #' @export
+
 exportRecordsTyped.redcapApiConnection <- 
   function(
     # API Call parameters
     rcon,  
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL,
     
     # Limiters
     fields        = NULL,
@@ -431,7 +234,11 @@ exportRecordsTyped.redcapApiConnection <-
     assignment    = list(label=stripHTMLandUnicode,
                          units=unitsFieldAnnotation),
     mChoice       = NULL,
-    ...)
+    ..., 
+    config        = list(),
+    api_param     = list(),
+    csv_delimiter = ",",
+    batch_size    = NULL)
 {
   if (is.numeric(records)) records <- as.character(records)
 
@@ -658,38 +465,21 @@ exportRecordsTyped.redcapApiConnection <-
   # Derive codings (This is probably a good internal helper)
   codebook <- MetaData$select_choices_or_calculations[field_map]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
-  
-  # # FROM BENJAMIN: This is how you would get it from fieldChoiceMapping
-  # #  NOTE that it returns matrices instead of named vectors. 
-  # #  IF the named vector is important, that should be obtainable with something like
-  # # tmp <- fieldChoiceMapping(...)
-  # # out <- tmp[, 1]
-  # # names(out) <- tmp[, 2]
-  # # out
-  # codings <- vector("list", length = length(codebook))
-  # 
-  # for (i in seq_along(codings)){
-  #   codings[[i]] <- 
-  #     if (is.na(codebook[i])){
-  #       NA_character_
-  #     } else {
-  #       fieldChoiceMapping(object = codebook[i], 
-  #                          field_name = field_names[i])
-  #     }
-  # }
-  
-  codings <- lapply(
-    codebook,
-    function(x)
-    {
-      if(is.na(x) | is.null(x)) return(NA)
-      
-      x <- strsplit(x, "\\s*\\|\\s*")[[1]]
-      y <- gsub("^\\s*(.*),\\s*.*$", "\\1", x)
-      names(y) <- gsub("^\\s*.*,\\s*(.*)$", "\\1", x)
-      y
-    }
-  )
+
+  codings <- vector("list", length = length(codebook))
+
+  for (i in seq_along(codings)){
+    codings[[i]] <-
+      if (is.na(codebook[i])){
+        NA_character_
+      } else {
+        this_mapping <- fieldChoiceMapping(object = codebook[i],
+                                           field_name = field_names[i])
+        this_coding <- this_mapping[, 1]
+        names(this_coding) <- this_mapping[, 2]
+        this_coding
+      }
+  }
 
    ###################################################################
   # Common provided args for na / validate functions
@@ -800,9 +590,15 @@ exportRecordsTyped.redcapApiConnection <-
 }
 
 
- #######################################################################
+#######################################################################
+# Unexported
+
+#######################################################################
 # mChoice Function
-mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded", "labelled")){
+mChoiceField <- function(rcon, 
+                         records_raw, 
+                         checkbox_fieldname, 
+                         style = c("coded", "labelled")){
 
   ##################################################################
   # Argument Validation 
@@ -871,8 +667,6 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
     class  = c("mChoice", "labelled"))
 }
 
-# Unexported --------------------------------------------------------
-
 .exportRecordsTyped_fieldsArray <- function(rcon = rcon, 
                                             fields = fields, 
                                             drop_fields = drop_fields, 
@@ -912,7 +706,7 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
   # this to FALSE and have to provide positive proof that they are in forms.
   FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
   
-  # Change is_in_fields to TRUE for in fields
+  # Change is_in_fields to TRUE for those in fields
   if (length(fields) > 0){
     FieldFormMap$is_in_fields <- 
       FieldFormMap$original_field_name %in% fields | 
@@ -944,7 +738,6 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
   # Also sets the is_in_forms to FALSE to ensure it isn't 
   # included in the API call.
   
-  # FIXME: If we drop fields in the post processing, this block needs to be removed.
   if (length(drop_fields) > 0){
     FieldFormMap <- 
       lapply(FieldFormMap, 
@@ -1043,80 +836,4 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
   Batched <- do.call("rbind", Batched)
   rownames(Batched) <- NULL
   Batched
-}
-
-#' @name stringCleanup
-#' @title Remove Undesired Characters From Strings
-#' 
-#' @description These functions are utilities to clear undesired characters
-#' from REDCap output.
-#' 
-#' @param x \code{character}, vector of content to be cleaned.
-#' @param tags \code{character}, vector of HTML tags to remove from \code{x}
-#' @param ignore.case \code{logical(1)}, should cases be ignored when matching
-#'   patterns? Defaults to \code{TRUE}.
-#'   
-#' @export
-stripHTMLTags <- function(x, 
-                           tags = c("p", "br", "div", "span", "b", "font", "sup", "sub"), 
-                           ignore.case = TRUE){
-  ###################################################################
-  # Argument Validation
-  
-  coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_character(x = x, 
-                              add = coll)
-  
-  checkmate::assert_character(x = tags, 
-                              add = coll)
-  
-  checkmate::assert_logical(x = ignore.case, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  ###################################################################
-  # Regex explanation 
-  # < : match the opening of the tag
-  # ([/]|) : The pipe (|) is an or operator. So this is a match of either nothing or /
-  #          This makes sure that both <p> and </p> tags are matched, for example
-  # (%s) : filled with the tags argument, but collapsed to (p|br|...). This is
-  #        matching the tags listed in the tags argument
-  # (|.+) : matches either nothing following the tag identifier, or any number of characters
-  #         until it reaches the closing >
-  # *? : Make the match 'non-greedy', that is, it will start the search at < and stop
-  #      at the first > it encounters.
-  regex <- sprintf("<([/]|)(%s)(|.+)*?>", 
-                   paste0(tags, 
-                          collapse = "|"))
-  x <- trimws(gsub(regex, "", x, ignore.case = ignore.case))
-  x <- gsub("\\n", "", x)
-  x
-}
-
-#' @rdname stringCleanup
-#' @export
-stripUnicode <- function(x)
-{
-  ###################################################################
-  # Argument Validation
-  
-  coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_character(x = x, 
-                              add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  ###################################################################
-  # Regex explanation
-  # See: https://stackoverflow.com/questions/39993715/how-to-remove-unicode-u00a6-from-string
-  # <U\\+ - a literal char sequence <U+
-  # \\w+ - 1 or more letters, digits or underscores
-  # > - a literal >
-  
-  gsub("<(U}u)\\+\\w+>", "", x)
 }
