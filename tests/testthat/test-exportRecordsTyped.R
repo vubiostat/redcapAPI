@@ -289,3 +289,40 @@ test_that(
                  "'mChoice'[:] Must be of type 'logical'")
   }
 )
+
+# Meta-data validations versus parameters
+test_that(
+  "Return an error if fields specified doesn't exist",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportRecordsTyped(rcon,fields='doesntexist'),
+                 "'fields'[:] Must be a subset of")
+  }
+)
+
+test_that(
+  "Return an error if drop_fields specified doesn't exist",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportRecordsTyped(rcon,drop_fields='doesntexist'),
+                 "'drop_fields'[:] Must be a subset of")
+  }
+)
+
+test_that(
+  "Return an error if forms specified doeesn't exist",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportRecordsTyped(rcon,forms='doesntexist'),
+                 "'forms'[:] Must be a subset of")
+  }
+)
+
+test_that(
+  "Return an error if events specified doeesn't exist",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportRecordsTyped(rcon,events='doesntexist'),
+                 "'events'[:] Must be a subset of")
+  }
+)
