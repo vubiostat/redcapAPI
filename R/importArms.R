@@ -17,9 +17,15 @@
 #'   delete all of the arms in the project and import the contents of 
 #'   \code{arms_data}.  The default setting is \code{FALSE}, which only
 #'   allows arms to be renamed or added.
+#' @param ... additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
-#' @param ... additional arguments to pass to other methods.
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @section REDCap API Documentation:
 #' This method allows you to import Arms into a project or to rename 
@@ -54,9 +60,15 @@ importArms <- function(rcon,
 
 importArms.redcapApiConnection <- function(rcon, 
                                            arms_data, 
-                                           override = FALSE, 
+                                           override       = FALSE, 
                                            ...,
-                                           error_handling = getOption("redcap_error_handling")){
+                                           error_handling = getOption("redcap_error_handling"), 
+                                           config         = list(), 
+                                           api_param      = list()){
+  
+   ##################################################################
+  # Argument Validation 
+  
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_data_frame(x = arms_data,
@@ -66,6 +78,18 @@ importArms.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = override,
                             len = 1,
                             add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling,
+                                        choices = c("null", "error"),
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -85,6 +109,9 @@ importArms.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+   ##################################################################
+  # Format data for API
+  
   arms_data <- 
     utils::capture.output(
       utils::write.csv(arms_data,
@@ -94,7 +121,9 @@ importArms.redcapApiConnection <- function(rcon,
     )
   arms_data <- paste0(arms_data, collapse = "\n")
       
-      
+   ##################################################################
+  # Make API Body List
+  
   body <- list(token = rcon$token,
                content = "arm",
                override = as.numeric(override),
@@ -102,9 +131,14 @@ importArms.redcapApiConnection <- function(rcon,
                format = "csv",
                data = arms_data)
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+  body <- body[lengths(body) > 0]
   
-  if (x$status_code != 200) return(redcap_error(x, error_handling))
+   ##################################################################
+  # API Call
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) return(redcap_error(response, error_handling))
 }

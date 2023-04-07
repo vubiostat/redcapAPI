@@ -25,7 +25,9 @@ exportPdf(
   instruments = NULL,
   all_records = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -38,7 +40,7 @@ exportPdf(
 \code{record} has a value, it will be appended with \code{"_record_[record id].pdf"}}
 
 \item{record}{The record id for which forms should be downloaded.  May only 
-have length 1.}
+have length 1. May be either \code{character} or \code{numeric}.}
 
 \item{events}{The events for which forms should be downloaded}
 
@@ -51,6 +53,14 @@ When \code{TRUE}, this overrides the \code{records} argument.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Creates a PDF file that is saved to the directory specified by the user.

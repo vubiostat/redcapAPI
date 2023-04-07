@@ -12,12 +12,12 @@ test_that(
 )
 
 test_that(
-  "Return an error when arms is not character", 
+  "Return an error when arms is not integerish", 
   {
     local_reproducible_output(width = 200)
     expect_error(exportEvents(rcon, 
                               arms = pi), 
-                 "Variable 'arms'[:] Must be of type 'character'")
+                 "Variable 'arms'[:] Must be of type 'integerish'")
   }
 )
 

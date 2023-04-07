@@ -58,7 +58,7 @@ deleteRecords.redcapApiConnection <- function(rcon,
                                               config         = list(), 
                                               api_param      = list()){
   
-  if (is.character(arms)) arm <- as.numeric(arm)
+  if (is.character(arm)) arm <- as.numeric(arm)
   
    ##################################################################
   # Argument Validation
@@ -70,8 +70,9 @@ deleteRecords.redcapApiConnection <- function(rcon,
                            min.len = 1,
                            add = coll)
   
-  # FIXME: Should this enforce a length of 1? Check API documentation
   checkmate::assert_integerish(arm,
+                               len = 1, 
+                               any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
   
@@ -86,6 +87,14 @@ deleteRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  Arms <- rcon$arms()
+  
+  checkmate::assert_subset(x = arm,
+                           choices = Arms$arm_num, 
+                           add = coll)
   
   checkmate::reportAssertions(coll)
   

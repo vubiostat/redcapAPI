@@ -11,7 +11,7 @@
 #'   \code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  If 
 #'   \code{record} has a value, it will be appended with \code{"_record_[record id].pdf"} 
 #' @param record The record id for which forms should be downloaded.  May only 
-#'   have length 1.
+#'   have length 1. May be either \code{character} or \code{numeric}.
 #' @param events The events for which forms should be downloaded
 #' @param instruments The instruments for which forms should be downloaded
 #' @param all_records Logical. If \code{TRUE} forms for all records are downloaded.
@@ -102,15 +102,18 @@ exportPdf.redcapApiConnection <- function(rcon,
                               any.missing = FALSE, 
                               add = coll)
   
-  # FIXME: Does this need to be limited to len = 1?
   checkmate::assert_character(x = record, 
-                              add = coll)
-  
-  checkmate::assert_character(x = events,
+                              len = 1, 
                               any.missing = FALSE,
                               add = coll)
   
-  checkmate::assert_character(x = instruments, 
+  checkmate::assert_character(x = events,
+                              len = 1, 
+                              any.missing = FALSE,
+                              add = coll)
+  
+  checkmate::assert_character(x = instruments,
+                              len  = 1,
                               any.missing = FALSE, 
                               add = coll)
   
@@ -155,13 +158,13 @@ exportPdf.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make the Body List
   
-  body <- c(list(token = rcon$token, 
-                 content = 'pdf', 
-                 returnFormat = 'csv', 
-                 allRecords = as.numeric(all_records)), 
-            vectorToApiBodyList(record, "record"), 
-            vectorToApiBodyList(events, "event"),
-            vectorToApiBodyList(instruments, "instrument"))
+  body <- list(token = rcon$token, 
+               content = 'pdf', 
+               returnFormat = 'csv', 
+               allRecords = as.numeric(all_records), 
+               record = record, 
+               event = events, 
+               instrument = instruments)
   
   body <- body[lengths(body) > 0]
   
@@ -174,8 +177,6 @@ exportPdf.redcapApiConnection <- function(rcon,
               
   if (response$status_code != 200) return(redcap_error(response, error_handling))
   
-  # FIXME: Make use of `reconstituteFileFromExport`
-  
   filename <- 
     if (all_records)
       paste0(filename, "_all_records.pdf")
@@ -184,9 +185,11 @@ exportPdf.redcapApiConnection <- function(rcon,
     else 
       paste0(filename, "_record_", record, ".pdf")
   
-  writeBin(object = as.vector(x$content), 
-           con = file.path(dir, filename), 
-           useBytes = TRUE)
+  reconstituteFileFromExport(response, 
+                             dir = dir, 
+                             dir_create = FALSE, 
+                             file_prefix = "", 
+                             filename = filename)
   
   message("The file was saved to '", file.path(dir, filename), "'")
 }

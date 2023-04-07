@@ -64,7 +64,7 @@ test_that(
                   event = "event_1_arm_1", 
                   overwrite = FALSE, 
                   repeat_instance = NULL), 
-      "A file exists and overwrite=FALSE"
+      "A file exists and overwrite = FALSE"
     )
   }
 )

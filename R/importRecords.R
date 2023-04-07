@@ -24,6 +24,14 @@
 #' @param batch.size Specifies size of batches.  A negative value
 #'   indicates no batching.
 #' @param ... Arguments to be passed to other methods.
+#' @param error_handling An option for how to handle errors returned by the API.
+#'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #'
 #' @details
 #' A record of imports through the API is recorded in the Logging section
@@ -80,9 +88,9 @@
 importRecords <- function(rcon, 
                           data,
                           overwriteBehavior = c('normal', 'overwrite'),
-                          returnContent = c('count', 'ids', 'nothing'),
-                          returnData = FALSE, 
-                          logfile="", 
+                          returnContent     = c('count', 'ids', 'nothing'),
+                          returnData        = FALSE, 
+                          logfile           = "", 
                           ...){
   UseMethod("importRecords")
 }
@@ -93,11 +101,17 @@ importRecords <- function(rcon,
 importRecords.redcapApiConnection <- function(rcon, 
                                               data,
                                               overwriteBehavior = c('normal', 'overwrite'),
-                                              returnContent = c('count', 'ids', 'nothing'),
-                                              returnData = FALSE, 
-                                              logfile = "", 
+                                              returnContent     = c('count', 'ids', 'nothing'),
+                                              returnData        = FALSE, 
+                                              logfile           = "", 
                                               ...,
-                                              batch.size=-1){
+                                              batch.size        = -1,
+                                              error_handling = getOption("redcap_error_handling"), 
+                                              config = list(), 
+                                              api_param = list()){
+  
+   ##################################################################
+  # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
   
@@ -127,12 +141,25 @@ importRecords.redcapApiConnection <- function(rcon,
                                len = 1,
                                add = coll)
   
+  error_handling <- checkmate::matchArg(x = error_handling,
+                                        choices = c("null", "error"))
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
+  
   
   MetaData <- rcon$metadata()
 
   version <- rcon$version()
 
+  # Manage Checkbox variables
   if (utils::compareVersion(version, "5.5.21") == -1 )
     MetaData <- syncUnderscoreCodings(data, 
                                        MetaData, 
@@ -149,7 +176,6 @@ importRecords.redcapApiConnection <- function(rcon,
                     replacement = "", 
                     x = names(data)), ]
   
-  #** Check that all of the variable names in 'data' exist in REDCap Database
   .checkbox <- MetaData[MetaData$field_type == "checkbox", ]
   
   .opts <- lapply(X = .checkbox$select_choices_or_calculations, 
@@ -167,18 +193,21 @@ importRecords.redcapApiConnection <- function(rcon,
                      tolower(unlist(.opts)), 
                      sep="___")
   
+  # form complete fields 
+  
   with_complete_fields <- 
     c(unique(MetaData$field_name), 
       paste(form_names, "_complete", sep=""), 
       check_var)
   
-  #** Remove survey identifiers and data access group fields from data
+  # Remove survey identifiers and data access group fields from data
   w.remove <- 
     which(names(data) %in% 
             c("redcap_survey_identifier",
               paste0(unique(MetaData$form_name), "_timestamp")))
   if (length(w.remove)) data <- data[-w.remove]
   
+  # Validate field names
   unrecognized_names <- !(names(data) %in% c(with_complete_fields, "redcap_event_name", "redcap_repeat_instrument", "redcap_repeat_instance"))
   if (any(unrecognized_names))
   {
@@ -187,7 +216,7 @@ importRecords.redcapApiConnection <- function(rcon,
                      " do not exist in the REDCap Data Dictionary"))
   }
   
-  #** Check that the study id exists in data
+  # Check that the study id exists in data
   if (!MetaData$field_name[1] %in% names(data))
   {
     coll$push(paste0("The variable '", 
@@ -196,7 +225,7 @@ importRecords.redcapApiConnection <- function(rcon,
                      "Please include this variable and place it in the first column."))
   }
   
-  #** If the study id is not in the the first column, move it and print a warning
+  # If the study id is not in the the first column, move it and print a warning
   if (MetaData$field_name[1] %in% names(data) && 
       MetaData$field_name[1] != names(data)[1])
   {
@@ -207,7 +236,7 @@ importRecords.redcapApiConnection <- function(rcon,
     data <- data[c(w, (1:length(data))[-w])]
   }
   
-  #** Confirm that date fields are either character, Date class, or POSIXct
+  # Confirm that date fields are either character, Date class, or POSIXct
   date_vars <- MetaData$field_name[grepl("date_", MetaData$text_validation_type_or_show_slider_number)]
   
   bad_date_fmt <- 
@@ -222,7 +251,7 @@ importRecords.redcapApiConnection <- function(rcon,
                      "' must have class Date, POSIXct, or character."))
   }
   
-  #*** Remove calculated fields
+  # Remove calculated fields
   calc_field <- MetaData$field_name[MetaData$field_type == "calc"]
   
   if (length(calc_field) > 0)
@@ -238,7 +267,7 @@ importRecords.redcapApiConnection <- function(rcon,
   
   
   idvars <- 
-    if ("redcap_event_name" %in% names(data)) 
+    if ("redcap_event_name" %in% names(data))
       c(MetaData$field_name[1], "redcap_event_name") 
   else 
     MetaData$field_name[1]
@@ -268,14 +297,18 @@ importRecords.redcapApiConnection <- function(rcon,
                            data = data,
                            batch.size = batch.size,
                            overwriteBehavior = overwriteBehavior,
-                           returnContent = returnContent)
+                           returnContent = returnContent, 
+                           config = config, 
+                           api_param = api_param)
   }
   else
   {
     import_records_unbatched(rcon = rcon,
                              data = data,
                              overwriteBehavior = overwriteBehavior,
-                             returnContent = returnContent)
+                             returnContent = returnContent, 
+                             config = config, 
+                             api_param = api_param)
   }
 }
 
@@ -283,9 +316,13 @@ importRecords.redcapApiConnection <- function(rcon,
 ## UNEXPORTED FUNCTIONS
 #####################################################################
 
-import_records_batched <- function(rcon, data, batch.size, 
+import_records_batched <- function(rcon, 
+                                   data, 
+                                   batch.size, 
                                    overwriteBehavior,
-                                   returnContent)
+                                   returnContent, 
+                                   config, 
+                                   api_param)
 {
   n.batch <- nrow(data) %/% batch.size + 1
   
@@ -312,32 +349,43 @@ import_records_batched <- function(rcon, data, batch.size,
                   return(d)
                 })
   
-  x <- vector("list", length = length(out))
+   ##################################################################
+  # Make API Body List
+  
+  body <- list(token = rcon$token, 
+               content = 'record', 
+               format = 'csv',
+               type = 'flat', 
+               overwriteBehavior = overwriteBehavior,
+               returnContent = returnContent,
+               returnFormat = 'csv')
+  body <- c(body, api_param)
+  
+  body <- body[lengths(body) > 0]
+  
+  
+   ##################################################################
+  # Call the API
+  responses <- vector("list", length = length(out))
   
   for (i in seq_along(out))
   {
-    httr::POST(url=rcon$url,
-               body=list(token = rcon$token, 
-                         content = 'record', 
-                         format = 'csv',
-                         type = 'flat', 
-                         overwriteBehavior = overwriteBehavior,
-                         returnContent = returnContent,
-                         returnFormat = 'csv', 
-                         data = out[[i]]),
-               config = rcon$config)
+    responses[[i]] <- makeApiCall(rcon, 
+                                  body = c(body, 
+                                           list(data = out[[i]])), 
+                                  config = config)
   }
   
-  if (all(unlist(sapply(X = x, 
+  if (all(unlist(sapply(X = responses, 
                         FUN = function(y) y["status_code"])) == "200"))
   {
-    vapply(x, as.character, character(1))
+    vapply(responses, as.character, character(1))
   }
   else 
   {
-    status.code <- unlist(sapply(X = x, 
+    status.code <- unlist(sapply(X = responses, 
                                  FUN = function(y) y["status_code"]))
-    msg <- sapply(x, as.character)
+    msg <- sapply(responses, as.character)
     
     stop(paste(paste0(status.code[status.code != "200"], 
                       ": ", 
@@ -347,8 +395,12 @@ import_records_batched <- function(rcon, data, batch.size,
 }
 
 
-import_records_unbatched <- function(rcon, data, overwriteBehavior,
-                                     returnContent)
+import_records_unbatched <- function(rcon, 
+                                     data, 
+                                     overwriteBehavior,
+                                     returnContent, 
+                                     config, 
+                                     api_param)
 {
   out <- data_frame_to_string(data)
   
@@ -357,23 +409,36 @@ import_records_unbatched <- function(rcon, data, overwriteBehavior,
     list("Content-Type" = structure(c("text/html", "utf-8"),
                                     .Names = c("", "charset")))
   
-  x <- httr::POST(url=rcon$url,
-                  body=list(token = rcon$token, 
-                            content = 'record', 
-                            format = 'csv',
-                            type = 'flat', 
-                            overwriteBehavior = overwriteBehavior,
-                            returnContent = returnContent,
-                            returnFormat = 'csv', 
-                            dateFormat = "YMD",
-                            data = out), 
-                  config = rcon$config)
+   ##################################################################
+  # Make API Body List
   
-  if (x$status_code == "200") 
-    as.character(x) 
+  body <- list(token = rcon$token, 
+               content = 'record', 
+               format = 'csv',
+               type = 'flat', 
+               overwriteBehavior = overwriteBehavior,
+               returnContent = returnContent,
+               returnFormat = 'csv', 
+               dateFormat = "YMD",
+               data = out)
+  
+  body <- body[lengths(body) > 0]
+  
+   ##################################################################
+  # Call the API
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code == "200") 
+    as.character(response) 
   else 
-    redcap_error(x, error_handling = "error")
+    redcap_error(response, error_handling = "error")
 }
+
+#####################################################################
+# Unexported
 
 data_frame_to_string <- function(data)
 {

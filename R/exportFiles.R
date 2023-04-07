@@ -131,6 +131,10 @@ exportFiles.redcapApiConnection <- function(rcon,
                                null.ok = TRUE,
                                add = coll)
   
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        add = coll)
+  
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)

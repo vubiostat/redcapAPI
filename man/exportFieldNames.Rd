@@ -5,11 +5,7 @@
 \alias{exportFieldNames.redcapApiConnection}
 \title{Export the Export Field Names for a Project}
 \usage{
-exportFieldNames(
-  rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling")
-)
+exportFieldNames(rcon, ...)
 
 \method{exportFieldNames}{redcapApiConnection}(
   rcon,
@@ -25,11 +21,11 @@ exportFieldNames(
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
-
 \item{fields}{\code{character} with maximum length of 1. Field name to be returned.  By 
 default, all fields are returned.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 
