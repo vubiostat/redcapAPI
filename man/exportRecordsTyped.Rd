@@ -132,9 +132,12 @@ to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
 
-\item{mChoice}{\code{logical(1)}. Should a multiple choice variable
-be summarized into an \code{Hmisc::mChoice} class and returned with the
-\code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE.}
+\item{mChoice}{character. Must be NULL, logical(1), \code{"coded"} or \code{"labelled"}.
+If NULL, \code{coded}, or \code{labelled} and \code{Hmisc} is loaded, it will summarize a multiple choice variable
+convert. If NULL and \code{Hmisc} is not loaded it will
+do no conversion. If FALSE it is disabled entirely. The summarized
+\code{Hmisc::mChoice} class is returned as an additional column in the
+\code{data.frame}.}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

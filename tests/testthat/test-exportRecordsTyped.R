@@ -278,15 +278,13 @@ test_that(
 
 
 test_that(
-  "Return an error if mChoice is not logical(1)",
+  "Return an error if mChoice is not logical(1) or 'labelled' or 'coded'",
   {
     local_reproducible_output(width = 200)
-    expect_error(exportRecordsTyped(rcon,
-                                    mChoice = c(TRUE, FALSE)),
-                 "'mChoice'[:] Must have length 1")
-    expect_error(exportRecordsTyped(rcon,
-                                    mChoice = "TRUE"),
-                 "'mChoice'[:] Must be of type 'logical'")
+    expect_error(exportRecordsTyped(rcon, mChoice = c(TRUE, FALSE)),
+                 "'mChoice'[:] .* Must have length 1")
+    expect_error(exportRecordsTyped(rcon, mChoice = "TRUE"),
+                 "'mChoice'[:] One of the following must apply")
   }
 )
 

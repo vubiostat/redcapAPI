@@ -77,10 +77,10 @@
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
-#' @param mChoice character. Must be NULL, FALSE, or \code{"coded"} or \code{"labelled"}.
-#'   If NULL and \code{Hmisc} is loaded, or \code{coded} or \code{labelled}, it will summarize a multiple choice variable
-#'   with the coded variant. If NULL and \code{Hmisc} is not loaded it will
-#'   do no conversion. If FALSE it is disabled. The summarized
+#' @param mChoice character. Must be NULL, logical(1), \code{"coded"} or \code{"labelled"}.
+#'   If NULL, \code{coded}, or \code{labelled} and \code{Hmisc} is loaded, it will summarize a multiple choice variable
+#'   convert. If NULL and \code{Hmisc} is not loaded it will
+#'   do no conversion. If FALSE it is disabled entirely. The summarized
 #'   \code{Hmisc::mChoice} class is returned as an additional column in the
 #'   \code{data.frame}.
 #' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
@@ -335,12 +335,18 @@ exportRecordsTyped.redcapApiConnection <-
                          add = coll)
   
   # mChoice is a bit loose with user expectations
-  if(!is.null(mChoice) && !is.logical(mChoice))
-  {
-    checkmate::matchArg(x = mChoice, 
-                        choices = c("coded", "labelled"), 
-                        add = coll)
-  }
+  checkmate::assert(
+    checkmate::check_character(
+      x = mChoice,
+      len=1,
+      null.ok=TRUE,
+      pattern="coded|labelled"),
+    checkmate::check_logical(
+      x = mChoice, 
+      len = 1, 
+      null.ok=TRUE),
+    add = coll
+  )
 
   checkmate::reportAssertions(coll)
   
@@ -451,7 +457,6 @@ exportRecordsTyped.redcapApiConnection <-
   
   field_types <- MetaData$field_type[field_map]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
-
 
   # autocomplete was added to the text_validation... column for
   # dropdown menus with the autocomplete feature.
@@ -578,29 +583,29 @@ exportRecordsTyped.redcapApiConnection <-
     
     for (i in seq_along(checkbox_fields))
       Records[[ checkbox_fields[i] ]] <- 
-        mChoiceField(rcon, 
+        .mChoiceField(rcon, 
                      records_raw = Raw, 
                      checkbox_fieldname = checkbox_fields[i], 
                      style = mChoice)
   } 
   
-  ###################################################################
+   ###################################################################
   # Return Results 
   Records
 }
 
 
-#######################################################################
+ #######################################################################
 # Unexported
 
-#######################################################################
+ #######################################################################
 # mChoice Function
-mChoiceField <- function(rcon, 
+.mChoiceField <- function(rcon, 
                          records_raw, 
                          checkbox_fieldname, 
                          style = c("coded", "labelled")){
 
-  ##################################################################
+   ##################################################################
   # Argument Validation 
   
   coll <- checkmate::makeAssertCollection()
@@ -642,7 +647,7 @@ mChoiceField <- function(rcon,
     checkmate::reportAssertions(coll)
   }
   
-  ##################################################################
+   ##################################################################
   # Make the mChoice field
   
   # get the suffixed field names
