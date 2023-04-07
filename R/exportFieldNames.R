@@ -74,8 +74,7 @@
 
 
 exportFieldNames <- function(rcon, 
-                             ...,
-                             error_handling = getOption("redcap_error_handling")){
+                             ...){
   UseMethod("exportFieldNames")
 }
 
@@ -83,11 +82,11 @@ exportFieldNames <- function(rcon,
 #' @export
 
 exportFieldNames.redcapApiConnection <- function(rcon, 
-                                                 fields = character(0), 
+                                                 fields         = character(0), 
                                                  ...,
                                                  error_handling = getOption("redcap_error_handling"), 
-                                                 config = list(), 
-                                                 api_param = list()){
+                                                 config         = list(), 
+                                                 api_param      = list()){
  
   # Argument validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
@@ -151,7 +150,7 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   # Get project metadata
   MetaData <- rcon$metadata()
   
-  if (!all(fields %in% meta_data$field_name)){
+  if (!all(fields %in% MetaData$field_name)){
     coll$push(sprintf("Field does not exist in the database: %s", 
                       fields))
     checkmate::reportAssertions(coll)

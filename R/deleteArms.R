@@ -67,6 +67,7 @@ deleteArms.redcapApiConnection <- function(rcon,
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_integerish(arms, 
+                               any.missing = FALSE,
                                add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
