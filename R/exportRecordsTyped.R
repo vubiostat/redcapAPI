@@ -901,14 +901,19 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
                      FieldFormMap$original_field_name), 
            no = FieldFormMap$form_name)
   
-  # By default, we include all fields, so set all is_in_fields to TRUE to start
-  FieldFormMap$is_in_fields <- rep(TRUE, nrow(FieldFormMap))
+  # If fields and forms are both NULL, the default behavior is to grab 
+  # all of the fields.
+  # Otherwise, we will only include those specified through those arguments
   
+  FieldFormMap$is_in_fields <-
+    rep((length(fields) == 0 && length(forms) == 0), 
+        nrow(FieldFormMap))
+
   # For the forms, we can't assume they are in forms. Instead, we initialize
   # this to FALSE and have to provide positive proof that they are in forms.
   FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
   
-  # Change is_in_fields to FALSE for those not in fields
+  # Change is_in_fields to TRUE for in fields
   if (length(fields) > 0){
     FieldFormMap$is_in_fields <- 
       FieldFormMap$original_field_name %in% fields | 
