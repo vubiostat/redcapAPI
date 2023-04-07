@@ -273,9 +273,12 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
-#' @param mChoice logical. Should a multiple choice variable
-#'   be summarized into an \code{Hmisc::mChoice} class and returned with the
-#'   \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE. 
+#' @param mChoice character. Must be NULL, FALSE, or \code{"coded"} or \code{"labelled"}.
+#'   If NULL and \code{Hmisc} is loaded, or \code{coded} or \code{labelled}, it will summarize a multiple choice variable
+#'   with the coded variant. If NULL and \code{Hmisc} is not loaded it will
+#'   do no conversion. If FALSE it is disabled. The summarized
+#'   \code{Hmisc::mChoice} class is returned as an additional column in the
+#'   \code{data.frame}.
 #' @param config named list. Additional configuration parameters to pass to httr::POST,
 #' These are appended to any parameters in rcon$config
 #' @param api_param named list. Additional API parameters to pass into the body of the
@@ -524,11 +527,13 @@ exportRecordsTyped.redcapApiConnection <-
                          types = "function",
                          add = coll)
   
-  checkmate::assert_logical(x = mChoice, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            null.ok = TRUE, 
-                            add = coll)
+  # mChoice is a bit loose with user expectations
+  if(!is.null(mChoice) && !is.logical(mChoice))
+  {
+    checkmate::matchArg(x = mChoice, 
+                        choices = c("coded", "labelled"), 
+                        add = coll)
+  }
 
   checkmate::reportAssertions(coll)
   
@@ -569,20 +574,21 @@ exportRecordsTyped.redcapApiConnection <-
                                             forms       = forms)
   
    ###################################################################
-  # See if mChoice argument is passed, otherwise default to state of Hmisc
+  # Figure out defaults for mChoice
   if("package:Hmisc" %in% search()) # Hmisc Loaded?
   {
-    if(is.null(mChoice)) mChoice <- TRUE
+    if(is.null(mChoice) || mChoice == TRUE) mChoice <- "coded"
+    if(mChoice == FALSE) mChoice <- NULL
     # Otherwise do what user requests for mChoice
   } else # Hmisc not loaded
   {
-    if(is.null(mChoice)) 
+    if(is.null(mChoice) || mChoice==FALSE)
     {
-      mChoice <- FALSE
-    } else if(mChoice)
+      mChoice <- NULL
+    } else 
     {
-      warning("mChoice=TRUE requires the package Hmisc to be loaded to function properly.")
-      mChoice <- FALSE
+      warning("mChoice requires the package Hmisc to be loaded to function properly.")
+      mChoice <- NULL
     }
   }
   
@@ -774,7 +780,7 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
-  if(mChoice)
+  if(!is.null(mChoice))
   {
     CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
     
@@ -785,7 +791,7 @@ exportRecordsTyped.redcapApiConnection <-
         mChoiceField(rcon, 
                      records_raw = Raw, 
                      checkbox_fieldname = checkbox_fields[i], 
-                     style = "labelled")
+                     style = mChoice)
   } 
   
   ###################################################################
@@ -846,27 +852,23 @@ mChoiceField <- function(rcon, records_raw, checkbox_fieldname, style = c("coded
   # get the suffixed field names
   fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
   
-  if (fields > 0){
-    # get the options
-    opts <- fieldChoiceMapping(rcon, checkbox_fieldname)
-    levels <- opts[, 1+(style == "labelled"), drop = TRUE]
-    
-    # Make the data frame to store the status of the options
-    opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
-    checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
-    opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
-    
-    # Consolidate choices into the mChoice object
-    z <- structure(
-      gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-      label  = checkbox_fieldname,
-      levels = levels,
-      class  = c("mChoice", "labelled"))
-    
-    return(z)
-  } else {
-    return(NULL)
-  }
+  if (length(fields) == 0) return(NULL)
+
+  # get the options
+  opts   <- fieldChoiceMapping(rcon, checkbox_fieldname)
+  levels <- opts[, 1+(style == "labelled"), drop = TRUE]
+  
+  # Make the data frame to store the status of the options
+  opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
+  checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
+  opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
+  
+  # Consolidate choices into the mChoice object
+  structure(
+    gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+    label  = checkbox_fieldname,
+    levels = levels,
+    class  = c("mChoice", "labelled"))
 }
 
 # Unexported --------------------------------------------------------
