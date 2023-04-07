@@ -25,7 +25,6 @@ exportReports(
   drop = NULL,
   checkboxLabels = FALSE,
   ...,
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling")
 )
 }
@@ -40,7 +39,7 @@ is returned as numeric codes or labelled factors.}
 
 \item{labels}{Logical.  Determines if the variable labels are applied to the data frame.}
 
-\item{dates}{Logical. Determines if date variables are converted to POSIXlt format during the download.}
+\item{dates}{Logical. Determines if date variables are converted to POSIXct format during the download.}
 
 \item{drop}{An optional character vector of REDCap variable names to remove from the 
 dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
@@ -53,8 +52,6 @@ is the label assigned to the level in the data dictionary. This option
 is only available after REDCap version 6.0.}
 
 \item{...}{Additional arguments to be passed between methods.}
-
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

@@ -14,7 +14,6 @@ exportFieldNames(
 \method{exportFieldNames}{redcapApiConnection}(
   rcon,
   fields = character(0),
-  bundle = NULL,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -31,8 +30,6 @@ see \code{\link{redcap_error}}}
 
 \item{fields}{\code{character} with maximum length of 1. Field name to be returned.  By 
 default, all fields are returned.}
-
-\item{bundle}{A \code{redcapProject} object as created by \code{redcapProjectInfo}.}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 

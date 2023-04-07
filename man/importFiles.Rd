@@ -13,7 +13,6 @@ importFiles(
   event,
   overwrite = TRUE,
   ...,
-  bundle = NULL,
   repeat_instance = NULL
 )
 
@@ -26,7 +25,6 @@ importFiles(
   overwrite = TRUE,
   repeat_instance = NULL,
   ...,
-  bundle = NULL,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -51,8 +49,6 @@ terminates to prevent overwriting.  When \code{TRUE}, no additional
 check is performed.}
 
 \item{...}{Arguments to be passed to other methods}
-
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{repeat_instance}{The repeat instance number of the repeating
 event or the repeating instrument. When available in your instance

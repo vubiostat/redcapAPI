@@ -24,18 +24,6 @@ test_that(
   }
 )
 
-test_that(
-  "Return an error if bundle is not of class redcapBundle",
-  {
-    local_reproducible_output(width = 200)
-    expect_error(
-      exportFieldNames(rcon, 
-                       bundle = "this is not a bundle"), 
-      "Must inherit from class 'redcapBundle'"
-    )
-  }
-)
-
 
 test_that(
   "Return a data frame when called with defaults",

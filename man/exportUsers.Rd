@@ -13,7 +13,6 @@ exportUsers(rcon, ...)
   labels = TRUE,
   form_rights = TRUE,
   ...,
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -34,8 +33,6 @@ converted to factor objects.}
 transformed to one column per form. The API-provided character string
 is always returned with the format [form_name]:[access_code] and a comma separating
 each form.}
-
-\item{bundle}{A \code{redcap_bundle} object.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

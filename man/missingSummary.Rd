@@ -19,7 +19,6 @@ missingSummary(
   ...,
   fixed_fields = REDCAP_SYSTEM_FIELDS,
   exportRecordsArgs = list(),
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling")
 )
 
@@ -51,8 +50,6 @@ see \code{\link{constants}}.}
 This allows for testing specific forms, events, and/or records. Internally, any 
 setting you make for \code{factors, labels, dates, survey}, or \code{dag} 
 arguments will be ignored.}
-
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

@@ -39,7 +39,6 @@ exportRecords(
   colClasses = character(0),
   ...,
   batch.size = -1,
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling"),
   form_complete_auto = TRUE
 )
@@ -123,8 +122,6 @@ avoid an unexpected recast.}
 in each batch of a batched export.  Non-positive numbers export the 
 entire project in a single batch. Batching the export may be beneficial 
 to prevent tying up smaller servers.  See details for more explanation.}
-
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

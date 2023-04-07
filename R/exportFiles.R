@@ -147,10 +147,8 @@ exportFiles.redcapApiConnection <- function(rcon,
   # Secure the MetaData
   MetaData <- rcon$metadata()
   
-  Fields <- rcon$fieldnames()
-  
   checkmate::assert_subset(x = field, 
-                           choices = Fields$original_field_name, 
+                           choices = MetaData$field_name, 
                            add = coll)
   
   # make sure 'field' exist in the project and are 'file' fields

@@ -399,7 +399,7 @@ allocationTable_offline <- function(meta_data,
                                     seed.prod = NULL,  
                                     weights = c(1, 1), 
                                     ...){
-  MetaData <- utils::read.csv(MetaData,
+  MetaData <- utils::read.csv(meta_data,
                                stringsAsFactors=FALSE,
                                na.strings = "")
   
