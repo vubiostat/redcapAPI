@@ -123,6 +123,7 @@ allocationTable.redcapApiConnection <- function(rcon,
   
   #***************************************
   #* Parameter Checking
+  #* These have gotten out of order to facilitate better error reporting
   #* 1. Verifying that 'random' is not missing
   #* 2. random, strata and group are characters
   #* 3. random and group have length 1
@@ -170,6 +171,20 @@ allocationTable.redcapApiConnection <- function(rcon,
                            choices = MetaData$field_name,
                            add = coll)
   
+  checkmate::assert_integerish(x = replicates,
+                               len = 1,
+                               add = coll)
+  
+  #* 7. If 'block.size' is missing, set it equal to 'replicates'.
+  if (missing(block.size)){
+    block.size <- replicates
+    warning("'block.size' was not provided.  The value of 'replicates' is used")
+  }
+  else{
+    checkmate::assert_integerish(x = block.size,
+                                 add = coll)
+  }
+  
   checkmate::reportAssertions(coll)
 
   
@@ -191,20 +206,7 @@ allocationTable.redcapApiConnection <- function(rcon,
   
   n_strata <- nrow(allocation)
   
-  #* 6. Verify 'replicates' is not missing and is numeric
-  checkmate::assert_integerish(x = replicates,
-                               len = 1,
-                               add = coll)
-  
-  #* 7. If 'block.size' is missing, set it equal to 'replicates'.
-  if (missing(block.size)){
-    block.size <- replicates
-    warning("'block.size' was not provided.  The value of 'replicates' is used")
-  }
-  else{
-    checkmate::assert_integerish(x = block.size,
-                                 add = coll)
-  }
+
   
   #* 8. block.size must be a multiple of n_levels
   if (any((block.size %% n_levels) != 0)){
@@ -226,6 +228,8 @@ allocationTable.redcapApiConnection <- function(rcon,
   if (length(block.size) != length(block.size.shift)){
     coll$push(": 'block.size' and 'block.size.shift' must have the same length")
   }
+  
+  checkmate::reportAssertions(coll)
   
   #* 12. The sum of all of the blocks must add up to replicates
   max.n <- cumsum(diff(c(block.size.shift * replicates, replicates)))
