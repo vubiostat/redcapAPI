@@ -8,31 +8,10 @@
 # Function variables: snake_case
 #  * (exception) data.frame variable: CamelCase
 
-# Punch List #10, #25, #40
-# [DONE] Agree on name/naming and change code to match
-# [DONE] Finish cleanup of main typing processing
-# [DONE] Deal with coding
-# [DONE] Attach error report to "invalid" attr #35
-# [DONE] Solve checkbox so all previous outputs are still supported easily
-# [DONE] Review existing code and handle all the odd cases
-#   * [DONE] Check that all fields exist in the meta data
-#   * [DONE] Check that all form names exist in the meta data
-#   * [DONE] Check that all event names exist in the events list
-#   * [DONE] synchronize underscore codings between records and meta data. NOTE:
-#            Only affects calls in REDCap versions earlier than 5.5.21
-# [DONE] Need a callback for cleanup of html and unicode on labels. #24 and Create default assignment function for attaching units #45
-#   * [DONE] Create interface
-#   * [DONE] Code review interface
-#   * [DONE] Documentation cleanup
-#   * [DONE] Add actual functions to do work
+# FIXME: Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
 # [DEFERRED] Offline version? testing? [A lot of the code could be reused if we
 #            can identify pieces to turn into subroutines.]
-# [DONE] Cleanup / review / editing pass
-# Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
-# [DONE] Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
-# [DONE] Change message from prior to recommend using the new method.
-# [DONE] Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
 # [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
 
 #' @name fieldValidationAndCasting
@@ -418,7 +397,7 @@ exportRecordsTyped <-
     date_end      = NULL,
     ...)
     
-    UseMethod("exportRecords")
+    UseMethod("exportRecordsTyped")
 
 #' @rdname exportRecordsTyped
 #' @export
