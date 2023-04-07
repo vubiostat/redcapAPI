@@ -459,38 +459,21 @@ exportRecordsTyped.redcapApiConnection <-
   # Derive codings (This is probably a good internal helper)
   codebook <- MetaData$select_choices_or_calculations[field_map]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
-  
-  # # FROM BENJAMIN: This is how you would get it from fieldChoiceMapping
-  # #  NOTE that it returns matrices instead of named vectors. 
-  # #  IF the named vector is important, that should be obtainable with something like
-  # # tmp <- fieldChoiceMapping(...)
-  # # out <- tmp[, 1]
-  # # names(out) <- tmp[, 2]
-  # # out
-  # codings <- vector("list", length = length(codebook))
-  # 
-  # for (i in seq_along(codings)){
-  #   codings[[i]] <- 
-  #     if (is.na(codebook[i])){
-  #       NA_character_
-  #     } else {
-  #       fieldChoiceMapping(object = codebook[i], 
-  #                          field_name = field_names[i])
-  #     }
-  # }
-  
-  codings <- lapply(
-    codebook,
-    function(x)
-    {
-      if(is.na(x) | is.null(x)) return(NA)
-      
-      x <- strsplit(x, "\\s*\\|\\s*")[[1]]
-      y <- gsub("^\\s*(.*),\\s*.*$", "\\1", x)
-      names(y) <- gsub("^\\s*.*,\\s*(.*)$", "\\1", x)
-      y
-    }
-  )
+
+  codings <- vector("list", length = length(codebook))
+
+  for (i in seq_along(codings)){
+    codings[[i]] <-
+      if (is.na(codebook[i])){
+        NA_character_
+      } else {
+        this_mapping <- fieldChoiceMapping(object = codebook[i],
+                                           field_name = field_names[i])
+        this_coding <- this_mapping[, 1]
+        names(this_coding) <- this_mapping[, 2]
+        this_coding
+      }
+  }
 
    ###################################################################
   # Common provided args for na / validate functions

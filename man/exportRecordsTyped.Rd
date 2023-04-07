@@ -8,10 +8,6 @@
 \usage{
 exportRecordsTyped(
   rcon,
-  config = list(),
-  api_param = list(),
-  csv_delimiter = ",",
-  batch_size = NULL,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -21,15 +17,15 @@ exportRecordsTyped(
   dag = TRUE,
   date_begin = NULL,
   date_end = NULL,
-  ...
+  ...,
+  config = list(),
+  api_param = list(),
+  csv_delimiter = ",",
+  batch_size = NULL
 )
 
 \method{exportRecordsTyped}{redcapApiConnection}(
   rcon,
-  config = list(),
-  api_param = list(),
-  csv_delimiter = ",",
-  batch_size = NULL,
   fields = NULL,
   drop_fields = NULL,
   forms = NULL,
@@ -44,40 +40,32 @@ exportRecordsTyped(
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
   mChoice = NULL,
-  ...
+  ...,
+  config = list(),
+  api_param = list(),
+  csv_delimiter = ",",
+  batch_size = NULL
 )
 }
 \arguments{
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
 
-\item{config}{named list. Additional configuration parameters to pass to httr::POST,
-These are appended to any parameters in rcon$config}
+\item{fields}{\code{character} vector of fields to be returned.  If \code{NULL}, 
+all fields are returned (unless \code{forms} is specified).}
 
-\item{api_param}{named list. Additional API parameters to pass into the body of the
-API call. This provides users to execute calls with options that may not
-otherwise be supported by redcapAPI.}
+\item{drop_fields}{\code{character} A vector of field names to remove from 
+the export. Ignore if length = 0.}
 
-\item{csv_delimiter}{character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-delimiter for the CSV file received from the API.}
+\item{forms}{\code{character} vector of forms to be returned.  If \code{NULL}, 
+all forms are returned (unless \code{fields} is specified.}
 
-\item{batch_size}{integerish(0/1). If length 0, all records are pulled.
-Otherwise, the records all pulled in batches of this size.}
+\item{records}{\code{character} or \code{integerish}. A vector of study id's 
+to be returned.  If \code{NULL}, all subjects are returned.}
 
-\item{fields}{A character vector of fields to be returned.  If \code{NULL}, 
-all fields are returned.}
-
-\item{drop_fields}{character.: A vector of field names to remove from the export. Ignore if length = 0.}
-
-\item{forms}{A character vector of forms to be returned.  If \code{NULL}, 
-all forms are returned.}
-
-\item{records}{A vector of study id's to be returned.  If \code{NULL}, all 
-subjects are returned.}
-
-\item{events}{A character vector of events to be returned from a 
+\item{events}{A \code{character} vector of events to be returned from a 
 longitudinal database.  If \code{NULL}, all events are returned.}
 
-\item{survey}{specifies whether or not to export the survey identifier field 
+\item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field 
 (e.g., "redcap_survey_identifier") or survey timestamp fields 
 (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
 If you do not pass in this flag, it will default to "true". If set to 
@@ -88,20 +76,35 @@ identifier field or survey timestamp fields are imported via API data
 import, they will simply be ignored since they are not real fields in 
 the project but rather are pseudo-fields.}
 
-\item{dag}{specifies whether or not to export the "redcap_data_access_group" 
+\item{dag}{\code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
 field when data access groups are utilized in the project. If you do not 
 pass in this flag, it will default to "false". NOTE: This flag is only 
 viable if the user whose token is being used to make the API request is 
 *not* in a data access group. If the user is in a group, then this 
 flag will revert to its default value.}
 
-\item{date_begin}{POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified after this date will be returned.}
+\item{date_begin}{\code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+Otherwise, records created or modified after this date will be returned.}
 
-\item{date_end}{POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.}
+\item{date_end}{\code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+Otherwise, records created or modified before this date will be returned.}
 
 \item{...}{Consumes any additional parameters passed. Not used.}
 
-\item{na}{list. A list of user specified functions to determine if the
+\item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
+These are appended to any parameters in \code{rcon$config}}
+
+\item{api_param}{named \code{list}. Additional API parameters to pass into the body of the
+API call. This provides users to execute calls with options that may not
+otherwise be supported by redcapAPI.}
+
+\item{csv_delimiter}{character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
+delimiter for the CSV file received from the API.}
+
+\item{batch_size}{\code{integerish(1)} (or \code{NULL}). If length \code{NULL},
+all records are pulled. Otherwise, the records all pulled in batches of this size.}
+
+\item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
@@ -111,25 +114,25 @@ checkbox, form_complete, sql}. The function will be provided the variables
 matching the input. It defaults to \code{\link{isNAorBlank}} for all
 entries.}
 
-\item{validation}{list. A list of user specified validation functions. The 
+\item{validation}{A named \code{list} of user specified validation functions. The 
 same named keys are supported as the na argument. The function will be 
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
 these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 are not identified as NA will be passed to validation functions.}
 
-\item{cast}{list. A list of user specified class casting functions. The
+\item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be 
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}}
 
-\item{assignment}{list of functions. These functions are provided, field_name,
+\item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
 
-\item{mChoice}{logical. Should a multiple choice variable
+\item{mChoice}{\code{logical(1)}. Should a multiple choice variable
 be summarized into an \code{Hmisc::mChoice} class and returned with the
 \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE.}
 }
