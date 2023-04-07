@@ -6,10 +6,10 @@
 #'   the REDCap data into R data types and allowing the user to customize 
 #'   the end product.
 #'   
-#' @param x character. A vector to check.
-#' @param rx character. The regular expression pattern to check.
-#' @param coding named character vector. The defined coding from the meta data.
-#' @param field_name character(1). Name of the field(s)
+#' @param x \code{character}. A vector to check.
+#' @param rx \code{character}. The regular expression pattern to check.
+#' @param coding named \code{character} vector. The defined coding from the meta data.
+#' @param field_name \code{character(1)}. Name of the field(s)
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
 #'

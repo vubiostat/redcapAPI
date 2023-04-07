@@ -3,9 +3,10 @@
 #' @description This set of functions helps in setting attributes for
 #' columns of the resulting type cast data.frame.
 #'   
-#' @param field_name character(n). Name of the fields.
-#' @param field_label character(n). Labels from meta data.
-#' @param field_annotation character(n). Annotations from meta_data.
+#' @param field_name \code{character(n)}. Name of the fields.
+#' @param field_label \code{character(n)}. Labels from meta data.
+#' @param field_annotation \code{character(n)}. Annotations from meta_data.
+#' 
 #' @details Functions passed int the \code{assignment} parameter list of 
 #' \code{\link{exportRecordsTyped}} construct attributes on a column. 
 #' They are expected to have a signature of \code{function(field_name,

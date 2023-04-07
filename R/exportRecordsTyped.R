@@ -22,20 +22,17 @@
 #'   the long term replacement for exportRecords. 
 #'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#'
-#' @param batch_size integerish(0/1). If length 0, all records are pulled.
-#' Otherwise, the records all pulled in batches of this size.
-#' 
-#' @param fields A character vector of fields to be returned.  If \code{NULL}, 
-#'   all fields are returned.
-#' @param drop_fields character.: A vector of field names to remove from the export. Ignore if length = 0.
-#' @param forms A character vector of forms to be returned.  If \code{NULL}, 
-#'   all forms are returned.
-#' @param records A vector of study id's to be returned.  If \code{NULL}, all 
-#'   subjects are returned.
-#' @param events A character vector of events to be returned from a 
+#' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
+#'   all fields are returned (unless \code{forms} is specified).
+#' @param drop_fields \code{character} A vector of field names to remove from 
+#'   the export. Ignore if length = 0.
+#' @param forms \code{character} vector of forms to be returned.  If \code{NULL}, 
+#'   all forms are returned (unless \code{fields} is specified.
+#' @param records \code{character} or \code{integerish}. A vector of study id's 
+#'   to be returned.  If \code{NULL}, all subjects are returned.
+#' @param events A \code{character} vector of events to be returned from a 
 #'   longitudinal database.  If \code{NULL}, all events are returned.
-#' @param survey specifies whether or not to export the survey identifier field 
+#' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
 #'   If you do not pass in this flag, it will default to "true". If set to 
@@ -45,16 +42,18 @@
 #'   identifier field or survey timestamp fields are imported via API data 
 #'   import, they will simply be ignored since they are not real fields in 
 #'   the project but rather are pseudo-fields.
-#' @param dag specifies whether or not to export the "redcap_data_access_group" 
+#' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
 #'   field when data access groups are utilized in the project. If you do not 
 #'   pass in this flag, it will default to "false". NOTE: This flag is only 
 #'   viable if the user whose token is being used to make the API request is 
 #'   *not* in a data access group. If the user is in a group, then this 
 #'   flag will revert to its default value.
-#' @param date_begin POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified after this date will be returned.
-#' @param date_end POSIXct(0/1). Ignored if length = 0 (default). Otherwise, records created or modified before this date will be returned.
+#' @param date_begin \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+#'   Otherwise, records created or modified after this date will be returned.
+#' @param date_end \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+#'   Otherwise, records created or modified before this date will be returned.
 #'
-#' @param na list. A list of user specified functions to determine if the
+#' @param na  A named \code{list} of user specified functions to determine if the
 #'   data is NA. This is useful when data is loaded that has coding for NA, e.g.
 #'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
@@ -63,31 +62,33 @@
 #'   (x, field_name, coding). The function must return a vector of logicals
 #'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
-#' @param validation list. A list of user specified validation functions. The 
+#' @param validation A named \code{list} of user specified validation functions. The 
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
 #'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
-#' @param cast list. A list of user specified class casting functions. The
+#' @param cast A named \code{list} of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
-#' @param assignment list of functions. These functions are provided, field_name,
+#' @param assignment A named \code{list} of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
-#' @param mChoice logical. Should a multiple choice variable
+#' @param mChoice \code{logical(1)}. Should a multiple choice variable
 #'   be summarized into an \code{Hmisc::mChoice} class and returned with the
 #'   \code{data.frame}. If \code{Hmisc} is loaded it will default to TRUE. 
-#' @param config named list. Additional configuration parameters to pass to httr::POST,
-#' These are appended to any parameters in rcon$config
-#' @param api_param named list. Additional API parameters to pass into the body of the
-#' API call. This provides users to execute calls with options that may not
-#' otherwise be supported by redcapAPI.
+#' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
+#'   These are appended to any parameters in \code{rcon$config}
+#' @param api_param named \code{list}. Additional API parameters to pass into the body of the
+#'   API call. This provides users to execute calls with options that may not
+#'   otherwise be supported by redcapAPI.
 #' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-#' delimiter for the CSV file received from the API.
+#'   delimiter for the CSV file received from the API.
+#' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
+#'   all records are pulled. Otherwise, the records all pulled in batches of this size.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @details
 #' 
@@ -185,10 +186,6 @@ exportRecordsTyped <-
   function(
     # API Call parameters
     rcon,
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL,
 
     # Limiters
     fields        = NULL,
@@ -200,7 +197,11 @@ exportRecordsTyped <-
     dag           = TRUE,
     date_begin    = NULL,
     date_end      = NULL,
-    ...)
+    ...,
+    config        = list(),
+    api_param     = list(),
+    csv_delimiter = ",",
+    batch_size    = NULL)
     
     UseMethod("exportRecordsTyped")
 
@@ -211,10 +212,6 @@ exportRecordsTyped.redcapApiConnection <-
   function(
     # API Call parameters
     rcon,  
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL,
     
     # Limiters
     fields        = NULL,
@@ -234,7 +231,11 @@ exportRecordsTyped.redcapApiConnection <-
     assignment    = list(label=stripHTMLandUnicode,
                          units=unitsFieldAnnotation),
     mChoice       = NULL,
-    ...)
+    ..., 
+    config        = list(),
+    api_param     = list(),
+    csv_delimiter = ",",
+    batch_size    = NULL)
 {
   if (is.numeric(records)) records <- as.character(records)
 
@@ -720,7 +721,7 @@ mChoiceField <- function(rcon,
   # this to FALSE and have to provide positive proof that they are in forms.
   FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
   
-  # Change is_in_fields to TRUE for in fields
+  # Change is_in_fields to TRUE for those in fields
   if (length(fields) > 0){
     FieldFormMap$is_in_fields <- 
       FieldFormMap$original_field_name %in% fields | 
