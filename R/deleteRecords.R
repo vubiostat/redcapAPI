@@ -123,5 +123,5 @@ deleteRecords.redcapApiConnection <- function(rcon,
     return(redcap_error(response, error_handling))
   } 
   
-  as.character(x)
+  as.character(response)
 }
