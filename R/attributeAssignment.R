@@ -34,5 +34,5 @@ unitsFieldAnnotation <- function(field_name, field_label, field_annotation)
 {
   m <- gsub('^.*units\\s*=\\s*\\{\\s*"([^"]*)"\\s*\\}.*$', "\\1", field_annotation)
   
-  ifelse(is.na(m) | sapply(m, length) == 0 | m == field_annotation,NA,m)
+  unname(ifelse(is.na(m) | sapply(m, length) == 0 | m == field_annotation,NA,m))
 }

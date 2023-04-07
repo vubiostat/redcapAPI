@@ -552,7 +552,6 @@ exportRecordsTyped.redcapApiConnection <-
   for(i in names(assignment))
   {
     x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
-    
     for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
   }
 

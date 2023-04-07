@@ -68,10 +68,12 @@ stripUnicode <- function(x)
   
   ###################################################################
   # Regex explanation
+  # Note: this is no longer the case for R on linux.
+  # NEED: testing on Windows 10 / Windows 11 / Mac
   # See: https://stackoverflow.com/questions/39993715/how-to-remove-unicode-u00a6-from-string
   # <U\\+ - a literal char sequence <U+
   # \\w+ - 1 or more letters, digits or underscores
   # > - a literal >
   
-  gsub("<(U}u)\\+\\w+>", "", x)
+  gsub("[^\x01-\x7F]+", "", x, perl=TRUE)
 }

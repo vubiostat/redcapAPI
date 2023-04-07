@@ -324,3 +324,16 @@ test_that(
                  "'events'[:] Must be a subset of")
   }
 )
+
+ ###################################################################
+# Test attribute assignments versus defaults
+rec <- exportRecordsTyped(rcon)
+test_that(
+  "HTML and Unicode is stripped by default",
+  expect_equal(attr(rec$date_dmy, "label"), "Date (D-M-Y)")
+)
+
+test_that(
+  "Units are assigned from annotations",
+  expect_equal(attr(rec$date_dmy, "units"), "time")
+)
