@@ -21,7 +21,7 @@
 #   * [DONE] synchronize underscore codings between records and meta data. NOTE: Only affects calls in REDCap versions earlier than 5.5.21
 # Need a callback for cleanup of html and unicode on labels. #24 and Create default assignment function for attaching units #45
 #   * [DONE] Create interface
-#   * Code review interface
+#   * [DONE] Code review interface
 #   * Documentation cleanup
 #   * Add actual functions to do work
 # [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
@@ -30,7 +30,7 @@
 # Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
 # [DONE] Figure out the mChoice strategy (dealing with an out of defined scope request from a power user).
 # [DONE] Change message from prior to recommend using the new method.
-# Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
+# [DONE] Fix stop messages to be clear about what caused the stoppage when a user provides an invalid callback.
 # [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
 
 #' @name fieldValidationAndCasting
@@ -509,11 +509,6 @@ exportRecordsTyped.redcapApiConnection <-
                          names = "named", 
                          add = coll)
   
-  # FIXME: Is field label supposed to be an argument?
-  # checkmate::assert_function(x = field_label, 
-  #                            null.ok = TRUE, 
-  #                            add = coll)
-  
   checkmate::reportAssertions(coll)
   
   # Check that fields (and drop_fields) exist in the project
@@ -661,12 +656,17 @@ exportRecordsTyped.redcapApiConnection <-
   # Locate NA's
   funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
   nas  <- mapply(do.call, funs, args)
-  if(!is.matrix(nas) || (nrow(nas) > 0 && !is.logical(nas[1,1])))
+  if(!is.matrix(nas))
   {
-    # FIXME -- Need to provide user the exact failing validate
-    stop("User supplied na method not returning vector of logical of correct length")
+    m <- unique(field_types[sapply(nas, class) != "logical"])
+    stop(paste("User supplied na method for [",
+               paste(m, collapse=", "),
+               "] not returning vector of logical of correct length"))
+  } else if (nrow(nas) > 0 && !is.logical(nas[1,1]))
+  {
+    stop("Supplied na methods must return logical vectors")
   }
-  
+   
    ###################################################################
   # Run Validation Functions
   validate <- modifyList(.default_validate, validation)
@@ -679,10 +679,16 @@ exportRecordsTyped.redcapApiConnection <-
       if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
     })
   validations <- mapply(do.call, funs, args)
-  if(!is.matrix(validations) || (nrow(validations) > 0 && !is.logical(validations[1,1])))
+
+  if(!is.matrix(validations))
   {
-    # FIXME -- Need to provide user the exact failing validate
-    stop("User supplied validation method not returning vector of logical of appropriate length")
+    m <- unique(field_types[sapply(validations, class) != "logical"])
+    stop(paste("User supplied validation method for [",
+               paste(m, collapse=", "),
+               "] not returning vectors of correct length logical"))
+  } else if (nrow(validations) > 0 && !is.logical(validations[1,1]))
+  {
+    stop("Supplied validation methods must return logical vectors")
   }
   
    ###################################################################
@@ -735,7 +741,7 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
   # FIXME: Will this cause a failure if fields were "dropped" or
-  # simply not requested?
+  # simply not requested? I.e. meta data versus retrieved mismatch
   if(mChoice)
   {
     checkbox_meta <- meta_data[which(meta_data$field_type == 'checkbox'),]
@@ -746,6 +752,7 @@ exportRecordsTyped.redcapApiConnection <-
       if(length(fields) > 0)
       {
         # FIXME: Issue-38 when merged will provide this as a function
+        # I.e. is this fieldChoiceMapping?
         opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
                            "\\s*,\\s*")
         levels <- sapply(opts, function(x) x[1+labels])
