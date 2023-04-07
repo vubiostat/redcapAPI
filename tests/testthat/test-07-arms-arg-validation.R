@@ -119,22 +119,73 @@ test_that(
                             error_handling = "not an option"), 
                  "'error[_]handling': Must be element of set [{]'null','error'[}]")
     
-    # FIXME: arguments are in importRecords yet
-    # expect_error(importArms(rcon, 
-    #                         config = list(1)), 
-    #              "'config': Must have names")
-    # expect_error(importArms(rcon, 
-    #                         config = "not a list"), 
-    #              "'config': Must be of type 'list'")
-    # 
-    # expect_error(importArms(rcon, 
-    #                         api_param = list(1)), 
-    #              "'api_param': Must have names")
-    # expect_error(importArms(rcon, 
-    #                         api_param = "not a list"), 
-    #              "'api_param': Must be of type 'list'")
+    expect_error(importArms(rcon,
+                            arms_data = Arms,
+                            config = list(1)),
+                 "'config': Must have names")
+    expect_error(importArms(rcon,
+                            arms_data = Arms,
+                            config = "not a list"),
+                 "'config': Must be of type 'list'")
+
+    expect_error(importArms(rcon,
+                            arms_data = Arms,
+                            api_param = list(1)),
+                 "'api_param': Must have names")
+    expect_error(importArms(rcon,
+                            arms_data = Arms,
+                            api_param = "not a list"),
+                 "'api_param': Must be of type 'list'")
   }
 )
 
 #####################################################################
 # Delete Arms Validation
+
+test_that(
+  "Return an error when rcon is not redcapApiConnection", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteArms("not an rcon"), 
+                 "no applicable method for 'deleteArms'")
+  }
+)
+
+test_that(
+  "Return an error when deleteArms is not character", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteArms(rcon, 
+                            arms = c(TRUE, FALSE)), 
+                 "'arms': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteArms(rcon,
+                            arms = 1,
+                            error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(deleteArms(rcon,
+                            arms = 1,
+                            config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteArms(rcon,
+                            arms = 1,
+                            config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteArms(rcon, 
+                            arms = 1,
+                            api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteArms(rcon, 
+                            arms = 1,
+                            api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)

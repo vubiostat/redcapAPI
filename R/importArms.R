@@ -66,7 +66,7 @@ importArms.redcapApiConnection <- function(rcon,
                                            config         = list(), 
                                            api_param      = list()){
   
-   ##################################################################
+  ##################################################################
   # Argument Validation 
   
   coll <- checkmate::makeAssertCollection()
@@ -81,6 +81,7 @@ importArms.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 
@@ -108,18 +109,6 @@ importArms.redcapApiConnection <- function(rcon,
                               .var.name = "arms_data$name")
   
   checkmate::reportAssertions(coll)
-  
-   ##################################################################
-  # Format data for API
-  
-  arms_data <- 
-    utils::capture.output(
-      utils::write.csv(arms_data,
-                       file = "",
-                       na = "",
-                       row.names = FALSE)
-    )
-  arms_data <- paste0(arms_data, collapse = "\n")
       
    ##################################################################
   # Make API Body List
@@ -129,7 +118,7 @@ importArms.redcapApiConnection <- function(rcon,
                override = as.numeric(override),
                action = "import",
                format = "csv",
-               data = arms_data)
+               data = writeDataForImport(arms_data))
   
   body <- body[lengths(body) > 0]
   
@@ -141,4 +130,7 @@ importArms.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200) return(redcap_error(response, error_handling))
+  
+  message(sprintf("Arms imported: %s", 
+                  as.character(response)))
 }
