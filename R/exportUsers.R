@@ -14,7 +14,6 @@
 #'   is always returned with the format [form_name]:[access_code] and a comma separating
 #'   each form.
 #' @param ... Arguments to be passed to other methods.
-#' @param bundle A \code{redcap_bundle} object.  
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -88,15 +87,9 @@ exportUsers.redcapApiConnection <- function(rcon,
                                             labels = TRUE, 
                                             form_rights = TRUE, 
                                             ...,
-                                            bundle = getOption("redcap_bundle"),
                                             error_handling = getOption("redcap_error_handling"), 
                                             config = list(), 
                                             api_param = list()){
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
   
   # Argument validations --------------------------------------------
   
@@ -117,11 +110,6 @@ exportUsers.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = form_rights, 
                             len = 1, 
                             add = coll)
-  
-  checkmate::assert_class(x = bundle, 
-                          classes = "redcapBundle", 
-                          null.ok = TRUE, 
-                          add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"))

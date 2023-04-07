@@ -13,7 +13,6 @@
 #' @param repeat_instance The repeat instance number of the repeating
 #'   event or the repeating instrument. When available in your instance
 #'   of REDCap, and passed as NULL, the API will assume a value of 1.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param ... Arguments to be passed to other methods
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -50,7 +49,6 @@ deleteFiles.redcapApiConnection <- function(rcon,
                                             event           = NULL, 
                                             repeat_instance = NULL,
                                             ..., 
-                                            bundle          = getOption("redcap_bundle"),
                                             error_handling  = getOption("redcap_error_handling"),
                                             config          = list(), 
                                             api_param       = list()){
@@ -87,10 +85,6 @@ deleteFiles.redcapApiConnection <- function(rcon,
                                any.missing = FALSE, 
                                null.ok = TRUE,
                                add = coll)
-  
-  checkmate::assert_class(x = bundle, 
-                          classes = "redcapBundle", 
-                          add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -159,13 +153,6 @@ deleteFiles.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  # x <- 
-  #   tryCatch(
-  #     httr::POST(url = rcon$url, 
-  #                body = body, 
-  #                config = rcon$config),
-  #     error = function(cond) list(status_code = 200))
   
   if (response$status_code != "200")
     redcap_error(response, error_handling)

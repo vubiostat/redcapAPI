@@ -1,3 +1,7 @@
+## Changes in Version 2.6.3
+
+* bundle argument has been removed from all API methods. (It is no longer needed, thanks to caching). Backward compatibility is unaffected.
+
 ## Changes in Version 2.6.2
 
 * Added retry parameter to connection object. On timeouts and gateway failures it retries 5 times now by default.

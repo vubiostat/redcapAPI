@@ -50,17 +50,25 @@ exportBundle <- function(rcon,
                          events = TRUE, 
                          arms = TRUE, 
                          mappings = TRUE,
-                         version = TRUE, ...) {
+                         version = TRUE, 
+                         ...) {
   UseMethod("exportBundle")
 }
 
 #' @rdname exportBundle
 #' @export
 
-exportBundle.redcapApiConnection <- function(rcon, date=TRUE, label=TRUE, 
-                                             meta_data=TRUE, users=TRUE, instruments=TRUE,
-                                             events=TRUE, arms=TRUE, mappings=TRUE,
-                                             version=TRUE, ..., 
+exportBundle.redcapApiConnection <- function(rcon, 
+                                             date = TRUE, 
+                                             label = TRUE, 
+                                             meta_data = TRUE, 
+                                             users = TRUE, 
+                                             instruments = TRUE,
+                                             events = TRUE, 
+                                             arms = TRUE, 
+                                             mappings = TRUE,
+                                             version = TRUE, 
+                                             ..., 
                                              return_object = TRUE){
   
   coll <- checkmate::makeAssertCollection()

@@ -5,8 +5,6 @@
 #'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
 #' @param data A \code{data.frame} to be imported to the REDCap project.
-#' @param bundle A \code{redcapBundle} object as created by
-#'   \code{exportBundle}.
 #' @param overwriteBehavior Character string.  'normal' prevents blank
 #'   fields from overwriting populated fields.  'overwrite' causes blanks to
 #'   overwrite data in the REDCap database.
@@ -99,23 +97,13 @@ importRecords.redcapApiConnection <- function(rcon,
                                               returnData = FALSE, 
                                               logfile = "", 
                                               ...,
-                                              bundle = NULL, 
                                               batch.size=-1){
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
   
   coll <- checkmate::makeAssertCollection()
   
-  massert(~ rcon + bundle + data,
-          fun = checkmate::assert_class,
-          classes = list(rcon = "redcapApiConnection",
-                         bundle = "redcapBundle",
-                         data = "data.frame"),
-          null.ok = list(bundle = TRUE),
-          fixed = list(add = coll))
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
   
   overwriteBehavior <- 
     checkmate::matchArg(x = overwriteBehavior, 
@@ -141,28 +129,28 @@ importRecords.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  meta_data <- rcon$metadata()
+  MetaData <- rcon$metadata()
 
   version <- rcon$version()
 
   if (utils::compareVersion(version, "5.5.21") == -1 )
-    meta_data <- syncUnderscoreCodings(data, 
-                                       meta_data, 
+    MetaData <- syncUnderscoreCodings(data, 
+                                       MetaData, 
                                        export = FALSE)
   
-  suffixed <- checkbox_suffixes(fields = meta_data$field_name,
-                                meta_data = meta_data)
+  suffixed <- checkbox_suffixes(fields = MetaData$field_name,
+                                meta_data = MetaData)
   
-  form_names <- unique(meta_data$form_name)
+  form_names <- unique(MetaData$form_name)
   
-  meta_data <- 
-    meta_data[meta_data$field_name %in% 
+  MetaData <- 
+    MetaData[MetaData$field_name %in% 
                 sub(pattern = "___[a-z,A-Z,0-9,_]+", 
                     replacement = "", 
                     x = names(data)), ]
   
   #** Check that all of the variable names in 'data' exist in REDCap Database
-  .checkbox <- meta_data[meta_data$field_type == "checkbox", ]
+  .checkbox <- MetaData[MetaData$field_type == "checkbox", ]
   
   .opts <- lapply(X = .checkbox$select_choices_or_calculations, 
                   FUN = function(x) unlist(strsplit(x, 
@@ -180,7 +168,7 @@ importRecords.redcapApiConnection <- function(rcon,
                      sep="___")
   
   with_complete_fields <- 
-    c(unique(meta_data$field_name), 
+    c(unique(MetaData$field_name), 
       paste(form_names, "_complete", sep=""), 
       check_var)
   
@@ -188,7 +176,7 @@ importRecords.redcapApiConnection <- function(rcon,
   w.remove <- 
     which(names(data) %in% 
             c("redcap_survey_identifier",
-              paste0(unique(meta_data$form_name), "_timestamp")))
+              paste0(unique(MetaData$form_name), "_timestamp")))
   if (length(w.remove)) data <- data[-w.remove]
   
   unrecognized_names <- !(names(data) %in% c(with_complete_fields, "redcap_event_name", "redcap_repeat_instrument", "redcap_repeat_instance"))
@@ -200,27 +188,27 @@ importRecords.redcapApiConnection <- function(rcon,
   }
   
   #** Check that the study id exists in data
-  if (!meta_data$field_name[1] %in% names(data))
+  if (!MetaData$field_name[1] %in% names(data))
   {
     coll$push(paste0("The variable '", 
-                     meta_data$field_name[1], 
+                     MetaData$field_name[1], 
                      "' cannot be found in 'data'. ",
                      "Please include this variable and place it in the first column."))
   }
   
   #** If the study id is not in the the first column, move it and print a warning
-  if (meta_data$field_name[1] %in% names(data) && 
-      meta_data$field_name[1] != names(data)[1])
+  if (MetaData$field_name[1] %in% names(data) && 
+      MetaData$field_name[1] != names(data)[1])
   {
-    message("The variable'", meta_data$field_name[1], 
+    message("The variable'", MetaData$field_name[1], 
             "' was not in the first column. ",
             "It has been moved to the first column.")
-    w <- which(names(data) == meta_data$field_name[1])
+    w <- which(names(data) == MetaData$field_name[1])
     data <- data[c(w, (1:length(data))[-w])]
   }
   
   #** Confirm that date fields are either character, Date class, or POSIXct
-  date_vars <- meta_data$field_name[grepl("date_", meta_data$text_validation_type_or_show_slider_number)]
+  date_vars <- MetaData$field_name[grepl("date_", MetaData$text_validation_type_or_show_slider_number)]
   
   bad_date_fmt <- 
     !vapply(X = data[date_vars], 
@@ -235,7 +223,7 @@ importRecords.redcapApiConnection <- function(rcon,
   }
   
   #*** Remove calculated fields
-  calc_field <- meta_data$field_name[meta_data$field_type == "calc"]
+  calc_field <- MetaData$field_name[MetaData$field_type == "calc"]
   
   if (length(calc_field) > 0)
   {
@@ -251,9 +239,9 @@ importRecords.redcapApiConnection <- function(rcon,
   
   idvars <- 
     if ("redcap_event_name" %in% names(data)) 
-      c(meta_data$field_name[1], "redcap_event_name") 
+      c(MetaData$field_name[1], "redcap_event_name") 
   else 
-    meta_data$field_name[1]
+    MetaData$field_name[1]
   
   msg <- paste0("REDCap Data Import Log: ", Sys.time(),
                 "\nThe following (if any) conditions were noted about the data.\n\n")
@@ -264,7 +252,7 @@ importRecords.redcapApiConnection <- function(rcon,
     write(msg, logfile)
   
   data <- validateImport(data = data,
-                         meta_data = meta_data,
+                         meta_data = MetaData,
                          logfile = logfile)
   
   if (returnData) return(data)
