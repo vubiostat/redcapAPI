@@ -563,10 +563,10 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
-  fields <- .exportRecordsTyped_fieldsArray(rcon = rcon, 
-                                                fields = fields, 
-                                                drop_fields = drop_fields, 
-                                                forms = forms)
+  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
+                                            fields      = fields, 
+                                            drop_fields = drop_fields, 
+                                            forms       = forms)
   
    ###################################################################
   # See if mChoice argument is passed, otherwise default to state of Hmisc
@@ -650,7 +650,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Derive codings (This is probably a good internal helper)
-# FIXME Could this be replaced with fieldChoiceMapping ?
   codebook <- MetaData$select_choices_or_calculations[field_map]
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   
@@ -781,15 +780,13 @@ exportRecordsTyped.redcapApiConnection <-
     
     checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
     
-    for (i in seq_along(checkbox_fields)){
+    for (i in seq_along(checkbox_fields))
       Records[[ checkbox_fields[i] ]] <- 
         mChoiceField(rcon, 
                      records_raw = Raw, 
                      checkbox_fieldname = checkbox_fields[i], 
                      style = "labelled")
-      
-    }
-  } # mChoice 
+  } 
   
   ###################################################################
   # Return Results 
