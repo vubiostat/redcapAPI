@@ -17,6 +17,8 @@
 #'   delete all of the arms in the project and import the contents of 
 #'   \code{arms_data}.  The default setting is \code{FALSE}, which only
 #'   allows arms to be renamed or added.
+#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached data will
+#'   be refreshed after the import.
 #' @param ... additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -61,6 +63,7 @@ importArms <- function(rcon,
 importArms.redcapApiConnection <- function(rcon, 
                                            arms_data, 
                                            override       = FALSE, 
+                                           refresh        = TRUE,
                                            ...,
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -77,6 +80,10 @@ importArms.redcapApiConnection <- function(rcon,
   
   checkmate::assert_logical(x = override,
                             len = 1,
+                            add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
@@ -133,4 +140,8 @@ importArms.redcapApiConnection <- function(rcon,
   
   message(sprintf("Arms imported: %s", 
                   as.character(response)))
+  
+  if (refresh && rcon$has_arms()){
+    rcon$refresh_arms()
+  }
 }

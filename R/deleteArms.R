@@ -10,6 +10,8 @@
 #'   \code{redcapConnection}.
 #' @param arms \code{character}, a vector of arm numbers that will be 
 #'   deleted. May also be \code{integerish}.
+#' @param refresh \code{logical(1)} If \code{TRUE}, the cached arms data will
+#'   be refreshed after the deletion.
 #' @param ... Additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -54,6 +56,7 @@ deleteArms <- function(rcon,
 
 deleteArms.redcapApiConnection <- function(rcon, 
                                            arms, 
+                                           refresh        = TRUE,
                                            ...,
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -69,6 +72,10 @@ deleteArms.redcapApiConnection <- function(rcon,
   checkmate::assert_character(arms, 
                               any.missing = FALSE,
                               add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -112,4 +119,8 @@ deleteArms.redcapApiConnection <- function(rcon,
   if (response$status_code != 200) return(redcap_error(response, error_handling))
   
   message("Arms ", paste0(arms, collapse = ", "), " deleted.")
+  
+  if (refresh && rcon$has_arms()){
+    rcon$refresh_arms()
+  }
 }

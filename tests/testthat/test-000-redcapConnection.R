@@ -227,17 +227,26 @@ test_that(
 #####################################################################
 # Argument Validation 
 
-test_that("redcapConnection throws an error if url is missing",
-          expect_error(redcapConnection(token = API_KEY))
+test_that(
+  "redcapConnection throws an error if url is missing",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(redcapConnection(token = API_KEY))
+  }
 )
 
-test_that("redcapConnection throws an  error if token is missing",
-          expect_error(redcapConnection(url = url))
+test_that(
+  "redcapConnection throws an  error if token is missing",
+  {
+    local_reproducible_output(width = 200)
+    expect_error(redcapConnection(url = url))
+  }
 )
 
 test_that(
   "return an error if retries is not integerish(1) > 0", 
   {
+    local_reproducible_output(width = 200)
     expect_error(redcapConnection(url = url, 
                                   token = API_KEY, 
                                   retries = "5"), 
@@ -258,6 +267,7 @@ test_that(
 test_that(
   "return an error if retry_interval is not numeric >= 0", 
   {
+    local_reproducible_output(width = 200)
     expect_error(redcapConnection(url = url, 
                                   token = API_KEY, 
                                   retry_interval = "0"), 
@@ -273,6 +283,7 @@ test_that(
 test_that(
   "return an error if retry_quietly is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(redcapConnection(url = url, 
                                   token = API_KEY, 
                                   retry_quietly = c(TRUE, FALSE)), 

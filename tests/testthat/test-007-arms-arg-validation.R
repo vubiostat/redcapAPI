@@ -111,6 +111,22 @@ test_that(
 )
 
 test_that(
+  "Return an error if refresh is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importArms(rcon, 
+                            Arms, 
+                            refresh = c(TRUE, FALSE)), 
+                 "'refresh': Must have length 1")
+    
+    expect_error(importArms(rcon, 
+                            Arms, 
+                            refresh = "TRUE"), 
+                 "'refresh': Must be of type 'logical'")
+  }
+)
+
+test_that(
   "Return an error when error handling isn't one of null, error", 
   {
     local_reproducible_output(width = 200)
@@ -158,6 +174,22 @@ test_that(
     expect_error(deleteArms(rcon, 
                             arms = c(TRUE, FALSE)), 
                  "'arms': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "Return an error if refresh is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteArms(rcon, 
+                            arms = 1, 
+                            refresh = c(TRUE, FALSE)), 
+                 "'refresh': Must have length 1")
+    
+    expect_error(deleteArms(rcon, 
+                            arms = 1, 
+                            refresh = "TRUE"), 
+                 "'refresh': Must be of type 'logical'")
   }
 )
 

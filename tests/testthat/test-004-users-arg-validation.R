@@ -56,15 +56,26 @@ test_that(
 
 
 test_that(
-  "Return an error if config or api_param are not named lists", 
+  "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
     expect_error(exportUsers(rcon, 
-                             config = list("parameter")), 
-                 "'config'[:] Must have names")
+                             error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
     expect_error(exportUsers(rcon, 
-                             api_param = list("parameter")), 
-                 "'api_param'[:] Must have names")
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportUsers(rcon, 
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportUsers(rcon, 
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportUsers(rcon, 
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
   }
 )
 

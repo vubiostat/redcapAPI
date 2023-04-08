@@ -293,6 +293,18 @@ test_that(
   }
 )
 
+test_that(
+  "Return an error when record is not character", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(
+      exportLogging(rcon, 
+                    record = 1:2), 
+      "Variable 'record': Must be of type 'character'"
+    )
+  }
+)
+
 
 test_that(
   "Return an error when dag is not a character", 
@@ -358,3 +370,26 @@ test_that(
   }
 )
 
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportLogging(rcon, 
+                               error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(exportLogging(rcon, 
+                               config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportLogging(rcon, 
+                               config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportLogging(rcon, 
+                               api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportLogging(rcon, 
+                               api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)
