@@ -1,4 +1,4 @@
-context("intruments, import/export mappings, export PDF argument functionality")
+context("instruments, import/export mappings, export PDF argument functionality")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 

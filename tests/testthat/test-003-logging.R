@@ -21,7 +21,7 @@ test_that(
     Logs <- exportLogging(rcon, 
                           logtype = "export")
     
-    all_export_record <- all(grepl("export", Logs$action))
+    all_export_record <- all(grepl("export", Logs$action, ignore.case = TRUE))
     expect_true(all_export_record)
   }
 )
