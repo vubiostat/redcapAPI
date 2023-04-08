@@ -31,7 +31,8 @@
 #' @param records \code{character} or \code{integerish}. A vector of study id's 
 #'   to be returned.  If \code{NULL}, all subjects are returned.
 #' @param events A \code{character} vector of events to be returned from a 
-#'   longitudinal database.  If \code{NULL}, all events are returned.
+#'   longitudinal database.  If \code{NULL}, all events are returned. This argument
+#'   is ignored when using an \code{offlineConnection}.
 #' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
@@ -250,6 +251,17 @@ exportRecordsTyped.redcapApiConnection <-
                           classes = "redcapApiConnection",
                           add = coll)
   
+  if (inherits(rcon, "offlineConnection")){
+    checkmate::assert_data_frame(x = rcon$metadata(),
+                                 .var.name = "rcon$metadata()",
+                                 add = coll)
+    
+    checkmate::assert_data_frame(x = rcon$record(), 
+                                 .var.name = "rcon$record()", 
+                                 add = coll)
+  }
+  
+  
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
@@ -372,9 +384,11 @@ exportRecordsTyped.redcapApiConnection <-
   
   # Check that the events exist in the project
   
-  checkmate::assert_subset(x = events, 
-                           choices = rcon$events()$unique_event_name, 
-                           add = coll)
+  if (!inherits(rcon, "offlineConnection")){
+    checkmate::assert_subset(x = events, 
+                             choices = rcon$events()$unique_event_name, 
+                             add = coll) 
+  }
   
   checkmate::reportAssertions(coll)
   
@@ -425,7 +439,9 @@ exportRecordsTyped.redcapApiConnection <-
   body <- body[lengths(body) > 0]
   
   Raw <- 
-    if (length(batch_size) == 0)
+    if (inherits(rcon, "offlineConnection")){
+      rcon$record()
+    } else if (length(batch_size) == 0)
     {
       .exportRecordsFormattedUnbatched( rcon          = rcon, 
                                         body          = body, 

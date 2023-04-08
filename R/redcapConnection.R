@@ -293,3 +293,368 @@ print.redcapApiConnection <- function(x, ...){
   cat(output, sep = "\n")
 }
 
+#' @rdname redcapConnection
+#' @param meta_data Either a \code{character} giving the file from which the 
+#'   metadata can be read, or a \code{data.frame}.
+#' @param arms Either a \code{character} giving the file from which the 
+#'   arms can be read, or a \code{data.frame}.
+#' @param events Either a \code{character} giving the file from which the 
+#'   events can be read, or a \code{data.frame}.
+#' @param instruments Either a \code{character} giving the file from which the 
+#'   instruments can be read, or a \code{data.frame}.
+#' @param field_names Either a \code{character} giving the file from which the 
+#'   field names can be read, or a \code{data.frame}.
+#' @param mapping Either a \code{character} giving the file from which the 
+#'   Event Instrument mappings can be read, or a \code{data.frame}.
+#' @param users Either a \code{character} giving the file from which the 
+#'   User settings can be read, or a \code{data.frame}.
+#' @param version Either a \code{character} giving the file from which the 
+#'   version can be read, or a \code{data.frame}.
+#' @param project_info Either a \code{character} giving the file from which the 
+#'   Project Information can be read, or a \code{data.frame}.
+#' @param file_repo Either a \code{character} giving the file from which the 
+#'   File Repository Listing can be read, or a \code{data.frame}.
+#' @param records Either a \code{character} giving the file from which the 
+#'   Records can be read, or a \code{data.frame}. This should be the raw 
+#'   data as downloaded from the API, for instance. Using labelled or formatted
+#'   data is likely to result in errors when passed to other functions. 
+#' @export
+
+offlineConnection <- function(meta_data = NULL, 
+                              arms = NULL, 
+                              events = NULL, 
+                              instruments = NULL, 
+                              field_names = NULL, 
+                              mapping = NULL, 
+                              users = NULL, 
+                              version = NULL, 
+                              project_info = NULL, 
+                              file_repo = NULL, 
+                              records = NULL){
+  ###################################################################
+  # Argument Validation 
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert(
+    checkmate::check_character(x = meta_data, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = meta_data, 
+                                null.ok = TRUE), 
+    combine = "or",
+    .var.name = "meta_data", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = arms, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = arms, 
+                                null.ok = TRUE), 
+    .var.name = "arms", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = events, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = events, 
+                                null.ok = TRUE), 
+    .var.name = "events", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = instruments, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = instruments, 
+                                null.ok = TRUE), 
+    .var.name = "instruments", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = field_names, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = field_names, 
+                                null.ok = TRUE), 
+    .var.name = "field_names", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = mapping, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = mapping, 
+                                null.ok = TRUE), 
+    .var.name = "mapping", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = users, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = users, 
+                                null.ok = TRUE), 
+    .var.name = "users", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = version, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = version, 
+                                null.ok = TRUE), 
+    .var.name = "version", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = project_info, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = project_info, 
+                                null.ok = TRUE), 
+    .var.name = "project_info", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = file_repo, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = file_repo, 
+                                null.ok = TRUE), 
+    .var.name = "file_repo", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = records, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = records, 
+                                null.ok = TRUE), 
+    .var.name = "records", 
+    add = coll
+  )
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Argument Validation - Part Two
+  
+  if (is.character(meta_data)){
+    checkmate::assert_file_exists(x = meta_data, 
+                                  add = coll)
+  }
+  
+  if (is.character(arms)){
+    checkmate::assert_file_exists(x = arms, 
+                                  add = coll)
+  }
+  
+  if (is.character(events)){
+    checkmate::assert_file_exists(x = events, 
+                                  add = coll)
+  }
+  
+  if (is.character(instruments)){
+    checkmate::assert_file_exists(x = instruments, 
+                                  add = coll)
+  }
+  
+  if (is.character(field_names)){
+    checkmate::assert_file_exists(x = field_names, 
+                                  add = coll)
+  }
+  
+  if (is.character(mapping)){
+    checkmate::assert_file_exists(x = mapping, 
+                                  add = coll)
+  }
+  
+  if (is.character(users)){
+    checkmate::assert_file_exists(x = users, 
+                                  add = coll)
+  }
+  
+  if (is.character(version)){
+    checkmate::assert_file_exists(x = version, 
+                                  add = coll)
+  }
+  
+  if (is.character(project_info)){
+    checkmate::assert_file_exists(x = project_info, 
+                                  add = coll)
+  }
+  
+  if (is.character(file_repo)){
+    checkmate::assert_file_exists(x = file_repo, 
+                                  add = coll)
+  }
+  
+  if (is.character(records)){
+    checkmate::assert_file_exists(x = records, 
+                                  add = coll)
+  }
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Read files
+  
+  this_metadata <- .offlineConnection_readFile(meta_data)
+  this_arm <- .offlineConnection_readFile(arms)
+  this_event <- .offlineConnection_readFile(events)
+  this_fieldname <- 
+    if (is.null(field_names) & !is.null(this_metadata)){
+      .fieldNamesFromMetaData(this_metadata)
+    } else {
+      .offlineConnection_readFile(field_names)
+    }
+  this_mapping <- .offlineConnection_readFile(mapping)
+  this_user <- .offlineConnection_readFile(users)
+  this_version <- .offlineConnection_readFile(version)
+  this_project <- .offlineConnection_readFile(project_info)
+  this_fileRepository <- .offlineConnection_readFile(file_repo)
+  this_instrument <- 
+    if (is.null(instruments) & !is.null(this_metadata)){
+      data.frame(instrument_name = unique(this_metadata$form_name), 
+                 instrument_label = unique(this_metadata$form_name), 
+                 stringsAsFactors = FALSE)
+    } else {
+      .offlineConnection_readFile(instruments)
+    }
+  this_record <- .offlineConnection_readFile(records)
+  
+  rc <- 
+    list(
+      url = NULL, 
+      token = NULL, 
+      config = NULL, 
+      
+      metadata = function(){ this_metadata }, 
+      has_metadata = function() !is.null(this_metadata),
+      flush_metadata = function() this_metadata <<- NULL, 
+      refresh_metadata = function() {}, 
+      
+      arms = function(){ this_arm }, 
+      has_arms = function() !is.null(this_arm), 
+      flush_arms = function() this_arm <<- NULL, 
+      refresh_arms = function() {}, 
+      
+      events = function(){ this_event}, 
+      has_events = function() !is.null(this_event), 
+      flush_events = function() this_event <<- NULL, 
+      refresh_events = function() {}, 
+      
+      fieldnames = function(){ this_fieldname }, 
+      has_fieldnames = function() !is.null(this_fieldname), 
+      flush_fieldnames = function() this_fieldname <<- NULL, 
+      refresh_fieldnames = function() {}, 
+      
+      mapping = function(){ this_mapping }, 
+      has_mapping = function() !is.null(this_mapping), 
+      flush_mapping = function() this_mapping <<- NULL, 
+      refresh_mapping = function() {}, 
+      
+      users = function(){ this_user }, 
+      has_users = function() !is.null(this_user), 
+      flush_users = function() this_user <<- NULL, 
+      refresh_users = function() {}, 
+      
+      version = function(){ this_version }, 
+      has_version = function() !is.null(this_version), 
+      flush_version = function() this_version <<- NULL, 
+      refresh_version = function() {}, 
+      
+      projectInformation = function(){ this_project }, 
+      has_projectInformation = function() !is.null(this_project), 
+      flush_projectInformation = function() this_project <<- NULL, 
+      refresh_projectInformation = function() {}, 
+      push_projectInformation = function(push) this_project <<- push, 
+      
+      instruments = function(){ this_instrument },
+      has_instruments = function() !is.null(this_instrument), 
+      flush_instruments = function() this_instrument <<- NULL, 
+      refresh_instruments = function() {}, 
+      
+      fileRepository = function(){ this_fileRepository },
+      has_fileRepository = function() !is.null(this_fileRepository),
+      flush_fileRepository = function() this_fileRepository <<- NULL,
+      refresh_fileRepository = function() {},
+      
+      record = function(){ this_record },
+      has_record = function() !is.null(this_record),
+      flush_record = function() this_record <<- NULL,
+      refresh_record = function() {},
+      
+      flush_all = function(){ 
+        this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
+          this_mapping <<- this_user <<- this_version <<- this_project <<- 
+          this_instrument <<- this_fileRepository <<- NULL}, 
+      
+      refresh_all = function(){}
+    )
+  class(rc) <- c("offlineConnection", "redcapApiConnection")
+  rc
+}
+
+#####################################################################
+# Unexported
+
+.offlineConnection_readFile <- function(file){
+  if (is.character(file)){
+    read.csv(file, 
+             na.strings = "", 
+             stringsAsFactors = FALSE, 
+             colClasses = "character")
+  } else {
+    file
+  }
+}
+
+.fieldNamesFromMetaData <- function(meta_data){
+  FieldNameFrame <- 
+    mapply(
+      function(field_name, field_type, choices){
+        if (field_type == "checkbox"){
+          mapping <- fieldChoiceMapping(choices, field_name)
+          data.frame(original_field_name = rep(field_name, nrow(mapping)), 
+                     choice_value = mapping[, 1], 
+                     export_field_name = sprintf("%s___%s", 
+                                                 field_name, 
+                                                 mapping[, 1]), 
+                     stringsAsFactors = FALSE)
+        } else {
+          data.frame(original_field_name = field_name, 
+                     choice_value = NA_character_, 
+                     export_field_name = field_name, 
+                     stringsAsFactors = FALSE)
+        }
+      }, 
+      field_name = meta_data$field_name, 
+      field_type = meta_data$field_type, 
+      choices = meta_data$select_choices_or_calculations, 
+      SIMPLIFY = FALSE)
+  
+  forms <- unique(meta_data$form_name)
+  forms <- sprintf("%s_complete", forms)
+  FormFieldName <- data.frame(original_field_name = forms, 
+                              choice_value = NA_character_, 
+                              export_field_name = forms, 
+                              stringsAsFactors = FALSE)
+  
+  FieldNames <- do.call("rbind", FieldNameFrame)
+  FieldNames <- rbind(FieldNames, FormFieldName)
+  rownames(FieldNames) <- NULL
+  FieldNames
+}
