@@ -119,14 +119,19 @@ importRecords.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection", 
                           add = coll)
   
+  checkmate::assert_data_frame(x = data, 
+                               add = coll)
+  
   overwriteBehavior <- 
     checkmate::matchArg(x = overwriteBehavior, 
                         choices = c('normal', 'overwrite'),
+                        .var.name = "overwriteBehavior",
                         add = coll)
   
   returnContent <- 
     checkmate::matchArg(x = returnContent, 
                         choices = c('count', 'ids', 'nothing'),
+                        .var.name = "returnContent",
                         add = coll)
   
   checkmate::assert_logical(x = returnData,
@@ -135,14 +140,16 @@ importRecords.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = logfile,
                               len = 1,
-                              add = TRUE)
+                              add = coll)
   
   checkmate::assert_integerish(x = batch.size,
                                len = 1,
                                add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"))
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling", 
+                                        add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -431,8 +438,15 @@ import_records_unbatched <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code == "200") 
-    as.character(response) 
+  if (response$status_code == "200"){
+    if (returnContent == "ids"){
+      read.csv(text = as.character(response), 
+               na.strings = "", 
+               stringsAsFactors = FALSE)
+    } else {
+      as.character(response)
+    }
+  }
   else 
     redcap_error(response, error_handling = "error")
 }

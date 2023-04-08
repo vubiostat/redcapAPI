@@ -58,6 +58,7 @@ deleteRecords.redcapApiConnection <- function(rcon,
                                               config         = list(), 
                                               api_param      = list()){
   
+  if (is.numeric(records)) records <- as.character(records)
   if (is.character(arm)) arm <- as.numeric(arm)
   
    ##################################################################
@@ -65,10 +66,10 @@ deleteRecords.redcapApiConnection <- function(rcon,
   
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_atomic(x = records,
-                           any.missing = FALSE,
-                           min.len = 1,
-                           add = coll)
+  checkmate::assert_character(x = records,
+                              any.missing = FALSE,
+                              min.len = 1,
+                              add = coll)
   
   checkmate::assert_integerish(arm,
                                len = 1, 
@@ -77,7 +78,8 @@ deleteRecords.redcapApiConnection <- function(rcon,
                                add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
+                                        choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 
