@@ -23,9 +23,11 @@ test_that(
   "Import, Export, and Deletion of Arms Execute Successfully", 
   {
     local_reproducible_output(width = 200)
-    # start from an empty project with no arms. It should be recognized as a classical project.
-    expect_equal(rcon$projectInformation()$is_longitudinal, 
-                 0)
+    
+    if(rcon$projectInformation()$is_longitudinal == 0){
+      importProjectInformation(rcon, 
+                               data.frame(is_longitudinal = 1))
+    }
     
     # To be considered 'longitudinal', both arms and events must be defined.
     expect_message(importArms(rcon, 
@@ -45,6 +47,8 @@ test_that(
     # export the Arms and compare output with what was imported
     expect_equal(exportArms(rcon), 
                  Arms)
+    
+    rcon$refresh_arms()
     
     # delete the Arms
     expect_message(deleteArms(rcon, 

@@ -3,6 +3,9 @@ context("Export/Import Project Information Functionality")
 rcon <- redcapConnection(url = url, 
                          token = SANDBOX_KEY)
 
+#####################################################################
+# exportProjectInformation functionality
+
 test_that(
   "Export project information", 
   {
@@ -40,3 +43,27 @@ test_that(
                       nrows = 1)
   }
 )
+
+#####################################################################
+# importProjectInformation functionality
+
+CurrentInfo <- rcon$projectInformation()
+
+test_that(
+  "Import new values", 
+  {
+    NewInfo <- data.frame(project_pi_lastname = "Not Garbett", 
+                          display_today_now_button = 0)
+    
+    expect_message(importProjectInformation(rcon, 
+                                            NewInfo), 
+                   "Fields updated: 2")
+    
+    
+    # cleanup 
+    expect_message(importProjectInformation(rcon, 
+                                            CurrentInfo), 
+                   "Fields updated: 18")
+  }
+)
+
