@@ -44,3 +44,7 @@ test_that("arm restrictions are honored",{
   expect_error(deleteRecords(rcon, "delete.too", arm=2), NA)
 })
 
+#####################################################################
+# Argument Validation
+
+# FIXME: Add tests for argument validation

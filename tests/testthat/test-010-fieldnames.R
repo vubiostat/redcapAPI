@@ -63,3 +63,27 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportFieldNames(rcon, 
+                                error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(exportFieldNames(rcon, 
+                                config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportFieldNames(rcon, 
+                                config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportFieldNames(rcon, 
+                                api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportFieldNames(rcon, 
+                                api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)

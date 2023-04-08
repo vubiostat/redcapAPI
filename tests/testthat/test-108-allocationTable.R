@@ -139,6 +139,18 @@ test_that(
 )
 
 test_that(
+  "Return an error when dag.id is not integerish", 
+  {
+    expect_error(allocationTable(rcon, 
+                                 random = "treatment", 
+                                 group = "no_prereq_checkbox", 
+                                 replicates = 20, 
+                                 block.size = 20, 
+                                 dag.id = "1"))
+  }
+)
+
+test_that(
   "Return an error when replicates is not integerish(1)", 
   {
     local_reproducible_output(width = 200)

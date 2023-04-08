@@ -159,6 +159,15 @@ test_that(
 )
 
 test_that(
+  "Return an error if drop is not character", 
+  {
+    expect_error(exportRecords(rcon, 
+                               drop = 1:3), 
+                 "'drop': Must be of type 'character'")
+  }
+)
+
+test_that(
   "Return an error if survey is not logical(1)",
   {
     local_reproducible_output(width = 200)
@@ -233,5 +242,29 @@ test_that(
     expect_error(exportRecords(rcon, 
                                form_complete_auto = "TRUE"), 
                  "'form_complete_auto'[:] Must be of type 'logical'")
+  }
+)
+
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportRecords(rcon, 
+                               error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(exportRecords(rcon, 
+                               config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportRecords(rcon, 
+                               config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportRecords(rcon, 
+                               api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportRecords(rcon, 
+                               api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
   }
 )

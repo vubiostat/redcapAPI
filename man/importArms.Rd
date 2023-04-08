@@ -11,6 +11,7 @@ importArms(rcon, arms_data, override = FALSE, ...)
   rcon,
   arms_data,
   override = FALSE,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -31,6 +32,9 @@ delete all of the arms in the project and import the contents of
 allows arms to be renamed or added.}
 
 \item{...}{additional arguments to pass to other methods.}
+
+\item{refresh}{\code{logical(1)}. If \code{TRUE}, the cached data will
+be refreshed after the import.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

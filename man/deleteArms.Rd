@@ -10,6 +10,7 @@ deleteArms(rcon, arms, ...)
 \method{deleteArms}{redcapApiConnection}(
   rcon,
   arms,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -24,6 +25,9 @@ deleteArms(rcon, arms, ...)
 deleted. May also be \code{integerish}.}
 
 \item{...}{Additional arguments to pass to other methods.}
+
+\item{refresh}{\code{logical(1)} If \code{TRUE}, the cached arms data will
+be refreshed after the deletion.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

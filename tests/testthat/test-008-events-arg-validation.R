@@ -67,7 +67,7 @@ test_that(
 )
 
 test_that(
-  "Return an error when arms_data is not a data.frame", 
+  "Return an error when event_data is not a data.frame", 
   {
     local_reproducible_output(width = 500)
     
@@ -98,6 +98,22 @@ test_that(
                               Events, 
                               override = "TRUE"), 
                  "'override': Must be of type 'logical'")
+  }
+)
+
+test_that(
+  "Return an error if refresh is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importEvents(rcon, 
+                              Events, 
+                              refresh = c(TRUE, FALSE)), 
+                 "'refresh': Must have length 1")
+    
+    expect_error(importEvents(rcon, 
+                              Events, 
+                              refresh = "TRUE"), 
+                 "'refresh': Must be of type 'logical'")
   }
 )
 
@@ -143,12 +159,28 @@ test_that(
 )
 
 test_that(
-  "Return an error when deleteArms is not character", 
+  "Return an error when events is not character", 
   {
     local_reproducible_output(width = 200)
     expect_error(deleteEvents(rcon, 
                             events = c(TRUE, FALSE)), 
                  "'events': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "Return an error if refresh is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteEvents(rcon, 
+                              Events, 
+                              refresh = c(TRUE, FALSE)), 
+                 "'refresh': Must have length 1")
+    
+    expect_error(deleteEvents(rcon, 
+                              Events, 
+                              refresh = "TRUE"), 
+                 "'refresh': Must be of type 'logical'")
   }
 )
 

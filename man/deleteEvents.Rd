@@ -7,6 +7,7 @@
 deleteEvents(
   rcon,
   events = NULL,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -16,6 +17,7 @@ deleteEvents(
 deleteEvents(
   rcon,
   events = NULL,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -27,6 +29,9 @@ deleteEvents(
 
 \item{events}{\code{character} vector giving the unique event names
 of the events to be deleted.}
+
+\item{refresh}{\code{logical(1)} If \code{TRUE}, cached event data will be 
+refreshed after the deletion.}
 
 \item{...}{Additional arguments to pass to other methods.}
 

@@ -246,6 +246,10 @@ exportRecords.redcapApiConnection <-
                             any.missing = FALSE, 
                             add = coll)
   
+  checkmate::assert_character(x = drop, 
+                              null.ok = TRUE, 
+                              add = coll)
+  
   checkmate::assert_logical(x = survey, 
                             len = 1, 
                             any.missing = FALSE, 
@@ -272,6 +276,7 @@ exportRecords.redcapApiConnection <-
 
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 
@@ -429,7 +434,7 @@ exportRecords.redcapApiConnection <-
   #* synchronize underscore codings between records and meta data
   #* Only affects calls in REDCap versions earlier than 5.5.21
   if (utils::compareVersion(version, "6.0.0") == -1)
-    MetaData <- syncUnderscoreCodings(x, MetaData)
+    MetaData <- syncUnderscoreCodings(Records, MetaData)
 
   Records <- fieldToVar(records = Records,
                         meta_data = MetaData,

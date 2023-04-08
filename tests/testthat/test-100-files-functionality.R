@@ -5,6 +5,7 @@ rcon <- redcapConnection(url, API_KEY)
 test_that(
   "export, delete, and import a file in a longitudinal project", 
   {
+    local_reproducible_output(width = 200)
     temp_dir <- tempdir()
     target_file <- "30-event_1_arm_1-FileForImportExportTesting.txt"
     
@@ -64,7 +65,7 @@ test_that(
                   event = "event_1_arm_1", 
                   overwrite = FALSE, 
                   repeat_instance = NULL), 
-      "A file exists and overwrite = FALSE"
+      "A file exists and overwrite [=] FALSE"
     )
   }
 )

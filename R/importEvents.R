@@ -21,6 +21,8 @@
 #'   only add new events or modify existing events. When \code{TRUE}, all
 #'   existing events are deleted and replaced with the events in 
 #'   \code{event_data}.
+#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
+#'   be refreshed after the import.
 #' @param ... Additional arguments to pass to other methods. 
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -46,6 +48,7 @@ importEvents <- function(rcon,
 importEvents <- function(rcon, 
                          event_data, 
                          override       = FALSE, 
+                         refresh        = TRUE,
                          ..., 
                          error_handling = getOption("redcap_error_handling"), 
                          config         = list(), 
@@ -65,6 +68,10 @@ importEvents <- function(rcon,
   checkmate::assert_logical(x = override, 
                             len = 1, 
                             any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
@@ -113,4 +120,8 @@ importEvents <- function(rcon,
   
   message(sprintf("Events imported: %s", 
                   as.character(response)))
+  
+  if (refresh && rcon$has_events()){
+    rcon$refresh_events()
+  }
 }

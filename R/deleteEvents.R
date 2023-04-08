@@ -11,6 +11,8 @@
 #' @param rcon A \code{redcapConnection} object.
 #' @param events \code{character} vector giving the unique event names
 #'   of the events to be deleted.
+#' @param refresh \code{logical(1)} If \code{TRUE}, cached event data will be 
+#'   refreshed after the deletion.
 #' @param ... Additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -34,6 +36,7 @@ deleteEvents <- function(rcon,
 
 deleteEvents <- function(rcon, 
                          events         = NULL, 
+                         refresh        = TRUE,
                          ..., 
                          error_handling = getOption("redcap_error_handling"), 
                          config         = list(), 
@@ -51,6 +54,10 @@ deleteEvents <- function(rcon,
                               any.missing = FALSE, 
                               null.ok = TRUE, 
                               add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -87,4 +94,8 @@ deleteEvents <- function(rcon,
   
   message(sprintf("Events deleted: %s", 
                   as.character(response)))
+  
+  if (refresh && rcon$has_events()){
+    rcon$refresh_events()
+  }
 }

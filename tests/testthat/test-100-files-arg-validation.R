@@ -8,6 +8,7 @@ rcon <- redcapConnection(url, API_KEY)
 test_that(
   "exportFiles Argument Checking", 
   {
+    local_reproducible_output(width = 200)
     # rcon is redcapApiConnection
     expect_error(exportFiles(rcon = mtcars), 
                  "no applicable method for 'exportFiles'")
@@ -105,12 +106,52 @@ test_that(
   }
 )
 
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(exportFiles(rcon,
+                             record = 1, 
+                             field = "file_import_field", 
+                             dir = "dir", 
+                             error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(exportFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             dir = "dir", 
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             dir = "dir", 
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             dir = "dir", 
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             dir = "dir", 
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)
+
 #####################################################################
 # importFiles
 
 test_that(
   "importFiles Argument Checking", 
   {
+    local_reproducible_output(width = 200)
     # rcon is redcapApiConnection
     expect_error(importFiles(rcon = mtcars), 
                  "no applicable method for 'importFiles'")
@@ -208,12 +249,52 @@ test_that(
   }
 )
 
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             file = "filename",
+                             error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(importFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             file = "filename",
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(importFiles(rcon, 
+                             record = 1, 
+                             field = "file_import_field", 
+                             file = "filename",
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(importFiles(rcon,
+                             record = 1, 
+                             field = "file_import_field", 
+                             file = "filename",
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(importFiles(rcon,
+                             record = 1, 
+                             field = "file_import_field", 
+                             file = "filename",
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)
+
 #####################################################################
 # deleteFiles
 
 test_that(
   "deleteFiles Argument Checking", 
   {
+    local_reproducible_output(width = 200)
     # rcon is redcapApiConnection
     expect_error(deleteFiles(rcon = mtcars), 
                  "no applicable method for 'deleteFiles'")
@@ -254,5 +335,29 @@ test_that(
     expect_error(deleteFiles(rcon, 
                              repeat_instance = c(1, 2)), 
                  "'repeat_instance': Must have length 1") 
+  }
+)
+
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteFiles(rcon, 
+                             error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(deleteFiles(rcon, 
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteFiles(rcon, 
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteFiles(rcon, 
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteFiles(rcon, 
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
   }
 )

@@ -50,9 +50,9 @@ exportMetaData <- function(rcon, ...){
 exportMetaData.redcapApiConnection <- function(rcon, 
                                                fields = character(0), 
                                                forms = character(0),
-                                               error_handling = getOption("redcap_error_handling"), 
                                                ...,
                                                drop_utf8 = FALSE, 
+                                               error_handling = getOption("redcap_error_handling"), 
                                                config = list(), 
                                                api_param = list()){
   # Argument validation ---------------------------------------------
@@ -71,6 +71,11 @@ exportMetaData.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = drop_utf8,
                             len = 1,
                             add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling", 
+                                        add = coll)
 
   checkmate::assert_list(x = config, 
                          names = "named", 

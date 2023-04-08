@@ -8,6 +8,7 @@ importEvents(
   rcon,
   event_data,
   override = FALSE,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -18,6 +19,7 @@ importEvents(
   rcon,
   event_data,
   override = FALSE,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -36,6 +38,9 @@ and "arm_num". To modify existing events, it must also have a column
 only add new events or modify existing events. When \code{TRUE}, all
 existing events are deleted and replaced with the events in 
 \code{event_data}.}
+
+\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached event data will 
+be refreshed after the import.}
 
 \item{...}{Additional arguments to pass to other methods.}
 

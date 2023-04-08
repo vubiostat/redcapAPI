@@ -105,16 +105,19 @@ exportPdf.redcapApiConnection <- function(rcon,
   checkmate::assert_character(x = record, 
                               len = 1, 
                               any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_character(x = events,
                               len = 1, 
                               any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_character(x = instruments,
                               len  = 1,
                               any.missing = FALSE, 
+                              null.ok = TRUE,
                               add = coll)
   
   checkmate::assert_logical(x = all_records,
@@ -124,6 +127,7 @@ exportPdf.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 
@@ -148,9 +152,8 @@ exportPdf.redcapApiConnection <- function(rcon,
                            choices = Events$unique_event_name,
                            add = coll)
 
-  # FIXME: What column in Instruments are we comparing against?
   checkmate::assert_subset(x = instruments, 
-                           choices = ,
+                           choices = Instruments$instrument_name,
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -161,7 +164,7 @@ exportPdf.redcapApiConnection <- function(rcon,
   body <- list(token = rcon$token, 
                content = 'pdf', 
                returnFormat = 'csv', 
-               allRecords = as.numeric(all_records), 
+               allRecords = if (all_records) as.numeric(all_records) else NULL, 
                record = record, 
                event = events, 
                instrument = instruments)
