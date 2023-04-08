@@ -107,7 +107,7 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   data <- data[!names(data) %in% PROJECT_INFO_FIELDS_FIXED]
   
   checkmate::assert_subset(x = names(data), 
-                           choices = PROJECT_INFO_FIELDS, 
+                           choices = PROJECT_INFO_FIELDS_EDITABLE, 
                            add = coll)
   
   checkmate::reportAssertions(coll)
