@@ -352,9 +352,11 @@ exportRecordsTyped.redcapApiConnection <-
   
   # Check that fields (and drop_fields) exist in the project
   
+  MetaData <- rcon$metadata()
   ProjectFields <- rcon$fieldnames()
   available_fields <- unique(c(ProjectFields$original_field_name, 
-                               ProjectFields$export_field_name))
+                               ProjectFields$export_field_name, 
+                               MetaData$field_name[MetaData$field_type %in% c("calc", "file")]))
   
   checkmate::assert_subset(x = fields, 
                            choices = available_fields, 
@@ -446,7 +448,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Process meta data for useful information
-  MetaData <- rcon$metadata()
   
    ###################################################################
   # Derive field information
@@ -678,11 +679,26 @@ exportRecordsTyped.redcapApiConnection <-
                                             drop_fields = drop_fields, 
                                             forms = forms)
 {
-  FieldFormMap <- rcon$metadata()[c("field_name", "form_name")]
+  MetaData <- rcon$metadata()
+  
+  # exportFieldNames excludes fields of type calc, descriptive, and file
+  # We need to wedge them in here or we'll never get them out of the API
   ProjectFields <- rcon$fieldnames()
+  
+  MissingFromFields <- MetaData[MetaData$field_type %in% c("calc", 
+                                                           "file"), ]
+  MissingFromFields <- 
+    data.frame(original_field_name = MissingFromFields$field_name, 
+               choice_value = NA, 
+               export_field_name = MissingFromFields$field_name, 
+               stringsAsFactors = FALSE)
+  
+  ProjectFields <- rbind(ProjectFields, MissingFromFields)
   ProjectFields$index <- seq_len(nrow(ProjectFields))
   
   # Make a reference table between fields and forms
+  FieldFormMap <- MetaData[c("field_name", "form_name")]
+  
   FieldFormMap <- 
     merge(ProjectFields, 
           FieldFormMap, 
