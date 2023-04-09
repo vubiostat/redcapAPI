@@ -564,13 +564,21 @@ exportRecordsTyped.redcapApiConnection <-
   attr(Records, "invalid") <-
     do.call(rbind, lapply(seq_along(Raw), function(i)
     {
-      sel <- selector[[i]]
+      sel <- selector[,i]
       if(any(sel))
       {
-        data.frame(row=seq_len(nrow(Raw))[sel],
-                   record_id=Raw[sel, 1],
-                   field_name=field_names[i],
-                   value=Raw[sel, i])
+        if("record_id" %in% colnames(Raw))
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     record_id=Raw[sel, "record_id"],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        } else
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        }
       } else NULL
     }))
   if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
