@@ -351,6 +351,23 @@ test_that(
 
  ###################################################################
 # Validation
+test_that(
+  "Custom validation works",
+  {
+    rec  <- exportRecordsTyped(rcon, fields="prereq_number", cast=raw_cast)
+    recV <- expect_warning(
+              exportRecordsTyped(
+                rcon,
+                fields="prereq_number",
+                validation=list(number=valRx("^5$|^-100$"))),
+              "failed validation")
+    inv <- attr(recV, "invalid")
+    expect_true(!is.null(inv))
+    expect_equal(unique(inv$value), "1")
+    sapply(c(14, 15, 18, 19), function(i) expect_true(!i %in% inv$row))
+    sapply(1:13, function(i) expect_true(i %in% inv$row))
+  }
+)
 
  ###################################################################
 # Casting

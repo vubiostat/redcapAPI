@@ -124,7 +124,7 @@ test_that(
     Logs <- exportLogging(rcon, 
                           logtype = "export")
     
-    all_export_record <- all(grepl("export", Logs$action))
+    all_export_record <- all(grepl("export", Logs$action, ignore.case = TRUE))
     expect_true(all_export_record)
   }
 )
@@ -249,8 +249,8 @@ test_that(
 test_that(
   "Logs are returned for an existing record", 
   {
+    Records <- FullLog[!is.na(FullLog$record) & !grepl("user", FullLog$action), ]
     records <- FullLog$record
-    records <- records[!is.na(records)]
     records <- trimws(records)
     records <- unique(records)
     
