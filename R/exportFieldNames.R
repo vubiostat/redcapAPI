@@ -74,8 +74,7 @@
 
 
 exportFieldNames <- function(rcon, 
-                             ...,
-                             error_handling = getOption("redcap_error_handling")){
+                             ...){
   UseMethod("exportFieldNames")
 }
 
@@ -83,11 +82,11 @@ exportFieldNames <- function(rcon,
 #' @export
 
 exportFieldNames.redcapApiConnection <- function(rcon, 
-                                                 fields = character(0), 
+                                                 fields         = character(0), 
                                                  ...,
                                                  error_handling = getOption("redcap_error_handling"), 
-                                                 config = list(), 
-                                                 api_param = list()){
+                                                 config         = list(), 
+                                                 api_param      = list()){
  
   # Argument validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
@@ -102,6 +101,7 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 

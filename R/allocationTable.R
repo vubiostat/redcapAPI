@@ -171,6 +171,10 @@ allocationTable.redcapApiConnection <- function(rcon,
                            choices = MetaData$field_name,
                            add = coll)
   
+  checkmate::assert_integerish(x = dag.id,
+                               null.ok = TRUE,
+                               add = coll)
+  
   checkmate::assert_integerish(x = replicates,
                                len = 1,
                                add = coll)

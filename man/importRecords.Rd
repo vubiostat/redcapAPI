@@ -23,7 +23,10 @@ importRecords(
   returnData = FALSE,
   logfile = "",
   ...,
-  batch.size = -1
+  batch.size = -1,
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -55,6 +58,17 @@ If \code{""}, the log is printed to the console.}
 
 \item{batch.size}{Specifies size of batches.  A negative value
 indicates no batching.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 Imports records from a \code{data.frame} to a REDCap Database
