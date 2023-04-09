@@ -63,7 +63,8 @@ all forms are returned (unless \code{fields} is specified.}
 to be returned.  If \code{NULL}, all subjects are returned.}
 
 \item{events}{A \code{character} vector of events to be returned from a 
-longitudinal database.  If \code{NULL}, all events are returned.}
+longitudinal database.  If \code{NULL}, all events are returned. This argument
+is ignored when using an \code{offlineConnection}.}
 
 \item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field 
 (e.g., "redcap_survey_identifier") or survey timestamp fields 

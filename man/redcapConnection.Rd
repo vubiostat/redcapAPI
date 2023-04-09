@@ -4,6 +4,7 @@
 \alias{redcapConnection}
 \alias{print.redcapApiConnection}
 \alias{offlineConnection}
+\alias{print.redcapOfflineConnection}
 \title{Connect to a REDCap Database}
 \usage{
 redcapConnection(
@@ -30,6 +31,8 @@ offlineConnection(
   file_repo = NULL,
   records = NULL
 )
+
+\method{print}{redcapOfflineConnection}(x, ...)
 }
 \arguments{
 \item{url}{URL for a REDCap database API.  Check your institution's REDCap 

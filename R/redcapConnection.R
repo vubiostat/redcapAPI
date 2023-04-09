@@ -278,8 +278,12 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
 
 print.redcapApiConnection <- function(x, ...){
   is_cached <- function(l) if (l) "Cached" else "Not Cached" 
+  
+  type <- class(x)[1]
+  type <- gsub("(redcap|Connection)", "", type)
+  type <- toupper(type)
   output <- 
-    c("REDCap API Connection Object:", 
+    c(sprintf("REDCap Connection Object (%s):", type), 
       sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
       sprintf("Arms        : %s", is_cached(x$has_arms())), 
       sprintf("Events      : %s", is_cached(x$has_events())),
@@ -510,20 +514,32 @@ offlineConnection <- function(meta_data = NULL,
   
   ###################################################################
   # Read files
-  
-  this_metadata <- .offlineConnection_readFile(meta_data)
-  this_arm <- .offlineConnection_readFile(arms)
-  this_event <- .offlineConnection_readFile(events)
+  this_metadata <- 
+    validateRedcapData(data = .offlineConnection_readFile(meta_data), 
+                       redcap_data = REDCAP_METADATA_STRUCTURE)
+  this_arm <- 
+    validateRedcapData(data = .offlineConnection_readFile(arms), 
+                       redcap_data = REDCAP_ARMS_STRUCTURE)
+  this_event <- 
+    validateRedcapData(data = .offlineConnection_readFile(events), 
+                       redcap_data = REDCAP_EVENT_STRUCTURE)
   this_fieldname <- 
     if (is.null(field_names) & !is.null(this_metadata)){
       .fieldNamesFromMetaData(this_metadata)
     } else {
-      .offlineConnection_readFile(field_names)
+      validateRedcapData(data = .offlineConnection_readFile(field_names), 
+                         redcap_data = REDCAP_FIELDNAME_STRUCTURE)
     }
-  this_mapping <- .offlineConnection_readFile(mapping)
-  this_user <- .offlineConnection_readFile(users)
-  this_version <- .offlineConnection_readFile(version)
-  this_project <- .offlineConnection_readFile(project_info)
+  this_mapping <- 
+    validateRedcapData(data = .offlineConnection_readFile(mapping), 
+                       redcap_data = REDCAP_INSTRUMENT_MAPPING_STRUCTURE)
+  this_user <- 
+    validateRedcapData(data = .offlineConnection_readFile(users), 
+                       redcap_data = REDCAP_USER_STRUCTURE)
+  this_version <- version
+  this_project <- 
+    validateRedcapData(data = .offlineConnection_readFile(project_info), 
+                       redcap_data = REDCAP_PROJECT_INFORMATION_STRUCTURE)
   this_fileRepository <- .offlineConnection_readFile(file_repo)
   this_instrument <- 
     if (is.null(instruments) & !is.null(this_metadata)){
@@ -531,7 +547,8 @@ offlineConnection <- function(meta_data = NULL,
                  instrument_label = unique(this_metadata$form_name), 
                  stringsAsFactors = FALSE)
     } else {
-      .offlineConnection_readFile(instruments)
+      validateRedcapData(data = .offlineConnection_readFile(instruments), 
+                         redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
     }
   this_record <- .offlineConnection_readFile(records)
   
@@ -544,68 +561,98 @@ offlineConnection <- function(meta_data = NULL,
       metadata = function(){ this_metadata }, 
       has_metadata = function() !is.null(this_metadata),
       flush_metadata = function() this_metadata <<- NULL, 
-      refresh_metadata = function() {}, 
+      refresh_metadata = function(x) {this_metadata <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                           redcap_data = REDCAP_METADATA_STRUCTURE)}, 
       
       arms = function(){ this_arm }, 
       has_arms = function() !is.null(this_arm), 
       flush_arms = function() this_arm <<- NULL, 
-      refresh_arms = function() {}, 
+      refresh_arms = function(x) {this_arm <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                  redcap_data = REDCAP_ARMS_STRUCTURE)}, 
       
       events = function(){ this_event}, 
       has_events = function() !is.null(this_event), 
       flush_events = function() this_event <<- NULL, 
-      refresh_events = function() {}, 
+      refresh_events = function(x) {this_event <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                      redcap_data = REDCAP_EVENT_STRUCTURE)}, 
       
       fieldnames = function(){ this_fieldname }, 
       has_fieldnames = function() !is.null(this_fieldname), 
       flush_fieldnames = function() this_fieldname <<- NULL, 
-      refresh_fieldnames = function() {}, 
+      refresh_fieldnames = function(x = NULL) {
+        this_fieldname <<- 
+          if (is.null(x) & !is.null(this_metadata)){
+            .fieldNamesFromMetaData(this_metadata)
+          } else {
+            validateRedcapData(data = .offlineConnection_readFile(x), 
+                               redcap_data = REDCAP_FIELDNAME_STRUCTURE)
+          }
+      }, 
       
       mapping = function(){ this_mapping }, 
       has_mapping = function() !is.null(this_mapping), 
       flush_mapping = function() this_mapping <<- NULL, 
-      refresh_mapping = function() {}, 
+      refresh_mapping = function(x) { this_mapping <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                          redcap_data = REDCAP_INSTRUMENT_MAPPING_STRUCTURE)}, 
       
       users = function(){ this_user }, 
       has_users = function() !is.null(this_user), 
       flush_users = function() this_user <<- NULL, 
-      refresh_users = function() {}, 
+      refresh_users = function(x) {this_user <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                    redcap_data = REDCAP_USER_STRUCTURE)}, 
       
       version = function(){ this_version }, 
       has_version = function() !is.null(this_version), 
       flush_version = function() this_version <<- NULL, 
-      refresh_version = function() {}, 
+      refresh_version = function(x) {this_version <<- x}, 
       
       projectInformation = function(){ this_project }, 
       has_projectInformation = function() !is.null(this_project), 
       flush_projectInformation = function() this_project <<- NULL, 
-      refresh_projectInformation = function() {}, 
-      push_projectInformation = function(push) this_project <<- push, 
+      refresh_projectInformation = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                                    redcap_data = REDCAP_PROJECT_INFORMATION_STRUCTURE)}, 
       
       instruments = function(){ this_instrument },
       has_instruments = function() !is.null(this_instrument), 
       flush_instruments = function() this_instrument <<- NULL, 
-      refresh_instruments = function() {}, 
+      refresh_instruments = function(x) {
+        this_instrument <<- 
+          if (is.null(x) & !is.null(this_metadata)){
+            data.frame(instrument_name = unique(this_metadata$form_name), 
+                       instrument_label = unique(this_metadata$form_name), 
+                       stringsAsFactors = FALSE)
+          } else {
+            validateRedcapData(data = .offlineConnection_readFile(x), 
+                               redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
+          }
+      }, 
       
       fileRepository = function(){ this_fileRepository },
       has_fileRepository = function() !is.null(this_fileRepository),
       flush_fileRepository = function() this_fileRepository <<- NULL,
-      refresh_fileRepository = function() {},
+      refresh_fileRepository = function(x) {this_fileRepository <<- .offlineConnection_readFile(x)},
       
       record = function(){ this_record },
       has_record = function() !is.null(this_record),
       flush_record = function() this_record <<- NULL,
-      refresh_record = function() {},
+      refresh_record = function(x) {this_record <<- .offlineConnection_readFile(records)},
       
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
           this_mapping <<- this_user <<- this_version <<- this_project <<- 
           this_instrument <<- this_fileRepository <<- NULL}, 
       
-      refresh_all = function(){}
+      refresh_all = function(){} # provided only to match the redcapApiConnection. Has no effect
     )
-  class(rc) <- c("offlineConnection", "redcapApiConnection")
+  class(rc) <- "redcapOfflineConnection"
   rc
+}
+
+#' @rdname redcapConnection
+#' @export
+
+print.redcapOfflineConnection <- function(x, ...){
+  print.redcapApiConnection(x = x, ...)
 }
 
 #####################################################################
