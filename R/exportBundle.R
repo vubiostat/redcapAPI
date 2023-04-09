@@ -42,15 +42,15 @@
 #' @export
 
 exportBundle <- function(rcon, 
-                         date = TRUE, 
-                         label = TRUE, 
-                         meta_data = TRUE, 
-                         users = TRUE, 
+                         date        = TRUE, 
+                         label       = TRUE, 
+                         meta_data   = TRUE, 
+                         users       = TRUE, 
                          instruments = TRUE,
-                         events = TRUE, 
-                         arms = TRUE, 
-                         mappings = TRUE,
-                         version = TRUE, 
+                         events      = TRUE, 
+                         arms        = TRUE, 
+                         mappings    = TRUE,
+                         version     = TRUE, 
                          ...) {
   UseMethod("exportBundle")
 }
@@ -59,17 +59,20 @@ exportBundle <- function(rcon,
 #' @export
 
 exportBundle.redcapApiConnection <- function(rcon, 
-                                             date = TRUE, 
-                                             label = TRUE, 
-                                             meta_data = TRUE, 
-                                             users = TRUE, 
-                                             instruments = TRUE,
-                                             events = TRUE, 
-                                             arms = TRUE, 
-                                             mappings = TRUE,
-                                             version = TRUE, 
+                                             date          = TRUE, 
+                                             label         = TRUE, 
+                                             meta_data     = TRUE, 
+                                             users         = TRUE, 
+                                             instruments   = TRUE,
+                                             events        = TRUE, 
+                                             arms          = TRUE, 
+                                             mappings      = TRUE,
+                                             version       = TRUE, 
                                              ..., 
                                              return_object = TRUE){
+  
+   ##################################################################
+  # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
   
@@ -77,13 +80,60 @@ exportBundle.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection",
                           add = coll)
   
-  massert(~ date + label + meta_data + users + instruments + 
-            events + arms + mappings + version + return_object,
-          fun = checkmate::assert_logical,
-          fixed = list(len = 1,
-                       add = coll))
+  checkmate::assert_logical(x = date,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = label,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = meta_data,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = users,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = instruments,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = events,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = arms,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = mappings,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = version,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = return_object,
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
   
   checkmate::reportAssertions(coll)
+
+   ##################################################################
+  # Deprecation messages
   
   if (return_object)
     message("It appears you are saving your export bundle to an object.\n  ",
@@ -94,6 +144,9 @@ exportBundle.redcapApiConnection <- function(rcon,
   if (!is.na(match("v.number", names(list(...)))))
     message("In redcapAPI 2.0, the 'v.number' argument is obsolete and deprecated. ",
             "Please discontinue its use")
+  
+   ##################################################################
+  # Make the bundle
   
   bundle <- 
     structure(

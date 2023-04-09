@@ -91,7 +91,8 @@ exportUsers.redcapApiConnection <- function(rcon,
                                             config = list(), 
                                             api_param = list()){
   
-  # Argument validations --------------------------------------------
+   ##################################################################
+  # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
   
@@ -112,7 +113,9 @@ exportUsers.redcapApiConnection <- function(rcon,
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"))
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling", 
+                                        add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -124,13 +127,19 @@ exportUsers.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  # Build the Body List ---------------------------------------------
+   ##################################################################
+  # Build the Body List 
+  
   body <- list(token = rcon$token, 
                content = 'user', 
                format = 'csv', 
                returnFormat = 'csv')
   
-  # API Call --------------------------------------------------------
+  body <- body[lengths(body) > 0]
+  
+   ##################################################################
+  # API Call 
+  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
@@ -144,12 +153,15 @@ exportUsers.redcapApiConnection <- function(rcon,
                            stringsAsFactors = FALSE,
                            na.strings = "")
   
-  # convert expiration date to POSIXct class ------------------------
+   ##################################################################
+  # convert expiration date to POSIXct class 
   if (dates){
     Users$expiration <- as.POSIXct(Users$expiration, format="%Y-%m-%d")
   } 
   
-  # Convert user privileges to labels -------------------------------
+   ##################################################################
+  # Convert user privileges to labels 
+  
   if (labels){
     access_var <- REDCAP_USER_TABLE_ACCESS_VARIABLES # defined in constants.R
     # Just in case the variable names ever change
@@ -161,7 +173,8 @@ exportUsers.redcapApiConnection <- function(rcon,
              type = "project")
   }
   
-  # Establish columns for the form rights ---------------------------
+   ##################################################################
+  # Establish columns for the form rights 
   if (form_rights){
     FormAccess <- .exportUsers_separateFormAccess(rcon = rcon, 
                                                   Users$forms, 
@@ -193,7 +206,9 @@ exportUsers.redcapApiConnection <- function(rcon,
   Users
 }
 
-# Unexported --------------------------------------------------------
+
+#####################################################################
+# Unexported 
 
 .exportUsers_separateFormAccess <- function(rcon, form_access, nrow, export = FALSE){
   forms <- unique(rcon$metadata()$form_name)

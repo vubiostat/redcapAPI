@@ -14,7 +14,9 @@
 # 
 #   options(keyring_backend=keyring::backend_file) # Because MACOS is so irritating
 #   keyring::keyring_create('TestRedcapAPI', 'YOURPASSWORDHERE')
+#   keyring::keyring_create('SandboxAPI', 'YOURPASSWORDHERE)
 #   keyring::key_set_with_value('TestRedcapAPI', username='TestRedcapAPI', keyring='TestRedcapAPI', password='YOURAPIKEYHERE')
+#   keyring::key_set_with_value('SandboxAPI', username='SandboxAPI', keyring='SandboxAPI', password='SandboxAPIKEYHERE')
 # To remove invalid password/API_KEY
 #   keyring::key_delete('TestRedcapAPI', 'TestRedcapAPI', 'TestRedcapAPI')
 
@@ -27,5 +29,7 @@ if(!exists("API_KEY")){
   keyring::keyring_unlock('TestRedcapAPI', password)
   API_KEY <- keyring::key_get('TestRedcapAPI', 'TestRedcapAPI', 'TestRedcapAPI')
 }
+
+STRUCTURAL_TEST_READY <- FALSE
 
 library(checkmate) # for additional expect_* functions.

@@ -7,40 +7,6 @@ context("makeApiCall.R")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 
-test_that(
-  "Return an error if rcon is not of class redcapApiConnection", 
-  {
-    expect_error(makeApiCall(mtcars), 
-                 "'rcon': Must inherit from class 'redcapApiConnection'")
-  }
-)
-
-test_that(
-  "Return an error if body is not a named list", 
-  {
-    expect_error(makeApiCall(rcon, 
-                             letters), 
-                 "'body': Must be of type 'list'")
-    
-    expect_error(makeApiCall(rcon, 
-                             list(1, 2, 3)), 
-                 "'body': Must have names")
-  }
-)
-
-test_that(
-  "Return an error if config is not a named list", 
-  {
-    expect_error(makeApiCall(rcon, 
-                             config = letters), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(makeApiCall(rcon, 
-                             config = list(1, 2, 3)), 
-                 "'config': Must have names")
-  }
-)
-
 # Test .makeApiCall_validateResponse
 
 test_that(
@@ -86,5 +52,45 @@ test_that(
     expect_message(.makeApiCall_retryMessage(rcon, response, rcon$retries()), 
                    sprintf("API attempt %s of %s failed. ERROR: The value of the parameter \"content\" is not valid", 
                            rcon$retries(), rcon$retries()))
+  }
+)
+
+#####################################################################
+# Argument Validation
+
+test_that(
+  "Return an error if rcon is not of class redcapApiConnection", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(makeApiCall(mtcars), 
+                 "'rcon': Must inherit from class 'redcapApiConnection'")
+  }
+)
+
+test_that(
+  "Return an error if body is not a named list", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(makeApiCall(rcon, 
+                             letters), 
+                 "'body': Must be of type 'list'")
+    
+    expect_error(makeApiCall(rcon, 
+                             list(1, 2, 3)), 
+                 "'body': Must have names")
+  }
+)
+
+test_that(
+  "Return an error if config is not a named list", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(makeApiCall(rcon, 
+                             config = letters), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(makeApiCall(rcon, 
+                             config = list(1, 2, 3)), 
+                 "'config': Must have names")
   }
 )

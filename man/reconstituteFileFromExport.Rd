@@ -4,7 +4,13 @@
 \alias{reconstituteFileFromExport}
 \title{Save a File to a Local Directory from a Response}
 \usage{
-reconstituteFileFromExport(response, dir, dir_create = FALSE, file_prefix = "")
+reconstituteFileFromExport(
+  response,
+  dir,
+  dir_create = FALSE,
+  file_prefix = "",
+  filename = character(0)
+)
 }
 \arguments{
 \item{response}{An object of class \code{response}.}
@@ -19,6 +25,10 @@ If dir does not exist and create = FALSE, an error is thrown.}
 \item{file_prefix}{\code{character(1)} An optional prefix to prepend to
 the file name. This may be desirable to explicitly associate files
 with a record and/or event.}
+
+\item{filename}{\code{character(0/1)} An optional filename. This is used
+in the case where a filename is being provided. It this has length 0, 
+the filename will be extracted from the API response.}
 }
 \description{
 Converts the file from a \code{response} object and saves

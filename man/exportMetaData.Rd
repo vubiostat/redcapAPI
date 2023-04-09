@@ -11,9 +11,9 @@ exportMetaData(rcon, ...)
   rcon,
   fields = character(0),
   forms = character(0),
-  error_handling = getOption("redcap_error_handling"),
   ...,
   drop_utf8 = FALSE,
+  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -32,12 +32,12 @@ will be returned, regardless of whether it is included in \code{fields} or
 not.  Be careful to use the form names in the second column of the data 
 dictionary, and not the display names shown on the webpage.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
-
 \item{drop_utf8}{\code{logical(1)}. In some cases, UTF-8 characters can 
 pose problems for exporting the data dictionary.  Set this to \code{TRUE}
 to replace any UTF-8 characters with empty characters.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 

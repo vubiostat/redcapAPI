@@ -11,8 +11,11 @@ importArms(rcon, arms_data, override = FALSE, ...)
   rcon,
   arms_data,
   override = FALSE,
+  refresh = TRUE,
   ...,
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -30,8 +33,19 @@ allows arms to be renamed or added.}
 
 \item{...}{additional arguments to pass to other methods.}
 
+\item{refresh}{\code{logical(1)}. If \code{TRUE}, the cached data will
+be refreshed after the import.}
+
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 No value is returned.
