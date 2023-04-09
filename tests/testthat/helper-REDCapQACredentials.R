@@ -30,9 +30,6 @@ if(!exists("API_KEY")){
   API_KEY <- keyring::key_get('TestRedcapAPI', 'TestRedcapAPI', 'TestRedcapAPI')
 }
 
-if(!exists("SANDBOX_API_KEY")){
-  keyring::keyring_unlock('SandboxAPI', password)
-  SANDBOX_KEY <- keyring::key_get('SandboxAPI', 'SandboxAPI', 'SandboxAPI')
-}
+STRUCTURAL_TEST_READY <- FALSE
 
 library(checkmate) # for additional expect_* functions.

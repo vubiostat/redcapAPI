@@ -1,7 +1,7 @@
 context("export/import/delete Events Functionality")
 
 rcon <- redcapConnection(url = url, 
-                         token = SANDBOX_KEY)
+                         token = API_KEY)
 
 #####################################################################
 # Events Functionality
@@ -23,6 +23,9 @@ test_that(
   "Import, Export, and Deletion of Arms Execute Successfully", 
   {
     local_reproducible_output(width = 200)
+    skip_if(!STRUCTURAL_TEST_READY, 
+            "Infrastructure not quite ready for structural tests.")
+    
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -73,6 +76,9 @@ test_that(
   "Test the override argument in importArms",
   {
     local_reproducible_output(width = 200)
+    skip_if(!STRUCTURAL_TEST_READY, 
+            "Infrastructure not quite ready for structural tests.")
+    
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
@@ -127,6 +133,9 @@ test_that(
   "Confirm that we can add additional events and delete specific events", 
   {
     local_reproducible_output(width = 200)
+    skip_if(!STRUCTURAL_TEST_READY, 
+            "Infrastructure not quite ready for structural tests.")
+    
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 

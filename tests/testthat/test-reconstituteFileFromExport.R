@@ -7,8 +7,6 @@ EXISTENT_DIR <- tempdir()
 
 NON_EXISTENT_DIR <- file.path(EXISTENT_DIR, "NotAFolderYet")
 
-
-# FIXME: A file should be loaded into the repository to get the doc_id for testing.
 FileRepo <- exportFileRepositoryListing(rcon, 
                                         recursive = TRUE)
 DOC_ID <- FileRepo$doc_id[!is.na(FileRepo$doc_id)][1]
