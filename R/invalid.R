@@ -6,7 +6,7 @@ format.invalid <- function(x, ...)
   ft <- attr(x, "field_types")
   x <- split(x, x$field_name)
   paste0(
-    "== Failed Validations from REDCap data ==\n",
+    "# Failed Validations from REDCap data\n",
     paste0(dt, "\n"),
     paste0("Package redcapAPI version ", packageVersion("redcapAPI"), "\n"),
     paste0("REDCap version ", vr, "\n\n"),
