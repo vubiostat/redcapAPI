@@ -3,7 +3,11 @@
 #'
 #' @description Utilities for recognizing and validating data structures 
 #'   for use with the REDCap API
-#'   
+#' 
+#' @param data \code{data.frame} User provided data to be compared against
+#'   the established REDCap data structure.
+#' @param redcap_data \code{data.frame} A data set from the \code{redcapAPI}
+#'   package to use a reference for comparing to expected data structure. 
 
 validateRedcapData <- function(data, redcap_data){
   if (is.null(data)) return(NULL)

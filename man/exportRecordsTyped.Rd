@@ -3,6 +3,7 @@
 \name{exportRecordsTyped}
 \alias{exportRecordsTyped}
 \alias{exportRecordsTyped.redcapApiConnection}
+\alias{exportRecordsTyped.redcapOfflineConnection}
 \title{A replacement for \code{\link{exportRecords}} with full inversion of control over 
        type casting.}
 \usage{
@@ -13,15 +14,7 @@ exportRecordsTyped(
   forms = NULL,
   records = NULL,
   events = NULL,
-  survey = TRUE,
-  dag = TRUE,
-  date_begin = NULL,
-  date_end = NULL,
-  ...,
-  config = list(),
-  api_param = list(),
-  csv_delimiter = ",",
-  batch_size = NULL
+  ...
 )
 
 \method{exportRecordsTyped}{redcapApiConnection}(
@@ -46,6 +39,21 @@ exportRecordsTyped(
   csv_delimiter = ",",
   batch_size = NULL
 )
+
+\method{exportRecordsTyped}{redcapOfflineConnection}(
+  rcon,
+  fields = NULL,
+  drop_fields = NULL,
+  forms = NULL,
+  records = NULL,
+  events = NULL,
+  na = list(),
+  validation = list(),
+  cast = list(),
+  assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
+  mChoice = NULL,
+  ...
+)
 }
 \arguments{
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
@@ -65,6 +73,8 @@ to be returned.  If \code{NULL}, all subjects are returned.}
 \item{events}{A \code{character} vector of events to be returned from a 
 longitudinal database.  If \code{NULL}, all events are returned. This argument
 is ignored when using an \code{offlineConnection}.}
+
+\item{...}{Consumes any additional parameters passed. Not used.}
 
 \item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field 
 (e.g., "redcap_survey_identifier") or survey timestamp fields 
@@ -89,21 +99,6 @@ Otherwise, records created or modified after this date will be returned.}
 
 \item{date_end}{\code{POSIXct(1)}. Ignored if \code{NULL} (default). 
 Otherwise, records created or modified before this date will be returned.}
-
-\item{...}{Consumes any additional parameters passed. Not used.}
-
-\item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
-These are appended to any parameters in \code{rcon$config}}
-
-\item{api_param}{named \code{list}. Additional API parameters to pass into the body of the
-API call. This provides users to execute calls with options that may not
-otherwise be supported by redcapAPI.}
-
-\item{csv_delimiter}{character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-delimiter for the CSV file received from the API.}
-
-\item{batch_size}{\code{integerish(1)} (or \code{NULL}). If length \code{NULL},
-all records are pulled. Otherwise, the records all pulled in batches of this size.}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
@@ -139,6 +134,19 @@ convert. If NULL and \code{Hmisc} is not loaded it will
 do no conversion. If FALSE it is disabled entirely. The summarized
 \code{Hmisc::mChoice} class is returned as an additional column in the
 \code{data.frame}.}
+
+\item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
+These are appended to any parameters in \code{rcon$config}}
+
+\item{api_param}{named \code{list}. Additional API parameters to pass into the body of the
+API call. This provides users to execute calls with options that may not
+otherwise be supported by redcapAPI.}
+
+\item{csv_delimiter}{character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
+delimiter for the CSV file received from the API.}
+
+\item{batch_size}{\code{integerish(1)} (or \code{NULL}). If length \code{NULL},
+all records are pulled. Otherwise, the records all pulled in batches of this size.}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

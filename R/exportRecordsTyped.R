@@ -197,15 +197,8 @@ exportRecordsTyped <-
     forms         = NULL,
     records       = NULL,
     events        = NULL,
-    survey        = TRUE,
-    dag           = TRUE,
-    date_begin    = NULL,
-    date_end      = NULL,
-    ...,
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL)
+    # Removed arguments that cannot be used in the offline function
+    ...)
     
     UseMethod("exportRecordsTyped")
 
@@ -251,41 +244,17 @@ exportRecordsTyped.redcapApiConnection <-
                           classes = "redcapApiConnection",
                           add = coll)
   
-  if (inherits(rcon, "offlineConnection")){
-    checkmate::assert_data_frame(x = rcon$metadata(),
-                                 .var.name = "rcon$metadata()",
-                                 add = coll)
-    
-    checkmate::assert_data_frame(x = rcon$record(), 
-                                 .var.name = "rcon$record()", 
-                                 add = coll)
-  }
-  
-  
-  checkmate::assert_character(x = fields, 
-                              any.missing = FALSE, 
-                              null.ok = TRUE,
-                              add = coll)
-
-  checkmate::assert_character(x = drop_fields, 
-                              any.missing = FALSE,
-                              null.ok = TRUE,
-                              add = coll)
-  
-  checkmate::assert_character(x = forms, 
-                              any.missing = FALSE,
-                              null.ok = TRUE,
-                              add = coll)
-  
-  checkmate::assert_character(x = events, 
-                              any.missing = FALSE,
-                              null.ok = TRUE,
-                              add = coll)
-  
-  checkmate::assert_character(x = records, 
-                              any.missing = FALSE,
-                              null.ok = TRUE,
-                              add = coll)
+  .exportRecordsTyped_validateCommonArgument(fields      = fields,
+                                             drop_fields = drop_fields,
+                                             forms       = forms,
+                                             records     = records,
+                                             events      = events, 
+                                             na          = na, 
+                                             validation  = validation, 
+                                             cast        = cast, 
+                                             assignment  = assignment,
+                                             mChoice     = mChoice,
+                                             coll        = coll)
   
   checkmate::assert_logical(x = survey, 
                             len = 1, 
@@ -328,6 +297,379 @@ exportRecordsTyped.redcapApiConnection <-
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+
+  checkmate::reportAssertions(coll)
+  
+  .exportRecordsTyped_validateFieldForm(rcon = rcon, 
+                                        fields = fields, 
+                                        drop_fields = drop_fields, 
+                                        forms = forms, 
+                                        coll = coll)
+  
+  # Check that the events exist in the project
+  
+  checkmate::assert_subset(x = events, 
+                           choices = rcon$events()$unique_event_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ###################################################################
+  # Combine fields, drop_fields, and forms into the fields that will 
+  # be exported
+  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
+                                            fields      = fields, 
+                                            drop_fields = drop_fields, 
+                                            forms       = forms)
+  
+   ###################################################################
+  # Figure out defaults for mChoice
+  
+  mChoice <- .exportRecordsTyped_setmChoice(mChoice = mChoice)
+  
+   ###################################################################
+  # Call API for Raw Results
+  
+  # We don't need to pass forms to the API because we have 
+  # absorbed that information directly into fields
+  body <- c(list(content                = "record", 
+                 format                 = "csv", 
+                 returnFormat           = "csv", 
+                 type                   = "flat", 
+                 exportSurveyFields     = tolower(survey), 
+                 exportDataAccessGroups = tolower(dag), 
+                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
+                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
+                 csvDelimiter           = csv_delimiter), 
+            vectorToApiBodyList(fields, "fields"), 
+            vectorToApiBodyList(events, "events"))
+  
+  body <- body[lengths(body) > 0]
+  
+  Raw <- 
+    if (length(batch_size) == 0)
+    {
+      .exportRecordsTyped_Unbatched( rcon          = rcon, 
+                                     body          = body, 
+                                     records       = records, 
+                                     config        = config, 
+                                     api_param     = api_param, 
+                                     csv_delimiter = csv_delimiter)
+    } else
+    {
+      .exportRecordsTyped_Batched(  rcon           = rcon, 
+                                    body           = body, 
+                                    records        = records, 
+                                    config         = config, 
+                                    api_param      = api_param, 
+                                    csv_delimiter  = csv_delimiter, 
+                                    batch_size     = batch_size)
+    }
+  
+   ###################################################################
+  # Process meta data for useful information
+  
+   ###################################################################
+  # Derive field information
+  MetaData <- rcon$metadata()
+  
+  field_names <- names(Raw)
+  field_bases <- gsub("___.+$", "", field_names)
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  field_map <- match(field_bases, MetaData$field_name)
+  
+  field_types <- .exportRecordsTyped_getFieldTypes(rcon = rcon, 
+                                                   field_map = field_map,
+                                                   field_bases = field_bases, 
+                                                   field_text_types = field_text_types)
+
+   ###################################################################
+  # Derive codings (This is probably a good internal helper)
+  
+  codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
+                                            field_map = field_map, 
+                                            field_names = field_names, 
+                                            field_types = field_types)
+
+   ###################################################################
+  # Common provided args for na / validate functions
+  args <- lapply(seq_along(Raw),
+                 function(x) list(x          = Raw[[x]],
+                                  field_name = field_names[x],
+                                  coding     = codings[[x]]))
+  
+   ###################################################################
+  # Locate NA's
+
+  nas <- .exportRecordsTyped_getNas(na = na, 
+                                   field_types = field_types, 
+                                   args = args)
+   
+   ###################################################################
+  # Run Validation Functions
+  
+  validations <- 
+    .exportRecordsTyped_runValidation(Raw = Raw, 
+                                      validation = validation, 
+                                      field_types = field_types, 
+                                      args = args)
+  
+   ###################################################################
+  # Type Casting
+  
+  Records <- .exportRecordsTyped_castRecords(Raw = Raw, 
+                                             cast = cast, 
+                                             field_types = field_types, 
+                                             nas = nas, 
+                                             validations = validations, 
+                                             codings = codings, 
+                                             field_names = field_names)
+
+   ###################################################################
+  # Handle Attributes assignments on columns, #24, #45
+  
+  Records <- .exportRecordsTyped_attributeAssignment(Records = Records, 
+                                                     assignment = assignment, 
+                                                     field_names = field_names, 
+                                                     MetaData = MetaData, 
+                                                     field_map = field_map)
+    
+   ###################################################################
+  # Attach invalid record information
+  
+  Records <- .exportRecordsTyped_attachInvalid(Records = Records, 
+                                               Raw = Raw, 
+                                               validations = validations, 
+                                               nas = nas, 
+                                               field_names = field_names)
+  
+   ###################################################################
+  # Convert checkboxes to mChoice if Hmisc is installed and requested
+  
+  Records <- .exportRecordsTyped_addmChoiceField(Records = Records, 
+                                                 Raw = Raw, 
+                                                 rcon = rcon, 
+                                                 fields = fields, 
+                                                 mChoice = mChoice)
+
+   ###################################################################
+  # Return Results 
+  Records
+}
+
+
+
+# offline function ----------------------------------------------------
+#' @rdname exportRecordsTyped
+#' @export
+
+exportRecordsTyped.redcapOfflineConnection <- function(rcon, 
+                                                       fields        = NULL,
+                                                       drop_fields   = NULL,
+                                                       forms         = NULL,
+                                                       records       = NULL,
+                                                       events        = NULL,
+                                                       
+                                                       # Type Casting Default Overrides Function Lists
+                                                       na            = list(),
+                                                       validation    = list(),
+                                                       cast          = list(),
+                                                       assignment    = list(label=stripHTMLandUnicode,
+                                                                            units=unitsFieldAnnotation),
+                                                       mChoice       = NULL, 
+                                                       ...){
+  ###################################################################
+  # Argument Validation
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapOfflineConnection", 
+                          add = coll)
+  
+  .exportRecordsTyped_validateCommonArgument(fields = fields, 
+                                             drop_fields = drop_fields, 
+                                             forms = forms, 
+                                             records = records, 
+                                             events = events, 
+                                             na          = na, 
+                                             validation  = validation, 
+                                             cast        = cast, 
+                                             assignment  = assignment,
+                                             mChoice     = mChoice,
+                                             coll = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  checkmate::assert_data_frame(x = rcon$metadata(),
+                               .var.name = "rcon$metadata()",
+                               add = coll)
+  
+  checkmate::assert_data_frame(x = rcon$record(),
+                               .var.name = "rcon$record()",
+                               add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  .exportRecordsTyped_validateFieldForm(rcon = rcon, 
+                                        fields = fields, 
+                                        drop_fields = drop_fields, 
+                                        forms = forms, 
+                                        coll = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Combine fields, drop_fields, and forms into the fields that will 
+  # be exported
+  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
+                                            fields      = fields, 
+                                            drop_fields = drop_fields, 
+                                            forms       = forms)
+  
+  ###################################################################
+  # Figure out defaults for mChoice
+  
+  mChoice <- .exportRecordsTyped_setmChoice(mChoice = mChoice)
+  
+  ###################################################################
+  # Raw Data comes from the rcon object for offlineConnections
+  
+  Raw <- rcon$record()
+  
+  ###################################################################
+  # Process meta data for useful information
+  
+  ###################################################################
+  # Derive field information
+  MetaData <- rcon$metadata()
+  
+  field_names <- names(Raw)
+  field_bases <- gsub("___.+$", "", field_names)
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  field_map <- match(field_bases, MetaData$field_name)
+  
+  field_types <- .exportRecordsTyped_getFieldTypes(rcon = rcon, 
+                                                   field_map = field_map,
+                                                   field_bases = field_bases, 
+                                                   field_text_types = field_text_types)
+  
+  
+  ###################################################################
+  # Derive codings (This is probably a good internal helper)
+  
+  codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
+                                            field_map = field_map, 
+                                            field_names = field_names, 
+                                            field_types = field_types)
+  
+  ###################################################################
+  # Common provided args for na / validate functions
+  args <- lapply(seq_along(Raw),
+                 function(x) list(x          = Raw[[x]],
+                                  field_name = field_names[x],
+                                  coding     = codings[[x]]))
+  
+  ###################################################################
+  # Locate NA's
+  
+  nas <- .exportRecordsTyped_getNas(na = na, 
+                                   field_types = field_types, 
+                                   args = args)
+  
+  ###################################################################
+  # Run Validation Functions
+  
+  validations <- 
+    .exportRecordsTyped_runValidation(Raw = Raw, 
+                                      validation = validation, 
+                                      field_types = field_types, 
+                                      args = args)
+  
+  ###################################################################
+  # Type Casting
+  
+  Records <- .exportRecordsTyped_castRecords(Raw = Raw, 
+                                             cast = cast, 
+                                             field_types = field_types, 
+                                             nas = nas, 
+                                             validations = validations, 
+                                             codings = codings, 
+                                             field_names = field_names)
+  
+  ###################################################################
+  # Handle Attributes assignments on columns, #24, #45
+  
+  Records <- .exportRecordsTyped_attributeAssignment(Records = Records, 
+                                                     assignment = assignment, 
+                                                     field_names = field_names, 
+                                                     MetaData = MetaData, 
+                                                     field_map = field_map)
+  
+  ###################################################################
+  # Attach invalid record information
+  
+  Records <- .exportRecordsTyped_attachInvalid(Records = Records, 
+                                               Raw = Raw, 
+                                               validations = validations, 
+                                               nas = nas, 
+                                               field_names = field_names)
+  
+  ###################################################################
+  # Convert checkboxes to mChoice if Hmisc is installed and requested
+  
+  Records <- .exportRecordsTyped_addmChoiceField(Records = Records, 
+                                                 Raw = Raw, 
+                                                 rcon = rcon, 
+                                                 fields = fields, 
+                                                 mChoice = mChoice)
+  
+  ###################################################################
+  # Return Results 
+  Records
+}
+
+
+#######################################################################
+# Unexported
+
+# .exportRecordsTyped_validateCommonArgument ------------------------
+
+.exportRecordsTyped_validateCommonArgument <- function(fields,
+                                                       drop_fields,
+                                                       forms,
+                                                       records,
+                                                       events,
+                                                       na, 
+                                                       validation, 
+                                                       cast, 
+                                                       assignment,
+                                                       mChoice,
+                                                       coll){
+  checkmate::assert_character(x = fields, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = drop_fields, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = forms, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = records, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = events, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
   
   checkmate::assert_list(x = na, 
                          names = "named", 
@@ -359,9 +701,15 @@ exportRecordsTyped.redcapApiConnection <-
       null.ok=TRUE),
     add = coll
   )
+}
 
-  checkmate::reportAssertions(coll)
-  
+
+# .exportRecordsTyped_validateFieldForm -----------------------------
+.exportRecordsTyped_validateFieldForm <- function(rcon, 
+                                                  fields, 
+                                                  drop_fields, 
+                                                  forms, 
+                                                  coll){
   # Check that fields (and drop_fields) exist in the project
   
   MetaData <- rcon$metadata()
@@ -383,320 +731,10 @@ exportRecordsTyped.redcapApiConnection <-
   checkmate::assert_subset(x = forms, 
                            choices = rcon$instruments()$instrument_name, 
                            add = coll)
-  
-  # Check that the events exist in the project
-  
-  if (!inherits(rcon, "offlineConnection")){
-    checkmate::assert_subset(x = events, 
-                             choices = rcon$events()$unique_event_name, 
-                             add = coll) 
-  }
-  
-  checkmate::reportAssertions(coll)
-  
-   ###################################################################
-  # Combine fields, drop_fields, and forms into the fields that will 
-  # be exported
-  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
-                                            fields      = fields, 
-                                            drop_fields = drop_fields, 
-                                            forms       = forms)
-  
-   ###################################################################
-  # Figure out defaults for mChoice
-  if("package:Hmisc" %in% search()) # Hmisc Loaded?
-  {
-    if(is.null(mChoice) || mChoice == TRUE) mChoice <- "coded"
-    if(mChoice == FALSE) mChoice <- NULL
-    # Otherwise do what user requests for mChoice
-  } else # Hmisc not loaded
-  {
-    if(is.null(mChoice) || mChoice==FALSE)
-    {
-      mChoice <- NULL
-    } else 
-    {
-      warning("mChoice requires the package Hmisc to be loaded to function properly.")
-      mChoice <- NULL
-    }
-  }
-  
-   ###################################################################
-  # Call API for Raw Results
-  
-  # We don't need to pass forms to the API because we have 
-  # absorbed that information directly into fields
-  body <- c(list(content                = "record", 
-                 format                 = "csv", 
-                 returnFormat           = "csv", 
-                 type                   = "flat", 
-                 exportSurveyFields     = tolower(survey), 
-                 exportDataAccessGroups = tolower(dag), 
-                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
-                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
-                 csvDelimiter           = csv_delimiter), 
-            vectorToApiBodyList(fields, "fields"), 
-            vectorToApiBodyList(events, "events"))
-  
-  body <- body[lengths(body) > 0]
-  
-  Raw <- 
-    if (inherits(rcon, "offlineConnection")){
-      rcon$record()
-    } else if (length(batch_size) == 0)
-    {
-      .exportRecordsFormattedUnbatched( rcon          = rcon, 
-                                        body          = body, 
-                                        records       = records, 
-                                        config        = config, 
-                                        api_param     = api_param, 
-                                        csv_delimiter = csv_delimiter)
-    } else
-    {
-      .exportRecordsFormattedBatched(  rcon           = rcon, 
-                                       body           = body, 
-                                       records        = records, 
-                                       config         = config, 
-                                       api_param      = api_param, 
-                                       csv_delimiter  = csv_delimiter, 
-                                       batch_size     = batch_size)
-    }
-  
-   ###################################################################
-  # Process meta data for useful information
-  
-   ###################################################################
-  # Derive field information
-  field_names <- names(Raw)
-  field_bases <- gsub("___.+$", "", field_names)
-  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
-  field_map <- match(field_bases, MetaData$field_name)
-  
-  field_types <- MetaData$field_type[field_map]
-  field_types[grepl("_complete$", field_bases)] <- "form_complete"
-
-  # autocomplete was added to the text_validation... column for
-  # dropdown menus with the autocomplete feature.
-  field_types[field_types == "text" & !is.na(field_text_types)] <-
-    field_text_types[field_types == "text" & !is.na(field_text_types)]
-  
-  field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
-  field_types[is.na(field_types)] <- "text"
-  
-   ###################################################################
-  # Derive codings (This is probably a good internal helper)
-  codebook <- MetaData$select_choices_or_calculations[field_map]
-  codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
-
-  codings <- vector("list", length = length(codebook))
-
-  for (i in seq_along(codings)){
-    codings[[i]] <-
-      if (is.na(codebook[i])){
-        NA_character_
-      } else {
-        this_mapping <- fieldChoiceMapping(object = codebook[i],
-                                           field_name = field_names[i])
-        this_coding <- this_mapping[, 1]
-        names(this_coding) <- this_mapping[, 2]
-        this_coding
-      }
-  }
-
-   ###################################################################
-  # Common provided args for na / validate functions
-  args <- lapply(seq_along(Raw),
-                 function(x) list(x          = Raw[[x]],
-                                  field_name = field_names[x],
-                                  coding     = codings[[x]]))
-  
-   ###################################################################
-  # Locate NA's
-  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
-  nas  <- mapply(do.call, funs, args)
-  if(!is.matrix(nas))
-  {
-    m <- unique(field_types[sapply(nas, class) != "logical"])
-    stop(paste("User supplied na method for [",
-               paste(m, collapse=", "),
-               "] not returning vector of logical of correct length"))
-  } else if (nrow(nas) > 0 && !is.logical(nas[1,1]))
-  {
-    stop("Supplied na methods must return logical vectors")
-  }
-   
-   ###################################################################
-  # Run Validation Functions
-  validate <- modifyList(.default_validate, validation)
-  funs <- lapply(
-    field_types,
-    function(x)
-    { 
-      f <- validate[[x]]
-      # No validate function is an auto pass
-      if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
-    })
-  validations <- mapply(do.call, funs, args)
-
-  if(!is.matrix(validations))
-  {
-    m <- unique(field_types[sapply(validations, class) != "logical"])
-    stop(paste("User supplied validation method for [",
-               paste(m, collapse=", "),
-               "] not returning vectors of correct length logical"))
-  } else if (nrow(validations) > 0 && !is.logical(validations[1,1]))
-  {
-    stop("Supplied validation methods must return logical vectors")
-  }
-  
-   ###################################################################
-  # Type Casting
-  Records <- Raw
-  cast <- modifyList(.default_cast, cast)
-  for(i in seq_along(Raw))
-  {
-    if(field_types[i] %in% names(cast))
-    {
-      x <- Raw[[i]]
-      x[ nas[,i] | !validations[,i] ] <- NA
-      typecast <- cast[[ field_types[i] ]]
-      if(is.function(typecast))
-        Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
-    }
-  }
-  names(Records) <- names(Raw)
-  
-   ###################################################################
-  # Handle Attributes assignments on columns, #24, #45
-  for(i in names(assignment))
-  {
-    x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
-    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
-  }
-
-   ###################################################################
-  # Attach invalid record information
-  selector <- !validations & !nas
-  attr(Records, "invalid") <-
-    do.call(rbind, lapply(seq_along(Raw), function(i)
-    {
-      sel <- selector[,i]
-      if(any(sel))
-      {
-        if("record_id" %in% colnames(Raw))
-        {
-          data.frame(row=seq_len(nrow(Raw))[sel],
-                     record_id=Raw[sel, "record_id"],
-                     field_name=field_names[i],
-                     value=Raw[sel, i])
-        } else
-        {
-          data.frame(row=seq_len(nrow(Raw))[sel],
-                     field_name=field_names[i],
-                     value=Raw[sel, i])
-        }
-      } else NULL
-    }))
-  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
-  
-   ###################################################################
-  # Convert checkboxes to mChoice if Hmisc is installed and requested
-  if(!is.null(mChoice))
-  {
-    CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
-    
-    checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
-    
-    for (i in seq_along(checkbox_fields))
-      Records[[ checkbox_fields[i] ]] <- 
-        .mChoiceField(rcon, 
-                     records_raw = Raw, 
-                     checkbox_fieldname = checkbox_fields[i], 
-                     style = mChoice)
-  } 
-  
-   ###################################################################
-  # Return Results 
-  Records
 }
 
 
- #######################################################################
-# Unexported
-
- #######################################################################
-# mChoice Function
-.mChoiceField <- function(rcon, 
-                         records_raw, 
-                         checkbox_fieldname, 
-                         style = c("coded", "labelled")){
-
-   ##################################################################
-  # Argument Validation 
-  
-  coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_class(x = rcon, 
-                          classes = "redcapApiConnection", 
-                          add = coll)
-  
-  checkmate::assert_data_frame(records_raw, 
-                               add = coll)
-  
-  checkmate::assert_character(x = checkbox_fieldname, 
-                              len = 1, 
-                              any.missing = FALSE, 
-                              add = coll)
-  
-  style <- checkmate::matchArg(x = style, 
-                               choices = c("coded", "labelled"), 
-                               add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  FieldNames <- rcon$fieldnames()
-  
-  checkmate::assert_subset(x = checkbox_fieldname, 
-                           choices = FieldNames$original_field_name, 
-                           add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  MetaData <- rcon$metadata()
-  
-  field_type <- MetaData$field_type[MetaData$field_name == checkbox_fieldname]
-  
-  if (field_type != "checkbox"){
-    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mChoice field", 
-                      checkbox_fieldname))
-    
-    checkmate::reportAssertions(coll)
-  }
-  
-   ##################################################################
-  # Make the mChoice field
-  
-  # get the suffixed field names
-  fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
-  
-  if (length(fields) == 0) return(NULL)
-
-  # get the options
-  opts   <- fieldChoiceMapping(rcon, checkbox_fieldname)
-  levels <- opts[, 1+(style == "labelled"), drop = TRUE]
-  
-  # Make the data frame to store the status of the options
-  opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
-  checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
-  opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
-  
-  # Consolidate choices into the mChoice object
-  structure(
-    gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-    label  = checkbox_fieldname,
-    levels = levels,
-    class  = c("mChoice", "labelled"))
-}
+# .exportRecordsTyped_fieldsArray -----------------------------------
 
 .exportRecordsTyped_fieldsArray <- function(rcon = rcon, 
                                             fields = fields, 
@@ -747,7 +785,7 @@ exportRecordsTyped.redcapApiConnection <-
   FieldFormMap$is_in_fields <-
     rep((length(fields) == 0 && length(forms) == 0), 
         nrow(FieldFormMap))
-
+  
   # For the forms, we can't assume they are in forms. Instead, we initialize
   # this to FALSE and have to provide positive proof that they are in forms.
   FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
@@ -812,12 +850,36 @@ exportRecordsTyped.redcapApiConnection <-
   Fields$original_field_name
 }
 
-.exportRecordsFormattedUnbatched <- function( rcon, 
-                                              body, 
-                                              records, 
-                                              config, 
-                                              api_param, 
-                                              csv_delimiter)
+
+# .exportRecordsTyped_setmChoice ------------------------------------
+
+.exportRecordsTyped_setmChoice <- function(mChoice){
+  if("package:Hmisc" %in% search()) # Hmisc Loaded?
+  {
+    if(is.null(mChoice) || mChoice == TRUE) mChoice <- "coded"
+    if(mChoice == FALSE) mChoice <- NULL
+    # Otherwise do what user requests for mChoice
+  } else # Hmisc not loaded
+  {
+    if(is.null(mChoice) || mChoice==FALSE)
+    {
+      mChoice <- NULL
+    } else 
+    {
+      warning("mChoice requires the package Hmisc to be loaded to function properly.")
+      mChoice <- NULL
+    }
+  }
+  mChoice
+}
+
+# .exportRecordsTyped_Unbatched -------------------------------------
+.exportRecordsTyped_Unbatched <- function( rcon, 
+                                           body, 
+                                           records, 
+                                           config, 
+                                           api_param, 
+                                           csv_delimiter)
 {
   response <- makeApiCall(rcon, 
                           body = c(body, 
@@ -832,7 +894,8 @@ exportRecordsTyped.redcapApiConnection <-
            sep = csv_delimiter)
 }
 
-.exportRecordsFormattedBatched <- function( rcon, 
+# .exportRecordsTyped_Batched ---------------------------------------
+.exportRecordsTyped_Batched <- function( rcon, 
                                             body, 
                                             records, 
                                             config, 
@@ -871,15 +934,279 @@ exportRecordsTyped.redcapApiConnection <-
   Batched <- 
     lapply(records, 
            function(r){ 
-             .exportRecordsFormattedUnbatched(rcon = rcon, 
-                                               body = body, 
-                                               records = r, 
-                                               config = config, 
-                                               api_param = api_param, 
-                                               csv_delimiter = csv_delimiter)})
+             .exportRecordsTyped_Unbatched(rcon = rcon, 
+                                           body = body, 
+                                           records = r, 
+                                           config = config, 
+                                           api_param = api_param, 
+                                           csv_delimiter = csv_delimiter)})
   
   # Combine the data
   Batched <- do.call("rbind", Batched)
   rownames(Batched) <- NULL
   Batched
+}
+
+# .exportRecordsTyped_getFieldTypes ---------------------------------
+
+.exportRecordsTyped_getFieldTypes <- function(rcon, 
+                                              field_map,
+                                              field_bases, 
+                                              field_text_types){
+  
+  field_types <- rcon$metadata()$field_type[field_map]
+  field_types[grepl("_complete$", field_bases)] <- "form_complete"
+  
+  # autocomplete was added to the text_validation... column for
+  # dropdown menus with the autocomplete feature.
+  field_types[field_types == "text" & !is.na(field_text_types)] <-
+    field_text_types[field_types == "text" & !is.na(field_text_types)]
+  
+  field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
+  field_types[is.na(field_types)] <- "text"
+  
+  field_types
+}
+
+# .exportRecordsTyped_getCodings ------------------------------------
+.exportRecordsTyped_getCodings <- function(rcon = rcon, 
+                                           field_map = field_map, 
+                                           field_names = field_names, 
+                                           field_types = field_types){
+  codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
+  codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
+  
+  codings <- vector("list", length = length(codebook))
+  
+  for (i in seq_along(codings)){
+    codings[[i]] <-
+      if (is.na(codebook[i])){
+        NA_character_
+      } else {
+        this_mapping <- fieldChoiceMapping(object = codebook[i],
+                                           field_name = field_names[i])
+        this_coding <- this_mapping[, 1]
+        names(this_coding) <- this_mapping[, 2]
+        this_coding
+      }
+  }
+  codings
+}
+
+# .exportRecords_getNas ---------------------------------------------
+.exportRecordsTyped_getNas <- function(na, 
+                                      field_types, 
+                                      args = args){
+  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
+  nas  <- mapply(do.call, funs, args)
+  if(!is.matrix(nas))
+  {
+    m <- unique(field_types[sapply(nas, class) != "logical"])
+    stop(paste("User supplied na method for [",
+               paste(m, collapse=", "),
+               "] not returning vector of logical of correct length"))
+  } else if (nrow(nas) > 0 && !is.logical(nas[1,1]))
+  {
+    stop("Supplied na methods must return logical vectors")
+  }
+  
+  nas
+}  
+
+# .exportRecordsTyped_runValidation ---------------------------------
+.exportRecordsTyped_runValidation <- function(Raw, 
+                                              validation, 
+                                              field_types, 
+                                              args){
+  validate <- modifyList(.default_validate, validation)
+  funs <- lapply(
+    field_types,
+    function(x)
+    { 
+      f <- validate[[x]]
+      # No validate function is an auto pass
+      if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
+    })
+  validations <- mapply(do.call, funs, args)
+  
+  if(!is.matrix(validations))
+  {
+    m <- unique(field_types[sapply(validations, class) != "logical"])
+    stop(paste("User supplied validation method for [",
+               paste(m, collapse=", "),
+               "] not returning vectors of correct length logical"))
+  } else if (nrow(validations) > 0 && !is.logical(validations[1,1]))
+  {
+    stop("Supplied validation methods must return logical vectors")
+  }
+  
+  validations
+}
+
+# .exportRecordsTyped_castRecords -----------------------------------
+.exportRecordsTyped_castRecords <- function(Raw, 
+                                            cast, 
+                                            field_types, 
+                                            nas, 
+                                            validations, 
+                                            codings, 
+                                            field_names){
+  Records <- Raw
+  cast <- modifyList(.default_cast, cast)
+  for(i in seq_along(Raw))
+  {
+    if(field_types[i] %in% names(cast))
+    {
+      x <- Raw[[i]]
+      x[ nas[,i] | !validations[,i] ] <- NA
+      typecast <- cast[[ field_types[i] ]]
+      if(is.function(typecast))
+        Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
+    }
+  }
+  names(Records) <- names(Raw)
+  
+  Records
+}
+
+# .exportRecordsTyped_attributeAssignment ---------------------------
+.exportRecordsTyped_attributeAssignment <- function(Records, 
+                                                    assignment, 
+                                                    field_names, 
+                                                    MetaData, 
+                                                    field_map){
+  for(i in names(assignment))
+  {
+    x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
+    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
+  }
+  Records
+}
+
+# .exportRecordsTyped_attachInvalid ---------------------------------
+.exportRecordsTyped_attachInvalid <- function(Records, 
+                                              Raw, 
+                                              validations, 
+                                              nas, 
+                                              field_names){
+  selector <- !validations & !nas
+  attr(Records, "invalid") <-
+    do.call(rbind, lapply(seq_along(Raw), function(i)
+    {
+      sel <- selector[,i]
+      if(any(sel))
+      {
+        if("record_id" %in% colnames(Raw))
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     record_id=Raw[sel, "record_id"],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        } else
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        }
+      } else NULL
+    }))
+  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
+  
+  Records
+}
+
+# .exportRecordsTyped_addmChoiceField -------------------------------
+.exportRecordsTyped_addmChoiceField <- function(Records, 
+                                                Raw, 
+                                                rcon, 
+                                                fields, 
+                                                mChoice){
+  if(!is.null(mChoice))
+  {
+    MetaData <- rcon$metadata()
+    CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
+    
+    checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
+    
+    for (i in seq_along(checkbox_fields))
+      Records[[ checkbox_fields[i] ]] <- 
+      .mChoiceField(rcon, 
+                    records_raw = Raw, 
+                    checkbox_fieldname = checkbox_fields[i], 
+                    style = mChoice)
+  }
+  Records
+}
+
+# mChoice Function --------------------------------------------------
+.mChoiceField <- function(rcon, 
+                          records_raw, 
+                          checkbox_fieldname, 
+                          style = c("coded", "labelled")){
+  
+  ##################################################################
+  # Argument Validation 
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
+  
+  checkmate::assert_data_frame(records_raw, 
+                               add = coll)
+  
+  checkmate::assert_character(x = checkbox_fieldname, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  style <- checkmate::matchArg(x = style, 
+                               choices = c("coded", "labelled"), 
+                               add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  FieldNames <- rcon$fieldnames()
+  
+  checkmate::assert_subset(x = checkbox_fieldname, 
+                           choices = FieldNames$original_field_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  MetaData <- rcon$metadata()
+  
+  field_type <- MetaData$field_type[MetaData$field_name == checkbox_fieldname]
+  
+  if (field_type != "checkbox"){
+    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mChoice field", 
+                      checkbox_fieldname))
+    
+    checkmate::reportAssertions(coll)
+  }
+  
+  ##################################################################
+  # Make the mChoice field
+  
+  # get the suffixed field names
+  fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
+  
+  if (length(fields) == 0) return(NULL)
+  
+  # get the options
+  opts   <- fieldChoiceMapping(rcon, checkbox_fieldname)
+  levels <- opts[, 1+(style == "labelled"), drop = TRUE]
+  
+  # Make the data frame to store the status of the options
+  opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
+  checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
+  opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
+  
+  # Consolidate choices into the mChoice object
+  structure(
+    gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
+    label  = checkbox_fieldname,
+    levels = levels,
+    class  = c("mChoice", "labelled"))
 }

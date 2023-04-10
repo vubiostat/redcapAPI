@@ -7,6 +7,13 @@
 \usage{
 validateRedcapData(data, redcap_data)
 }
+\arguments{
+\item{data}{\code{data.frame} User provided data to be compared against
+the established REDCap data structure.}
+
+\item{redcap_data}{\code{data.frame} A data set from the \code{redcapAPI}
+package to use a reference for comparing to expected data structure.}
+}
 \description{
 Utilities for recognizing and validating data structures 
   for use with the REDCap API
