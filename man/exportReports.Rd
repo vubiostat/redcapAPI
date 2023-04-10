@@ -25,8 +25,9 @@ exportReports(
   drop = NULL,
   checkboxLabels = FALSE,
   ...,
-  bundle = getOption("redcap_bundle"),
-  error_handling = getOption("redcap_error_handling")
+  error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list()
 )
 }
 \arguments{
@@ -40,7 +41,7 @@ is returned as numeric codes or labelled factors.}
 
 \item{labels}{Logical.  Determines if the variable labels are applied to the data frame.}
 
-\item{dates}{Logical. Determines if date variables are converted to POSIXlt format during the download.}
+\item{dates}{Logical. Determines if date variables are converted to POSIXct format during the download.}
 
 \item{drop}{An optional character vector of REDCap variable names to remove from the 
 dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
@@ -54,10 +55,16 @@ is only available after REDCap version 6.0.}
 
 \item{...}{Additional arguments to be passed between methods.}
 
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
-
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 Exports reports from a REDCap Database and formats data if requested

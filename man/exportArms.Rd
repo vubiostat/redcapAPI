@@ -21,8 +21,8 @@ exportArms(rcon, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{arms}{\code{character} identifying the arm numbers to retrieve. In REDCap 6.5.0, 
-using this argument results in an empty data frame being returned.}
+\item{arms}{\code{character} identifying the arm numbers to retrieve. 
+May also be \code{integerish}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

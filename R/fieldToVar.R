@@ -212,11 +212,10 @@ fieldToVar <- function(records,
       fields <- recordnames[grepl(sprintf("^%s", checkbox_fieldname), recordnames)]
       if(length(fields) > 0)
       {
-        # FIXME: Issue-38 when merged will provide this as a function
-        opts   <- strsplit(strsplit(checkbox_meta[i,'select_choices_or_calculations'],"\\s*\\|\\s*")[[1]],
-                           "\\s*,\\s*")
-        levels <- sapply(opts, function(x) x[1+labels])
-        # END FIXME
+        opts <- fieldChoiceMapping(checkbox_meta[i,'select_choices_or_calculations'], 
+                                   fields[i])
+        levels <- opts[, 1 + labels]
+
         opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records)), nrow=nrow(records), byrow=TRUE))
         checked <- records_raw[,fields] != '1'
         opts[which(checked,arr.ind=TRUE)] <- ""

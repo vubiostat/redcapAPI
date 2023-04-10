@@ -11,8 +11,8 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   rcon,
   folder_id,
   recursive = FALSE,
-  ...,
   refresh = TRUE,
+  ...,
   confirm = c("ask", "no", "yes"),
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -31,10 +31,10 @@ deleting an entire File Repository using a default argument.)}
 \item{recursive}{\code{logical(1)}. If \code{TRUE}, files in all subfolders
 will be deleted as well.}
 
-\item{...}{Arguments to pass to other methods.}
-
-\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached 
+\item{...}{Arguments to pass to other methods.
 File Repository data on \code{rcon} will be refreshed.}
+
+\item{refresh}{\code{logical(1)}. If \code{TRUE} and the file repository}
 
 \item{confirm}{\code{confirm} \code{character}. One of \code{c("ask", "no", "yes")}. 
 When \code{"ask"}, user will be prompted to confirm the deletion. 

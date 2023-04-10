@@ -90,6 +90,7 @@ importFileRepository.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 

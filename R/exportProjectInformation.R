@@ -7,6 +7,12 @@
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details If this function is used in a version of REDCap that does not
 #'   support the Export Version Number function, the character string
@@ -44,7 +50,12 @@ exportProjectInformation <- function(rcon,
 
 exportProjectInformation.redcapApiConnection <- function(rcon, 
                                                          ...,
-                                                         error_handling = getOption("redcap_error_handling")){
+                                                         error_handling = getOption("redcap_error_handling"), 
+                                                         config         = list(), 
+                                                         api_param      = list()){
+   ##################################################################
+  # Argument Validation
+  
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
@@ -53,22 +64,39 @@ exportProjectInformation.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
+  
+   ##################################################################
+  # Make the Body List
   
   body <- list(token = rcon$token, 
                content = 'project',
                format = 'csv',
                returnFormat = 'csv')
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body,
-                  config = rcon$config)
+  body <- body[lengths(body) > 0]
   
-  if (x$status_code != 200) return(redcap_error(x, error_handling))
+   ##################################################################
+  # Call the API
   
-  utils::read.csv(text = as.character(x), 
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) return(redcap_error(response, error_handling))
+  
+  utils::read.csv(text = as.character(response), 
                   stringsAsFactors = FALSE, 
                   na.strings="")
 }

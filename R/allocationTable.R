@@ -36,7 +36,6 @@
 #' allocation.  No pairwise elements of \code{seed.dev} and \code{seed.prod}
 #' may be equal.  This guarantees that the two randomization schemes are 
 #' unique.
-#' @param bundle A \code{redcapBundle} object.
 #' @param weights An optional vector giving the sampling weights for each of the randomization 
 #'   groups.  There must be one number for each level of the randomization variable.  If named, 
 #'   the names must match the group labels.  If unnamed, the group labels will be assigned in the
@@ -82,7 +81,6 @@ allocationTable <- function(rcon,
                             block.size.shift = 0,
                             seed.dev = NULL, 
                             seed.prod = NULL,  
-                            bundle = NULL, 
                             weights = NULL, 
                             ...){
   UseMethod("allocationTable")
@@ -101,22 +99,14 @@ allocationTable.redcapApiConnection <- function(rcon,
                                                 block.size.shift = 0,
                                                 seed.dev = NULL, 
                                                 seed.prod = NULL,  
-                                                bundle = NULL, 
                                                 weights = c(1, 1), 
                                                 ...){
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
   
   coll <- checkmate::makeAssertCollection()
   
   #* Establish the meta_data table
-  meta_data <- 
-    if (is.null(bundle$meta_data)) 
-      exportMetaData(rcon) 
-    else bundle$meta_data
+  
+  MetaData <- rcon$metadata()
   
   #* A utility function to extract the coded values from the meta_data
   redcapChoices <- function(v, meta_data, raw=TRUE)
@@ -133,6 +123,7 @@ allocationTable.redcapApiConnection <- function(rcon,
   
   #***************************************
   #* Parameter Checking
+  #* These have gotten out of order to facilitate better error reporting
   #* 1. Verifying that 'random' is not missing
   #* 2. random, strata and group are characters
   #* 3. random and group have length 1
@@ -169,39 +160,21 @@ allocationTable.redcapApiConnection <- function(rcon,
   #* 4. all fields in 'random', 'strata', and 'group' exist in meta_data
   #* Verify that all given fields exist in the database
   checkmate::assert_subset(x = random,
-                           choices = meta_data$field_name,
+                           choices = MetaData$field_name,
                            add = coll)
   
   checkmate::assert_subset(x = strata,
-                           choices = meta_data$field_name,
+                           choices = MetaData$field_name,
                            add = coll)
   
   checkmate::assert_subset(x = group,
-                           choices = meta_data$field_name,
+                           choices = MetaData$field_name,
                            add = coll)
   
-  checkmate::reportAssertions(coll)
-
+  checkmate::assert_integerish(x = dag.id,
+                               null.ok = TRUE,
+                               add = coll)
   
-  #* 5. Calculate n_levels
-  #* randomization levels
-  random_levels <- redcapChoices(random, meta_data)
-  random_level_names <- redcapChoices(random, meta_data, raw = FALSE)
-  n_levels <- length(random_levels)
-  
-  #* stratification groups
-  strata <- c(strata, group)
-  strata_levels <- lapply(strata, redcapChoices, meta_data)
-  names(strata_levels) <- strata
-  if (!is.null(dag.id)) strata_levels[['redcap_data_access_group']] <- dag.id
-  
-  #* Allocation table
-  allocation <- expand.grid(strata_levels)
-  if (nrow(allocation) == 0) allocation <- data.frame(place.holding.strata=1)
-  
-  n_strata <- nrow(allocation)
-  
-  #* 6. Verify 'replicates' is not missing and is numeric
   checkmate::assert_integerish(x = replicates,
                                len = 1,
                                add = coll)
@@ -215,6 +188,29 @@ allocationTable.redcapApiConnection <- function(rcon,
     checkmate::assert_integerish(x = block.size,
                                  add = coll)
   }
+  
+  checkmate::reportAssertions(coll)
+
+  
+  #* 5. Calculate n_levels
+  #* randomization levels
+  random_levels <- redcapChoices(random, MetaData)
+  random_level_names <- redcapChoices(random, MetaData, raw = FALSE)
+  n_levels <- length(random_levels)
+  
+  #* stratification groups
+  strata <- c(strata, group)
+  strata_levels <- lapply(strata, redcapChoices, MetaData)
+  names(strata_levels) <- strata
+  if (!is.null(dag.id)) strata_levels[['redcap_data_access_group']] <- dag.id
+  
+  #* Allocation table
+  allocation <- expand.grid(strata_levels)
+  if (nrow(allocation) == 0) allocation <- data.frame(place.holding.strata=1)
+  
+  n_strata <- nrow(allocation)
+  
+
   
   #* 8. block.size must be a multiple of n_levels
   if (any((block.size %% n_levels) != 0)){
@@ -236,6 +232,8 @@ allocationTable.redcapApiConnection <- function(rcon,
   if (length(block.size) != length(block.size.shift)){
     coll$push(": 'block.size' and 'block.size.shift' must have the same length")
   }
+  
+  checkmate::reportAssertions(coll)
   
   #* 12. The sum of all of the blocks must add up to replicates
   max.n <- cumsum(diff(c(block.size.shift * replicates, replicates)))
@@ -397,14 +395,19 @@ makeChoices <- function(random_levels, block.size, weights){
 #' @rdname allocationTable
 #' @export
 
-allocationTable_offline <- function(meta_data, random, strata = NULL, 
-                                    group = NULL, dag.id = NULL, 
-                                    replicates, block.size, 
+allocationTable_offline <- function(meta_data, 
+                                    random, 
+                                    strata = NULL, 
+                                    group = NULL, 
+                                    dag.id = NULL, 
+                                    replicates, 
+                                    block.size, 
                                     block.size.shift = 0,
-                                    seed.dev = NULL, seed.prod = NULL,  
-                                    bundle = NULL, 
-                                    weights = c(1, 1), ...){
-  meta_data <- utils::read.csv(meta_data,
+                                    seed.dev = NULL, 
+                                    seed.prod = NULL,  
+                                    weights = c(1, 1), 
+                                    ...){
+  MetaData <- utils::read.csv(meta_data,
                                stringsAsFactors=FALSE,
                                na.strings = "")
   
@@ -415,9 +418,23 @@ allocationTable_offline <- function(meta_data, random, strata = NULL,
               'branching_logic', 'required_field', 'custom_alignment', 
               'question_number', 'matrix_group_name', 'matrix_ranking',
               'field_annotation')
-  names(meta_data) <- col.names[1:length(col.names)]
+  names(MetaData) <- col.names[1:length(col.names)]
   
-  allocationTable.redcapApiConnection(rcon = NULL,
+  # Bear with me here--this is weird. If we can trick the redcapApiConnection
+  # method into thinking the object it is passed has a cached metadata frame, 
+  # we can just pass everything up to that method for processing. So we're
+  # going to spoof a redcapApiConnection object here. It's a dirty trick.
+  # Try not to do it elsewhere. I'm seriously questioning my sanity for 
+  # doing it here.
+  
+  spoofedConnection <- function(metadata){
+    md <- metadata
+    rc <- list(metadata = function() md)
+    class(rc) <- "redcapApiConnection"
+    rc
+  }
+  
+  allocationTable.redcapApiConnection(rcon = spoofedConnection(MetaData),
                                       random = random,
                                       strata = strata,
                                       group = group,
@@ -427,7 +444,6 @@ allocationTable_offline <- function(meta_data, random, strata = NULL,
                                       block.size.shift = block.size.shift,
                                       seed.dev = seed.dev,
                                       seed.prod = seed.prod,
-                                      bundle = list(meta_data = meta_data),
                                       weights = weights, 
                                       ...)
 }

@@ -13,6 +13,9 @@
 #' @param file_prefix \code{character(1)} An optional prefix to prepend to
 #'   the file name. This may be desirable to explicitly associate files
 #'   with a record and/or event.
+#' @param filename \code{character(0/1)} An optional filename. This is used
+#'   in the case where a filename is being provided. It this has length 0, 
+#'   the filename will be extracted from the API response.
 #'   
 #' @author Benjamin Nutter
 #' @export
@@ -20,7 +23,8 @@
 reconstituteFileFromExport <- function(response, 
                                        dir, 
                                        dir_create = FALSE, 
-                                       file_prefix = ""){
+                                       file_prefix = "", 
+                                       filename = character(0)){
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -31,14 +35,22 @@ reconstituteFileFromExport <- function(response,
   
   checkmate::assert_character(x = dir, 
                               len = 1, 
+                              any.missing = FALSE,
                               add = coll)
   
   checkmate::assert_logical(x = dir_create, 
                             len = 1, 
+                            any.missing = FALSE,
                             add = coll)
   
   checkmate::assert_character(x = file_prefix, 
                               len = 1, 
+                              any.missing = FALSE,
+                              add = coll)
+  
+  checkmate::assert_character(x = filename, 
+                              max.len = 1,
+                              any.missing = FALSE,
                               add = coll)
   
   checkmate::reportAssertions(coll)
@@ -56,10 +68,13 @@ reconstituteFileFromExport <- function(response,
   }
   
   # Extract the filename --------------------------------------------
-  filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
-                   replacement = "", 
-                   x = response$headers$'content-type')
-  filename <- sub("[;]charset.+$", "", filename)
+  # Only extracted if a filename isn't provided.
+  if (length(filename) == 0){
+    filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
+                     replacement = "", 
+                     x = response$headers$'content-type')
+    filename <- sub("[;]charset.+$", "", filename)
+  } 
   
   # Add Prefix to the file name -------------------------------------
   

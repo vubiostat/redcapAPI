@@ -16,7 +16,6 @@
 #'   file already exists for that record.  If a file exists, the function 
 #'   terminates to prevent overwriting.  When \code{TRUE}, no additional 
 #'   check is performed.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param repeat_instance The repeat instance number of the repeating
 #'   event or the repeating instrument. When available in your instance
 #'   of REDCap, and passed as NULL, the API will assume a value of 1.
@@ -41,10 +40,9 @@ importFiles <- function(rcon,
                         record, 
                         field, 
                         event, 
-                        overwrite       = TRUE, 
-                        ...,
-                        bundle          = NULL, 
-                        repeat_instance = NULL){
+                        overwrite       = TRUE,
+                        repeat_instance = NULL, 
+                        ...){
   UseMethod("importFiles")
 }
 
@@ -59,21 +57,14 @@ importFiles.redcapApiConnection <- function(rcon,
                                             overwrite       = TRUE,
                                             repeat_instance = NULL, 
                                             ...,
-                                            bundle          = NULL,
                                             error_handling  = getOption("redcap_error_handling"),
                                             config          = list(), 
                                             api_param       = list()){
   
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
-  
   if (is.numeric(record)) record <- as.character(record)
   
-   ###########################################################################
-  # Check parameters passed to function
+   ##################################################################
+  # Argumetn Validation
   
   coll <- checkmate::makeAssertCollection()
   
@@ -113,10 +104,10 @@ importFiles.redcapApiConnection <- function(rcon,
                                null.ok = TRUE,
                                add = coll)
   
-  checkmate::assert_class(x = bundle, 
-                          classes = "redcapBundle", 
-                          null.ok = TRUE, 
-                          add = coll)
+  error_handling <- checkmate::matchArg(x = error_handling,
+                                        choices = c("null", "error"),
+                                        .var.name = "error_handling",
+                                        add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -174,13 +165,14 @@ importFiles.redcapApiConnection <- function(rcon,
     })
     
     if (!is.na(fileThere[field])) 
-      coll$push("A file exists and overwrite=FALSE")
+      coll$push("A file exists and overwrite = FALSE")
   }
   
   checkmate::reportAssertions(coll)
   
    ###########################################################################
   # Build the body list
+  
   body <- list(content = 'file',
                action = 'import', 
                record = record,

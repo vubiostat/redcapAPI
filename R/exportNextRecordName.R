@@ -8,6 +8,12 @@
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @details 
 #' It generates the next record name by determining the current maximum numerical 
@@ -45,7 +51,12 @@ exportNextRecordName <- function(rcon,
 
 exportNextRecordName.redcapApiConnection <- function(rcon, 
                                                      ...,
-                                                     error_handling = getOption("redcap_error_handling")){
+                                                     error_handling = getOption("redcap_error_handling"), 
+                                                     config         = list(), 
+                                                     api_param      = list()){
+   ##################################################################
+  # Argument Validation
+  
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
@@ -54,29 +65,35 @@ exportNextRecordName.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
+  
+   ##################################################################
+  # Make the Body List
   
   body <- list(token = rcon$token, 
                content = 'generateNextRecordName')
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+  body <- body[length(body) > 0]
   
-  if (x$status_code != 200) 
-  {
-    handled <- redcap_error(x, error_handling)
-    #* If the export version API method isn't supported by the REDCap instance,
-    #* return "5.12.2".  For convenience, we will treat all pre 6.0.0 
-    #* versions the same.  The only inefficiency this will generate is 
-    #* in choosing when to run `syncUnderscoreCodings`.
-    if (is.null(handled)) return("5.12.2")
-  }
+   ##################################################################
+  # Call the API
   
-  as.numeric(rawToChar(x$content))
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) redcap_error(response, error_handling)
+  
+  as.numeric(rawToChar(response$content))
 }
-
-
-

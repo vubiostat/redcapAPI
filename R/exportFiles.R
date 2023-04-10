@@ -20,7 +20,6 @@
 #'   event or the repeating instrument. When available in your instance
 #'   of REDCap, and passed as NULL, the API will assume a value of 1.
 #' @param ... Arguments to be passed to other methods
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -72,8 +71,7 @@ exportFiles <- function(rcon,
                         event      = NULL, 
                         dir, 
                         filePrefix = TRUE, 
-                        ...,
-                        bundle     = getOption("redcap_bundle")){
+                        ...){
   UseMethod("exportFiles")
 }
 
@@ -88,16 +86,9 @@ exportFiles.redcapApiConnection <- function(rcon,
                                             filePrefix      = TRUE, 
                                             repeat_instance = NULL,
                                             ...,
-                                            bundle          = getOption("redcap_bundle"),
                                             error_handling  = getOption("redcap_error_handling"),
                                             config          = list(), 
                                             api_param       = list()){
-  
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
 
   if (is.numeric(record)) record <- as.character(record)
   
@@ -140,9 +131,10 @@ exportFiles.redcapApiConnection <- function(rcon,
                                null.ok = TRUE,
                                add = coll)
   
-  checkmate::assert_class(x = bundle, 
-                          classes = "redcapBundle", 
-                          add = coll)
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling",
+                                        add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -160,12 +152,12 @@ exportFiles.redcapApiConnection <- function(rcon,
   # Secure the MetaData
   MetaData <- rcon$metadata()
   
+  checkmate::assert_subset(x = field, 
+                           choices = MetaData$field_name, 
+                           add = coll)
+  
   # make sure 'field' exist in the project and are 'file' fields
-  if (!field %in% MetaData$field_name) 
-  {
-    coll$push(paste("'", field, "' does not exist in the project.", sep=""))
-  }
-  else if (MetaData$field_type[MetaData$field_name == field] != "file")
+  if (!isTRUE(MetaData$field_type[MetaData$field_name == field] == "file"))
   {
     coll$push(paste0("'", field, "' is not of field type 'file'"))
   }
