@@ -568,7 +568,7 @@ exportRecordsTyped.redcapApiConnection <-
     class(inv) <- c("invalid", "data.frame")
     attr(inv, "field_types") <- field_types[apply(selector, 2, any)]
     attr(inv, "time")        <- Sys.time()
-    attr(inv, "version")     <- exportVersion(rcon)
+    attr(inv, "version")     <- rcon$version()
     attr(inv, "project")     <- rcon$project()$project_title
     attr(Records, "invalid") <- inv
     warning("Some records failed validation. See 'invalid' attr.")
