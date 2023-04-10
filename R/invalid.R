@@ -26,9 +26,9 @@ format.invalid <- function(x, ...)
   x <- split(x, x$field_name)
   paste0(
     "# Failed Validations from REDCap project '",  pt, "'\n\n",
-    paste0(dt, "\n"),
-    paste0("Package redcapAPI version ", packageVersion("redcapAPI"), "\n"),
-    paste0("REDCap version ", vr, "\n\n"),
+    paste0(dt, "  \n"),
+    paste0("Package redcapAPI version ", packageVersion("redcapAPI"), "  \n"),
+    paste0("REDCap version ", vr, "  \n\n"),
     paste0(unlist(sapply(seq_along(x), function(i) {
       data <- x[[i]]
       c(paste0("* Field[",ft[i], "] '", names(x)[i], "' has ", nrow(data), " failure", ifelse(nrow(data) > 1, "s", "")),
