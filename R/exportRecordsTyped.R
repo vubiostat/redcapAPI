@@ -553,7 +553,7 @@ exportRecordsTyped.redcapApiConnection <-
       sel <- selector[,i]
       if(any(sel))
       {
-        if("record_id" %in% colnames(Raw))
+        inv <- if("record_id" %in% colnames(Raw))
         {
           data.frame(row=seq_len(nrow(Raw))[sel],
                      record_id=Raw[sel, "record_id"],
@@ -566,6 +566,10 @@ exportRecordsTyped.redcapApiConnection <-
                      value=Raw[sel, i])
         }
       } else NULL
+     
+      if(!is.null) class(inv) <- c("invalid", "data.frame")
+      
+      inv
     }))
   if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
   
