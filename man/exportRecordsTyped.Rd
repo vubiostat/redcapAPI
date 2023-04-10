@@ -71,8 +71,10 @@ all forms are returned (unless \code{fields} is specified.}
 to be returned.  If \code{NULL}, all subjects are returned.}
 
 \item{events}{A \code{character} vector of events to be returned from a 
-longitudinal database.  If \code{NULL}, all events are returned. This argument
-is ignored when using an \code{offlineConnection}.}
+longitudinal database.  If \code{NULL}, all events are returned. When 
+using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
+and only rows that match one of the values given are returned; be advised
+that misspellings may result in unexpected results.}
 
 \item{...}{Consumes any additional parameters passed. Not used.}
 
