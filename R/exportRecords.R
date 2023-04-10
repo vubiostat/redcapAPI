@@ -198,7 +198,7 @@ exportRecords.redcapApiConnection <-
            api_param          = list(),
            form_complete_auto = TRUE)
 {
-  message("The call syntax of exportRecords will undergo a breaking change in the upcoming 3.0.0 release. See Issue #10")
+  message("Please use exportRecordsTyped instead. exportRecords is DEPRECATED.")
 
   if (is.numeric(records)) records <- as.character(records)
 
