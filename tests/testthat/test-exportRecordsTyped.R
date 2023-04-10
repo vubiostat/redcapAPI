@@ -1,4 +1,4 @@
-context("exportRecordsTyped")
+context("exportRecordsTyped redcapApiConnection")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 

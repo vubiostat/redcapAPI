@@ -1,4 +1,4 @@
-context("exportRecordsTyped")
+context("exportRecordsTyped redcapOfflineConnection")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 
@@ -253,6 +253,10 @@ test_that(
 test_that(
   "Custom validation works",
   {
+    # This is about the only test that is different from the redcapApiConnection test. 
+    # It turns out the API only returns records with at least one non-missing value
+    # but the data download includes all the records. So the data sets are 
+    # a different size between the two methods. Curious.
     rec  <- exportRecordsTyped(rcon_off, fields="prereq_number", cast=raw_cast)
     recV <- expect_warning(
               exportRecordsTyped(
@@ -263,8 +267,8 @@ test_that(
     inv <- attr(recV, "invalid")
     expect_true(!is.null(inv))
     expect_equal(unique(inv$value), "1")
-    sapply(c(14, 15, 18, 19), function(i) expect_true(!i %in% inv$row))
-    sapply(1:13, function(i) expect_true(i %in% inv$row))
+    sapply(c(17, 18, 21, 22), function(i) expect_true(!i %in% inv$row))
+    sapply(4:16, function(i) expect_true(i %in% inv$row))
   }
 )
 
