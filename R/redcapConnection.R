@@ -278,12 +278,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
 
 print.redcapApiConnection <- function(x, ...){
   is_cached <- function(l) if (l) "Cached" else "Not Cached" 
-  
-  type <- class(x)[1]
-  type <- gsub("(redcap|Connection)", "", type)
-  type <- toupper(type)
+
   output <- 
-    c(sprintf("REDCap Connection Object (%s):", type), 
+    c("REDCap API Connection Object", 
       sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
       sprintf("Arms        : %s", is_cached(x$has_arms())), 
       sprintf("Events      : %s", is_cached(x$has_events())),
@@ -652,7 +649,22 @@ offlineConnection <- function(meta_data = NULL,
 #' @export
 
 print.redcapOfflineConnection <- function(x, ...){
-  print.redcapApiConnection(x = x, ...)
+    is_cached <- function(l) if (l) "Cached" else "Not Cached" 
+    
+    output <- 
+      c("REDCap Offline Connection Object", 
+        sprintf("Records     : %s", is_cached(x$has_records())),
+        sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
+        sprintf("Arms        : %s", is_cached(x$has_arms())), 
+        sprintf("Events      : %s", is_cached(x$has_events())),
+        sprintf("Instruments : %s", is_cached(x$has_instruments())),
+        sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
+        sprintf("Mapping     : %s", is_cached(x$has_mapping())),
+        sprintf("Users       : %s", is_cached(x$has_users())), 
+        sprintf("Version     : %s", is_cached(x$has_version())), 
+        sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
+        sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))
+    cat(output, sep = "\n")
 }
 
 #####################################################################
