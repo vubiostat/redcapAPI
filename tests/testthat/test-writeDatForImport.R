@@ -12,7 +12,9 @@ test_that(
                  "\"arm_num\",\"name\"\n1,\"Arm1\"\n2,\"Arm2\"\n3,\"Arm3\"")
     
     expect_equal(writeDataForImport(data2), 
-                 "\"record_id\",\"date_dmy\"\n1,2023-04-08\n2,2023-04-08")
+                 sprintf("\"record_id\",\"date_dmy\"\n1,%s\n2,%s", 
+                         format(Sys.Date()), 
+                         format(Sys.Date())))
   }
 )
 
