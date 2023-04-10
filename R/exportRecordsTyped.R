@@ -567,7 +567,13 @@ exportRecordsTyped.redcapApiConnection <-
         }
       } else NULL
      
-      if(!is.null) class(inv) <- c("invalid", "data.frame")
+      if(!is.null(inv))
+      {  
+        class(inv) <- c("invalid", "data.frame")
+        attr(inv, "field_types") <- field_types
+        attr(inv, "time")        <- Sys.time()
+        attr(inv, "version")     <- exportVersion(rcon)
+      }
       
       inv
     }))
