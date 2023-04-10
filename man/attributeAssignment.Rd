@@ -21,7 +21,7 @@ This set of functions helps in setting attributes for
 columns of the resulting type cast data.frame.
 }
 \details{
-Functions passed int the \code{assignment} parameter list of 
+Functions passed into the \code{assignment} parameter list of 
 \code{\link{exportRecordsTyped}} construct attributes on a column. 
 They are expected to have a signature of \code{function(field_name,
 field_label, field_annotation)} and return the attribute to assign or NA. 

@@ -25,9 +25,9 @@
 #' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
 #'   all fields are returned (unless \code{forms} is specified).
 #' @param drop_fields \code{character} A vector of field names to remove from 
-#'   the export. Ignore if length = 0.
+#'   the export. Ignored if length = 0.
 #' @param forms \code{character} vector of forms to be returned.  If \code{NULL}, 
-#'   all forms are returned (unless \code{fields} is specified.
+#'   all forms are returned (unless \code{fields} is specified).
 #' @param records \code{character} or \code{integerish}. A vector of study id's 
 #'   to be returned.  If \code{NULL}, all subjects are returned.
 #' @param events A \code{character} vector of events to be returned from a 
@@ -35,18 +35,10 @@
 #' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-#'   If you do not pass in this flag, it will default to "true". If set to 
-#'   "true", it will return the redcap_survey_identifier field and also the 
-#'   survey timestamp field for a particular survey when at least 
-#'   one field from that survey is being exported. NOTE: If the survey 
-#'   identifier field or survey timestamp fields are imported via API data 
-#'   import, they will simply be ignored since they are not real fields in 
-#'   the project but rather are pseudo-fields.
 #' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
-#'   field when data access groups are utilized in the project. If you do not 
-#'   pass in this flag, it will default to "false". NOTE: This flag is only 
+#'   field when data access groups are utilized in the project. NOTE: This argument is only 
 #'   viable if the user whose token is being used to make the API request is 
-#'   *not* in a data access group. If the user is in a group, then this 
+#'   not in a data access group. If the user is in a group, then this 
 #'   flag will revert to its default value.
 #' @param date_begin \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
 #'   Otherwise, records created or modified after this date will be returned.
@@ -63,13 +55,13 @@
 #'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
 #' @param validation A named \code{list} of user specified validation functions. The 
-#'   same named keys are supported as the na argument. The function will be 
+#'   same named keys are supported as the \code{na} argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
 #'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
 #' @param cast A named \code{list} of user specified class casting functions. The
-#'   same named keys are supported as the na argument. The function will be 
+#'   same named keys are supported as the \code{na} argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
 #' @param assignment A named \code{list} of functions. These functions are provided, field_name,
@@ -98,10 +90,10 @@
 #' A record of exports through the API is recorded in the Logging section 
 #' of the project.
 #' 
-#' The 'offline' version of the function operates on the raw (unlabeled) data 
-#' file downloaded from REDCap along with the data dictionary.  
-#' This is made available for instances where the API can not be accessed for 
-#' some reason (such as waiting for API approval from the REDCap administrator).
+# The 'offline' version of the function operates on the raw (unlabeled) data 
+# file downloaded from REDCap along with the data dictionary.  
+# This is made available for instances where the API can not be accessed for 
+# some reason (such as waiting for API approval from the REDCap administrator).
 #' 
 #' It is unnecessary to include "redcap_event_name" in the fields argument.  
 #' This field is automatically exported for any longitudinal database.  
@@ -131,9 +123,11 @@
 #' specifying a different function for each of the stages of the type casting.
 #' The algorithm is as follows:
 #' 
-#' 1. Detect NAs in returned data (\code{na} argument).
-#' 2. Run \code{validate} functions for the field_types.
-#' 3. On the fields that are not NA and pass validate do the specified cast.
+#' \itemize{
+#'   \item{1. }{Detect NAs in returned data (\code{na} argument).}
+#'   \item{2. }{Run \code{validate} functions for the field_types.}
+#'   \item{3. }{On the fields that are not NA and pass validate do the specified cast.}
+#' }
 #' 
 #' It is expected that the \code{na} and \code{validate} overrides should
 #' rarely be used. Their exposure via the function parameters is to future
@@ -146,7 +140,7 @@
 #' by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
 #' an addition to allow dates in the previous version to be overridden if the 
 #' user wanted to use the Date class. In this version, it would appear called
-#' as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
+#' as \code{cast=list(date_=as.Date))}. See \code{\link{fieldValidationAndCasting}}
 #' for a full listing of package provided cast functions.
 #' 
 #' @section REDCap API Documentation (6.5.0):
@@ -170,7 +164,7 @@
 #' Batched calls to the API are not a feature of the REDCap API, but may be imposed 
 #' by making multiple calls to the API.  The process of batching the export requires
 #' that an initial call be made to the API to retrieve only the record IDs.  The
-#' list of IDs is then broken into chunks, each about the size of \code{batch.size}.
+#' list of IDs is then broken into chunks, each about the size of \code{batch_size}.
 #' The batched calls then force the \code{records} argument in each call.
 #' 
 #' When a user's permissions require a de-identified data export, a batched call 
@@ -196,15 +190,7 @@ exportRecordsTyped <-
     forms         = NULL,
     records       = NULL,
     events        = NULL,
-    survey        = TRUE,
-    dag           = TRUE,
-    date_begin    = NULL,
-    date_end      = NULL,
-    ...,
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL)
+    ...)
     
     UseMethod("exportRecordsTyped")
 
