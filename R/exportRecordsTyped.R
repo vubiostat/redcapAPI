@@ -31,8 +31,10 @@
 #' @param records \code{character} or \code{integerish}. A vector of study id's 
 #'   to be returned.  If \code{NULL}, all subjects are returned.
 #' @param events A \code{character} vector of events to be returned from a 
-#'   longitudinal database.  If \code{NULL}, all events are returned. This argument
-#'   is ignored when using an \code{offlineConnection}.
+#'   longitudinal database.  If \code{NULL}, all events are returned. When 
+#'   using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
+#'   and only rows that match one of the values given are returned; be advised
+#'   that misspellings may result in unexpected results.
 #' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
@@ -478,6 +480,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                                             units=unitsFieldAnnotation),
                                                        mChoice       = NULL, 
                                                        ...){
+  
+  if (is.numeric(records)) records <- as.character(records)
+  
   ###################################################################
   # Argument Validation
   
@@ -522,10 +527,31 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
-  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
-                                            fields      = fields, 
-                                            drop_fields = drop_fields, 
-                                            forms       = forms)
+  
+  system_field <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% names(rcon$records())]
+  if (length(fields) > 0){
+    system_field <- system_field[system_field %in% fields]
+  }
+  
+  fields <- .exportRecordsTyped_fieldsArray(rcon         = rcon, 
+                                            fields       = fields, 
+                                            drop_fields  = drop_fields, 
+                                            forms        = forms, 
+                                            use_original = FALSE)
+  
+  
+  
+  id_index <- which(fields == rcon$metadata()$field_name[1])
+  
+  if (length(id_index) > 0){
+    fields <- c(fields[id_index], 
+                system_field, 
+                fields[-id_index])
+  } else {
+    fields <- c(system_field, 
+                fields)
+  }
+
   
   ###################################################################
   # Figure out defaults for mChoice
@@ -535,7 +561,15 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Raw Data comes from the rcon object for offlineConnections
   
-  Raw <- rcon$record()
+  Raw <- rcon$records()[fields]
+  
+  if (length(records) > 0){
+    Raw <- Raw[Raw[[ rcon$metadata()$field_name[1] ]] %in% records, ]
+  }
+  
+  if (length(events) > 0){
+    Raw <- Raw[Raw$redcap_event_name %in% events, ]
+  }
   
   ###################################################################
   # Process meta data for useful information
@@ -736,10 +770,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 
 # .exportRecordsTyped_fieldsArray -----------------------------------
 
-.exportRecordsTyped_fieldsArray <- function(rcon = rcon, 
-                                            fields = fields, 
-                                            drop_fields = drop_fields, 
-                                            forms = forms)
+.exportRecordsTyped_fieldsArray <- function(rcon, 
+                                            fields, 
+                                            drop_fields, 
+                                            forms, 
+                                            use_original = TRUE)
 {
   MetaData <- rcon$metadata()
   
@@ -841,13 +876,18 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   FieldFormMap <- do.call("rbind", FieldFormMap)
   rownames(FieldFormMap) <- NULL
   
-  FieldFormMap <- FieldFormMap[!duplicated(FieldFormMap$original_field_name), ]
+  # FieldFormMap <- FieldFormMap[!duplicated(FieldFormMap$original_field_name), ]
   
   # Reduce to fields in either fields or forms
   Fields <- FieldFormMap[FieldFormMap$is_in_fields | 
                            FieldFormMap$is_in_forms, ]
   Fields <- Fields[order(Fields$index), ]
-  Fields$original_field_name
+  
+  if (use_original){
+    unique(Fields$original_field_name)
+  } else {
+    Fields$export_field_name
+  }
 }
 
 

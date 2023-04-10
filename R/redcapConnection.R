@@ -632,10 +632,10 @@ offlineConnection <- function(meta_data = NULL,
       flush_fileRepository = function() this_fileRepository <<- NULL,
       refresh_fileRepository = function(x) {this_fileRepository <<- .offlineConnection_readFile(x)},
       
-      record = function(){ this_record },
-      has_record = function() !is.null(this_record),
-      flush_record = function() this_record <<- NULL,
-      refresh_record = function(x) {this_record <<- .offlineConnection_readFile(records)},
+      records = function(){ this_record },
+      has_records = function() !is.null(this_record),
+      flush_records = function() this_record <<- NULL,
+      refresh_records = function(x) {this_record <<- .offlineConnection_readFile(records)},
       
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
@@ -679,7 +679,7 @@ print.redcapOfflineConnection <- function(x, ...){
                      choice_value = mapping[, 1], 
                      export_field_name = sprintf("%s___%s", 
                                                  field_name, 
-                                                 mapping[, 1]), 
+                                                 tolower(mapping[, 1])), 
                      stringsAsFactors = FALSE)
         } else {
           data.frame(original_field_name = field_name, 
