@@ -560,6 +560,7 @@ exportRecordsTyped.redcapApiConnection <-
           data.frame(row=seq_len(nrow(Raw))[sel],
                      record_id=if('record_id' %in% names(Raw)) Raw[sel, "record_id"] else rep(NA, sum(sel)),
                      field_name=field_names[i],
+                     field_type=field_types[i],
                      value=Raw[sel, i])
         }
       }))
@@ -567,7 +568,6 @@ exportRecordsTyped.redcapApiConnection <-
   if(!is.null(inv))
   {
     class(inv) <- c("invalid", "data.frame")
-    attr(inv, "field_types") <- field_types[apply(selector, 2, any)]
     attr(inv, "time")        <- Sys.time()
     attr(inv, "version")     <- rcon$version()
     attr(inv, "project")     <- rcon$project()$project_title

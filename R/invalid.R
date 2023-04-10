@@ -21,7 +21,6 @@ format.invalid <- function(x, ...)
 {
   dt <- attr(x, "time")
   vr <- attr(x, "version")
-  ft <- attr(x, "field_types")
   pt <- attr(x, "project")
   x <- split(x, x$field_name)
   paste0(
@@ -31,7 +30,7 @@ format.invalid <- function(x, ...)
     paste0("REDCap version ", vr, "  \n\n"),
     paste0(unlist(sapply(seq_along(x), function(i) {
       data <- x[[i]]
-      c(paste0("* Field[",ft[i], "] '", names(x)[i], "' has ", nrow(data), " failure", ifelse(nrow(data) > 1, "s", "")),
+      c(paste0("* Field[",data$field_type[1], "] '", names(x)[i], "' has ", nrow(data), " failure", ifelse(nrow(data) > 1, "s", "")),
         if(!is.na(data$record_id[1])) 
            paste0("  * Row ", data$row, ", Record Id '", data$record_id, "', Value '", data$value, "'") else
            paste0("  * Row ", data$row, ", Value '", data$value, "'")
