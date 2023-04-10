@@ -456,8 +456,9 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Derive codings (This is probably a good internal helper)
   codebook <- MetaData$select_choices_or_calculations[field_map]
+  codebook[! field_types %in% c("select", "radio", "dropdown")] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
-
+  
   codings <- vector("list", length = length(codebook))
 
   for (i in seq_along(codings)){
