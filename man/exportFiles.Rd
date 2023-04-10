@@ -5,16 +5,7 @@
 \alias{exportFiles.redcapApiConnection}
 \title{Exports a File attached to a Record}
 \usage{
-exportFiles(
-  rcon,
-  record,
-  field,
-  event = NULL,
-  dir,
-  filePrefix = TRUE,
-  ...,
-  bundle = getOption("redcap_bundle")
-)
+exportFiles(rcon, record, field, event = NULL, dir, filePrefix = TRUE, ...)
 
 \method{exportFiles}{redcapApiConnection}(
   rcon,
@@ -25,7 +16,6 @@ exportFiles(
   filePrefix = TRUE,
   repeat_instance = NULL,
   ...,
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -50,8 +40,6 @@ name.  The prefix takes the form [record_id]-[event_name]-[file_name].
 The file name is always the same name of the file as it exists in REDCap}
 
 \item{...}{Arguments to be passed to other methods}
-
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
 
 \item{repeat_instance}{The repeat instance number of the repeating
 event or the repeating instrument. When available in your instance

@@ -11,7 +11,7 @@
 #'   \code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  If 
 #'   \code{record} has a value, it will be appended with \code{"_record_[record id].pdf"} 
 #' @param record The record id for which forms should be downloaded.  May only 
-#'   have length 1.
+#'   have length 1. May be either \code{character} or \code{numeric}.
 #' @param events The events for which forms should be downloaded
 #' @param instruments The instruments for which forms should be downloaded
 #' @param all_records Logical. If \code{TRUE} forms for all records are downloaded.
@@ -19,6 +19,12 @@
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details
 #' This function mimics the behavior of "Download PDF of Instruments" button on the
@@ -51,9 +57,9 @@
 
 exportPdf <- function(rcon, 
                       dir, 
-                      filename = "redcap_forms_download", 
-                      record = NULL, 
-                      events = NULL, 
+                      filename    = "redcap_forms_download", 
+                      record      = NULL, 
+                      events      = NULL, 
                       instruments = NULL, 
                       all_records = FALSE, 
                       ...){
@@ -65,67 +71,114 @@ exportPdf <- function(rcon,
 
 exportPdf.redcapApiConnection <- function(rcon, 
                                           dir, 
-                                          filename = "redcap_forms_download",
-                                          record = NULL, 
-                                          events = NULL,
-                                          instruments = NULL, 
-                                          all_records = FALSE, 
+                                          filename       = "redcap_forms_download",
+                                          record         = NULL, 
+                                          events         = NULL,
+                                          instruments    = NULL, 
+                                          all_records    = FALSE, 
                                           ...,
-                                          error_handling = getOption("redcap_error_handling")){
+                                          error_handling = getOption("redcap_error_handling"), 
+                                          config         = list(), 
+                                          api_param      = list()){
+
+  if (is.numeric(record)) record <- as.character(record)
+    
+   ##################################################################
+  # Argument Validation
+  
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
   
-  if (missing(dir)){
-    coll$push("'dir' must have a character(1) value")
-  }
-  else{
-    checkmate::assert_character(x = dir,
-                                len = 1, 
-                                add = coll)
-    
-    if (is.character(dir)){
-      if (!dir.exists(dir)){
-        coll$push("'dir' is not an existing directory")
-      }
-    }
-  }
+  checkmate::assert_character(x = dir, 
+                              len = 1, 
+                              any.missing = FALSE,
+                              add = coll)
   
-  massert(~ filename + record + events + instruments + dir,
-          fun = checkmate::assert_character,
-          len = list(dir = 1, filename = 1),
-          fixed = list(null.ok = TRUE,
-                       add = coll))
+  checkmate::assert_character(x = filename, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = record, 
+                              len = 1, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = events,
+                              len = 1, 
+                              any.missing = FALSE,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = instruments,
+                              len  = 1,
+                              any.missing = FALSE, 
+                              null.ok = TRUE,
+                              add = coll)
   
   checkmate::assert_logical(x = all_records,
                             len = 1,
+                            any.missing = FALSE,
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
+  checkmate::assert_directory_exists(x = dir, 
+                                     add = coll)
+
+  
+  Events <- rcon$events()
+  
+  Instruments <- rcon$instruments()
+  
+  checkmate::assert_subset(x = events, 
+                           choices = Events$unique_event_name,
+                           add = coll)
+
+  checkmate::assert_subset(x = instruments, 
+                           choices = Instruments$instrument_name,
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ##################################################################
+  # Make the Body List
+  
   body <- list(token = rcon$token, 
                content = 'pdf', 
-               returnFormat = 'csv')
+               returnFormat = 'csv', 
+               allRecords = if (all_records) as.numeric(all_records) else NULL, 
+               record = record, 
+               event = events, 
+               instrument = instruments)
   
-  if (!is.null(record)) body[['record']] <- paste0(record, collapse=",")
-  if (!is.null(events)) body[['event']] <- paste0(events, collapse=",")
-  if (!is.null(instruments)) body[['instrument']] <- paste0(instruments, collapse=",")
-  if (all_records) body[['allRecords']] <- 'true'
+  body <- body[lengths(body) > 0]
   
-  x <- httr::POST(url = rcon$url,
-                  body = body,
-                  config = rcon$config)
+   ##################################################################
+  # Call the API
   
-  if (x$status_code != 200) return(redcap_error(x, error_handling))
-  
-  # FIXME: Make use of `reconstituteFileFromExport`
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+              
+  if (response$status_code != 200) return(redcap_error(response, error_handling))
   
   filename <- 
     if (all_records)
@@ -135,9 +188,11 @@ exportPdf.redcapApiConnection <- function(rcon,
     else 
       paste0(filename, "_record_", record, ".pdf")
   
-  writeBin(object = as.vector(x$content), 
-           con = file.path(dir, filename), 
-           useBytes = TRUE)
+  reconstituteFileFromExport(response, 
+                             dir = dir, 
+                             dir_create = FALSE, 
+                             file_prefix = "", 
+                             filename = filename)
   
   message("The file was saved to '", file.path(dir, filename), "'")
 }

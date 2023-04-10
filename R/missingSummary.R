@@ -5,7 +5,6 @@
 #' @description Returns a data frame of subject events with missing values. 
 #' 
 #' @param rcon A \code{redcapConnection} object.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param records \code{character(1)} A filename pointing to the raw records download from REDCap
 #' @param meta_data \code{character(1)} A filename pointing to the data dictionary download from REDCap
 #' @param excludeMissingForms \code{logical(1)} If all of the fields in a form are missing, would 
@@ -25,6 +24,12 @@
 #'   arguments will be ignored.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @details The intention of this function is to generate a list of subject
 #'   events that are missing and could potentially be values that should have
@@ -51,7 +56,7 @@
 missingSummary <- function(rcon, 
                            excludeMissingForms = TRUE, 
                            ..., 
-                           fixed_fields = REDCAP_SYSTEM_FIELDS){
+                           fixed_fields        = REDCAP_SYSTEM_FIELDS){
   UseMethod("missingSummary")
 }
 
@@ -61,10 +66,11 @@ missingSummary <- function(rcon,
 missingSummary.redcapApiConnection <- function(rcon, 
                                                excludeMissingForms = TRUE, 
                                                ...,
-                                               fixed_fields = REDCAP_SYSTEM_FIELDS,
-                                               exportRecordsArgs = list(),
-                                               bundle = getOption("redcap_bundle"),
-                                               error_handling = getOption("redcap_error_handling")){
+                                               fixed_fields        = REDCAP_SYSTEM_FIELDS,
+                                               exportRecordsArgs   = list(),
+                                               error_handling      = getOption("redcap_error_handling"), 
+                                               config              = list(), 
+                                               api_param           = list()){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
@@ -84,7 +90,16 @@ missingSummary.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -105,28 +120,28 @@ missingSummary.redcapApiConnection <- function(rcon,
                               survey = FALSE, 
                               dag = TRUE))
   
-  records_orig <- do.call("exportRecords", 
-                          exportRecordsArgs)
+  RecordsOrig <- do.call("exportRecords", 
+                         exportRecordsArgs)
   
   # Import the Meta Data --------------------------------------------
-  meta_data <- rcon$metadata()
-  meta_data <- meta_data[meta_data$field_type != "descriptive", ]
+  MetaData <- rcon$metadata()
+  MetaData <- MetaData[MetaData$field_type != "descriptive", ]
   
-  logic <- parseBranchingLogic(meta_data$branching_logic)
-  names(logic) <- meta_data$field_name
+  logic <- parseBranchingLogic(MetaData$branching_logic)
+  names(logic) <- MetaData$field_name
   
-  records <- .missingSummary_isMissingInField(records_orig, 
-                                              meta_data, 
+  Records <- .missingSummary_isMissingInField(RecordsOrig, 
+                                              MetaData, 
                                               logic)
   
   if (excludeMissingForms){
-    records <- .missingSummary_excludeMissingForm(records, 
-                                                  meta_data, 
+    Records <- .missingSummary_excludeMissingForm(Records, 
+                                                  MetaData, 
                                                   logic)
   }
   
-  .missingSummary_makeResultFrame(records, 
-                                  meta_data)
+  .missingSummary_makeResultFrame(Records, 
+                                  MetaData)
 }
 
 #' @rdname missingSummary

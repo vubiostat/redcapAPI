@@ -16,7 +16,6 @@
 #'   will be deleted as well. 
 #' @param refresh \code{logical(1)}. If \code{TRUE} and the file repository
 #' @param ... Arguments to pass to other methods.
-#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
 #'   File Repository data on \code{rcon} will be refreshed. 
 #' @param confirm \code{confirm} \code{character}. One of \code{c("ask", "no", "yes")}. 
 #'   When \code{"ask"}, user will be prompted to confirm the deletion. 
@@ -48,13 +47,13 @@ deleteFileRepository <- function(rcon,
 
 deleteFileRepository.redcapApiConnection <- function(rcon, 
                                                      folder_id, 
-                                                     recursive = FALSE, 
+                                                     recursive      = FALSE,
+                                                     refresh        = TRUE,
                                                      ..., 
-                                                     refresh = TRUE,
-                                                     confirm = c("ask", "no", "yes"),
+                                                     confirm        = c("ask", "no", "yes"),
                                                      error_handling = getOption("redcap_error_handling"),
-                                                     config = list(), 
-                                                     api_param = list()){
+                                                     config         = list(), 
+                                                     api_param      = list()){
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -82,6 +81,7 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
   
   checkmate::assert_list(x = config, 

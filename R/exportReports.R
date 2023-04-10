@@ -9,19 +9,24 @@
 #' @param factors Logical.  Determines if categorical data from the database 
 #' is returned as numeric codes or labelled factors.
 #' @param labels Logical.  Determines if the variable labels are applied to the data frame.
-#' @param dates Logical. Determines if date variables are converted to POSIXlt format during the download.
+#' @param dates Logical. Determines if date variables are converted to POSIXct format during the download.
 #' @param checkboxLabels Logical. Determines the format of labels in checkbox 
 #'   variables.  If \code{FALSE} labels are applies as "Unchecked"/"Checked".  
 #'   If \code{TRUE}, they are applied as ""/"[field_labe]" where [field_label] 
 #'   is the label assigned to the level in the data dictionary. This option 
 #'   is only available after REDCap version 6.0.
-#' @param bundle A \code{redcapBundle} object as created by \code{exportBundle}.
 #' @param drop An optional character vector of REDCap variable names to remove from the 
 #'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
 #'   It is OK for drop to contain variables not present; these names are ignored.
 #' @param ... Additional arguments to be passed between methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @details
 #' A record of exports through the API is recorded in the Logging section of 
@@ -54,10 +59,10 @@
 
 exportReports <- function(rcon, 
                           report_id, 
-                          factors = TRUE, 
-                          labels = TRUE, 
-                          dates = TRUE, 
-                          drop = NULL,
+                          factors        = TRUE, 
+                          labels         = TRUE, 
+                          dates          = TRUE, 
+                          drop           = NULL,
                           checkboxLabels = FALSE, 
                           ...){
   UseMethod("exportReports")
@@ -68,92 +73,127 @@ exportReports <- function(rcon,
 
 exportReports.redcapApiConnection <- function(rcon, 
                                               report_id, 
-                                              factors = TRUE, 
-                                              labels = TRUE, 
-                                              dates = TRUE, 
-                                              drop = NULL, 
+                                              factors        = TRUE, 
+                                              labels         = TRUE, 
+                                              dates          = TRUE, 
+                                              drop           = NULL, 
                                               checkboxLabels = FALSE, 
                                               ...,
-                                              bundle = getOption("redcap_bundle"),
-                                              error_handling = getOption("redcap_error_handling")){
-  
-  if (!is.na(match("proj", names(list(...)))))
-  {
-    message("The 'proj' argument is deprecated.  Please use 'bundle' instead")
-    bundle <- list(...)[["proj"]]
-  }
+                                              error_handling = getOption("redcap_error_handling"),
+                                              config         = list(), 
+                                              api_param      = list()){
   
   if (!is.numeric(report_id)) report_id <- as.numeric(report_id)
   
+   ##################################################################
+  # Argument Validation
+  
   coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
   
   checkmate::assert_integerish(x = report_id,
                                len = 1,
                                add = coll)
   
-  massert(~ rcon + bundle,
-          fun = checkmate::assert_class,
-          classes = list(rcon = "redcapApiConnection",
-                         bundle = "redcapBundle"),
-          null.ok = list(rcon = FALSE,
-                         bundle = TRUE),
-          fixed = list(add = coll))
+  checkmate::assert_logical(x = factors, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
   
-  massert(~ factors + labels + dates + checkboxLabels,
-          fun = checkmate::assert_logical,
-          fixed = list(len = 1,
-                       add = coll))
+  checkmate::assert_logical(x = labels, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = dates, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = checkboxLabels, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_character(x = drop, 
+                              any.missing = FALSE,
+                              null.ok = TRUE, 
+                              add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
+                                        .var.name = "error_handling",
                                         add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::reportAssertions(coll)
   
-  #* Secure the meta data.
-  meta_data <- rcon$metadata()
+   ##################################################################
+  # Get required information
+  
+  MetaData <- rcon$metadata()
 
   #* for purposes of the export, we don't need the descriptive fields. 
   #* Including them makes the process more error prone, so we'll ignore them.
-  meta_data <- meta_data[!meta_data$field_type %in% "descriptive", ]  
+  MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]  
   
-  #* Secure the REDCap version
   version <- rcon$version()
 
+   ##################################################################
+  # Make API Body List
+  
   body <- list(token = rcon$token, 
                content = 'report',
                format = 'csv', 
                returnFormat = 'csv',
                report_id = report_id)
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+  body <- body[lengths(body) > 0]
   
-  if (x$status_code != 200) redcap_error(x, error_handling)
+   ##################################################################
+  # Call the API
   
-  x <- utils::read.csv(text = as.character(x), 
-                       stringsAsFactors = FALSE, 
-                       na.strings = "")
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) redcap_error(response, error_handling)
+  
+  Report <- utils::read.csv(text = as.character(response), 
+                            stringsAsFactors = FALSE, 
+                            na.strings = "")
+  
+   ##################################################################
+  # Process the data
 
   #* synchronize underscore codings between records and meta data
   #* Only affects calls in REDCap versions earlier than 5.5.21
   if (utils::compareVersion(version, "6.0.0") == -1) 
-    meta_data <- syncUnderscoreCodings(x, meta_data)
+    MetaData <- syncUnderscoreCodings(Report, MetaData)
   
 
-  x <- fieldToVar(records = x, 
-                  meta_data = meta_data, 
-                  factors = factors, 
-                  dates = dates, 
-                  labels=labels,
-                  checkboxLabels = checkboxLabels,
-                  ...)
+  Report <- fieldToVar(records = Report, 
+                       meta_data = MetaData, 
+                       factors = factors, 
+                       dates = dates, 
+                       labels=labels,
+                       checkboxLabels = checkboxLabels,
+                       ...)
   
   
   if (labels) 
   {
-    field_names <- names(x)
+    field_names <- names(Report)
     field_names <- unique(sub("___.+$", "", field_names))
     
     # For reports, there is not check on the field names, since 
@@ -161,29 +201,30 @@ exportReports.redcapApiConnection <- function(rcon,
     # However, [form]_complete fields do not appear in the 
     # meta data and need to be removed to avoid an error.
     # See #108
-    field_names <- field_names[field_names %in% meta_data$field_name]
+    field_names <- field_names[field_names %in% MetaData$field_name]
 
     suffixed <- checkbox_suffixes(fields = field_names,
-                                  meta_data = meta_data)
+                                  meta_data = MetaData)
 
-    x[suffixed$name_suffix] <-
+    Report[suffixed$name_suffix] <-
       mapply(nm = suffixed$name_suffix,
              lab = suffixed$label_suffix,
              FUN = function(nm, lab){
-               if(is.null(x[[nm]])){
+               if(is.null(Report[[nm]])){
                  warning("Missing field for suffix ", nm)
                } else {
-                 labelVector::set_label(x[[nm]], lab)
+                 labelVector::set_label(Report[[nm]], lab)
                }
              },
              SIMPLIFY = FALSE)
   }
   
-  # drop
+   ##################################################################
+  # Drop fields from Report
+  
   if(length(drop)) {
-    x <- x[!names(x) %in% drop]
+    Report <- Report[!names(Report) %in% drop]
   } # end drop
   
-  x 
-  
+  Report
 }
