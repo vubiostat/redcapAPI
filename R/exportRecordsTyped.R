@@ -801,13 +801,16 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   MissingFromFields <- MetaData[MetaData$field_type %in% c("calc", 
                                                            "file"), ]
-  MissingFromFields <- 
-    data.frame(original_field_name = MissingFromFields$field_name, 
-               choice_value = NA, 
-               export_field_name = MissingFromFields$field_name, 
-               stringsAsFactors = FALSE)
+  if (nrow(MissingFromFields) > 0){
+    # FIXME: We need a test on a project that has no calc or file fields.
+    MissingFromFields <- 
+      data.frame(original_field_name = MissingFromFields$field_name, 
+                 choice_value = NA, 
+                 export_field_name = MissingFromFields$field_name, 
+                 stringsAsFactors = FALSE)
   
-  ProjectFields <- rbind(ProjectFields, MissingFromFields)
+    ProjectFields <- rbind(ProjectFields, MissingFromFields)
+  }
   ProjectFields$index <- seq_len(nrow(ProjectFields))
   
   # Make a reference table between fields and forms
