@@ -487,11 +487,6 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
-  if (is.character(version)){
-    checkmate::assert_file_exists(x = version, 
-                                  add = coll)
-  }
-  
   if (is.character(project_info)){
     checkmate::assert_file_exists(x = project_info, 
                                   add = coll)
@@ -512,7 +507,7 @@ offlineConnection <- function(meta_data = NULL,
   ###################################################################
   # Read files
   this_metadata <- 
-    validateRedcapData(data = .offlineConnection_readFile(meta_data), 
+    validateRedcapData(data = .offlineConnection_readMetaData(meta_data), 
                        redcap_data = REDCAP_METADATA_STRUCTURE)
   this_arm <- 
     validateRedcapData(data = .offlineConnection_readFile(arms), 
@@ -716,4 +711,21 @@ print.redcapOfflineConnection <- function(x, ...){
   FieldNames <- rbind(FieldNames, FormFieldName)
   rownames(FieldNames) <- NULL
   FieldNames
+}
+
+.offlineConnection_readMetaData <- function(file){
+  if (is.character(file)){
+    MetaData <- read.csv(file, 
+                         na.strings = "", 
+                         stringsAsFactors = FALSE)
+    
+    names(MetaData) <- 
+      ifelse(names(MetaData) %in% names(REDCAP_METADATA_API_UI_MAPPING), 
+             REDCAP_METADATA_API_UI_MAPPING[names(MetaData)], 
+             names(MetaData))
+    
+    return(MetaData)
+  } else {
+    file
+  }
 }

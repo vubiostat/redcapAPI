@@ -1,0 +1,11 @@
+arm_num,unique_event_name,form
+1,event_1_arm_1,fieldtovar_datetimes
+1,event_1_arm_1,randomization
+1,event_1_arm_1,branching_logic
+1,event_1_arm_1,file_import
+1,event_1_arm_1,calculated_fields
+2,event_1_arm_2,fieldtovar_datetimes
+2,event_1_arm_2,randomization
+2,event_1_arm_2,branching_logic
+2,event_1_arm_2,file_import
+2,event_1_arm_2,calculated_fields

@@ -61,9 +61,6 @@ test_that(
   }
 )
 
-# Argument validation tests -----------------------------------------
-
-
 
 ###################################################################
 # Test attribute assignments versus defaults
@@ -215,5 +212,20 @@ test_that(
     
     expect_warning(rec <- exportRecordsTyped(rcon, mChoice="labelled"), "Hmisc")
     expect_false("prereq_checkbox" %in% names(rec))
+  }
+)
+
+#####################################################################
+# Export calculated fields
+
+test_that(
+  "Calculated fields are exported", 
+  {
+    expect_data_frame(
+      exportRecordsTyped(rcon, 
+                         fields = c("left_operand", "right_operand", 
+                                    "calc_addition", "calc_squared")), 
+      ncols = 4
+    )
   }
 )

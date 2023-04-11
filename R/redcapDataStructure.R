@@ -70,6 +70,7 @@ REDCAP_EVENT_STRUCTURE <-
              arm_num = numeric(0), 
              unique_event_name = character(0), 
              custom_event_label = character(0), 
+             event_id = numeric(0),
              stringsAsFactors = FALSE)
 
 # Field Names -------------------------------------------------------
@@ -131,6 +132,26 @@ REDCAP_METADATA_STRUCTURE <-
              matrix_ranking = character(0),
              field_annotation = character(0), 
              stringsAsFactors = FALSE)
+
+REDCAP_METADATA_API_UI_MAPPING <- 
+  c("Variable...Field.Name" = "field_name", 
+    "Form.Name" = "form_name", 
+    "Section.Header" = "section_header", 
+    "Field.Type" = "field_type", 
+    "Field.Label" = "field_label", 
+    "Choices..Calculations..OR.Slider.Labels" = "select_choices_or_calculations", 
+    "Field.Note" = "field_note", 
+    "Text.Validation.Type.OR.Show.Slider.Number" = "text_validation_type_or_show_slider_number", 
+    "Text.Validation.Min" = "text_validation_min", 
+    "Text.Validation.Max" = "text_validation_max", 
+    "Identifier." = "identifier", 
+    "Branching.Logic..Show.field.only.if...." = "branching_logic", 
+    "Required.Field." = "required_field", 
+    "Custom.Alignment" = "custom_alignment", 
+    "Question.Number..surveys.only." = "question_number", 
+    "Matrix.Group.Name" = "matrix_group_name", 
+    "Matrix.Ranking." = "matrix_ranking", 
+    "Field.Annotation" = "field_annotation")
 
 # Meta Data - Known Field Types 
 
