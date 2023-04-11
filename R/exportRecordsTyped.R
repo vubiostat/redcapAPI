@@ -421,8 +421,9 @@ exportRecordsTyped.redcapApiConnection <-
   # Locate NA's
 
   nas <- .exportRecordsTyped_getNas(na = na, 
-                                   field_types = field_types, 
-                                   args = args)
+                                    field_types = field_types, 
+                                    args = args, 
+                                    correct_length = nrow(Raw))
    
    ###################################################################
   # Run Validation Functions
@@ -431,7 +432,8 @@ exportRecordsTyped.redcapApiConnection <-
     .exportRecordsTyped_runValidation(Raw = Raw, 
                                       validation = validation, 
                                       field_types = field_types, 
-                                      args = args)
+                                      args = args, 
+                                      correct_length = nrow(Raw))
   
    ###################################################################
   # Type Casting
@@ -626,7 +628,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   nas <- .exportRecordsTyped_getNas(na = na, 
                                    field_types = field_types, 
-                                   args = args)
+                                   args = args, 
+                                   correct_length = nrow(Raw))
   
   ###################################################################
   # Run Validation Functions
@@ -635,7 +638,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     .exportRecordsTyped_runValidation(Raw = Raw, 
                                       validation = validation, 
                                       field_types = field_types, 
-                                      args = args)
+                                      args = args, 
+                                      correct_length = nrow(Raw))
   
   ###################################################################
   # Type Casting
@@ -1057,29 +1061,43 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 # .exportRecords_getNas ---------------------------------------------
 .exportRecordsTyped_getNas <- function(na, 
                                       field_types, 
-                                      args = args){
+                                      args, 
+                                      correct_length){
   funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
-  nas  <- mapply(do.call, funs, args)
-  if(!is.matrix(nas))
-  {
-    m <- unique(field_types[sapply(nas, class) != "logical"])
-    stop(paste("User supplied na method for [",
-               paste(m, collapse=", "),
-               "] not returning vector of logical of correct length"))
-  } else if (nrow(nas) > 0 && !is.logical(nas[1,1]))
-  {
-    stop("Supplied na methods must return logical vectors")
+  nas  <- mapply(do.call, funs, args, SIMPLIFY = FALSE)
+  
+  is_correct_length <- vapply(nas, function(x) length(x) == correct_length, logical(1))
+  is_logical <- vapply(nas, is.logical, logical(1))
+  
+  cm <- checkmate::makeAssertCollection()
+  
+  if (any(!is_correct_length & is_logical)){
+    m <- unique(field_types[!is_correct_length & !is_logical])
+    cm$push(paste("User supplied na method for [",
+                  paste(m, collapse=", "),
+                  "] not returning vector of logical of correct length"))
+  } 
+  
+  if (any(!is_logical)){
+    m <- unique(field_types[!is_logical])
+    cm$push(paste("User supplied na method for [",
+                  paste(m, collapse=", "),
+                  "] must return a logical vector"))
   }
   
-  nas
+  checkmate::reportAssertions(cm)
+  
+  matrix(unlist(nas), ncol = length(nas), byrow = FALSE)
 }  
 
 # .exportRecordsTyped_runValidation ---------------------------------
 .exportRecordsTyped_runValidation <- function(Raw, 
                                               validation, 
                                               field_types, 
-                                              args){
+                                              args, 
+                                              correct_length){
   validate <- modifyList(.default_validate, validation)
+  
   funs <- lapply(
     field_types,
     function(x)
@@ -1088,20 +1106,30 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
       # No validate function is an auto pass
       if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
     })
-  validations <- mapply(do.call, funs, args)
+  validations <- mapply(do.call, funs, args, SIMPLIFY = FALSE)
   
-  if(!is.matrix(validations))
-  {
-    m <- unique(field_types[sapply(validations, class) != "logical"])
-    stop(paste("User supplied validation method for [",
-               paste(m, collapse=", "),
-               "] not returning vectors of correct length logical"))
-  } else if (nrow(validations) > 0 && !is.logical(validations[1,1]))
-  {
-    stop("Supplied validation methods must return logical vectors")
+  is_correct_length <- vapply(validations, function(x) length(x) == correct_length, logical(1))
+  is_logical <- vapply(validations, is.logical, logical(1))
+  
+  cm <- checkmate::makeAssertCollection()
+  
+  if (any(!is_correct_length & is_logical)){
+    m <- unique(field_types[!is_correct_length & !is_logical])
+    cm$push(paste("User supplied validation method for [",
+                  paste(m, collapse=", "),
+                  "] not returning vector of correct length logical"))
+  } 
+  
+  if (any(!is_logical)){
+    m <- unique(field_types[!is_logical])
+    cm$push(paste("User supplied validation method for [",
+                  paste(m, collapse=", "),
+                  "] must return a logical vectors"))
   }
   
-  validations
+  checkmate::reportAssertions(cm)
+  
+  matrix(unlist(validations), ncol = length(validations), byrow = FALSE)
 }
 
 # .exportRecordsTyped_castRecords -----------------------------------
