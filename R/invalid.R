@@ -6,10 +6,12 @@
 #' attribute if validations fail. This data has some routines which
 #' help locate the failing records.
 #'
-#' @param x The `invalid` object
+#' @param x The \code{invalid} class object.
+#' @param object The \code{invalid} class object.
 #' @param ... additional arguments to `print`
+#' @importFrom utils packageVersion
 #' 
-#' #' @examples
+#' @examples
 #' \dontrun{
 #' rcon <- redcapConnection(url=[YOUR_REDCAP_URL], token=[API_TOKEN])
 #' 
@@ -48,10 +50,10 @@ print.invalid <- function(x, ...)
 
 #' @rdname invalidSummary
 #' @export
-summary.invalid <- function(x, ...)
+summary.invalid <- function(object, ...)
 {
-  paste0("There are ", nrow(x), " validation failures over the following fields: '",
-    paste0(unique(x$field_name), collapse="', '"),
+  paste0("There are ", nrow(object), " validation failures over the following fields: '",
+    paste0(unique(object$field_name), collapse="', '"),
     "'."
   , collapse="")
 }

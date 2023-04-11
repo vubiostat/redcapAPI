@@ -10,24 +10,26 @@
 
 \method{print}{invalid}(x, ...)
 
-\method{summary}{invalid}(x, ...)
+\method{summary}{invalid}(object, ...)
 }
 \arguments{
-\item{x}{The `invalid` object}
+\item{x}{The \code{invalid} class object.}
 
-\item{...}{additional arguments to `print`
+\item{...}{additional arguments to `print`}
 
-#' @examples
+\item{object}{The \code{invalid} class object.}
+}
+\description{
+\code{\link{exportRecordsTyped}} may have an \code{invalid}
+attribute if validations fail. This data has some routines which
+help locate the failing records.
+}
+\examples{
 \dontrun{
 rcon <- redcapConnection(url=[YOUR_REDCAP_URL], token=[API_TOKEN])
 
 rec <- exportRecordsTyped(rcon)
 
 attr(rec, "invalid")
-}}
 }
-\description{
-\code{\link{exportRecordsTyped}} may have an \code{invalid}
-attribute if validations fail. This data has some routines which
-help locate the failing records.
 }
