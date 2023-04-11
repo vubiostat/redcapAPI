@@ -6,7 +6,7 @@
 redcapAPI
 ======
 
-redcapAPI version 2.6.1 has an emergency patch to deal with the latest version of REDCap enforcing arrays for it's API calls. We are still assessing if this fixes the issue.
+2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependeable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
 *NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.
 Existing tickets in the older git repo will be transitioned over the next couple months.

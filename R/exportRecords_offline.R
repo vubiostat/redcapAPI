@@ -20,27 +20,64 @@ exportRecords_offline <- function(dataFile,
     }
   }
   
-  #* Error Collection Object
+   ##################################################################
+  # Argument Validation 
+  
   coll <- checkmate::makeAssertCollection()
   
-  massert(~ factors + labels + dates + checkboxLabels,
-          fun = checkmate::assert_logical,
-          fixed = list(len = 1,
-                       add = coll))
+  checkmate::assert_character(x = dataFile, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
   
-  massert(~ fields + forms + dataFile + metaDataFile,
-          fun = checkmate::assert_character,
-          len = list(dataFile = 1, 
-                     metaDataFile = 1),
-          fixed = list(null.ok = TRUE,
-                       add = coll))
+  checkmate::assert_character(x = metaDataFile, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = factors, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_character(x = fields, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = forms, 
+                              any.missing = FALSE, 
+                              null.ok = TRUE, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = labels, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = dates, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = checkboxLabels, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  if (is.list(colClasses)) colClasses <- unlist(colClasses)
+  
+  checkmate::assert_character(x = colClasses, 
+                              names = "named", 
+                              add = coll)
   
   checkmate::reportAssertions(coll)
   
-  #* Secure the meta data.
-  meta_data <- utils::read.csv(metaDataFile,
-                               stringsAsFactors = FALSE,
-                               na.strings = "")
+   ##################################################################
+  # Prepare the Meta Data
+  MetaData <- utils::read.csv(metaDataFile,
+                              stringsAsFactors = FALSE,
+                              na.strings = "")
   
   col.names=c('field_name', 'form_name', 'section_header', 
               'field_type', 'field_label', 'select_choices_or_calculations', 
@@ -50,25 +87,25 @@ exportRecords_offline <- function(dataFile,
               'question_number', 'matrix_group_name', 'matrix_ranking',
               'field_annotation')
   
-  names(meta_data) <- col.names[1:length(col.names)]
+  names(MetaData) <- col.names[1:length(col.names)]
   
-  #* for purposes of the export, we don't need the descriptive fields. 
-  #* Including them makes the process more error prone, so we'll ignore them.
-  meta_data <- meta_data[!meta_data$field_type %in% "descriptive", ]  
+  # for purposes of the export, we don't need the descriptive fields. 
+  # Including them makes the process more error prone, so we'll ignore them.
+  MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]  
   
-  #* Check that all fields exist in the meta data
+  # Check that all fields exist in the meta data
   if (!is.null(fields)) 
   {
-    bad_fields <- fields[!fields %in% meta_data$field_name]
+    bad_fields <- fields[!fields %in% MetaData$field_name]
     if (length(bad_fields))
       coll$push(paste0("The following are not valid field names: ",
                        paste0(bad_fields, collapse = ", ")))
   }
   
-  #* Check that all form names exist in the meta data
+  # Check that all form names exist in the meta data
   if (!is.null(forms))
   {
-    bad_forms <- forms[!forms %in% meta_data$form_name]
+    bad_forms <- forms[!forms %in% MetaData$form_name]
     if (length(bad_forms))
       coll$push(paste0("The following are not valid form names: ",
                        paste0(bad_forms, collapse = ", ")))
@@ -76,7 +113,8 @@ exportRecords_offline <- function(dataFile,
   
   checkmate::reportAssertions(coll)
   
-  #* Create the vector of field names
+   ##################################################################
+  # Create the vector of field names
   if (!is.null(fields)) #* fields were provided
   {
     # redcap_event_name is automatically included in longitudinal projects
@@ -84,45 +122,52 @@ exportRecords_offline <- function(dataFile,
   }
   else if (!is.null(forms))
   {
-    field_names <- meta_data$field_name[meta_data$form_name %in% forms]
+    field_names <- MetaData$field_name[MetaData$form_name %in% forms]
   }
   else
     #* fields were not provided, default to all fields.
-    field_names <- meta_data$field_name
+    field_names <- MetaData$field_name
   
-  #* Expand 'field_names' to include fields from specified forms.    
+   ##################################################################
+  # Expand 'field_names' to include fields from specified forms.    
   if (!is.null(forms)) 
   {
     field_names <- 
       unique(c(field_names, 
-               meta_data$field_name[meta_data$form_name %in% forms]))
+               MetaData$field_name[MetaData$form_name %in% forms]))
   }  
   
+   ##################################################################
+  # Manage checkbox suffixes
+  
   suffixed <- checkbox_suffixes(fields = field_names,
-                                meta_data = meta_data)
+                                meta_data = MetaData)
   
   
-  x <- utils::read.csv(dataFile, 
-                       stringsAsFactors = FALSE,
-                       colClasses = colClasses)
+   ##################################################################
+  # Load and process data
   
-  x <- fieldToVar(records = x, 
-                  meta_data = meta_data, 
-                  factors = factors, 
-                  dates = dates, 
-                  labels=labels,
-                  checkboxLabels = checkboxLabels,
-                  ...)
+  Records <- utils::read.csv(dataFile, 
+                             stringsAsFactors = FALSE,
+                             colClasses = colClasses)
+  
+  Records <- fieldToVar(records = Records, 
+                        meta_data = MetaData, 
+                        factors = factors, 
+                        dates = dates, 
+                        labels=labels,
+                        checkboxLabels = checkboxLabels,
+                        ...)
   
   if (labels){
-    x[,suffixed$name_suffix] <-
+    Records[,suffixed$name_suffix] <-
       mapply(nm = suffixed$name_suffix,
              lab = suffixed$label_suffix,
              FUN = function(nm, lab){
-               if(is.null(x[[nm]])){
+               if(is.null(Records[[nm]])){
                  warning("Missing field for suffix ", nm)
                } else {
-                 labelVector::set_label(x[[nm]], lab)
+                 labelVector::set_label(Records[[nm]], lab)
                }
              },
              SIMPLIFY = FALSE)
@@ -131,8 +176,8 @@ exportRecords_offline <- function(dataFile,
   
   # drop
   if(length(drop)) {
-    x <- x[!names(x) %in% drop]
+    Records <- Records[!names(Records) %in% drop]
   } # end drop
   
-  x  
+  Records
 }

@@ -1,3 +1,9 @@
+## Changes in Version 2.7.0
+
+* The new function exportRecordsTyped is now available as a replacement for the existing exportRecords. It is a breaking change in interface--but provides
+far better stability in calling--full inversion of control over casting, retries through the connection object, and a clear error report as part of the final dataframe. Please take a moment to read the documentation on exportRecordsTyped and start moving over to using it over exportRecords.
+* bundle argument has been removed from all API methods. (It is no longer needed, thanks to caching). Backward compatibility is unaffected.
+
 ## Changes in Version 2.6.2
 
 * Added retry parameter to connection object. On timeouts and gateway failures it retries 5 times now by default.

@@ -39,8 +39,9 @@ exportRecords(
   colClasses = character(0),
   ...,
   batch.size = -1,
-  bundle = getOption("redcap_bundle"),
   error_handling = getOption("redcap_error_handling"),
+  config = list(),
+  api_param = list(),
   form_complete_auto = TRUE
 )
 
@@ -124,10 +125,16 @@ in each batch of a batched export.  Non-positive numbers export the
 entire project in a single batch. Batching the export may be beneficial 
 to prevent tying up smaller servers.  See details for more explanation.}
 
-\item{bundle}{A \code{redcapBundle} object as created by \code{exportBundle}.}
-
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
+\item{api_param}{\code{list} Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 
 \item{form_complete_auto}{\code{logical(1)}. When \code{TRUE} 
 (default), the \code{[form]_complete} fields for any form 

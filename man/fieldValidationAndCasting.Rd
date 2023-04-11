@@ -66,7 +66,7 @@ column processed. Helper routines
 are provided here for common cases to construct these functions. 
 
 \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
-function for constructing na overrides in \code{\link{exportRecordsTyped}}.
+function for constructing \code{na} overrides in \code{\link{exportRecordsTyped}}.
 
 \code{valRx} constructs a validation function from a regular expression pattern. 
 The function returns a TRUE/FALSE if the value matches the pattern.

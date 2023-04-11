@@ -1,8 +1,6 @@
 packageStartupMessage(
   "Welcome to redcapAPI.  Please Note:\n",
-  " - 'exportProjectInfo' has been deprecated and replaced with 'exportBundle'.\n",
-  " - 'exportBundle' saves its result to an option. Consider discontinuing\n",
-  "   use of bundle objects unless working with multiple REDCap projects in one session.")
+  " - 'exportBundle' has been made redundant. See ?redcapConnection for details about caching project data.")
 
 .onLoad <- function(libname,pkgname)
 {
@@ -26,7 +24,7 @@ packageStartupMessage(
 
 .onUnload <- function(libPath)
 {
-  options(redcap_api_url=NULL,
+  options(redcap_api_url = NULL,
           redcap_error_handling = NULL,
           redcap_bundle = NULL)
 }

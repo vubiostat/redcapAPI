@@ -66,3 +66,35 @@ FILE_IMPORT_EXPORT_EMPTY_FRAME <-
   data.frame(directory = character(0), 
              filename = character(0), 
              stringsAsFactors = FALSE)
+
+# This is the list of fields recognized for updates in importProjectInformation
+
+PROJECT_INFO_FIELDS_EDITABLE <- 
+  c("project_title", 
+    "project_language", 
+    "purpose", 
+    "purpose_other", 
+    "project_notes", 
+    "custom_record_label",
+    "secondary_unique_field", 
+    "is_longitudinal", 
+    "surveys_enabled", 
+    "scheduling_enabled", 
+    "record_autonumbering_enabled", 
+    "randomization_enabled", 
+    "project_irb_number", 
+    "project_grant_number", 
+    "project_pi_firstname", 
+    "project_pi_lastname", 
+    "display_today_now_button", 
+    "bypass_branching_erase_field_prompt")
+
+PROJECT_INFO_FIELDS_FIXED <- 
+  c("project_id",
+    "creation_time",
+    "production_time",
+    "in_production",
+    "has_repeating_instruments_or_events",
+    "ddp_enabled",
+    "missing_data_codes",
+    "external_modules")

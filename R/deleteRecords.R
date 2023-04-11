@@ -15,9 +15,15 @@
 #'   provided, the specified records will be deleted from all arms in which 
 #'   they exist. Whereas, if arm is provided, they will only be deleted from 
 #'   the specified arm.
+#' @param ... Additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
-#' @param ... Additional arguments to pass to other methods.
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
 #' @section REDCap API Documentation:
 #' This method allows you to delete one or more records from a project in a 
@@ -36,7 +42,8 @@
 
 deleteRecords <- function(rcon, 
                           records, 
-                          arm = NULL, ...){
+                          arm      = NULL,
+                          ...){
   UseMethod("deleteRecords")
 }
 
@@ -45,43 +52,78 @@ deleteRecords <- function(rcon,
 
 deleteRecords.redcapApiConnection <- function(rcon, 
                                               records, 
-                                              arm = NULL, ...,
-                                              error_handling = getOption("redcap_error_handling")){
+                                              arm            = NULL, 
+                                              ...,
+                                              error_handling = getOption("redcap_error_handling"), 
+                                              config         = list(), 
+                                              api_param      = list()){
+  
+  if (is.numeric(records)) records <- as.character(records)
+  if (is.character(arm)) arm <- as.numeric(arm)
+  
+   ##################################################################
+  # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_atomic(x = records,
-                           any.missing = FALSE,
-                           min.len = 1,
-                           add = coll)
+  checkmate::assert_character(x = records,
+                              any.missing = FALSE,
+                              min.len = 1,
+                              add = coll)
   
   checkmate::assert_integerish(arm,
+                               len = 1, 
+                               any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
   
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"),
+                                        .var.name = "error_handling",
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
   
-  if (!is.character(records)){
-    records <- as.character(records)
-  }
+  Arms <- rcon$arms()
+  
+  checkmate::assert_subset(x = arm,
+                           choices = Arms$arm_num, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ##################################################################
+  # Build the Body List
   
   body <- list(token = rcon$token,
                content = "record",
-               action = "delete")
-  
-  if(!is.null(arm)) body$arm <- arm
+               action = "delete", 
+               arm = arm)
   
   body <- c(body,
             vectorToApiBodyList(vector = records,
                                 parameter_name = "records"))
+
+  body <- body[lengths(body) > 0]
   
-  x <- httr::POST(url = rcon$url, 
-                  body = body, 
-                  config = rcon$config)
+   ##################################################################
+  # Call the API
   
-  if (x$status_code != 200){
-    return(redcap_error(x, error_handling))
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200){
+    return(redcap_error(response, error_handling))
   } 
   
-  as.character(x)
+  as.character(response)
 }

@@ -25,9 +25,9 @@
 #' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
 #'   all fields are returned (unless \code{forms} is specified).
 #' @param drop_fields \code{character} A vector of field names to remove from 
-#'   the export. Ignore if length = 0.
+#'   the export. Ignored if length = 0.
 #' @param forms \code{character} vector of forms to be returned.  If \code{NULL}, 
-#'   all forms are returned (unless \code{fields} is specified.
+#'   all forms are returned (unless \code{fields} is specified).
 #' @param records \code{character} or \code{integerish}. A vector of study id's 
 #'   to be returned.  If \code{NULL}, all subjects are returned.
 #' @param events A \code{character} vector of events to be returned from a 
@@ -38,18 +38,10 @@
 #' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
 #'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
 #'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-#'   If you do not pass in this flag, it will default to "true". If set to 
-#'   "true", it will return the redcap_survey_identifier field and also the 
-#'   survey timestamp field for a particular survey when at least 
-#'   one field from that survey is being exported. NOTE: If the survey 
-#'   identifier field or survey timestamp fields are imported via API data 
-#'   import, they will simply be ignored since they are not real fields in 
-#'   the project but rather are pseudo-fields.
 #' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
-#'   field when data access groups are utilized in the project. If you do not 
-#'   pass in this flag, it will default to "false". NOTE: This flag is only 
+#'   field when data access groups are utilized in the project. NOTE: This argument is only 
 #'   viable if the user whose token is being used to make the API request is 
-#'   *not* in a data access group. If the user is in a group, then this 
+#'   not in a data access group. If the user is in a group, then this 
 #'   flag will revert to its default value.
 #' @param date_begin \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
 #'   Otherwise, records created or modified after this date will be returned.
@@ -66,13 +58,13 @@
 #'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
 #' @param validation A named \code{list} of user specified validation functions. The 
-#'   same named keys are supported as the na argument. The function will be 
+#'   same named keys are supported as the \code{na} argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
 #'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
 #' @param cast A named \code{list} of user specified class casting functions. The
-#'   same named keys are supported as the na argument. The function will be 
+#'   same named keys are supported as the \code{na} argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
 #' @param assignment A named \code{list} of functions. These functions are provided, field_name,
@@ -101,10 +93,10 @@
 #' A record of exports through the API is recorded in the Logging section 
 #' of the project.
 #' 
-#' The 'offline' version of the function operates on the raw (unlabeled) data 
-#' file downloaded from REDCap along with the data dictionary.  
-#' This is made available for instances where the API can not be accessed for 
-#' some reason (such as waiting for API approval from the REDCap administrator).
+# The 'offline' version of the function operates on the raw (unlabeled) data 
+# file downloaded from REDCap along with the data dictionary.  
+# This is made available for instances where the API can not be accessed for 
+# some reason (such as waiting for API approval from the REDCap administrator).
 #' 
 #' It is unnecessary to include "redcap_event_name" in the fields argument.  
 #' This field is automatically exported for any longitudinal database.  
@@ -134,9 +126,11 @@
 #' specifying a different function for each of the stages of the type casting.
 #' The algorithm is as follows:
 #' 
-#' 1. Detect NAs in returned data (\code{na} argument).
-#' 2. Run \code{validate} functions for the field_types.
-#' 3. On the fields that are not NA and pass validate do the specified cast.
+#' \itemize{
+#'   \item{1. }{Detect NAs in returned data (\code{na} argument).}
+#'   \item{2. }{Run \code{validate} functions for the field_types.}
+#'   \item{3. }{On the fields that are not NA and pass validate do the specified cast.}
+#' }
 #' 
 #' It is expected that the \code{na} and \code{validate} overrides should
 #' rarely be used. Their exposure via the function parameters is to future
@@ -149,7 +143,7 @@
 #' by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
 #' an addition to allow dates in the previous version to be overridden if the 
 #' user wanted to use the Date class. In this version, it would appear called
-#' as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
+#' as \code{cast=list(date_=as.Date))}. See \code{\link{fieldValidationAndCasting}}
 #' for a full listing of package provided cast functions.
 #' 
 #' @section REDCap API Documentation (6.5.0):
@@ -173,7 +167,7 @@
 #' Batched calls to the API are not a feature of the REDCap API, but may be imposed 
 #' by making multiple calls to the API.  The process of batching the export requires
 #' that an initial call be made to the API to retrieve only the record IDs.  The
-#' list of IDs is then broken into chunks, each about the size of \code{batch.size}.
+#' list of IDs is then broken into chunks, each about the size of \code{batch_size}.
 #' The batched calls then force the \code{records} argument in each call.
 #' 
 #' When a user's permissions require a de-identified data export, a batched call 
@@ -199,7 +193,6 @@ exportRecordsTyped <-
     forms         = NULL,
     records       = NULL,
     events        = NULL,
-    # Removed arguments that cannot be used in the offline function
     ...)
     
     UseMethod("exportRecordsTyped")
@@ -765,6 +758,238 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   checkmate::assert_subset(x = forms, 
                            choices = rcon$instruments()$instrument_name, 
                            add = coll)
+  
+  # Check that the events exist in the project
+  
+  checkmate::assert_subset(x = events, 
+                           choices = rcon$events()$unique_event_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ###################################################################
+  # Combine fields, drop_fields, and forms into the fields that will 
+  # be exported
+  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
+                                            fields      = fields, 
+                                            drop_fields = drop_fields, 
+                                            forms       = forms)
+  
+   ###################################################################
+  # Figure out defaults for mChoice
+  if("package:Hmisc" %in% search()) # Hmisc Loaded?
+  {
+    if(is.null(mChoice) || mChoice == TRUE) mChoice <- "coded"
+    if(mChoice == FALSE) mChoice <- NULL
+    # Otherwise do what user requests for mChoice
+  } else # Hmisc not loaded
+  {
+    if(is.null(mChoice) || mChoice==FALSE)
+    {
+      mChoice <- NULL
+    } else 
+    {
+      warning("mChoice requires the package Hmisc to be loaded to function properly.")
+      mChoice <- NULL
+    }
+  }
+  
+   ###################################################################
+  # Call API for Raw Results
+  
+  # We don't need to pass forms to the API because we have 
+  # absorbed that information directly into fields
+  body <- c(list(content                = "record", 
+                 format                 = "csv", 
+                 returnFormat           = "csv", 
+                 type                   = "flat", 
+                 exportSurveyFields     = tolower(survey), 
+                 exportDataAccessGroups = tolower(dag), 
+                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
+                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
+                 csvDelimiter           = csv_delimiter), 
+            vectorToApiBodyList(fields, "fields"), 
+            vectorToApiBodyList(events, "events"))
+  
+  body <- body[lengths(body) > 0]
+  
+  Raw <- 
+    if (length(batch_size) == 0)
+    {
+      .exportRecordsFormattedUnbatched( rcon          = rcon, 
+                                        body          = body, 
+                                        records       = records, 
+                                        config        = config, 
+                                        api_param     = api_param, 
+                                        csv_delimiter = csv_delimiter)
+    } else
+    {
+      .exportRecordsFormattedBatched(  rcon           = rcon, 
+                                       body           = body, 
+                                       records        = records, 
+                                       config         = config, 
+                                       api_param      = api_param, 
+                                       csv_delimiter  = csv_delimiter, 
+                                       batch_size     = batch_size)
+    }
+  
+   ###################################################################
+  # Process meta data for useful information
+  
+   ###################################################################
+  # Derive field information
+  field_names <- names(Raw)
+  field_bases <- gsub("___.+$", "", field_names)
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  field_map <- match(field_bases, MetaData$field_name)
+  
+  field_types <- MetaData$field_type[field_map]
+  field_types[grepl("_complete$", field_bases)] <- "form_complete"
+
+  # autocomplete was added to the text_validation... column for
+  # dropdown menus with the autocomplete feature.
+  field_types[field_types == "text" & !is.na(field_text_types)] <-
+    field_text_types[field_types == "text" & !is.na(field_text_types)]
+  
+  field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
+  field_types[is.na(field_types)] <- "text"
+  
+   ###################################################################
+  # Derive codings (This is probably a good internal helper)
+  codebook <- MetaData$select_choices_or_calculations[field_map]
+  codebook[! field_types %in% c("select", "radio", "dropdown")] <- NA
+  codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
+  
+  codings <- vector("list", length = length(codebook))
+
+  for (i in seq_along(codings)){
+    codings[[i]] <-
+      if (is.na(codebook[i])){
+        NA_character_
+      } else {
+        this_mapping <- fieldChoiceMapping(object = codebook[i],
+                                           field_name = field_names[i])
+        this_coding <- this_mapping[, 1]
+        names(this_coding) <- this_mapping[, 2]
+        this_coding
+      }
+  }
+
+   ###################################################################
+  # Common provided args for na / validate functions
+  args <- lapply(seq_along(Raw),
+                 function(x) list(x          = Raw[[x]],
+                                  field_name = field_names[x],
+                                  coding     = codings[[x]]))
+  
+   ###################################################################
+  # Locate NA's
+  funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
+  nas  <- mapply(do.call, funs, args)
+  if(!is.matrix(nas))
+  {
+    m <- unique(field_types[sapply(nas, class) != "logical"])
+    stop(paste("User supplied na method for [",
+               paste(m, collapse=", "),
+               "] not returning vector of logical of correct length"))
+  } else if (nrow(nas) > 0 && !is.logical(nas[1,1]))
+  {
+    stop("Supplied na methods must return logical vectors")
+  }
+   
+   ###################################################################
+  # Run Validation Functions
+  validate <- modifyList(.default_validate, validation)
+  funs <- lapply(
+    field_types,
+    function(x)
+    { 
+      f <- validate[[x]]
+      # No validate function is an auto pass
+      if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
+    })
+  validations <- mapply(do.call, funs, args)
+
+  if(!is.matrix(validations))
+  {
+    m <- unique(field_types[sapply(validations, class) != "logical"])
+    stop(paste("User supplied validation method for [",
+               paste(m, collapse=", "),
+               "] not returning vectors of correct length logical"))
+  } else if (nrow(validations) > 0 && !is.logical(validations[1,1]))
+  {
+    stop("Supplied validation methods must return logical vectors")
+  }
+  
+   ###################################################################
+  # Type Casting
+  Records <- Raw
+  cast <- modifyList(.default_cast, cast)
+  for(i in seq_along(Raw))
+  {
+    if(field_types[i] %in% names(cast))
+    {
+      x <- Raw[[i]]
+      x[ nas[,i] | !validations[,i] ] <- NA
+      typecast <- cast[[ field_types[i] ]]
+      if(is.function(typecast))
+        Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
+    }
+  }
+  names(Records) <- names(Raw)
+  
+   ###################################################################
+  # Handle Attributes assignments on columns, #24, #45
+  for(i in names(assignment))
+  {
+    x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
+    for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
+  }
+
+   ###################################################################
+  # Attach invalid record information
+  selector <- !validations & !nas
+  attr(Records, "invalid") <-
+    do.call(rbind, lapply(seq_along(Raw), function(i)
+    {
+      sel <- selector[,i]
+      if(any(sel))
+      {
+        if("record_id" %in% colnames(Raw))
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     record_id=Raw[sel, "record_id"],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        } else
+        {
+          data.frame(row=seq_len(nrow(Raw))[sel],
+                     field_name=field_names[i],
+                     value=Raw[sel, i])
+        }
+      } else NULL
+    }))
+  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
+  
+   ###################################################################
+  # Convert checkboxes to mChoice if Hmisc is installed and requested
+  if(!is.null(mChoice))
+  {
+    CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
+    
+    checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
+    
+    for (i in seq_along(checkbox_fields))
+      Records[[ checkbox_fields[i] ]] <- 
+        .mChoiceField(rcon, 
+                     records_raw = Raw, 
+                     checkbox_fieldname = checkbox_fields[i], 
+                     style = mChoice)
+  } 
+  
+   ###################################################################
+  # Return Results 
+  Records
 }
 
 
