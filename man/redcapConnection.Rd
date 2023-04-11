@@ -3,6 +3,8 @@
 \name{redcapConnection}
 \alias{redcapConnection}
 \alias{print.redcapApiConnection}
+\alias{offlineConnection}
+\alias{print.redcapOfflineConnection}
 \title{Connect to a REDCap Database}
 \usage{
 redcapConnection(
@@ -15,6 +17,22 @@ redcapConnection(
 )
 
 \method{print}{redcapApiConnection}(x, ...)
+
+offlineConnection(
+  meta_data = NULL,
+  arms = NULL,
+  events = NULL,
+  instruments = NULL,
+  field_names = NULL,
+  mapping = NULL,
+  users = NULL,
+  version = NULL,
+  project_info = NULL,
+  file_repo = NULL,
+  records = NULL
+)
+
+\method{print}{redcapOfflineConnection}(x, ...)
 }
 \arguments{
 \item{url}{URL for a REDCap database API.  Check your institution's REDCap 
@@ -44,6 +62,41 @@ be shown giving the status of the API calls. Defaults to \code{TRUE}.}
 \item{x}{\code{redcapConnection} object to be printed}
 
 \item{...}{arguments to pass to other methods}
+
+\item{meta_data}{Either a \code{character} giving the file from which the 
+metadata can be read, or a \code{data.frame}.}
+
+\item{arms}{Either a \code{character} giving the file from which the 
+arms can be read, or a \code{data.frame}.}
+
+\item{events}{Either a \code{character} giving the file from which the 
+events can be read, or a \code{data.frame}.}
+
+\item{instruments}{Either a \code{character} giving the file from which the 
+instruments can be read, or a \code{data.frame}.}
+
+\item{field_names}{Either a \code{character} giving the file from which the 
+field names can be read, or a \code{data.frame}.}
+
+\item{mapping}{Either a \code{character} giving the file from which the 
+Event Instrument mappings can be read, or a \code{data.frame}.}
+
+\item{users}{Either a \code{character} giving the file from which the 
+User settings can be read, or a \code{data.frame}.}
+
+\item{version}{Either a \code{character} giving the file from which the 
+version can be read, or a \code{data.frame}.}
+
+\item{project_info}{Either a \code{character} giving the file from which the 
+Project Information can be read, or a \code{data.frame}.}
+
+\item{file_repo}{Either a \code{character} giving the file from which the 
+File Repository Listing can be read, or a \code{data.frame}.}
+
+\item{records}{Either a \code{character} giving the file from which the 
+Records can be read, or a \code{data.frame}. This should be the raw 
+data as downloaded from the API, for instance. Using labelled or formatted
+data is likely to result in errors when passed to other functions.}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 
