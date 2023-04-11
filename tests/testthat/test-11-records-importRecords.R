@@ -115,3 +115,15 @@ test_that(
     file.remove(logfile_path)
   }
 )
+
+test_that(
+  "mChoice fields are dropped", 
+  {
+    local_reproducible_output(width = 200)
+    TheData <- exportRecordsTyped(rcon)
+    expect_message(importRecords(rcon, TheData), 
+                   "The variable[(]s[)] file_import_field, prereq_checkbox, no_prereq_checkbox are not found in the project and/or cannot be imported.")
+    TheDataAfter <- exportRecordsTyped(rcon)
+    expect_true(identical(TheData, TheDataAfter))
+  }
+)

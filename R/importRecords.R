@@ -166,46 +166,7 @@ importRecords.redcapApiConnection <- function(rcon,
 
   version <- rcon$version()
 
-  # Manage Checkbox variables
-  if (utils::compareVersion(version, "5.5.21") == -1 )
-    MetaData <- syncUnderscoreCodings(data, 
-                                       MetaData, 
-                                       export = FALSE)
-  
-  suffixed <- checkbox_suffixes(fields = MetaData$field_name,
-                                meta_data = MetaData)
-  
-  form_names <- unique(MetaData$form_name)
-  
-  MetaData <- 
-    MetaData[MetaData$field_name %in% 
-                sub(pattern = "___[a-z,A-Z,0-9,_]+", 
-                    replacement = "", 
-                    x = names(data)), ]
-  
-  .checkbox <- MetaData[MetaData$field_type == "checkbox", ]
-  
-  .opts <- lapply(X = .checkbox$select_choices_or_calculations, 
-                  FUN = function(x) unlist(strsplit(x, 
-                                                    split = " [|] ")))
-  .opts <- lapply(X = .opts, 
-                  FUN = function(x) gsub(pattern = ",[[:print:]]+", 
-                                         replacement = "", 
-                                         x = x))
-  
-  check_var <- paste(rep(.checkbox$field_name, 
-                         vapply(.opts, 
-                                FUN = length,
-                                FUN.VALUE = numeric(1))), 
-                     tolower(unlist(.opts)), 
-                     sep="___")
-  
-  # form complete fields 
-  
-  with_complete_fields <- 
-    c(unique(MetaData$field_name), 
-      paste(form_names, "_complete", sep=""), 
-      check_var)
+  with_complete_fields <- rcon$fieldnames()$export_field_name
   
   # Remove survey identifiers and data access group fields from data
   w.remove <- 
@@ -216,11 +177,13 @@ importRecords.redcapApiConnection <- function(rcon,
   
   # Validate field names
   unrecognized_names <- !(names(data) %in% c(with_complete_fields, "redcap_event_name", "redcap_repeat_instrument", "redcap_repeat_instance"))
+
   if (any(unrecognized_names))
   {
-    coll$push(paste0("The variables ", 
-                     paste(names(data)[unrecognized_names], collapse=", "),
-                     " do not exist in the REDCap Data Dictionary"))
+    message("The variable(s) ", 
+            paste0(names(data)[unrecognized_names], collapse=", "), 
+            " are not found in the project and/or cannot be imported. They have been removed from the imported data frame.")
+    data <- data[!unrecognized_names]
   }
   
   # Check that the study id exists in data
