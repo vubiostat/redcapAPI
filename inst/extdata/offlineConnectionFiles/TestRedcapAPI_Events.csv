@@ -1,0 +1,4 @@
+event_name,arm_num,unique_event_name,custom_event_label
+event_1,1,event_1_arm_1,
+event_2,1,event_2_arm_1,
+event_1,2,event_1_arm_2,
