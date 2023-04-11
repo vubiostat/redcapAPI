@@ -132,19 +132,22 @@ test_that(
   "import with Auto Numbering", 
   {
     Records <- exportRecordsTyped(rcon, mChoice = FALSE)
-    OneRecord <- exportRecordsTyped(rcon, mChoice = FALSE)[1,]
+    nrow(Records)
+    OneRecord <- Records[1,]
     
     next_record_id <- exportNextRecordName(rcon)
     
-    OneRecord$record_id <- 100
+    NewId <- importRecords(rcon, 
+                           data = OneRecord, 
+                           returnContent = 'auto_ids',
+                           force_auto_number = TRUE)
     
-    importRecords(rcon, 
-                  data = OneRecord, 
-                  returnContent = 'auto_ids',
-                  force_auto_number = TRUE)
+    expect_equal(NewId$id, next_record_id)
     
     After <- exportRecordsTyped(rcon)
     
-    deleteRecords(rcon, records = "100")
+    expect_equal(nrow(Records) + 1, nrow(After))
+    
+    deleteRecords(rcon, records = next_record_id)
   }
 )
