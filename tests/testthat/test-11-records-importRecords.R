@@ -115,3 +115,41 @@ test_that(
     file.remove(logfile_path)
   }
 )
+
+test_that(
+  "mChoice fields are dropped", 
+  {
+    local_reproducible_output(width = 200)
+    require(Hmisc)
+    TheData <- exportRecordsTyped(rcon)
+    expect_message(importRecords(rcon, TheData), 
+                   "The variable[(]s[)] file_import_field, prereq_checkbox, no_prereq_checkbox are not found in the project and/or cannot be imported.")
+    TheDataAfter <- exportRecordsTyped(rcon)
+    expect_true(identical(TheData, TheDataAfter))
+    detach("package:Hmisc", unload = TRUE)
+  }
+)
+
+test_that(
+  "import with Auto Numbering", 
+  {
+    Records <- exportRecordsTyped(rcon, mChoice = FALSE)
+    nrow(Records)
+    OneRecord <- Records[1,]
+    
+    next_record_id <- exportNextRecordName(rcon)
+    
+    NewId <- importRecords(rcon, 
+                           data = OneRecord, 
+                           returnContent = 'auto_ids',
+                           force_auto_number = TRUE)
+    
+    expect_equal(NewId$id, next_record_id)
+    
+    After <- exportRecordsTyped(rcon)
+    
+    expect_equal(nrow(Records) + 1, nrow(After))
+    
+    deleteRecords(rcon, records = next_record_id)
+  }
+)

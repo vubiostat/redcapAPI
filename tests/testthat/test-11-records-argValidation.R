@@ -246,13 +246,13 @@ test_that(
 )
 
 test_that(
-  "Return an error if returnContent is not one of 'count', 'ids', 'nothing'", 
+  "Return an error if returnContent is not one of 'count', 'ids', 'nothing', 'auto_ids'", 
   {
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                data = NewRecord, 
                                returnContent = "not an option"), 
-                 "'returnContent': Must be element of set [{]'count','ids','nothing'[}]")
+                 "'returnContent': Must be element of set [{]'count','ids','nothing','auto_ids'[}]")
   }
 )
 
@@ -285,6 +285,22 @@ test_that(
                                data = NewRecord, 
                                logfile = TRUE), 
                  "'logfile': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "Return an error if force_auto_number is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importRecords(rcon, 
+                               data = NewRecord, 
+                               force_auto_number = c(TRUE, FALSE)), 
+                 "'force_auto_number': Must have length 1")
+    
+    expect_error(importRecords(rcon, 
+                               data = NewRecord, 
+                               force_auto_number = "TRUE"), 
+                 "'force_auto_number': Must be of type 'logical'")
   }
 )
 
