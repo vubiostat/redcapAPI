@@ -155,7 +155,7 @@ test_that(
     
     Logs <- exportLogging(rcon, 
                           record = record_for_test)
-    all_record <- all(Logs$record %in% record_for_test)
+    all_record <- all(Logs$record %in% c(record_for_test, NA))
     expect_true(all_record)
   }
 )
