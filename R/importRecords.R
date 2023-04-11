@@ -229,16 +229,18 @@ importRecords.redcapApiConnection <- function(rcon,
   # Confirm that date fields are either character, Date class, or POSIXct
   date_vars <- MetaData$field_name[grepl("date_", MetaData$text_validation_type_or_show_slider_number)]
   
-  bad_date_fmt <- 
-    !vapply(X = data[date_vars], 
-            FUN = function(x) is.character(x) | "Date" %in% class(x) | "POSIXct" %in% class(x),
-            FUN.VALUE = logical(1))
-  
-  if (any(bad_date_fmt))
-  {
-    coll$push(paste0("The variables '", 
-                     paste(date_vars[bad_date_fmt], collapse="', '"),
-                     "' must have class Date, POSIXct, or character."))
+  if (any(date_vars %in% names(data))){
+    bad_date_fmt <- 
+      !vapply(X = data[date_vars], 
+              FUN = function(x) is.character(x) | "Date" %in% class(x) | "POSIXct" %in% class(x),
+              FUN.VALUE = logical(1))
+    
+    if (any(bad_date_fmt))
+    {
+      coll$push(paste0("The variables '", 
+                       paste(date_vars[bad_date_fmt], collapse="', '"),
+                       "' must have class Date, POSIXct, or character."))
+    }
   }
   
   # Remove calculated fields

@@ -120,11 +120,13 @@ test_that(
   "mChoice fields are dropped", 
   {
     local_reproducible_output(width = 200)
+    require(Hmisc)
     TheData <- exportRecordsTyped(rcon)
     expect_message(importRecords(rcon, TheData), 
                    "The variable[(]s[)] file_import_field, prereq_checkbox, no_prereq_checkbox are not found in the project and/or cannot be imported.")
     TheDataAfter <- exportRecordsTyped(rcon)
     expect_true(identical(TheData, TheDataAfter))
+    detach("package:Hmisc", unload = TRUE)
   }
 )
 
