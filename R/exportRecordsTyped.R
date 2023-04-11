@@ -548,27 +548,32 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Attach invalid record information
   selector <- !validations & !nas
-  attr(Records, "invalid") <-
-    do.call(rbind, lapply(seq_along(Raw), function(i)
-    {
-      sel <- selector[,i]
-      if(any(sel))
+  inv <-do.call(
+    rbind,
+    lapply(
+      seq_along(Raw),
+      function(i)
       {
-        if("record_id" %in% colnames(Raw))
+        sel <- selector[,i]
+        if(any(sel))
         {
           data.frame(row=seq_len(nrow(Raw))[sel],
-                     record_id=Raw[sel, "record_id"],
+                     record_id=if('record_id' %in% names(Raw)) Raw[sel, "record_id"] else rep(NA, sum(sel)),
                      field_name=field_names[i],
-                     value=Raw[sel, i])
-        } else
-        {
-          data.frame(row=seq_len(nrow(Raw))[sel],
-                     field_name=field_names[i],
+                     field_type=field_types[i],
                      value=Raw[sel, i])
         }
-      } else NULL
-    }))
-  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
+      }))
+  
+  if(!is.null(inv))
+  {
+    class(inv) <- c("invalid", "data.frame")
+    attr(inv, "time")        <- Sys.time()
+    attr(inv, "version")     <- rcon$version()
+    attr(inv, "project")     <- rcon$project()$project_title
+    attr(Records, "invalid") <- inv
+    warning("Some records failed validation. See 'invalid' attr.")
+  }
   
    ###################################################################
   # Convert checkboxes to mChoice if Hmisc is installed and requested
