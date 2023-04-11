@@ -10,7 +10,9 @@
 #'   overwrite data in the REDCap database.
 #' @param returnContent Character string.  'count' returns the number of
 #'   records imported; 'ids' returns the record ids that are imported;
-#'   'nothing' returns no message.
+#'   'nothing' returns no message; 'auto_ids' returns a list of pairs of all 
+#'   record IDs that were imported. If used when \code{force_auto_number = FALSE}, 
+#'   the value will be changed to \code{'ids'}.
 #' @param returnData Logical.  Prevents the REDCap import and instead
 #'   returns the data frame that would have been given
 #'   for import.  This is sometimes helpful if the API import fails without
@@ -21,6 +23,19 @@
 #' @param logfile An optional filepath (preferably .txt) in which to print the
 #'   log of errors and warnings about the data.
 #'   If \code{""}, the log is printed to the console.
+#' @param force_auto_number \code{logical(1)} If record auto-numbering has been
+#'   enabled in the project, it may be desirable to import records where each 
+#'   record's record name is automatically determined by REDCap (just as it 
+#'   does in the user interface). If this parameter is set to 'true', the 
+#'   record names provided in the request will not be used (although they 
+#'   are still required in order to associate multiple rows of data to an 
+#'   individual record in the request), but instead those records in the 
+#'   request will receive new record names during the import process. 
+#'   NOTE: To see how the provided record names get translated into new auto
+#'    record names, the returnContent parameter should be set to 'auto_ids', 
+#'    which will return a record list similar to 'ids' value, but it will have
+#'    the new record name followed by the provided record name in the request, 
+#'    in which the two are comma-delimited.
 #' @param batch.size Specifies size of batches.  A negative value
 #'   indicates no batching.
 #' @param ... Arguments to be passed to other methods.
@@ -88,7 +103,7 @@
 importRecords <- function(rcon, 
                           data,
                           overwriteBehavior = c('normal', 'overwrite'),
-                          returnContent     = c('count', 'ids', 'nothing'),
+                          returnContent     = c('count', 'ids', 'nothing', 'auto_ids'),
                           returnData        = FALSE, 
                           logfile           = "", 
                           ...){
@@ -101,9 +116,10 @@ importRecords <- function(rcon,
 importRecords.redcapApiConnection <- function(rcon, 
                                               data,
                                               overwriteBehavior = c('normal', 'overwrite'),
-                                              returnContent     = c('count', 'ids', 'nothing'),
+                                              returnContent     = c('count', 'ids', 'nothing', 'auto_ids'),
                                               returnData        = FALSE, 
                                               logfile           = "", 
+                                              force_auto_number = FALSE,
                                               ...,
                                               batch.size        = -1,
                                               error_handling = getOption("redcap_error_handling"), 
@@ -130,7 +146,7 @@ importRecords.redcapApiConnection <- function(rcon,
   
   returnContent <- 
     checkmate::matchArg(x = returnContent, 
-                        choices = c('count', 'ids', 'nothing'),
+                        choices = c('count', 'ids', 'nothing', 'auto_ids'),
                         .var.name = "returnContent",
                         add = coll)
   
@@ -141,6 +157,10 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_character(x = logfile,
                               len = 1,
                               add = coll)
+  
+  checkmate::assert_logical(x = force_auto_number, 
+                            len = 1, 
+                            add = coll)
   
   checkmate::assert_integerish(x = batch.size,
                                len = 1,
@@ -235,6 +255,10 @@ importRecords.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  if (!force_auto_number && returnContent == 'auto_ids'){
+    returnContent = 'ids'
+  }
+  
   
   idvars <- 
     if ("redcap_event_name" %in% names(data))
@@ -268,6 +292,7 @@ importRecords.redcapApiConnection <- function(rcon,
                            batch.size = batch.size,
                            overwriteBehavior = overwriteBehavior,
                            returnContent = returnContent, 
+                           force_auto_number = force_auto_number,
                            config = config, 
                            api_param = api_param)
   }
@@ -277,6 +302,7 @@ importRecords.redcapApiConnection <- function(rcon,
                              data = data,
                              overwriteBehavior = overwriteBehavior,
                              returnContent = returnContent, 
+                             force_auto_number = force_auto_number,
                              config = config, 
                              api_param = api_param)
   }
@@ -291,6 +317,7 @@ import_records_batched <- function(rcon,
                                    batch.size, 
                                    overwriteBehavior,
                                    returnContent, 
+                                   force_auto_number,
                                    config, 
                                    api_param)
 {
@@ -328,6 +355,7 @@ import_records_batched <- function(rcon,
                type = 'flat', 
                overwriteBehavior = overwriteBehavior,
                returnContent = returnContent,
+               forceAutoNumber = tolower(force_auto_number),
                returnFormat = 'csv')
   body <- c(body, api_param)
   
@@ -369,6 +397,7 @@ import_records_unbatched <- function(rcon,
                                      data, 
                                      overwriteBehavior,
                                      returnContent, 
+                                     force_auto_number,
                                      config, 
                                      api_param)
 {
@@ -389,7 +418,7 @@ import_records_unbatched <- function(rcon,
                overwriteBehavior = overwriteBehavior,
                returnContent = returnContent,
                returnFormat = 'csv', 
-               dateFormat = "YMD",
+               forceAutoNumber = tolower(force_auto_number),
                data = out)
   
   body <- body[lengths(body) > 0]
@@ -402,7 +431,7 @@ import_records_unbatched <- function(rcon,
                           config = config)
   
   if (response$status_code == "200"){
-    if (returnContent == "ids"){
+    if (returnContent %in% c("ids", "auto_ids")){
       read.csv(text = as.character(response), 
                na.strings = "", 
                stringsAsFactors = FALSE)
