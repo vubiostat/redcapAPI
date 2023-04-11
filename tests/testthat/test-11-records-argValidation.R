@@ -252,7 +252,7 @@ test_that(
     expect_error(importRecords(rcon, 
                                data = NewRecord, 
                                returnContent = "not an option"), 
-                 "'returnContent': Must be element of set [{]'count','ids','nothing', 'auto_ids'[}]")
+                 "'returnContent': Must be element of set [{]'count','ids','nothing','auto_ids'[}]")
   }
 )
 
