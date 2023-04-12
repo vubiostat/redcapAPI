@@ -4,6 +4,9 @@ context("Export / Import MetaData Functionality")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 
+#####################################################################
+# Export Meta Data
+
 test_that(
   "Return a data frame when called with defaults", 
   {
@@ -35,3 +38,8 @@ test_that(
     )
   }
 )
+
+#####################################################################
+# Import Meta Data
+
+# Validation of the data frame content is in test-09-metadata-arg-validation.R

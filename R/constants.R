@@ -49,7 +49,9 @@ REGEX_FIELD_NAME <- "^[a-z][a-z,0-9,_]+[a-z,0-9]$"
 REGEX_FORM_NAME <- "^[a-z][a-z,0-9,_]+[a-z,0-9]$"
 
 # REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options
+# It's a good idea to trim whitespace before using this
 # Explanation - this one makes my head swim a bit, but I'll do my best. (BN)
+#                       ^ : Start of string
 #                 [^\\|]+ : Any number of character, but the sequence may not 
 #                           start with a pipe (this is the first code)
 #                       , : literal comma
@@ -61,7 +63,8 @@ REGEX_FORM_NAME <- "^[a-z][a-z,0-9,_]+[a-z,0-9]$"
 #                         : of pipe, characters, comma, character, pipe with 
 #                         : a terminating sequence of pipe, characters, comma, characters.
 #                         : That is, the last in the sequence does not end with a pipe
-REGEX_MULT_CHOICE <- "[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*"
+#                       $ : end of string
+REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 
 # REGEX_SLIDER - matches acceptable definition of slider bar settings
 # Specifically, low point | midpoint | high point

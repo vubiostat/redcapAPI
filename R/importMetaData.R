@@ -12,6 +12,8 @@
 #'   when validating the \code{field_type} column. 
 #' @param validation_types \code{character} giving the acceptable values 
 #'   for the \code{text_validation_or_show_slider_number} column. 
+#' @param error_handling An option for how to handle errors returned by the API.
+#'   see \code{\link{redcap_error}}
 #' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 #'   These are appended to any parameters in \code{rcon$config}
 #' @param api_param named \code{list}. Additional API parameters to pass into the body of the
@@ -28,9 +30,9 @@
 #'   letters must be lowercase (the function will coerce them to lower before
 #'   checking for duplicate field names).
 #'   
-#' Field types may be one of \code{REDCAP_FIELD_TYPES}. In the event that a 
+#' Field types may be one of \code{REDCAP_METADATA_FIELDTYPE}. In the event that a 
 #'   new field type is added to REDCap and \code{redcapAPI} isn't yet updated, 
-#'   you may add additional values via \code{c(REDCAP_FIELD_TYPES, "new_type")}.
+#'   you may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
 #'   
 #' Validation types may be one of \code{REDCAP_METADATA_VALIDATION_TYPE} or 
 #'  \code{NA}. AS with field types, additional values can be appended if
@@ -63,8 +65,9 @@ importMetaData <- function(rcon,
 importMetaData.redcapApiConnection <- function(rcon, 
                                                data, 
                                                ..., 
-                                               field_types = REDCAP_FIELD_TYPES, # see redcapDataStructure
+                                               field_types = REDCAP_METADATA_FIELDTYPE, # see redcapDataStructure
                                                validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
+                                               error_handling = getOption("redcap_error_handling"), 
                                                config = list(), 
                                                api_param = list()){
   ###################################################################
@@ -84,6 +87,11 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = validation_types, 
                               add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling", 
+                                        add = coll)
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -120,10 +128,11 @@ importMetaData.redcapApiConnection <- function(rcon,
   isValidFieldName(field_name = data$field_name, 
                    coll = coll)
   
-  isValidFormname(form_name = data$form_name,
+  isValidFormName(form_name = data$form_name,
                   coll = coll)
   
   isValidFieldType(field_type = data$field_type,
+                   acceptable_field_types = field_types,
                    coll = coll)
   
   isValidFieldValidationType(field_validation = data$text_validation_type_or_show_slider_number, 
@@ -138,14 +147,16 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   .isPropertyOnAppropriateField(field_name = data$field_name, 
                                 field_type = data$field_type, 
+                                permissible_field_type = c("dropdown", "radio", "checkbox", "slider"),
                                 property = data$text_validation_type_or_show_slider_number, 
                                 property_name = "text_validation_type_or_show_slider_number", 
                                 coll = coll)
 
   .isPropertyOnAppropriateField(field_name = data$field_name, 
                                 field_type = data$field_type, 
+                                permissible_field_type = c("dropdown", "radio", "checkbox", "slider", "calc"),
                                 property = data$select_choices_or_calculations, 
-                                property_name = "text_validation_type_or_show_slider_number", 
+                                property_name = "select_choices_or_calculations", 
                                 coll = coll)
 
   checkmate::reportAssertions(coll)
@@ -175,7 +186,7 @@ importMetaData.redcapApiConnection <- function(rcon,
 # Although I'm debating if some of these might be useful exports
 # Perhaps a validationUtility file?
 
-isValidFieldName <- fucntion(field_name, 
+isValidFieldName <- function(field_name, 
                                 coll = NULL){
   is_valid_field_name <- 
     grepl(REGEX_FIELD_NAME, # defined in constants.R
@@ -210,8 +221,10 @@ isValidFormName <- function(form_name, coll = NULL){
 
 
 
-isValidFieldType <- function(field_type, coll = NULL){
-  is_valid_field_type <- field_type %in% field_types
+isValidFieldType <- function(field_type, 
+                             acceptable_field_types, 
+                             coll = NULL){
+  is_valid_field_type <- field_type %in% acceptable_field_types
   
   if (any(!is_valid_field_type) & !is.null(coll)){
     coll$push(sprintf("The following field types are not valid field types: {%s}", 
@@ -224,17 +237,17 @@ isValidFieldType <- function(field_type, coll = NULL){
 
 
 
-isValidFieldValidationType(field_validation, 
-                           validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure, 
-                           allow_na = TRUE,
-                           coll = NULL){
+isValidFieldValidationType <- function(field_validation, 
+                                       validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure, 
+                                       allow_na = TRUE,
+                                       coll = NULL){
   if (allow_na) validation_types <- c(validation_types, NA_character_)
   
   is_valid_field_validation <- field_validation %in% validation_types
   
   if (any(!is_valid_field_validation) && !is.null(coll)){
     coll$push(sprintf("The following 'text_validation_type_or_show_slider_number' values are not valid {%s}", 
-                      paste0(data$text_validation_type_or_show_slider_number[!is_valid_field_validation], 
+                      paste0(field_validation[!is_valid_field_validation], 
                              collapse = ", ")))
   }
   
@@ -249,25 +262,27 @@ isValidFieldValidationType(field_validation,
                                           permissible_field_type,
                                           property_name,
                                           coll = NULL){
-  w <- which(field_type %in% permissible_field_type & 
-               !is.na(propert))
+  is_correct <-  
+    (field_type %in% permissible_field_type & !is.na(property)) | 
+     (!field_type %in% permissible_field_type & is.na(property))
   
-  field_shouldnt_have_property <- field_name[w]
+  
+  field_shouldnt_have_property <- field_name[!is_correct]
   
   if (length(field_shouldnt_have_property) > 0 && !is.null(coll)){
-    coll$push(sprintf("The following fields should not have a value in '%s: {%s}", 
+    coll$push(sprintf("The following fields should not have a value in '%s': {%s}", 
                       property_name,
-                      field_shoudnt_have_validation))
+                      field_shouldnt_have_property))
   }
   
-  filed_shouldnt_have_property
+  is_correct
 }
 
 
 isValidChoiceField <- function(field_name, 
                                field_type, 
                                choices, 
-                               coll = coll){
+                               coll = NULL){
   # make a logical. Assume all are valid to start
   is_valid_select <- rep(TRUE, length(field_name))
   
@@ -279,14 +294,14 @@ isValidChoiceField <- function(field_name,
   
   # for slider fields, update is_valid_select for invalid entries
   w_slide <- which(field_type %in% "slider")
-  is_valid_slide <- grepl(REGEX_SLIDE, # defined in constants.R
+  is_valid_slide <- grepl(REGEX_SLIDER, # defined in constants.R
                           choices[w_slide])
   is_valid_select[w_slide] <- is_valid_slide                # set invalid rows
   
   # report the results
-  if (any(!is_valid_slide) && !is.null(coll)){
+  if (any(!is_valid_select) && !is.null(coll)){
     coll$push(sprintf("The following fields have invalid 'select_choices_or_calculations': {%s}", 
-                      data$field_name[!is_valid_slide]))
+                      paste0(field_name[!is_valid_select], collapse = ", ")))
   }
   
   is_valid_select
