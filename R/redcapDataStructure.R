@@ -155,6 +155,9 @@ REDCAP_METADATA_API_UI_MAPPING <-
 
 # Meta Data - Known Field Types 
 
+#' @rdname redcapDataStructures
+#' @export
+
 REDCAP_METADATA_FIELDTYPE <- c("calc", 
                                "checkbox", 
                                "descriptive", 
@@ -169,6 +172,8 @@ REDCAP_METADATA_FIELDTYPE <- c("calc",
 
 # Meta Data - Known Validation Types 
 
+#' @rdname redcapDataStructures
+#' @export
 REDCAP_METADATA_VALIDATION_TYPE <- c("date_dmy", 
                                      "date_mdy", 
                                      "date_ymd", 

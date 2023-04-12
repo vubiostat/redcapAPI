@@ -98,3 +98,9 @@ PROJECT_INFO_FIELDS_FIXED <-
     "ddp_enabled",
     "missing_data_codes",
     "external_modules")
+
+# Regular Expressions -----------------------------------------------
+
+REGEX_MULT_CHOICE <- "[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*"
+REGEX_SLIDER <- "^([0-9]|\\s|)+[|]([0-9]|\\s|)+[|]([0-9]|\\s|)+$"
+
