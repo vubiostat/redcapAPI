@@ -163,7 +163,7 @@ exportUsers.redcapApiConnection <- function(rcon,
   # Convert user privileges to labels 
   
   if (labels){
-    access_var <- REDCAP_USER_TABLE_ACCESS_VARIABLES # defined in constants.R
+    access_var <- REDCAP_USER_TABLE_ACCESS_VARIABLES # defined in redcapDataStructures.R
     # Just in case the variable names ever change
     access_var <- access_var[access_var %in% names(Users)]
     
