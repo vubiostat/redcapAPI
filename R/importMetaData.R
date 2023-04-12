@@ -63,8 +63,8 @@ importMetaData <- function(rcon,
 importMetaData.redcapApiConnection <- function(rcon, 
                                                data, 
                                                ..., 
-                                               field_types = REDCAP_FIELD_TYPES, # exported constant - see redcapDataStructure
-                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE, # exported constant - see redcapDataStructure
+                                               field_types = REDCAP_FIELD_TYPES, # see redcapDataStructure
+                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
                                                config = list(), 
                                                api_param = list()){
   ###################################################################
@@ -110,8 +110,44 @@ importMetaData.redcapApiConnection <- function(rcon,
   data$field_name <- trimws(tolower(data$field_name))
   data$form_name <- trimws(tolower(data$form_name))
   
-  .importRecords_dataValidations(data)
+  duplicate_field_name <- data$field_name[duplicated(data$field_name)]
   
+  if (any(duplicate_field_name)){
+    coll$push(sprintf("The following have duplicate field names: {%s}", 
+                      duplicate_field_name))
+  }
+
+  isValidFieldName(field_name = data$field_name, 
+                   coll = coll)
+  
+  isValidFormname(form_name = data$form_name,
+                  coll = coll)
+  
+  isValidFieldType(field_type = data$field_type,
+                   coll = coll)
+  
+  isValidFieldValidationType(field_validation = data$text_validation_type_or_show_slider_number, 
+                             validation_types = validation_types, 
+                             allow_na = TRUE,
+                             coll = coll)
+  
+  isValidChoiceField(field_name = data$field_name, 
+                     field_type = data$field_type, 
+                     choices = data$select_choices_or_calculations, 
+                     coll = coll)
+  
+  .isPropertyOnAppropriateField(field_name = data$field_name, 
+                                field_type = data$field_type, 
+                                property = data$text_validation_type_or_show_slider_number, 
+                                property_name = "text_validation_type_or_show_slider_number", 
+                                coll = coll)
+
+  .isPropertyOnAppropriateField(field_name = data$field_name, 
+                                field_type = data$field_type, 
+                                property = data$select_choices_or_calculations, 
+                                property_name = "text_validation_type_or_show_slider_number", 
+                                coll = coll)
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -136,108 +172,122 @@ importMetaData.redcapApiConnection <- function(rcon,
 
 #####################################################################
 # Unexported
+# Although I'm debating if some of these might be useful exports
+# Perhaps a validationUtility file?
 
-.importRecords_dataValidations <- function(data){
-  duplicate_field_name <- data$field_name[duplicated(data$field_name)]
-  
-  if (any(duplicate_field_name)){
-    coll$push(sprintf("The following have duplicate field names: {%s}", 
-                      duplicate_field_name))
-  }
-  
-  
-  
-  # field_names are valid ###########################################
+isValidFieldName <- fucntion(field_name, 
+                                coll = NULL){
   is_valid_field_name <- 
     grepl(REGEX_FIELD_NAME, # defined in constants.R
-          data$field_name)
+          field_name)
   
-  if (any(!is_valid_field_name)){
+  # if a collection object is used, push the message to it, otherwise
+  # return the logical vector
+  if (any(!is_valid_field_name) & !is.null(coll)){
     coll$push(sprintf("The following field names do not conform to REDCap field name standards: {%s}", 
-                      paste0(data$field_name[!is_valid_field_name], 
+                      paste0(field_name[!is_valid_field_name], 
                              collapse = ", ")))
   }
   
-  
-  
-  # form_names are valid ############################################
+  is_valid_field_name
+}
+
+
+
+isValidFormName <- function(form_name, coll = NULL){
   is_valid_form_name <- 
     grepl(REGEX_FORM_NAME, # defined in constants.R 
-          data$form_name)
+          form_name)
   
-  if (any(!is_valid_form_name)){
+  if (any(!is_valid_form_name) && !is.null(coll)){
     coll$push(sprintf("The following form names do not conform to REDCap form name standards: {%s}", 
-                      paste0(data$form_name[!is_valid_form_name], 
+                      paste0(form_name[!is_valid_form_name], 
                              collapse = ", ")))
   }
   
+  is_valid_form_name
+}
+
+
+
+isValidFieldType <- function(field_type, coll = NULL){
+  is_valid_field_type <- field_type %in% field_types
   
-  
-  # field_types are valid ###########################################
-  is_valid_field_type <- data$field_type %in% field_types
-  
-  if (any(!is_valid_field_type)){
+  if (any(!is_valid_field_type) & !is.null(coll)){
     coll$push(sprintf("The following field types are not valid field types: {%s}", 
-                      paste0(data$field_type[!is_valid_field_type], 
+                      paste0(field_type[!is_valid_field_type], 
                              collapse = ", ")))
   }
   
+  is_valid_field_type
+}
+
+
+
+isValidFieldValidationType(field_validation, 
+                           validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure, 
+                           allow_na = TRUE,
+                           coll = NULL){
+  if (allow_na) validation_types <- c(validation_types, NA_character_)
   
+  is_valid_field_validation <- field_validation %in% validation_types
   
-  # field validation types are valid ################################
-  is_valid_field_validation <- 
-    data$text_validation_type_or_show_slider_number %in% c(validation_types, NA_character_)
-  
-  if (any(!is_valid_field_validation)){
+  if (any(!is_valid_field_validation) && !is.null(coll)){
     coll$push(sprintf("The following 'text_validation_type_or_show_slider_number' values are not valid {%s}", 
                       paste0(data$text_validation_type_or_show_slider_number[!is_valid_field_validation], 
                              collapse = ", ")))
   }
   
+  is_valid_field_validation
+}
+
+
+
+.isPropertyOnAppropriateField <- function(field_name, 
+                                          field_type, 
+                                          property, 
+                                          permissible_field_type,
+                                          property_name,
+                                          coll = NULL){
+  w <- which(field_type %in% permissible_field_type & 
+               !is.na(propert))
   
+  field_shouldnt_have_property <- field_name[w]
   
-  # field validation type only applied to text or slider ############
-  w <- which(!data$field_type %in% c("text", "slider") & 
-               !is.na(data$text_validation_type_or_show_slider_number))
-  field_shouldnt_have_validation <- data$field_name[w]
-  if (length(field_shouldnt_have_validation) > 0){
-    coll$push(sprintf("The following fields should not have a value in 'text_validation_type_or_show_slider_number: {%s}", 
+  if (length(field_shouldnt_have_property) > 0 && !is.null(coll)){
+    coll$push(sprintf("The following fields should not have a value in '%s: {%s}", 
+                      property_name,
                       field_shoudnt_have_validation))
   }
   
-  
-  
-  # field choices only applied to calc, radio, dropdown, checkbox, and slider ####
-  w <- which(!data$field_type %in% c("calc", "checkbox", "dropdown", "radio", "slider") & 
-               !is.na(data$select_choices_or_calculations))
-  field_shouldnt_have_choice <- data$field_name[w]
-  if (length(field_shouldnt_have_choice) > 0){
-    coll$push(sprintf("The following fields should not have a value in 'select_choices_or_calculations: {%s}", 
-                      field_shouldnt_have_choice))
-  }
-  
-  
-  
-  # validate choices for multiple choice and slider #################
+  filed_shouldnt_have_property
+}
+
+
+isValidChoiceField <- function(field_name, 
+                               field_type, 
+                               choices, 
+                               coll = coll){
   # make a logical. Assume all are valid to start
-  is_valid_select <- rep(TRUE, nrow(data))
+  is_valid_select <- rep(TRUE, length(field_name))
   
   # for multiple choice fields, update is_valid_select for invalid entries
-  w_mult <- which(data$field_type %in% c("checkbox", "dropdown", "radio"))
+  w_mult <- which(field_type %in% c("checkbox", "dropdown", "radio"))
   is_valid_mult <- grepl(REGEX_MULT_CHOICE, # defined in constants.R 
-                         data$select_choices_or_calculations[w_mult])
+                         choices[w_mult])
   is_valid_select[w_mult] <- is_valid_mult                  # set invalid rows
   
   # for slider fields, update is_valid_select for invalid entries
-  w_slide <- which(data$field_type %in% "slider")
+  w_slide <- which(field_type %in% "slider")
   is_valid_slide <- grepl(REGEX_SLIDE, # defined in constants.R
-                          data$select_choices_or_calculations[w_slide])
-  is_valid_select[w_slid] <- is_valid_slide                 # set invalid rows
+                          choices[w_slide])
+  is_valid_select[w_slide] <- is_valid_slide                # set invalid rows
   
   # report the results
-  if (any(!is_valid_slide)){
-    msg <- sprintf("The following fields have invalid 'select_choices_or_calculations': {%s}", 
-                   data$field_name[!is_valid_slide])
-    coll$push(msg)
+  if (any(!is_valid_slide) && !is.null(coll)){
+    coll$push(sprintf("The following fields have invalid 'select_choices_or_calculations': {%s}", 
+                      data$field_name[!is_valid_slide]))
   }
+  
+  is_valid_select
 }
