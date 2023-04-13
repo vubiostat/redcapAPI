@@ -12,7 +12,7 @@
 #'   A message is printed if any of the indicated fields are not a 
 #'   multiple choice field; no action will be taken on such fields.
 #'   For this function, yes/no and true/false fields are considered 
-#'   multiple choice fields.
+#'   multiple choice fields. Fields of class \code{mChoice} are quietly skipped.
 #' @param cast A named \code{list} of user specified class casting functions. 
 #'   Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
@@ -71,7 +71,7 @@ recastData <- function(data,
   
   if (is.numeric(fields)){
     out_of_range <- fields[fields > ncol(data)]
-    if (out_of_range > 0){
+    if (length(out_of_range) > 0){
       coll$push(sprintf("Columns {%s} requested in a data frame with %s columns", 
                         paste0(out_of_range, collapse = ", "), 
                         ncol(data)))
@@ -79,8 +79,8 @@ recastData <- function(data,
   } 
   
   if (is.logical(fields)){
-    if (length(fields) > ncol(data)){
-      coll$push(sprintf("fields (logical) should be of length %s and is length %s", 
+    if (length(fields) != ncol(data)){
+      coll$push(sprintf("'fields' (logical) should be of length %s and is length %s", 
                         ncol(data), 
                         length(fields)))
     }
@@ -95,6 +95,15 @@ recastData <- function(data,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Remove mChoice fields from processing                        ####
+  
+  is_mChoice <- vapply(data[fields], 
+                       FUN = inherits, 
+                       what = "mChoice", 
+                       FUN.VALUE = logical(1))
+  fields <- fields[!is_mChoice]
   
   ###################################################################
   # Derive field information
