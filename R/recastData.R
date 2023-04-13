@@ -135,5 +135,5 @@ recastData <- function(data,
 invert_default_cast <- list(checkbox = uncastChecked, 
                             dropdown = uncastLabel,
                             radio = uncastLabel, 
-                            yesno = uncastLabel,
+                            yesno = function(x, field_name, coding) as.numeric(x == "Yes"),
                             truefalse = as.numeric)
