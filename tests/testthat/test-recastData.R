@@ -3,12 +3,6 @@ context("recastData.R")
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
 
-#####################################################################
-# Functionality
-
-#####################################################################
-# Argument Validation
-
 fields <- c("dropdown_test",
             "radio_test", 
             "checkbox_test", 
@@ -25,6 +19,29 @@ export_fields <- c("dropdown_test",
 
 Records <- exportRecordsTyped(rcon, 
                               fields = fields)
+
+#####################################################################
+# Functionality                                                  ####
+
+test_that(
+  "Successful recast with defaults", 
+  {
+    Recast <- recastData(Records, 
+                         rcon = rcon, 
+                         fields = names(Records))
+    
+    expect_equal(levels(Recast$dropdown_test), c("1", "2", "3"))
+    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
+    expect_equal(sort(unique(Recast$yesno_test)), c(0, 1))
+    expect_equal(sort(unique(Recast$truefalse_test)), c(0, 1))
+    expect_equal(unique(Recast$checkbox_test___x), c(0, 1))
+    expect_equal(unique(Recast$checkbox_test___y), c(0, 1))
+    expect_equal(unique(Recast$checkbox_test___z), c(0, 1))
+  }
+)
+
+#####################################################################
+# Argument Validation                                            ####
 
 test_that(
   "Return an error if data is not a data.frame", 

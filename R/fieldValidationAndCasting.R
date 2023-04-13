@@ -90,19 +90,19 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastLabel <- function(x, coding, field_name) as.character(factor(x, levels = names(coding), labels = coding)) 
+uncastLabel <- function(x, coding, field_name) factor(as.character(x), levels = names(coding), labels = coding)
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastChecked <- function(x, coding, field_name) as.numeric(x %in% "Checked")
+uncastChecked <- function(x, coding, field_name) as.numeric(as.character(x) %in% "Checked")
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastCheckLabel <- function(x, coding, field_name) as.numeric(x %in% names(coding)) 
+uncastCheckLabel <- function(x, coding, field_name) as.numeric(as.character(x) %in% names(coding)) 
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastCheckCode <- function(x, coding, field_name) as.numeric(x %in% coding)
+uncastCheckCode <- function(x, coding, field_name) as.numeric(as.character(x) %in% coding)
 
 #' @rdname fieldValidationAndCasting
 #' @export

@@ -1038,6 +1038,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                            field_names = field_names, 
                                            field_types = field_types, 
                                            code_check = FALSE){
+  # code_check is not needed in exportRecordsTyped
+  # in recastData, however, we need a codebook for checkboxes
   codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
   codebook[! field_types %in% c("select", "radio", "dropdown", if (code_check) "checkbox" else character(0))] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
@@ -1134,6 +1136,12 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 }
 
 # .exportRecordsTyped_castRecords -----------------------------------
+# We provide 'castRecords' and 'recastRecords' options. The first
+# is needed for exportRecordsTyped, and the second for recastData. 
+# They are very similar in concept, and changes to one may indicate
+# changes to the other. For this reason, we want to keep them close to 
+# each other to remind us to review both of them if either requires an edit
+
 .exportRecordsTyped_castRecords <- function(Raw, 
                                             cast, 
                                             field_types, 
@@ -1141,6 +1149,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                             validations, 
                                             codings, 
                                             field_names){
+  # REMINDER: Any changes to this method may suggest changes are needed to .exportRecordsTyped_recastRecords
   Records <- Raw
   cast <- modifyList(.default_cast, cast)
   # Edits to this for loop may necessitate edits to the for loop in recastData
@@ -1156,6 +1165,42 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     }
   }
   names(Records) <- names(Raw)
+  
+  Records
+}
+
+.exportRecordsTyped_recastRecords <- function(Raw, 
+                                              cast, 
+                                              field_types, 
+                                              codings, 
+                                              field_names, 
+                                              suffix){
+  # REMINDER: Any changes to this method may suggest changes are needed to .exportRecordsTyped_castRecords
+  Records <- Raw
+  for(i in seq_along(field_names))
+  {
+    if(field_types[i] %in% names(cast))
+    {
+      # generate the new field name
+      this_field_name <- sprintf("%s%s", 
+                                 field_names[i], 
+                                 suffix)
+      
+      x <- Records[[ field_names[i] ]]
+      
+      # preserve the attributes on the field (but dropping class and factor levels)
+      this_attribute <- attributes(x)
+      this_attribute <- this_attribute[!names(this_attribute) %in% c("class", "levels")]
+      
+      typecast <- cast[[ field_types[i] ]]
+      if(is.function(typecast)){
+        Records[[ this_field_name ]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
+        # reapply the attributes
+        attributes(Records[[ this_field_name ]]) <- c(attributes(Records[[ this_field_name ]]), 
+                                                      this_attribute)
+      }
+    }
+  }
   
   Records
 }

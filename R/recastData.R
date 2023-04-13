@@ -27,16 +27,18 @@
 #'   (\code{forklift_brand}) and one column with the labelled values 
 #'   (\code{forklift_brand_labelled}).
 #'   
+#' @details field types for which no casting function is specified will
+#'   be returned with no changes.
+#'   
+#'   The default \code{cast} list in 
+#'   \code{recastData} inverts the default casting of \code{exportRecordsTyped}. 
+#'   
 #' @export
 
 recastData <- function(data, 
                        rcon, 
                        fields, 
-                       cast = list(checkbox = uncastChecked, 
-                                   dropdown = uncastLabel,
-                                   radio = uncastLabel, 
-                                   yesno = uncastLabel,
-                                   truefalse = as.numeric), 
+                       cast = invert_default_cast, 
                        suffix    = ""){
   ###################################################################
   # Argument Validation #############################################
@@ -116,25 +118,22 @@ recastData <- function(data,
                                             field_names = field_names, 
                                             field_types = field_types, 
                                             code_check = TRUE)
-  
-  for(i in seq_along(field_names))
-  {
-    if(field_types[i] %in% names(cast))
-    {
-      this_field_name <- sprintf("%s%s", 
-                                 fields[i], 
-                                 suffix)
-      x <- data[[ field_names[i] ]]
-      this_attribute <- attributes(x)
-      this_attribute <- this_attribute[!names(this_attribute) %in% c("class", "levels")]
-      
-      typecast <- cast[[ field_types[i] ]]
-      if(is.function(typecast)){
-        data[[ this_field_name ]] <- typecast(as.character(x), field_name=field_names[i], coding=codings[[i]])
-        attributes(data[[ this_field_name ]]) <- this_attribute
-      }
-    }
-  }
+
+  data <- .exportRecordsTyped_recastRecords(Raw = data, 
+                                            cast = cast, 
+                                            field_types = field_types, 
+                                            codings = codings, 
+                                            field_names = field_names, 
+                                            suffix = suffix)
   
   data
 }
+
+#' @rdname recastData
+#' @export
+
+invert_default_cast <- list(checkbox = uncastChecked, 
+                            dropdown = uncastLabel,
+                            radio = uncastLabel, 
+                            yesno = uncastLabel,
+                            truefalse = as.numeric)
