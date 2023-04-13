@@ -42,4 +42,17 @@ test_that(
 #####################################################################
 # Import Meta Data
 
-# Validation of the data frame content is in test-09-metadata-arg-validation.R
+test_that(
+  "Import a Meta Data Frame", 
+  {
+    OrigMetaData <- rcon$metadata()
+    
+    ImportMeta <- OrigMetaData[1:4, ]
+    
+    importMetaData(rcon, 
+                   ImportMeta)
+    
+    importMetaData(rcon, 
+                   OrigMetaData)
+  }
+)

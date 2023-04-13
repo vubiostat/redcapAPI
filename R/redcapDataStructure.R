@@ -187,7 +187,8 @@ REDCAP_METADATA_FIELDTYPE <- c("calc",
 
 #' @rdname redcapDataStructures
 #' @export
-REDCAP_METADATA_VALIDATION_TYPE <- c("date_dmy", 
+REDCAP_METADATA_VALIDATION_TYPE <- c("alpha_only",
+                                     "date_dmy", 
                                      "date_mdy", 
                                      "date_ymd", 
                                      "datetime_dmy", 
@@ -199,9 +200,14 @@ REDCAP_METADATA_VALIDATION_TYPE <- c("date_dmy",
                                      "email", 
                                      "integer", 
                                      "number", 
+                                     "number_1dp", 
+                                     "number_1dp_comma_decimal", 
+                                     "number_2dp", 
+                                     "number_2dp_comma_decimal",
                                      "phone", 
-                                     "signature", 
+                                     "signature",
                                      "time", 
+                                     "time_hh_mm_ss",
                                      "zipcode")
 
 # Project Information -----------------------------------------------

@@ -147,7 +147,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   .isPropertyOnAppropriateField(field_name = data$field_name, 
                                 field_type = data$field_type, 
-                                permissible_field_type = c("dropdown", "radio", "checkbox", "slider"),
+                                permissible_field_type = c("text", "slider", "file"),
                                 property = data$text_validation_type_or_show_slider_number, 
                                 property_name = "text_validation_type_or_show_slider_number", 
                                 coll = coll)
@@ -179,6 +179,8 @@ importMetaData.redcapApiConnection <- function(rcon,
                           config = config)
   
   response <- as.character(response)
+  
+  message(sprintf("Fields Imported: %s", response))
 }
 
 #####################################################################
@@ -263,8 +265,8 @@ isValidFieldValidationType <- function(field_validation,
                                           property_name,
                                           coll = NULL){
   is_correct <-  
-    (field_type %in% permissible_field_type & !is.na(property)) | 
-     (!field_type %in% permissible_field_type & is.na(property))
+    ((field_type %in% permissible_field_type)) | 
+     (!(field_type %in% permissible_field_type) & is.na(property))
   
   
   field_shouldnt_have_property <- field_name[!is_correct]
