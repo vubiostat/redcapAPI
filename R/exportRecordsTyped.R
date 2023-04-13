@@ -1043,6 +1043,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
   codebook[! field_types %in% c("select", "radio", "dropdown", if (code_check) "checkbox" else character(0))] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
+  codebook[field_types == "yesno"] <- "0, No | 1, Yes"
   
   codings <- vector("list", length = length(codebook))
   
