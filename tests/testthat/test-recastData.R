@@ -18,7 +18,8 @@ export_fields <- c("dropdown_test",
                    "truefalse_test")
 
 Records <- exportRecordsTyped(rcon, 
-                              fields = fields)
+                              fields = fields, 
+                              mChoice = FALSE)
 
 #####################################################################
 # Functionality                                                  ####

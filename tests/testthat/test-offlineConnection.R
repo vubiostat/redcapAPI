@@ -2,6 +2,16 @@ context("offlineConnection object")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 
+test_that(
+  "offlineConnection creates the right class", 
+  {
+    expect_class(
+      offlineConnection(meta_data = rcon$metadata()),
+      classes = c("redcapOfflineConnection", "redcapConnection")
+    )
+  }
+)
+
 #####################################################################
 # Functionality - Data from API
 
