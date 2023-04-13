@@ -257,3 +257,15 @@ test_that(
     )
   }
 )
+
+#####################################################################
+# Yes/No fields are cast properly
+
+test_that(
+  "Yes/No fields are labelled correctly", 
+  {
+    Rec <- exportRecordsTyped(rcon, fields = "prereq_yesno")
+    
+    expect_true(all(Rec$prereq_yesno %in% c("Yes", "No", NA)))
+  }
+)
