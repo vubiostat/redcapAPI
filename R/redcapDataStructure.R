@@ -208,6 +208,7 @@ REDCAP_METADATA_VALIDATION_TYPE <- c("alpha_only",
                                      "signature",
                                      "time", 
                                      "time_hh_mm_ss",
+                                     "time_mm_ss",
                                      "zipcode")
 
 # Project Information -----------------------------------------------

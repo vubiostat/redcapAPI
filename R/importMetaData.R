@@ -7,6 +7,8 @@
 #'   
 #' @param rcon a \code{redcapConnection} object. 
 #' @param data \code{data.frame} with the Meta Data to import. 
+#' @param refresh \code{logical(1)}. When \code{TRUE}, the cached metadata
+#'   and instruments will be refreshed after the import.
 #' @param ... Additional arguments to pass to other methods.
 #' @param field_types \code{character} giving the acceptable field types
 #'   when validating the \code{field_type} column. 
@@ -63,7 +65,8 @@ importMetaData <- function(rcon,
 #' @export
 
 importMetaData.redcapApiConnection <- function(rcon, 
-                                               data, 
+                                               data,
+                                               refresh = TRUE,
                                                ..., 
                                                field_types = REDCAP_METADATA_FIELDTYPE, # see redcapDataStructure
                                                validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
@@ -81,6 +84,11 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::assert_data_frame(x = data, 
                                add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
   
   checkmate::assert_character(x = field_types, 
                               add = coll)
@@ -181,6 +189,16 @@ importMetaData.redcapApiConnection <- function(rcon,
   response <- as.character(response)
   
   message(sprintf("Fields Imported: %s", response))
+  
+  if (refresh){
+    if (rcon$has_metadata()){
+      rcon$refresh_metadata()
+    }
+    
+    if (rcon$has_instruments()){
+      rcon$refresh_instruments()
+    }
+  }
 }
 
 #####################################################################

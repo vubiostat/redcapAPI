@@ -10,9 +10,11 @@ importMetaData(rcon, data, ...)
 \method{importMetaData}{redcapApiConnection}(
   rcon,
   data,
+  refresh = TRUE,
   ...,
-  field_types = REDCAP_FIELD_TYPES,
+  field_types = REDCAP_METADATA_FIELDTYPE,
   validation_types = REDCAP_METADATA_VALIDATION_TYPE,
+  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -24,11 +26,17 @@ importMetaData(rcon, data, ...)
 
 \item{...}{Additional arguments to pass to other methods.}
 
+\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached metadata
+and instruments will be refreshed after the import.}
+
 \item{field_types}{\code{character} giving the acceptable field types
 when validating the \code{field_type} column.}
 
 \item{validation_types}{\code{character} giving the acceptable values 
 for the \code{text_validation_or_show_slider_number} column.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
 
 \item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 These are appended to any parameters in \code{rcon$config}}
@@ -53,9 +61,9 @@ Form names may start with a letter, have any number of letters,
   letters must be lowercase (the function will coerce them to lower before
   checking for duplicate field names).
   
-Field types may be one of \code{REDCAP_FIELD_TYPES}. In the event that a 
+Field types may be one of \code{REDCAP_METADATA_FIELDTYPE}. In the event that a 
   new field type is added to REDCap and \code{redcapAPI} isn't yet updated, 
-  you may add additional values via \code{c(REDCAP_FIELD_TYPES, "new_type")}.
+  you may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
   
 Validation types may be one of \code{REDCAP_METADATA_VALIDATION_TYPE} or 
  \code{NA}. AS with field types, additional values can be appended if

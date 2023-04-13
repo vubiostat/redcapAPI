@@ -43,16 +43,41 @@ test_that(
 # Import Meta Data
 
 test_that(
-  "Import a Meta Data Frame", 
+  "Import a MetaData Data Frame", 
   {
     OrigMetaData <- rcon$metadata()
+    OrigInstrument <- rcon$instruments()
     
     ImportMeta <- OrigMetaData[1:4, ]
     
-    importMetaData(rcon, 
-                   ImportMeta)
+    expect_message(importMetaData(rcon, 
+                                  ImportMeta), 
+                   "Fields Imported: 4")
     
-    importMetaData(rcon, 
-                   OrigMetaData)
+    expect_data_frame(rcon$metadata(), 
+                      nrows = 4)
+    
+    expect_data_frame(rcon$instruments(), 
+                      nrows = 1)
+    
+    expect_message(importMetaData(rcon, 
+                                  OrigMetaData, 
+                                  refresh = FALSE), 
+                   sprintf("Fields Imported: %s", nrow(OrigMetaData)))
+    
+    expect_data_frame(rcon$metadata(), 
+                      nrows = 4)
+    
+    expect_data_frame(rcon$instruments(), 
+                      nrows = 1)
+    
+    rcon$refresh_metadata()
+    rcon$refresh_instruments()
+    
+    expect_data_frame(rcon$metadata(), 
+                      nrows = nrow(OrigMetaData))
+    
+    expect_data_frame(rcon$instruments(), 
+                      nrows = nrow(OrigInstrument))
   }
 )

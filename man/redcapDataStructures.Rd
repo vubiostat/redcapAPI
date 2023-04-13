@@ -4,16 +4,21 @@
 \name{redcapDataStructures}
 \alias{redcapDataStructures}
 \alias{validateRedcapData}
+\alias{REDCAP_SYSTEM_FIELDS}
 \alias{REDCAP_METADATA_FIELDTYPE}
 \alias{REDCAP_METADATA_VALIDATION_TYPE}
 \title{REDCap Data Structures}
 \format{
+An object of class \code{character} of length 4.
+
 An object of class \code{character} of length 11.
 
-An object of class \code{character} of length 16.
+An object of class \code{character} of length 22.
 }
 \usage{
 validateRedcapData(data, redcap_data)
+
+REDCAP_SYSTEM_FIELDS
 
 REDCAP_METADATA_FIELDTYPE
 
