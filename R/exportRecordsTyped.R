@@ -1036,9 +1036,10 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 .exportRecordsTyped_getCodings <- function(rcon = rcon, 
                                            field_map = field_map, 
                                            field_names = field_names, 
-                                           field_types = field_types){
+                                           field_types = field_types, 
+                                           code_check = FALSE){
   codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
-  codebook[! field_types %in% c("select", "radio", "dropdown")] <- NA
+  codebook[! field_types %in% c("select", "radio", "dropdown", if (code_check) "checkbox" else character(0))] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   
   codings <- vector("list", length = length(codebook))
@@ -1142,6 +1143,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                             field_names){
   Records <- Raw
   cast <- modifyList(.default_cast, cast)
+  # Edits to this for loop may necessitate edits to the for loop in recastData
   for(i in seq_along(Raw))
   {
     if(field_types[i] %in% names(cast))

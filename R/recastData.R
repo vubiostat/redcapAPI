@@ -1,7 +1,7 @@
-#' @name recodeData
-#' @title Recode Multiple Choice Fields
+#' @name recastData
+#' @title Recast Data Fields
 #' 
-#' @description Allows for recoding one or more multiple choice fields using 
+#' @description Allows for recasting one or more fields using 
 #'   the codes and labels in the Meta Data.
 #'   
 #' @param data \code{data.frame} with the data fields to be recoded. 
@@ -13,8 +13,13 @@
 #'   multiple choice field; no action will be taken on such fields.
 #'   For this function, yes/no and true/false fields are considered 
 #'   multiple choice fields.
-#' @param return_as \code{character}, one of \code{c("coded", "labelled")}. 
-#'   Determines which set of values are returned. 
+#' @param cast A named \code{list} of user specified class casting functions. 
+#'   Keys must correspond to a truncated REDCap field type, i.e.
+#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+#'   checkbox, form_complete, sql}. The function will be 
+#'   provided the variables (x, field_name, coding). 
+#'   See \code{\link{fieldValidationAndCasting}}
 #' @param suffix \code{character(1)}. An optional suffix to provide if 
 #'   the recoded variables should be returned as new columns. For example, 
 #'   if recoding a field \code{forklift_brand} and \code{suffix = "_labelled"}, 
@@ -24,10 +29,14 @@
 #'   
 #' @export
 
-recodeData <- function(data, 
+recastData <- function(data, 
                        rcon, 
                        fields, 
-                       return_as = c("coded", "labelled"), 
+                       cast = list(checkbox = uncastChecked, 
+                                   dropdown = uncastLabel,
+                                   radio = uncastLabel, 
+                                   yesno = uncastLabel,
+                                   truefalse = as.numeric), 
                        suffix    = ""){
   ###################################################################
   # Argument Validation #############################################
@@ -47,9 +56,9 @@ recodeData <- function(data,
     add = coll
   )
   
-  return_as <- checkmate::matchArg(x = return_as, 
-                                   choices = c("coded", "labelled"), 
-                                   add = coll)
+  checkmate::assert_list(x = cast, 
+                         names = "named", 
+                         add = coll)
   
   checkmate::assert_character(x = suffix, 
                               len = 1, 
@@ -83,72 +92,49 @@ recodeData <- function(data,
                            choices = names(data), 
                            add = coll)
   
-  checkmate::assert_subset(x = fields, 
-                           choices = rcon$metadata()$field_name, 
-                           add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
-  # Remove fields without a codebook ################################
-  
+  # Derive field information
   MetaData <- rcon$metadata()
   
-  MetaDataChoice <- MetaData[MetaData$field_type %in% c("checkbox", "dropdown", "radio", "truefalse", "yesno"), ]
+  field_names <- fields
+  field_bases <- gsub("___.+$", "", field_names)
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
+  field_map <- match(field_bases, MetaData$field_name)
   
-  fields_to_remove <- fields[!fields %in% MetaDataChoice$field_name]
-  
-  if (length(fields_to_remove) > 0){
-    message("The following fields are not multiple choice fields and will be ignored: ", 
-            paste0(fields_to_remove, collapse = ", "))
-    fields <- fields[!fields %in% fields_to_remove]
-  }
+  field_types <- .exportRecordsTyped_getFieldTypes(rcon = rcon, 
+                                                   field_map = field_map,
+                                                   field_bases = field_bases, 
+                                                   field_text_types = field_text_types)
   
   ###################################################################
-  # Start Recoding ##################################################
+  # Derive codings (This is probably a good internal helper)
   
-  MetaDataChoice <- MetaDataChoice[MetaDataChoice$field_name %in% fields, ]
+  codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
+                                            field_map = field_map, 
+                                            field_names = field_names, 
+                                            field_types = field_types, 
+                                            code_check = TRUE)
   
-  field_to <- sprintf("%s%s", fields, suffix)
-  
-  if (return_as == "coded"){
-    from <- "choice_label"
-    to <- "choice_value"
-  } else {
-    from <- "choice_value"
-    to <- "choice_label"
-  }
-  
-  for (i in seq_along(fields)){
-    this_attribute <- attributes(data[[ fields[i] ]])
-
-    this_codebook <- .recodeData_getCodebook(fields[i], MetaDataChoice)
-    
-    data[[field_to[i] ]] <- 
-      this_codebook[, to][match(data[[ fields[i] ]], this_codebook[, from])]
-    attributes(data[[ field_to[i] ]]) <- this_attribute
+  for(i in seq_along(field_names))
+  {
+    if(field_types[i] %in% names(cast))
+    {
+      this_field_name <- sprintf("%s%s", 
+                                 fields[i], 
+                                 suffix)
+      x <- data[[ field_names[i] ]]
+      this_attribute <- attributes(x)
+      this_attribute <- this_attribute[!names(this_attribute) %in% c("class", "levels")]
+      
+      typecast <- cast[[ field_types[i] ]]
+      if(is.function(typecast)){
+        data[[ this_field_name ]] <- typecast(as.character(x), field_name=field_names[i], coding=codings[[i]])
+        attributes(data[[ this_field_name ]]) <- this_attribute
+      }
+    }
   }
   
   data
-}
-
-#####################################################################
-# Unexported ########################################################
-
-.recodeData_getCodebook <- function(field_name, MetaDataChoice){
-  field_type <- MetaDataChoice$field_type[MetaDataChoice$field_name == field_name]
-
-  if (field_type == "truefalse"){
-    matrix(c("0", "FALSE", "1", "TRUE"), 
-           ncol = 2, 
-           byrow = TRUE, 
-           dimnames = list(NULL, c("choice_value", "choice_label")))
-  } else if (field_type == "yesno"){
-    matrix(c("0", "No", "1", "Yes"), 
-           ncol = 2, 
-           byrow = TRUE, 
-           dimnames = list(NULL, c("choice_value", "choice_label")))
-  } else {
-    fieldChoiceMapping( MetaDataChoice$select_choices_or_calculations[MetaDataChoice$field_name == field_name] )
-  }
 }
