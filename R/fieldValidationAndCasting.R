@@ -90,7 +90,7 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastLabel <- function(x, coding, field_name) factor(as.character(x), levels = names(coding), labels = coding)
+uncastLabel <- function(x, coding, field_name) as.character(factor(as.character(x), levels = names(coding), labels = coding))
 
 #' @rdname fieldValidationAndCasting
 #' @export

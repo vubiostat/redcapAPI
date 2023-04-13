@@ -30,13 +30,13 @@ test_that(
                          rcon = rcon, 
                          fields = names(Records))
     
-    expect_equal(levels(Recast$dropdown_test), c("1", "2", "3"))
-    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
-    expect_equal(sort(unique(Recast$yesno_test)), c(0, 1))
-    expect_equal(sort(unique(Recast$truefalse_test)), c(0, 1))
-    expect_equal(unique(Recast$checkbox_test___x), c(0, 1))
-    expect_equal(unique(Recast$checkbox_test___y), c(0, 1))
-    expect_equal(unique(Recast$checkbox_test___z), c(0, 1))
+    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
+    expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
+    expect_equal(sort(unique(Recast$checkbox_test___y)), c(0, 1))
+    expect_equal(sort(unique(Recast$checkbox_test___z)), c(0, 1))
+    expect_equal(sort(unique(Recast$yesno_test)),        c(0, 1))
+    expect_equal(sort(unique(Recast$truefalse_test)),    c(0, 1))
   }
 )
 
@@ -48,24 +48,24 @@ test_that(
                          rcon = rcon, 
                          fields = 1:3)
     
-    expect_equal(levels(Recast$dropdown_test), c("1", "2", "3"))
-    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
-    expect_equal(unique(Recast$checkbox_test___x), c(0, 1))
-    expect_equal(levels(Recast$checkbox_test___y), levels(Records$checkbox_test___y))
-    expect_equal(levels(Recast$checkbox_test___z), levels(Records$checkbox_test___z))
-    expect_equal(levels(Recast$yesno_test), c("No", "Yes"))
+    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
+    expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
+    expect_equal(levels(Recast$checkbox_test___y),       levels(Records$checkbox_test___y))
+    expect_equal(levels(Recast$checkbox_test___z),       levels(Records$checkbox_test___z))
+    expect_equal(levels(Recast$yesno_test),              c("No", "Yes"))
     expect_true(is.logical(Recast$truefalse_test))
     
     Recast <- recastData(Records, 
                          rcon = rcon, 
                          fields = c(2, 4, 6))
     
-    expect_equal(levels(Recast$dropdown_test), levels(Records$dropdown_test))
-    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
-    expect_equal(levels(Recast$checkbox_test___x), levels(Records$checkbox_test___x))
-    expect_equal(sort(unique(Recast$checkbox_test___y)), 0:1)
-    expect_equal(levels(Recast$checkbox_test___z), levels(Records$checkbox_test___z))
-    expect_equal(sort(unique(Recast$yesno_test)), 0:1)
+    expect_equal(levels(Recast$dropdown_test),           levels(Records$dropdown_test))
+    expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
+    expect_equal(levels(Recast$checkbox_test___x),       levels(Records$checkbox_test___x))
+    expect_equal(sort(unique(Recast$checkbox_test___y)), c(0, 1))
+    expect_equal(levels(Recast$checkbox_test___z),       levels(Records$checkbox_test___z))
+    expect_equal(sort(unique(Recast$yesno_test)),        c(0, 1))
     expect_true(is.logical(Recast$truefalse_test))
     
     expect_error(recastData(Records, 
@@ -83,12 +83,12 @@ test_that(
                          rcon = rcon, 
                          fields = rep(c(TRUE, FALSE), c(3, 4)))
     
-    expect_equal(levels(Recast$dropdown_test), c("1", "2", "3"))
-    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
-    expect_equal(unique(Recast$checkbox_test___x), c(0, 1))
-    expect_equal(levels(Recast$checkbox_test___y), levels(Records$checkbox_test___y))
-    expect_equal(levels(Recast$checkbox_test___z), levels(Records$checkbox_test___z))
-    expect_equal(levels(Recast$yesno_test), c("No", "Yes"))
+    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
+    expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
+    expect_equal(levels(Recast$checkbox_test___y),       levels(Records$checkbox_test___y))
+    expect_equal(levels(Recast$checkbox_test___z),       levels(Records$checkbox_test___z))
+    expect_equal(levels(Recast$yesno_test),              c("No", "Yes"))
     expect_true(is.logical(Recast$truefalse_test))
     
     Recast <- recastData(Records, 
@@ -96,12 +96,12 @@ test_that(
                          fields = rep(c(FALSE, TRUE), 
                                       length.out = ncol(Records)))
     
-    expect_equal(levels(Recast$dropdown_test), levels(Records$dropdown_test))
-    expect_equal(levels(Recast$radio_test), c("a", "b", "c"))
-    expect_equal(levels(Recast$checkbox_test___x), levels(Records$checkbox_test___x))
-    expect_equal(sort(unique(Recast$checkbox_test___y)), 0:1)
-    expect_equal(levels(Recast$checkbox_test___z), levels(Records$checkbox_test___z))
-    expect_equal(sort(unique(Recast$yesno_test)), 0:1)
+    expect_equal(levels(Recast$dropdown_test),           levels(Records$dropdown_test))
+    expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
+    expect_equal(levels(Recast$checkbox_test___x),       levels(Records$checkbox_test___x))
+    expect_equal(sort(unique(Recast$checkbox_test___y)), c(0, 1))
+    expect_equal(levels(Recast$checkbox_test___z),       levels(Records$checkbox_test___z))
+    expect_equal(sort(unique(Recast$yesno_test)),        c(0, 1))
     expect_true(is.logical(Recast$truefalse_test))
     
     expect_error(recastData(Records, 
@@ -128,8 +128,8 @@ test_that(
     expect_equal(levels(Recast$yesno_test),        levels(Records$yesno_test))
     expect_true(is.logical(Recast$truefalse_test))
     
-    expect_equal(levels(Recast$dropdown_test_coded),           c("1", "2", "3"))
-    expect_equal(levels(Recast$radio_test_coded),              c("a", "b", "c"))
+    expect_equal(sort(unique(Recast$dropdown_test_coded)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$radio_test_coded)),        c("a", "b", "c"))
     expect_equal(sort(unique(Recast$checkbox_test___x_coded)), 0:1)
     expect_equal(sort(unique(Recast$checkbox_test___y_coded)), 0:1)
     expect_equal(sort(unique(Recast$checkbox_test___z_coded)), 0:1)
