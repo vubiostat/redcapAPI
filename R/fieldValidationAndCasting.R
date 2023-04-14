@@ -120,13 +120,14 @@ recastCode <- function(x, coding, field_name){
 #' @rdname fieldValidationAndCasting
 #' @export
 recastRaw <- function(x, coding, field_name){
-  if (grepl(".*___(.*)", field_name)){
-    as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
-  } else {
-    code_match <- getCodingIndex(x, coding)
-    
-    unname(coding[code_match])
-  }
+  raw <- 
+    if (grepl(".*___(.*)", field_name)){
+      as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
+    } else {
+      code_match <- getCodingIndex(x, coding)
+      unname(coding[code_match])
+    }
+  coerceNumericIfAble(raw)
 }
 
 #' @rdname fieldValidationAndCasting
@@ -176,6 +177,13 @@ getCheckedValue <- function(coding, field_name){
                      "1", 
                      "Checked", 
                      "yes")
+}
+
+coerceNumericIfAble <- function(x){
+  x <- tryCatch(as.numeric(x), 
+                warning = function(cond) x, 
+                error = function(cond) x)
+  x
 }
 
 #' @rdname fieldValidationAndCasting
