@@ -1,18 +1,3 @@
-# Style Guideline Note
-# 
-# Exported function names: dromedaryCase
-# Internal function names: .dromedaryCase
-# Constant data exported: UPPERCASE
-# Function parameters: snake_case
-# Function variables: snake_case
-#  * (exception) data.frame variable: CamelCase
-
-# FIXME: Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
-# [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# [DEFERRED] Offline version? testing? [A lot of the code could be reused if we
-#            can identify pieces to turn into subroutines.]
-# [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
-
 #' @name exportRecordsTyped
 #' 
 #' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 

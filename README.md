@@ -22,3 +22,11 @@ Issues may be reported at [Issues](https://github.com/vubiostat/redcapAPI/issues
 
 This package was developed under REDCap Version 13.4.3. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
 
+### Coding Style Guideline Note
+
+- Exported function names: dromedaryCase
+- Internal function names: .dromedaryCase
+- Constant data exported: UPPERCASE
+- Function parameters: snake_case
+- Function variables: snake_case
+- - (exception) data.frame variable: CamelCase
