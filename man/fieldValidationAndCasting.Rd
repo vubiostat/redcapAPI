@@ -16,6 +16,8 @@
 \alias{recastCode}
 \alias{recastRaw}
 \alias{recastChecked}
+\alias{recastCheckLabel}
+\alias{recastCheckCode}
 \alias{raw_cast}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
@@ -47,6 +49,10 @@ recastCode(x, coding, field_name)
 recastRaw(x, coding, field_name)
 
 recastChecked(x, coding, field_name)
+
+recastCheckLabel(x, coding, field_name)
+
+recastCheckCode(x, coding, field_name)
 
 raw_cast
 }

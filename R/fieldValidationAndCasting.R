@@ -108,7 +108,7 @@ recastCode <- function(x, coding, field_name){
 #' @export
 recastRaw <- function(x, coding, field_name){
   if (grepl(".*___(.*)", field_name)){
-    as.numeric(x %in% getCheckedValue(coding, field_name))
+    as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
   } else {
     code_match <- getCodingIndex(x, coding)
     
