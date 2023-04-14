@@ -547,6 +547,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
   
+  MetaData <- rcon$metadata()
+  
   system_field <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% names(rcon$records())]
   if (length(fields) > 0){
     system_field <- system_field[system_field %in% fields]
@@ -561,7 +563,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   fields <- fields[!fields %in% MetaData$field_name[MetaData$field_type == "descriptive"]]
   
   
-  id_index <- which(fields == rcon$metadata()$field_name[1])
+  id_index <- which(fields == MetaData$field_name[1])
   
   if (length(id_index) > 0){
     fields <- c(fields[id_index], 
