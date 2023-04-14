@@ -2,9 +2,7 @@ context("importRecords Functionality")
 
 rcon <- redcapConnection(url = url, token = API_KEY)
 
-rec <- exportRecords(rcon, forms = c("fieldtovar_datetimes",
-                                     "randomization", 
-                                     "branching_logic"), mChoice=FALSE)
+rec <- exportRecords(rcon, mChoice=FALSE)
 rows <- nrow(rec)
 
 NewRecords <- rbind(rec[1,], rec[1,])
@@ -123,17 +121,10 @@ test_that(
   {
     local_reproducible_output(width = 200)
     require(Hmisc)
-    TheData <- exportRecordsTyped(rcon, 
-                                  forms = c("fieldtovar_datetimes",
-                                            "randomization", 
-                                            "branching_logic"), 
-                                  mChoice = TRUE)
+    TheData <- exportRecordsTyped(rcon)
     expect_message(importRecords(rcon, TheData), 
-                   "The variable[(]s[)] prereq_checkbox, no_prereq_checkbox are not found in the project and/or cannot be imported.")
-    TheDataAfter <- exportRecordsTyped(rcon, 
-                                       forms = c("fieldtovar_datetimes",
-                                                 "randomization", 
-                                                 "branching_logic"))
+                   "The variable[(]s[)] file_import_field, signature_test, file_upload_test, prereq_checkbox, no_prereq_checkbox, checkbox_test are not found in the project and/or cannot be imported.")
+    TheDataAfter <- exportRecordsTyped(rcon)
     expect_true(identical(TheData, TheDataAfter))
     detach("package:Hmisc", unload = TRUE)
   }
@@ -142,26 +133,23 @@ test_that(
 test_that(
   "import with Auto Numbering", 
   {
-    Records <- exportRecordsTyped(rcon, 
-                                  forms = c("fieldtovar_datetimes",
-                                            "randomization", 
-                                            "branching_logic"), mChoice = FALSE)
+    Records <- exportRecordsTyped(rcon, mChoice = FALSE)
     nrow(Records)
     OneRecord <- Records[1,]
     
-    # next_record_id <- exportNextRecordName(rcon)
+    next_record_id <- exportNextRecordName(rcon)
     
     NewId <- importRecords(rcon, 
                            data = OneRecord, 
                            returnContent = 'auto_ids',
                            force_auto_number = TRUE)
     
-    # expect_equal(NewId$id, next_record_id)
+    expect_equal(NewId$id, next_record_id)
     
     After <- exportRecordsTyped(rcon)
     
     expect_equal(nrow(Records) + 1, nrow(After))
     
-    deleteRecords(rcon, records = NewId$id)
+    deleteRecords(rcon, records = next_record_id)
   }
 )

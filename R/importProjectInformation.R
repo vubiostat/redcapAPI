@@ -104,10 +104,10 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   # Remove uneditable fields.
-  data <- data[!names(data) %in% PROJECT_INFO_FIELDS_FIXED]
+  data <- data[!names(data) %in% PROJECT_INFO_FIELDS_FIXED] # defined in redcapDataStructures.R
   
   checkmate::assert_subset(x = names(data), 
-                           choices = PROJECT_INFO_FIELDS_EDITABLE, 
+                           choices = PROJECT_INFO_FIELDS_EDITABLE, # defined in redcapDataStructures.R
                            add = coll)
   
   checkmate::reportAssertions(coll)
