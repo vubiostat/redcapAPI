@@ -558,6 +558,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                             forms        = forms, 
                                             use_original = FALSE)
   
+  fields <- fields[!fields %in% MetaData$field_name[MetaData$field_type == "descriptive"]]
   
   
   id_index <- which(fields == rcon$metadata()$field_name[1])
