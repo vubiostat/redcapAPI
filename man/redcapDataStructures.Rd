@@ -13,7 +13,7 @@ An object of class \code{character} of length 4.
 
 An object of class \code{character} of length 11.
 
-An object of class \code{character} of length 22.
+An object of class \code{character} of length 23.
 }
 \usage{
 validateRedcapData(data, redcap_data)

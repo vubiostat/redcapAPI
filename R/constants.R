@@ -70,6 +70,10 @@ REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 # Specifically, low point | midpoint | high point
 # Any of the three values may be missing, but the two pipes must be 
 # present.
+# This is fairly permissive, but it seems to match REDCap behaviors
+# REDCap doesn't actually restrict what characters can go between the pipes, 
+# although it produces weird results when you include a pipe within the labels.
+# Example:  this | and|or | that will produce labels "this", "and", and "or | that" in the UI.
 # Explanation
 #             ^ : start of string
 # ([0-9]|\\s|)+ : any number of characters, or empty character
