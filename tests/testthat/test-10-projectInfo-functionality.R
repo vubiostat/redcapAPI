@@ -11,6 +11,7 @@ test_that(
   {
     Project <- exportProjectInformation(rcon)
     
+    # These constants are defined in redcapDataStructure.R
     expect_true(all(names(Project) %in% c(PROJECT_INFO_FIELDS_EDITABLE, 
                                           PROJECT_INFO_FIELDS_FIXED)))
     

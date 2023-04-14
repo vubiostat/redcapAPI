@@ -3,13 +3,13 @@
 \docType{data}
 \name{constants}
 \alias{constants}
-\alias{REDCAP_SYSTEM_FIELDS}
+\alias{FILE_REPOSITORY_EMPTY_FRAME}
 \title{Constants for Use in the redcapAPI Package}
 \format{
-An object of class \code{character} of length 4.
+An object of class \code{data.frame} with 0 rows and 4 columns.
 }
 \usage{
-REDCAP_SYSTEM_FIELDS
+FILE_REPOSITORY_EMPTY_FRAME
 }
 \description{
 Constants that are used inside the package
