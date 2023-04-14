@@ -88,6 +88,19 @@ castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 #' @export
 castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
 
+# I'm not sold on this one yet, but it could be a way to get around some thorny 
+# issues we've heard about where a checkbox is being labeled where 0 = Checked, 
+# which our current import function can't accommodate. 
+# with this, you could set the cast function to 
+# cast = list(castCheckForImport(checked = "0"))
+# #' @rdname fieldValidationAndCasting
+# #' @export
+# castCheckForImport <- function(checked = c("Checked", "1")){
+#   function(x, coding, field_name){
+#     (x %in% checked) + 0L
+#   }
+# }
+
 #' @rdname fieldValidationAndCasting
 #' @export
 recastLabel <- function(x, coding, field_name){
