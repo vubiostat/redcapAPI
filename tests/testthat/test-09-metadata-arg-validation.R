@@ -311,7 +311,7 @@ test_that(
     field_type <- c("slider", "slider", "slider", "slider", "slider")
     choices <- c("||",
                  "   |  |      ",
-                 "a|1|10", 
+                 " |1|10", 
                  "|a|10",
                  "1|2")
     
@@ -321,10 +321,10 @@ test_that(
                                     coll = coll)
     
     expect_equal(bad_slide, 
-                 c(TRUE, TRUE, FALSE, FALSE, FALSE))
+                 c(TRUE, TRUE, TRUE, TRUE, FALSE))
     
     expect_error(checkmate::reportAssertions(coll), 
-                 "The following fields have invalid 'select_choices_or_calculations': [{]slide3, slide4, slide5[}]")
+                 "The following fields have invalid 'select_choices_or_calculations': [{]slide5[}]")
   }
 )
 

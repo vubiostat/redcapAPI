@@ -315,7 +315,7 @@ isValidChoiceField <- function(field_name,
   # for slider fields, update is_valid_select for invalid entries
   w_slide <- which(field_type %in% "slider")
   is_valid_slide <- grepl(REGEX_SLIDER, # defined in constants.R
-                          choices[w_slide])
+                          choices[w_slide]) | is.na(choices[w_slide])
   is_valid_select[w_slide] <- is_valid_slide                # set invalid rows
   
   # report the results

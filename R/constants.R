@@ -72,11 +72,11 @@ REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 # present.
 # Explanation
 #             ^ : start of string
-# ([0-9]|\\s|)+ : any number of characters that are digit, whitespace, or empty character
+# ([0-9]|\\s|)+ : any number of characters, or empty character
 #           [|] : match a literal pipe
-# ([0-9]|\\s|)+ : any number of characters that are digit, whitespace, or empty character
+# ([0-9]|\\s|)+ : any number of characters, or empty character
 #           [|] : match a literal pipe
-# ([0-9]|\\s|)+ : any number of characters that are digit, whitespace, or empty character
+# ([0-9]|\\s|)+ : any number of characters, or empty character
 #             $ : end of string
-REGEX_SLIDER <- "^([0-9]|\\s|)+[|]([0-9]|\\s|)+[|]([0-9]|\\s|)+$"
+REGEX_SLIDER <- "^(.|)+[|](.|\\s|)+[|](.|\\s|)+$"
 
