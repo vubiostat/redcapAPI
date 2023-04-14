@@ -12,10 +12,10 @@
 \alias{castChecked}
 \alias{castCheckLabel}
 \alias{castCheckCode}
-\alias{uncastLabel}
-\alias{uncastChecked}
-\alias{uncastCheckLabel}
-\alias{uncastCheckCode}
+\alias{recastLabel}
+\alias{recastCode}
+\alias{recastRaw}
+\alias{recastChecked}
 \alias{raw_cast}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
@@ -40,13 +40,13 @@ castCheckLabel(x, coding, field_name)
 
 castCheckCode(x, coding, field_name)
 
-uncastLabel(x, coding, field_name)
+recastLabel(x, coding, field_name)
 
-uncastChecked(x, coding, field_name)
+recastCode(x, coding, field_name)
 
-uncastCheckLabel(x, coding, field_name)
+recastRaw(x, coding, field_name)
 
-uncastCheckCode(x, coding, field_name)
+recastChecked(x, coding, field_name)
 
 raw_cast
 }

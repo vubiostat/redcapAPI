@@ -90,19 +90,80 @@ castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)",
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastLabel <- function(x, coding, field_name) as.character(factor(as.character(x), levels = names(coding), labels = coding))
+recastLabel <- function(x, coding, field_name){
+  code_match <- getCodingIndex(x, coding)
+  
+  factor(unname(coding[code_match]), levels = coding, labels = names(coding))
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastChecked <- function(x, coding, field_name) as.numeric(as.character(x) %in% "Checked")
+recastCode <- function(x, coding, field_name){
+  code_match <- getCodingIndex(x, coding)
+  
+  factor(unname(coding[code_match]), levels = coding, labels = coding)
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastCheckLabel <- function(x, coding, field_name) as.numeric(as.character(x) %in% names(coding)) 
+recastRaw <- function(x, coding, field_name){
+  if (grepl(".*___(.*)", field_name)){
+    as.numeric(x %in% getCheckedValue(coding, field_name))
+  } else {
+    code_match <- getCodingIndex(x, coding)
+    
+    unname(coding[code_match])
+  }
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-uncastCheckCode <- function(x, coding, field_name) as.numeric(as.character(x) %in% coding)
+recastChecked <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+  
+  factor(c("Unchecked", "Checked")[(x %in% checked_value)+1], levels=c("Unchecked", "Checked"))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+recastCheckLabel <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+
+  factor(c("", gsub(".*___(.*)", "\\1", field_name))[(x %in% checked_value + 1)], 
+         levels=c("", coding[this_code_index]), 
+         labels=c("", names(coding)[this_code_index]))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+recastCheckCode <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+  
+  factor(c("", gsub(".*___(.*)", "\\1", field_name))[(x %in% checked_value + 1)], 
+         levels=c("", coding[this_code_index]), 
+         labels=c("", coding[this_code_index]))
+}
+
+# utility function returns the index of the codebook matching the 
+# content of the vector. Permits accurate matching without foreknowledge
+# of whether the data are coded or labelled.
+getCodingIndex <- function(x, coding){
+  code_match <- match(as.character(x), coding)
+  
+  ifelse(is.na(match(x, coding)), 
+         match(x, names(coding)), 
+         code_match)
+}
+
+getCheckedValue <- function(coding, field_name){
+  this_code <- sub(".*___(.*)", "\\1", field_name)
+  this_code_index <- match(this_code, coding)  
+  checked_value <- c(coding[this_code_index], 
+                     names(coding)[this_code_index], 
+                     "1", 
+                     "Checked", 
+                     "yes")
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export

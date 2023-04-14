@@ -408,7 +408,8 @@ exportRecordsTyped.redcapApiConnection <-
   codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
                                             field_map = field_map, 
                                             field_names = field_names, 
-                                            field_types = field_types)
+                                            field_types = field_types, 
+                                            code_check = TRUE)
 
    ###################################################################
   # Common provided args for na / validate functions

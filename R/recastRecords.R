@@ -1,4 +1,4 @@
-#' @name recastData
+#' @name recastRecords
 #' @title Recast Data Fields
 #' 
 #' @description Allows for recasting one or more fields using 
@@ -31,11 +31,11 @@
 #'   be returned with no changes.
 #'   
 #'   The default \code{cast} list in 
-#'   \code{recastData} inverts the default casting of \code{exportRecordsTyped}. 
+#'   \code{recastRecords} inverts the default casting of \code{exportRecordsTyped}. 
 #'   
 #' @export
 
-recastData <- function(data, 
+recastRecords <- function(data, 
                        rcon, 
                        fields, 
                        cast = invert_default_cast, 
@@ -138,11 +138,11 @@ recastData <- function(data,
   data
 }
 
-#' @rdname recastData
-#' @export
-
-invert_default_cast <- list(checkbox = uncastChecked, 
-                            dropdown = uncastLabel,
-                            radio = uncastLabel, 
-                            yesno = function(x, field_name, coding) as.numeric(x == "Yes"),
-                            truefalse = as.numeric)
+#' #' @rdname recastRecords
+#' #' @export
+#' 
+#' invert_default_cast <- list(checkbox = uncastChecked, 
+#'                             dropdown = uncastLabel,
+#'                             radio = uncastLabel, 
+#'                             yesno = function(x, field_name, coding) as.numeric(x == "Yes"),
+#'                             truefalse = as.numeric)
