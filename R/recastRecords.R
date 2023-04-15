@@ -38,7 +38,7 @@
 recastRecords <- function(data, 
                        rcon, 
                        fields, 
-                       cast = invert_default_cast, 
+                       cast = list(), 
                        suffix    = ""){
   ###################################################################
   # Argument Validation #############################################

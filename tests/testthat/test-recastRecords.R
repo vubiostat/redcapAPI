@@ -25,13 +25,29 @@ Records <- exportRecordsTyped(rcon,
 # Functionality                                                  ####
 
 test_that(
-  "Successful recast with defaults", 
+  "Recast with defaults performs no changes", 
   {
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
                             fields = names(Records))
     
-    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_true(identical(Records, Recast))
+  }
+)
+
+test_that(
+  "Successfully recast back to raw", 
+  {
+    Recast <- recastRecords(Records, 
+                            rcon = rcon, 
+                            fields = names(Records), 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
+    
+    expect_equal(sort(unique(Recast$dropdown_test)),     c(1, 2, 3))
     expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
     expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
     expect_equal(sort(unique(Recast$checkbox_test___y)), c(0, 1))
@@ -47,9 +63,14 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = 1:3)
+                            fields = 1:3, 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
-    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$dropdown_test)),     c(1, 2, 3))
     expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
     expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
     expect_equal(levels(Recast$checkbox_test___y),       levels(Records$checkbox_test___y))
@@ -59,7 +80,12 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = c(2, 4, 6))
+                            fields = c(2, 4, 6), 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
     expect_equal(levels(Recast$dropdown_test),           levels(Records$dropdown_test))
     expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
@@ -82,9 +108,14 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = rep(c(TRUE, FALSE), c(3, 4)))
+                            fields = rep(c(TRUE, FALSE), c(3, 4)), 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
-    expect_equal(sort(unique(Recast$dropdown_test)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$dropdown_test)),     c(1, 2, 3))
     expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
     expect_equal(sort(unique(Recast$checkbox_test___x)), c(0, 1))
     expect_equal(levels(Recast$checkbox_test___y),       levels(Records$checkbox_test___y))
@@ -95,7 +126,12 @@ test_that(
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
                             fields = rep(c(FALSE, TRUE), 
-                                         length.out = ncol(Records)))
+                                         length.out = ncol(Records)), 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
     expect_equal(levels(Recast$dropdown_test),           levels(Records$dropdown_test))
     expect_equal(sort(unique(Recast$radio_test)),        c("a", "b", "c"))
@@ -119,7 +155,12 @@ test_that(
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
                             fields = names(Records), 
-                            suffix = "_coded")
+                            suffix = "_coded", 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
     expect_equal(levels(Recast$dropdown_test),     levels(Records$dropdown_test))
     expect_equal(levels(Recast$radio_test),        levels(Recast$radio_test))
@@ -129,7 +170,7 @@ test_that(
     expect_equal(levels(Recast$yesno_test),        levels(Records$yesno_test))
     expect_true(is.logical(Recast$truefalse_test))
     
-    expect_equal(sort(unique(Recast$dropdown_test_coded)),     c("1", "2", "3"))
+    expect_equal(sort(unique(Recast$dropdown_test_coded)),     c(1, 2, 3))
     expect_equal(sort(unique(Recast$radio_test_coded)),        c("a", "b", "c"))
     expect_equal(sort(unique(Recast$checkbox_test___x_coded)), 0:1)
     expect_equal(sort(unique(Recast$checkbox_test___y_coded)), 0:1)
@@ -153,7 +194,12 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = names(Records))
+                            fields = names(Records), 
+                            cast = list(dropdown = recastRaw, 
+                                        radio = recastRaw, 
+                                        checkbox = recastRaw, 
+                                        yesno = recastRaw, 
+                                        truefalse = as.numeric))
     
     expect_class(Recast$checkbox_test, "mChoice")
     expect_identical(Records$checkbox_test, 
@@ -212,7 +258,7 @@ test_that(
     expect_error(recastRecords(data = Records, 
                                rcon = rcon, 
                                fields = export_fields, 
-                               cast = list(uncastChecked)), 
+                               cast = list(castChecked)), 
                  "Variable 'cast': Must have names.")
   }
 )

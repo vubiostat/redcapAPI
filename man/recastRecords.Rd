@@ -4,7 +4,7 @@
 \alias{recastRecords}
 \title{Recast Data Fields}
 \usage{
-recastRecords(data, rcon, fields, cast = invert_default_cast, suffix = "")
+recastRecords(data, rcon, fields, cast = list(), suffix = "")
 }
 \arguments{
 \item{data}{\code{data.frame} with the data fields to be recoded.}
