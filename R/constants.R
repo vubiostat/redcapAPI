@@ -43,7 +43,7 @@ FILE_IMPORT_EXPORT_EMPTY_FRAME <-
 # I don't think there is any way to truly parse the field name base from the 
 # option without using the data dictionary.
 # 
-# Explanation
+# Explanation : https://stackoverflow.com/a/76020417/1017276
 # ^(.*?)___ : match anything at beginning non-greedily followed by ___ into 1st group
 # (?!.*___) : after that, don't allow ___ preceded by anything, negative lookahead is used for that purpose
 #     (.*)$ : match anything after until end of string into 2nd group
