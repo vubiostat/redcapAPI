@@ -30,6 +30,25 @@ FILE_IMPORT_EXPORT_EMPTY_FRAME <-
 
 # Regular Expressions -----------------------------------------------
 
+# REGEX_CHECKBOX_FIELD_NAME - Matches the checkbox style field name
+# use sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", x) to get the field name base
+# use sub(REGEX_CHECKBOX_FIELD_NAME, "\\2", x) to get the option
+# Using regex to parse checkbox names has some limitations and at some point
+# we may need to consider another strategy. REDCap permits any characters to
+# be used in coding checkboxes, but when converting them to field names, 
+# converts non alphnumeric characters to an underscore. 
+# some examples -4, Option  ----> checkbox____4
+#               k>=9, K >=9 ----> checkbox___k__9
+#               a___b       ----> checkbox___a___b (this is not handled correctly by this REGEX)
+# I don't think there is any way to truly parse the field name base from the 
+# option without using the data dictionary.
+# 
+# Explanation
+# ^(.*?)___ : match anything at beginning non-greedily followed by ___ into 1st group
+# (?!.*___) : after that, don't allow ___ preceded by anything, negative lookahead is used for that purpose
+#     (.*)$ : match anything after until end of string into 2nd group
+REGEX_CHECKBOX_FIELD_NAME <- "^(.*?)___(?!.*___)(.*)$"
+
 # REGEX_FIELD_NAME - matches the acceptable naming conventions for field names
 # Explanation
 #            ^ : start of string

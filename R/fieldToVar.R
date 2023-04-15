@@ -63,9 +63,8 @@ fieldToVar <- function(records,
   {
     # Establish basic info about field/record
     field_name <- recordnames[i]
-    field_base <- gsub(pattern     = "___.+$",
-                       replacement = "",
-                       x           = field_name)
+    field_base <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
+                      "\\1", field_name)
     field_text_type <- meta_data$text_validation_type_or_show_slider_number[meta_data$field_name == field_base]
     field_type <- meta_data$field_type[meta_data$field_name == field_base]
     

@@ -393,7 +393,8 @@ exportRecordsTyped.redcapApiConnection <-
   MetaData <- rcon$metadata()
   
   field_names <- names(Raw)
-  field_bases <- gsub("___.+$", "", field_names)
+  field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
+                     "\\1", field_names)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   
@@ -602,7 +603,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   MetaData <- rcon$metadata()
   
   field_names <- names(Raw)
-  field_bases <- gsub("___.+$", "", field_names)
+  field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
+                     "\\1", field_names)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   
