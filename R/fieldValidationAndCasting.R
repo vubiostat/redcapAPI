@@ -52,7 +52,11 @@
 #' parameter.
 #' 
 #' @author Shawn Garbett, Benjamin Nutter
-#' 
+
+#####################################################################
+# Validation                                                     ####
+
+#' @rdname fieldValidationAndCasting
 #' @export
 isNAorBlank <- function(x, ...) is.na(x) | x==''
 
@@ -63,6 +67,9 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 #' @rdname fieldValidationAndCasting
 #' @export
 valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
+
+#####################################################################
+# Casting                                                        ####
 
 #' @rdname fieldValidationAndCasting
 #' @export
@@ -143,9 +150,9 @@ recastChecked <- function(x, coding, field_name){
 recastCheckLabel <- function(x, coding, field_name){
   checked_value <- getCheckedValue(coding, field_name)
 
-  factor(c("", gsub(".*___(.*)", "\\1", field_name))[(x %in% checked_value + 1)], 
-         levels=c("", coding[this_code_index]), 
-         labels=c("", names(coding)[this_code_index]))
+  factor(unname(c("", checked_value[1])[(x %in% checked_value) + 1]), 
+         levels=c("", checked_value[1]), 
+         labels=c("", names(checked_value)[1]))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -153,9 +160,9 @@ recastCheckLabel <- function(x, coding, field_name){
 recastCheckCode <- function(x, coding, field_name){
   checked_value <- getCheckedValue(coding, field_name)
   
-  factor(c("", gsub(".*___(.*)", "\\1", field_name))[(x %in% checked_value + 1)], 
-         levels=c("", coding[this_code_index]), 
-         labels=c("", coding[this_code_index]))
+  factor(unname(c("", checked_value[1])[(x %in% checked_value) + 1]), 
+         levels=c("", checked_value[1]), 
+         labels=c("", checked_value[1]))
 }
 
 # utility function returns the index of the codebook matching the 
@@ -169,22 +176,33 @@ getCodingIndex <- function(x, coding){
          code_match)
 }
 
+# Assembles the values that are associated with Checked
 getCheckedValue <- function(coding, field_name){
-  this_code <- sub(".*___(.*)", "\\1", field_name)
-  this_code_index <- match(this_code, coding)  
+  this_code <- sub("([^_]+)___(.*)", "\\2", field_name)
+  # to match, we will convert all of the punctuation to underscore. 
+  # this is consistent with how REDCap converts codes to variable names.
+  # for instance, a checkbox with code 4-3, label produce variable name checkbox___4_3 
+  this_code_index <- match(this_code, 
+                           gsub("[[:punct:]]", "_", coding))  
+
   checked_value <- c(coding[this_code_index], 
                      names(coding)[this_code_index], 
                      "1", 
                      "Checked", 
                      "yes")
+  checked_value
 }
 
+# Coerce to a numeric vector if possible, otherwise return the original value
 coerceNumericIfAble <- function(x){
   x <- tryCatch(as.numeric(x), 
                 warning = function(cond) x, 
                 error = function(cond) x)
   x
 }
+
+#####################################################################
+# Cast function lists                                            ####
 
 #' @rdname fieldValidationAndCasting
 #' @export
