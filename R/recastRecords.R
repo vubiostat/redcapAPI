@@ -111,7 +111,7 @@ recastRecords <- function(data,
   
   field_names <- fields
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                     "\\1", field_names)
+                     "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   

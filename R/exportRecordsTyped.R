@@ -394,7 +394,7 @@ exportRecordsTyped.redcapApiConnection <-
   
   field_names <- names(Raw)
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                     "\\1", field_names)
+                     "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   
@@ -604,7 +604,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   field_names <- names(Raw)
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                     "\\1", field_names)
+                     "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   
@@ -620,7 +620,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
                                             field_map = field_map, 
                                             field_names = field_names, 
-                                            field_types = field_types)
+                                            field_types = field_types, 
+                                            code_check = TRUE)
   
   ###################################################################
   # Common provided args for na / validate functions

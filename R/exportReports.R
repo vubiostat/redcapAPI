@@ -195,7 +195,7 @@ exportReports.redcapApiConnection <- function(rcon,
   {
     field_names <- names(Report)
     field_names <- unique(sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                              "\\1", field_names))
+                              "\\1", field_names, perl = TRUE))
     
     # For reports, there is not check on the field names, since 
     # the user may only select fields using the interface.

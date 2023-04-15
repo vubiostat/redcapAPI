@@ -210,7 +210,8 @@ isValidFieldName <- function(field_name,
                                 coll = NULL){
   is_valid_field_name <- 
     grepl(REGEX_FIELD_NAME, # defined in constants.R
-          field_name)
+          field_name, 
+          perl = TRUE)
   
   # if a collection object is used, push the message to it, otherwise
   # return the logical vector
@@ -228,7 +229,8 @@ isValidFieldName <- function(field_name,
 isValidFormName <- function(form_name, coll = NULL){
   is_valid_form_name <- 
     grepl(REGEX_FORM_NAME, # defined in constants.R 
-          form_name)
+          form_name, 
+          perl = TRUE)
   
   if (any(!is_valid_form_name) && !is.null(coll)){
     coll$push(sprintf("The following form names do not conform to REDCap form name standards: {%s}", 

@@ -207,7 +207,7 @@ missingSummary_offline <- function(records,
     this_field <- names(records)[i]
     # Remove checkbox suffixes. This allows logic to be matched to the field.
     this_field_base <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                           "\\1", this_field)
+                           "\\1", this_field, perl = TRUE)
     # get the logic expression for this iteration of the loop
     this_logic <- logic[[this_field_base]]
     
