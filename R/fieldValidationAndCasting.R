@@ -38,7 +38,9 @@
 #' values are typically more compact and their meaning may not be obvious.
 #' 
 #' \code{castRaw} constructs a casting function that returns the content
-#' from REDCap as it was received. It is functionally equivalent to \code{identity}
+#' from REDCap as it was received. It is functionally equivalent to \code{identity}. 
+#' For multiple choice variables, the result will be coerced to numeric, if possible; 
+#' otherwise, the result is character vector.
 #' 
 #' \code{castChecked} constructs a casting function for checkbox fields. It
 #' returns values in the form of Unchecked/Checked.
@@ -160,7 +162,7 @@ getCheckedValue <- function(coding, field_name){
   # this is consistent with how REDCap converts codes to variable names.
   # for instance, a checkbox with code 4-3, label produce variable name checkbox___4_3 
   this_code_index <- match(this_code, 
-                           gsub("[[:punct:]]", "_", coding))  
+                           tolower(gsub("[[:punct:]]", "_", coding)))  
 
   checked_value <- c(coding[this_code_index], 
                      names(coding)[this_code_index], 
