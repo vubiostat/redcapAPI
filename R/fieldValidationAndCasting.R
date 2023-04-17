@@ -107,7 +107,9 @@ castRaw <- function(x, coding, field_name){
 castChecked <- function(x, coding, field_name){
   checked_value <- getCheckedValue(coding, field_name)
   
-  factor(c("Unchecked", "Checked")[(x %in% checked_value)+1], levels=c("Unchecked", "Checked"))
+  x_checked <- x %in% checked_value 
+  
+  factor(c("Unchecked", "Checked")[(x_checked)+1], levels=c("Unchecked", "Checked"))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -115,7 +117,9 @@ castChecked <- function(x, coding, field_name){
 castCheckLabel <- function(x, coding, field_name){
   checked_value <- getCheckedValue(coding, field_name)
 
-  factor(unname(c("", checked_value[1])[(x %in% checked_value) + 1]), 
+  x_checked <- x %in% checked_value 
+  
+  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
          levels=c("", checked_value[1]), 
          labels=c("", names(checked_value)[1]))
 }
@@ -125,7 +129,9 @@ castCheckLabel <- function(x, coding, field_name){
 castCheckCode <- function(x, coding, field_name){
   checked_value <- getCheckedValue(coding, field_name)
   
-  factor(unname(c("", checked_value[1])[(x %in% checked_value) + 1]), 
+  x_checked <- x %in% checked_value 
+  
+  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
          levels=c("", checked_value[1]), 
          labels=c("", checked_value[1]))
 }

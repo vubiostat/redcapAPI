@@ -368,21 +368,40 @@ test_that(
     x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
     
     expect_equal(as.character(castChecked(x, coding, "checkbox___1")), 
-                 rep(c("Checked", "Unchecked"), c(2, 9)))
+                 c("Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
     expect_equal(as.character(castChecked(x, coding, "checkbox___b")), 
-                 c("Unchecked", rep("Checked", 3), rep("Unchecked", 7)))
+                 c("Unchecked", "Checked", 
+                   "Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
     expect_equal(as.character(castChecked(x, coding, "checkbox___xyz")), 
-                 c("Unchecked", "Checked", "Unchecked", "Unchecked", 
-                   "Checked", "Checked",
-                   "Unchecked", "Unchecked",
-                   "Unchecked", "Unchecked", "Unchecked"))
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
     expect_equal(as.character(castChecked(x, coding, "checkbox____4")), 
-                 c("Unchecked", "Checked", rep("Unchecked", 4), 
-                   rep("Checked", 2), 
-                   "Unchecked", "Unchecked", "Unchecked"))
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked",
+                   "Unchecked", "Unchecked", 
+                   "Checked",   "Checked",  
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
     expect_equal(as.character(castChecked(x, coding, "checkbox___abc")), 
-                 c("Unchecked", "Checked", rep("Unchecked", 6), 
-                   rep("Checked", 2), "Unchecked"))
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked",
+                   "Unchecked", "Unchecked",  
+                   "Unchecked", "Unchecked",
+                   "Checked",   "Checked",  
+                   "Unchecked"))
   }
 )
 
@@ -400,15 +419,40 @@ test_that(
     x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
     
     expect_equal(as.character(castCheckLabel(x, coding, "checkbox___1")), 
-                 c("Peanut", "Peanut", "", "", "", "", "", "", "", "", ""))
+                 c("Peanut",   "Peanut", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckLabel(x, coding, "checkbox___b")), 
-                 c("", "Walnut", "Walnut", "Walnut", "", "", "", "", "", "", ""))
+                 c("", "Walnut", 
+                   "Walnut",   "Walnut", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckLabel(x, coding, "checkbox___xyz")), 
-                 c("", "Cashew", "", "", "Cashew", "Cashew", "", "", "", "", ""))
+                 c("", "Cashew", 
+                   "", "", 
+                   "Cashew",   "Cashew", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckLabel(x, coding, "checkbox____4")), 
-                 c("", "Almond", "", "", "", "", "Almond", "Almond", "", "", ""))
+                 c("", "Almond", 
+                   "", "",
+                   "", "", 
+                   "Almond",   "Almond",  
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckLabel(x, coding, "checkbox___abc")), 
-                 c("", "Pecan", "", "", "", "", "", "", "Pecan", "Pecan", ""))
+                 c("", "Pecan", 
+                   "", "",
+                   "", "",  
+                   "", "",
+                   "Pecan",   "Pecan",  
+                   ""))
   }
 )
 
@@ -426,15 +470,40 @@ test_that(
     x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
     
     expect_equal(as.character(castCheckCode(x, coding, "checkbox___1")), 
-                 c("1", "1", "", "", "", "", "", "", "", "", ""))
+                 c("1",   "1", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckCode(x, coding, "checkbox___b")), 
-                 c("", "b", "b", "b", "", "", "", "", "", "", ""))
+                 c("", "b", 
+                   "b",   "b", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckCode(x, coding, "checkbox___xyz")), 
-                 c("", "xyz", "", "", "xyz", "xyz", "", "", "", "", ""))
+                 c("", "xyz", 
+                   "", "", 
+                   "xyz",   "xyz", 
+                   "", "", 
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckCode(x, coding, "checkbox____4")), 
-                 c("", "-4", "", "", "", "", "-4", "-4", "", "", ""))
+                 c("", "-4", 
+                   "", "",
+                   "", "", 
+                   "-4",   "-4",  
+                   "", "", 
+                   ""))
     expect_equal(as.character(castCheckCode(x, coding, "checkbox___abc")), 
-                 c("", "ABC", "", "", "", "", "", "", "ABC", "ABC", ""))
+                 c("", "ABC", 
+                   "", "",
+                   "", "",  
+                   "", "",
+                   "ABC",   "ABC",  
+                   ""))
   }
 )
 
