@@ -269,7 +269,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         rtry_q <<- rq
       }
     )
-  class(rc) <- "redcapApiConnection"
+  class(rc) <- c("redcapApiConnection", "redcapConnection")
   rc
 }
 
@@ -636,7 +636,7 @@ offlineConnection <- function(meta_data = NULL,
       
       refresh_all = function(){} # provided only to match the redcapApiConnection. Has no effect
     )
-  class(rc) <- "redcapOfflineConnection"
+  class(rc) <- c("redcapOfflineConnection", "redcapConnection")
   rc
 }
 

@@ -230,6 +230,7 @@ importRecords.redcapApiConnection <- function(rcon,
   date_vars <- MetaData$field_name[grepl("date_", MetaData$text_validation_type_or_show_slider_number)]
   
   if (any(date_vars %in% names(data))){
+    date_vars <- date_vars[date_vars %in% names(data)]
     bad_date_fmt <- 
       !vapply(X = data[date_vars], 
               FUN = function(x) is.character(x) | "Date" %in% class(x) | "POSIXct" %in% class(x),

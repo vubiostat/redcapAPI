@@ -30,23 +30,42 @@ FILE_IMPORT_EXPORT_EMPTY_FRAME <-
 
 # Regular Expressions -----------------------------------------------
 
+# REGEX_CHECKBOX_FIELD_NAME - Matches the checkbox style field name
+# use sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", x, perl = TRUE) to get the field name base
+# use sub(REGEX_CHECKBOX_FIELD_NAME, "\\2", x, perl = TRUE) to get the option
+# Using regex to parse checkbox names has some limitations and at some point
+# we may need to consider another strategy. REDCap permits any characters to
+# be used in coding checkboxes, but when converting them to field names, 
+# converts non alphnumeric characters to an underscore. 
+# some examples -4, Option  ----> checkbox____4
+#               k>=9, K >=9 ----> checkbox___k__9
+#               a___b       ----> checkbox___a___b
+# 
+# Explanation : https://stackoverflow.com/a/76020417/1017276
+# ^(.*?)___ : match anything at beginning non-greedily followed by ___ into 1st group
+#       ___ : after that, find the first case of ___ (the REDCap UI won't permit the user to use more than one consecutive _ in field names)
+#     (.*)$ : match anything after until end of string into 2nd group
+REGEX_CHECKBOX_FIELD_NAME <- "^(.*?)___(.*)$"
+
 # REGEX_FIELD_NAME - matches the acceptable naming conventions for field names
 # Explanation
 #            ^ : start of string
 #        [a-z] : a single character that is a lower case letter
+#   (?!.*__.*) : disallow any two consecutive characters to be underscores
 # [a-z,0-9,_]+ : any number or characters that are a lower case letter, digit, or underscore
 #    [a-z,0-9] : a single character that is a lower case letter or digit
 #            $ : end of string
-REGEX_FIELD_NAME <- "^[a-z][a-z,0-9,_]+[a-z,0-9]$"
+REGEX_FIELD_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 
 # REGEX_FORM_NAME - matches acceptable naming conventions for form names
 # Explanation
 #            ^ : start of string
 #        [a-z] : A single character that is a lower case letter
+#   (?!.*__.*) : disallow any two consecutive characters to be underscores
 # [a-z,0-9,_]+ : Any number of characters that are lower case letters, digits, or an underscore
 #    [a-z,0-9] : a single character that is a lower case letter or digit
 #            $ : end of string
-REGEX_FORM_NAME <- "^[a-z][a-z,0-9,_]+[a-z,0-9]$"
+REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 
 # REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options
 # It's a good idea to trim whitespace before using this

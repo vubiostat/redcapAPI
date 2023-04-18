@@ -1,9 +1,9 @@
 context("redcapConnection")
 
 test_that("redcapApiConnection can be created",
-          expect_equal(
-            class(redcapConnection(url = url, token = API_KEY)),
-            "redcapApiConnection"
+          expect_class(
+            redcapConnection(url = url, token = API_KEY),
+            classes = c("redcapApiConnection", "redcapConnection")
           )
 )
 
