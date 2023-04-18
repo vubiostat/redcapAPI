@@ -3,7 +3,7 @@ context("instruments, import/export mappings, export PDF argument functionality"
 rcon <- redcapConnection(url = url, token = API_KEY)
 
 #####################################################################
-# exportInstruments
+# exportInstruments                                              ####
 
 test_that(
   "Returns a data frame of instruments", 
@@ -14,7 +14,7 @@ test_that(
 )
 
 #####################################################################
-# exportMappings
+# exportMappings                                                 ####
 
 test_that(
   "Return a data frame of mappings when called with defaults (longitudinal)", 
@@ -52,10 +52,38 @@ test_that(
 #####################################################################
 # importMappings
 
-# FIXME: Add tests after writing file
+test_that(
+  "Import Instrument Mappings Successfully", 
+  {
+    OrigMapping <- rcon$mapping()
+    
+    ArmOneMapping <- OrigMapping[OrigMapping$arm_num == 1, ]
+    
+    # Import a subset of mappings
+    expect_message(importMappings(rcon, 
+                                  ArmOneMapping), 
+                   sprintf("Mappings imported: %s", nrow(ArmOneMapping)))
+    
+    expect_equal(ArmOneMapping, 
+                 rcon$mapping())
+    
+    expect_message(importMappings(rcon, 
+                                  OrigMapping, 
+                                  refresh = FALSE), 
+                   sprintf("Mappings imported: %s", nrow(OrigMapping)))
+    
+    expect_data_frame(rcon$mapping(), 
+                      nrows = nrow(ArmOneMapping))
+    
+    rcon$refresh_mapping()
+    
+    expect_equal(OrigMapping, 
+                 rcon$mapping())
+  }
+)
 
 #####################################################################
-# exportPDF
+# exportPDF                                                      ####
 
 test_that(
   "Blank data collection sheet", 
