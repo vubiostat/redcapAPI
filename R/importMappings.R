@@ -45,13 +45,13 @@ importMappings <- function(rcon,
 #' @rdname importMappings
 #' @export
 
-importMappings <- function(rcon, 
-                           data, 
-                           refresh = TRUE, 
-                           ..., 
-                           error_handling  = getOption("redcap_error_handling"),
-                           config          = list(), 
-                           api_param       = list()){
+importMappings.redcapApiConnection <- function(rcon, 
+                                               data, 
+                                               refresh = TRUE, 
+                                               ..., 
+                                               error_handling  = getOption("redcap_error_handling"),
+                                               config          = list(), 
+                                               api_param       = list()){
   ###################################################################
   # Argument Validation                                          ####
   
@@ -62,7 +62,7 @@ importMappings <- function(rcon,
                           add = coll)
   
   checkmate::assert_data_frame(x = data, 
-                               names = "named", 
+                               col.names = "named", 
                                add = coll)
   
   checkmate::assert_logical(x = refresh, 
