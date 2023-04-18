@@ -159,11 +159,13 @@ test_that(
                 "a_field_name_",   #FALSE - trailing underscore not permitted
                 "a field name",    #FALSE - spaces not permitted
                 "a-field_name",    #FALSE - only digits, lowercase letters, and underscore permitted
-                "a.field.name")    #FALSE - only digits, lowercase letters, and underscore permitted
+                "a.field.name",    #FALSE - only digits, lowercase letters, and underscore permitted
+                "a__field_name",   #FALSE - no consecutive underscores
+                "a_fie___ld_name") #FALSE - no consecutive underscores
 
     
     expect_equal(isValidFieldName(fields), 
-                 rep(c(TRUE, FALSE), c(3, 8)))
+                 rep(c(TRUE, FALSE), c(3, 10)))
     
     coll <- checkmate::makeAssertCollection()
     
@@ -180,20 +182,22 @@ test_that(
   {
     local_reproducible_output(width = 200)
     forms <- c("a_form_name",      #TRUE
-                "a_form_name2",    #TRUE - trailing digits permitted
-                "a_form123_name",  #TRUE - digits permitted in the name
-                "A_form_name",    #FALSE - capital letters not permitted
-                "a_forM_name",    #FALSE - captial letters not permitted
-                "1_form_name",    #FALSE - leading digits not permitted
-                "_form_name",     #FALSE - leading underscore not permitted
-                "a_form_name_",   #FALSE - trailing underscore not permitted
-                "a form name",    #FALSE - spaces not permitted
-                "a-form_name",    #FALSE - only digits, lowercase letters, and underscore permitted
-                "a.form.name")    #FALSE - only digits, lowercase letters, and underscore permitted
+               "a_form_name2",    #TRUE - trailing digits permitted
+               "a_form123_name",  #TRUE - digits permitted in the name
+               "A_form_name",    #FALSE - capital letters not permitted
+               "a_forM_name",    #FALSE - captial letters not permitted
+               "1_form_name",    #FALSE - leading digits not permitted
+               "_form_name",     #FALSE - leading underscore not permitted
+               "a_form_name_",   #FALSE - trailing underscore not permitted
+               "a form name",    #FALSE - spaces not permitted
+               "a-form_name",    #FALSE - only digits, lowercase letters, and underscore permitted
+               "a.form.name",    #FALSE - only digits, lowercase letters, and underscore permitted
+               "a__form_name",   #FALSE - no consecutive underscores
+               "a_fo___rm_name") #FALSE - no consecutive underscores
     
     
     expect_equal(isValidFormName(forms), 
-                 rep(c(TRUE, FALSE), c(3, 8)))
+                 rep(c(TRUE, FALSE), c(3, 10)))
     
     coll <- checkmate::makeAssertCollection()
     
