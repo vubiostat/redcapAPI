@@ -375,8 +375,7 @@ exportRecordsTyped.redcapApiConnection <-
                                                    field_text_types = field_text_types)
 
    ###################################################################
-  # Derive codings (This is probably a good internal helper)
-  
+  # Derive codings
   codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
                                             field_map = field_map, 
                                             field_names = field_names, 
@@ -391,7 +390,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Locate NA's
-
   nas <- .exportRecordsTyped_getNas(na = na, 
                                     field_types = field_types, 
                                     args = args, 
@@ -409,7 +407,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Type Casting
-  
   Records <- .exportRecordsTyped_castRecords(Raw = Raw, 
                                              cast = cast, 
                                              field_types = field_types, 
@@ -420,7 +417,6 @@ exportRecordsTyped.redcapApiConnection <-
 
    ###################################################################
   # Handle Attributes assignments on columns, #24, #45
-  
   Records <- .exportRecordsTyped_attributeAssignment(Records = Records, 
                                                      assignment = assignment, 
                                                      field_names = field_names, 
@@ -429,7 +425,6 @@ exportRecordsTyped.redcapApiConnection <-
     
    ###################################################################
   # Attach invalid record information
-  
   Records <- .exportRecordsTyped_attachInvalid(Records = Records, 
                                                Raw = Raw, 
                                                validations = validations, 
@@ -540,13 +535,12 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   Raw <- rcon$records()[fields]
   
-  if (length(records) > 0){
+  if (length(records) > 0)
     Raw <- Raw[Raw[[ rcon$metadata()$field_name[1] ]] %in% records, ]
-  }
+
   
-  if (length(events) > 0){
+  if (length(events) > 0)
     Raw <- Raw[Raw$redcap_event_name %in% events, ]
-  }
   
   ###################################################################
   # Process meta data for useful information
