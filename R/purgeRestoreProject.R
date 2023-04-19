@@ -54,9 +54,6 @@
 #' @param config \code{list} Additional configuration parameters to pass to 
 #'   \code{\link[httr]{POST}}. These are appended to any parameters in 
 #'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @details When restoring a project, all arguments are optional. Any argument 
 #' that is \code{NULL} will result in no import being made. The order of 
@@ -85,8 +82,7 @@ purgeProject <- function(rcon,
                          dags           = FALSE, 
                          records        = FALSE, 
                          error_handling = getOption("redcap_error_handling"), 
-                         config         = list(), 
-                         api_param      = list()){
+                         config         = list()){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -134,10 +130,6 @@ purgeProject <- function(rcon,
                          names = "named", 
                          add = coll)
   
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -147,14 +139,12 @@ purgeProject <- function(rcon,
     RecordId <- exportRecordsTyped(rcon, 
                                    fields = rcon$metadata()$field_name[1], 
                                    error_handling = error_handling, 
-                                   config = config, 
-                                   api_param = api_param)
+                                   config = config)
     
     deleteRecords(rcon, 
                   records = RecordId[[1]], 
                   error_handling = error_handling, 
-                  config = config, 
-                  api_param = api_param)
+                  config = config)
   }
   
   if (dags){
@@ -162,8 +152,7 @@ purgeProject <- function(rcon,
     # deleteDags(rcon, 
     #            dags = rcon$dags()$unique_group_name, 
     #            error_handling = error_handling, 
-    #            config = config, 
-    #            api_param = api_param)
+    #            config = config)
   }
 
   if (user_roles){
@@ -171,8 +160,7 @@ purgeProject <- function(rcon,
     # deleteUserRoles(rcon, 
     #                 rcon$user_roles()$unique_role_name, 
     #                 error_handling = error_handling, 
-    #                 config = config, 
-    #                 api_param = api_param)
+    #                 config = config)
   }
   
   if (users){
@@ -180,24 +168,21 @@ purgeProject <- function(rcon,
     # deleteUsers(rcon, 
     #             rcon$users()$username, 
     #             error_handling = error_handling, 
-    #             config = config, 
-    #             api_param = api_param)
+    #             config = config)
   }
   
   if (events){
     deleteEvents(rcon, 
                  events = rcon$events()$unique_event_name, 
                  error_handling = error_handling, 
-                 config = config, 
-                 api_param = api_param)
+                 config = config)
   }
   
   if (arms){
     deleteArms(rcon, 
                arms = rcon$arms()$arm_num, 
                error_handling = error_handling, 
-               config = config, 
-               api_param = api_param)
+               config = config)
   }
 }
 
@@ -217,8 +202,7 @@ restoreProject <- function(rcon,
                            dag_assignments       = NULL,
                            records               = NULL, 
                            error_handling        = getOption("redcap_error_handling"), 
-                           config                = list(), 
-                           api_param             = list()){
+                           config                = list()){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -296,10 +280,6 @@ restoreProject <- function(rcon,
                          names = "named", 
                          add = coll)
   
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -309,40 +289,35 @@ restoreProject <- function(rcon,
     importProjectInformation(rcon, 
                              data = project_information, 
                              error_handling = error_handling, 
-                             config = config, 
-                             api_param = api_param)
+                             config = config)
   }
   
   if (!is.null(arms)){
     importArms(rcon, 
                arms_data = arms, 
                error_handling = error_handling, 
-               config = config, 
-               api_param = api_param)
+               config = config)
   }
   
   if (!is.null(events)){
     importEvents(rcon, 
                  event_data = events, 
                  error_handling = error_handling, 
-                 config = config, 
-                 api_param = api_param)
+                 config = config)
   }
   
   if (!is.null(meta_data)){
     importMetaData(rcon, 
                    data = meta_data, 
                    error_handling = error_handling, 
-                   config = config, 
-                   api_param = api_param)
+                   config = config)
   }
   
   if (!is.null(mappings)){
     importMappings(rcon, 
                    data = mappings, 
                    error_handling = error_handling, 
-                   config = config, 
-                   api_param = api_param)
+                   config = config)
   }
   
   if (!is.null(repeating_instruments)){
@@ -350,8 +325,7 @@ restoreProject <- function(rcon,
     # importRepeatingInstrumentsEvents(rcon,
     #                                  data = repeating_instruments,
     #                                  error_handling = error_handling, 
-    #                                  config = config, 
-    #                                  api_param = api_param)
+    #                                  config = config)
   }
   
   if (!is.null(users)){
@@ -359,8 +333,7 @@ restoreProject <- function(rcon,
     # importUsers(rcon,
     #             data = users, 
     #             error_handling = error_handling, 
-    #             config = config, 
-    #             api_param = api_param)
+    #             config = config)
   }
   
   if (!is.null(user_roles)){
@@ -368,8 +341,7 @@ restoreProject <- function(rcon,
     # importUserRoles(rcon,
     #                 data = user_roles, 
     #                 error_handling = error_handling, 
-    #                 config = config, 
-    #                 api_param = api_param)
+    #                 config = config)
   }
   
   if (!is.null(user_role_assignments)){
@@ -377,8 +349,7 @@ restoreProject <- function(rcon,
     # importUserRoleAssignments(rcon,
     #                           data = user_role_assignments, 
     #                           error_handling = error_handling, 
-    #                           config = config, 
-    #                           api_param = api_param)
+    #                           config = config)
   }
   
   if (!is.null(dags)){
@@ -386,8 +357,7 @@ restoreProject <- function(rcon,
     # importDags(rcon,
     #            data = dags, 
     #            error_handling = error_handling, 
-    #            config = config, 
-    #            api_param = api_param)
+    #            config = config)
   }
   
   if (!is.null(dag_assignments)){
@@ -395,15 +365,13 @@ restoreProject <- function(rcon,
     # importDagAssignments(rcon,
     #                      data = dag_assignments, 
     #                      error_handling = error_handling, 
-    #                      config = config, 
-    #                      api_param = api_param)
+    #                      config = config)
   }
   
   if (!is.null(records)){
     importRecords(rcon, 
                   data = records, 
                   error_handling = error_handling, 
-                  config = config, 
-                  api_param = api_param)
+                  config = config)
   }
 }
