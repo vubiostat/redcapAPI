@@ -459,7 +459,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        validation    = list(),
                                                        cast          = list(),
                                                        assignment    = list(label=stripHTMLandUnicode,
-                                                                            units=unitsFieldAnnotation)
+                                                                            units=unitsFieldAnnotation),
                                                        ...){
   
   if (is.numeric(records)) records <- as.character(records)

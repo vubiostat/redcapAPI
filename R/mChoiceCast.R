@@ -10,6 +10,7 @@
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
+#' @param style character. One of "labelled" or "coded". Default is "labelled"
 #' @export
 #' @examples
 #' \dontrun{
@@ -31,32 +32,26 @@ mChoiceCast <- function(Records, rcon, style="labelled")
   style <- checkmate::matchArg(x = style, 
                                choices = c("coded", "labelled"), 
                                add = coll)
-  ## FIXME: How to assert? if("package:Hmisc" %in% search())
-    
+
   checkmate::reportAssertions(coll)
+  
+  if(!"package:Hmisc" %in% search())
+    warning("Hmisc is not loaded. Required to use an mChoice class.")
   
   fields <- colnames(Records)
 
-# # .exportRecordsTyped_addmChoiceField -------------------------------
-# .exportRecordsTyped_addmChoiceField <- function(Records, 
-#                                                 Raw, 
-#                                                 rcon, 
-#                                                 fields, 
-#                                                 mChoice){
-  
-  # FIXME: Where does fields come from?
-  # FIXME: Where does Raw come from? or could we substitute the recast function?
-  #   Even better why bother? Let the other field be cast in the desired manner.
-  
   MetaData <- rcon$metadata()
   CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
-  checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
   
-  for (i in seq_along(checkbox_fields))
-    Records[[ checkbox_fields[i] ]] <- 
+  checkbox_fields <- lapply(CheckboxMetaData$field_name,
+    function(fn) fields[grepl(paste0("^", fn,"___"), fields)])
+  
+  Raw <- Records |> recastRecords(rcon, fields=unlist(checkbox_fields), cast=list(checkbox=castRaw))
+  for (i in CheckboxMetaData$field_name)
+    Records[[ i ]] <- 
       .mChoiceField(rcon, 
                     records_raw = Raw, 
-                    checkbox_fieldname = checkbox_fields[i], 
+                    checkbox_fieldname = i, 
                     style = style)
 
   Records
