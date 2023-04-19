@@ -24,17 +24,17 @@ valRx(rx)
 
 valChoice(x, field_name, coding)
 
-castLabel(x, coding, field_name)
+castLabel(x, field_name, coding)
 
-castCode(x, coding, field_name)
+castCode(x, field_name, coding)
 
-castRaw(x, coding, field_name)
+castRaw(x, field_name, coding)
 
-castChecked(x, coding, field_name)
+castChecked(x, field_name, coding)
 
-castCheckLabel(x, coding, field_name)
+castCheckLabel(x, field_name, coding)
 
-castCheckCode(x, coding, field_name)
+castCheckCode(x, field_name, coding)
 
 raw_cast
 }
@@ -71,7 +71,7 @@ function for constructing \code{na} overrides in \code{\link{exportRecordsTyped}
 \code{valRx} constructs a validation function from a regular expression pattern. 
 The function returns a TRUE/FALSE if the value matches the pattern.
 
-\code{valchoice} constructs a validation function from a set of choices 
+\code{valChoice} constructs a validation function from a set of choices 
 defined in the MetaData. The functions returns a TRUE/FALSE if the value
 matches one of the choices.
 

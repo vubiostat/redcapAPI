@@ -75,7 +75,7 @@ valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), 
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castLabel <- function(x, coding, field_name){
+castLabel <- function(x, field_name, coding){
   code_match <- getCodingIndex(x, coding)
   
   factor(unname(coding[code_match]), levels = coding, labels = names(coding))
@@ -83,7 +83,7 @@ castLabel <- function(x, coding, field_name){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCode <- function(x, coding, field_name){
+castCode <- function(x, field_name, coding){
   code_match <- getCodingIndex(x, coding)
   
   factor(unname(coding[code_match]), levels = coding, labels = coding)
@@ -91,7 +91,7 @@ castCode <- function(x, coding, field_name){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castRaw <- function(x, coding, field_name){
+castRaw <- function(x, field_name, coding){
   raw <- 
     if (grepl(".*___(.*)", field_name)){
       as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
@@ -104,7 +104,7 @@ castRaw <- function(x, coding, field_name){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castChecked <- function(x, coding, field_name){
+castChecked <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
   
   x_checked <- x %in% checked_value 
@@ -114,7 +114,7 @@ castChecked <- function(x, coding, field_name){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCheckLabel <- function(x, coding, field_name){
+castCheckLabel <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
 
   x_checked <- x %in% checked_value 
@@ -126,7 +126,7 @@ castCheckLabel <- function(x, coding, field_name){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCheckCode <- function(x, coding, field_name){
+castCheckCode <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
   
   x_checked <- x %in% checked_value 
