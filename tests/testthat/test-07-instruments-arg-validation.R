@@ -3,7 +3,7 @@ context("instruments, import/export mappings, export PDF argument validations")
 rcon <- redcapConnection(url = url, token = API_KEY)
 
 #####################################################################
-# exportInstruments
+# exportInstruments                                              ####
 
 test_that(
   "Return an error when rcon is not a redcapConnection object", 
@@ -39,7 +39,7 @@ test_that(
 )
 
 #####################################################################
-# exportMappings
+# exportMappings                                                 ####
 
 test_that(
   "Return an error when rcon is not a redcapConnection object", 
@@ -87,10 +87,109 @@ test_that(
 #####################################################################
 # importMappings
 
-# FIXME: Add tests after writing file
+test_that(
+  "Return an error if rcon is not a redcapConnection", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importMappings(rcon = "not a connection", 
+                                data = rcon$mapping()), 
+                 "no applicable method for 'importMappings'")
+    expect_error(importMappings.redcapApiConnection(rcon = "not a connection", 
+                                                    data = rcon$mapping()), 
+                 "'rcon': Must inherit from class 'redcapApiConnection'")
+  }
+)
+
+test_that(
+  "Return an error if data is not a data frame", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importMappings(rcon = rcon, 
+                                data = "not a data frame"), 
+                 "'data': Must be of type 'data.frame'")
+  }
+)
+
+test_that(
+  "Validate the content of data", 
+  {
+    local_reproducible_output(width = 200)
+    
+    # must have the right names
+    new_map <- rcon$mapping()
+    names(new_map)[1] <- "the_arm_number"
+    
+    expect_error(importMappings(rcon = rcon, 
+                                data = new_map), 
+                 "'names[(]data[)]': Must be a subset of [{]'arm_num','unique_event_name','form'[}]")
+
+    new_map <- rcon$mapping()
+    new_map$arm_num <- 3:4
+    expect_error(importMappings(rcon = rcon,
+                                data = new_map),
+                 "'data[$]arm_num': Must be a subset of [{]'1','2'[}]")
+
+    new_map <- rcon$mapping()
+    new_map$unique_event_name <- sub("event", "different event", new_map$unique_event_name)
+    expect_error(importMappings(rcon = rcon,
+                                data = new_map),
+                 "'data[$]unique_event_name': Must be a subset of [{]'event_1_arm_1','event_2_arm_1','event_1_arm_2'[}]")
+    
+    new_map <- rcon$mapping()
+    new_map$form[1] <- "not_a_real_form"
+    expect_error(importMappings(rcon = rcon,
+                                data = new_map),
+                 "Variable 'data[$]form': Must be a subset of [{]'fieldtovar_datetimes','randomization','branching_logic','data_import_export'[}]")
+  }
+)
+
+test_that(
+  "Return an error if refresh is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importMappings(rcon = rcon, 
+                                data = rcon$mapping(), 
+                                refresh = "TRUE"), 
+                 "'refresh': Must be of type 'logical'")
+    expect_error(importMappings(rcon = rcon, 
+                                data = rcon$mapping(), 
+                                refresh = c(FALSE, TRUE)), 
+                 "'refresh': Must have length 1")
+  }
+)
+
+
+test_that(
+  "Validate error_handling, config, api_param", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importMappings(rcon, 
+                                data = rcon$mapping(),
+                                error_handling = "not an option"), 
+                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
+    
+    expect_error(importMappings(rcon, 
+                                data = rcon$mapping(),
+                                config = list(1)), 
+                 "'config': Must have names")
+    expect_error(importMappings(rcon, 
+                                data = rcon$mapping(),
+                                config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(importMappings(rcon, 
+                                data = rcon$mapping(),
+                                api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(importMappings(rcon,
+                                data = rcon$mapping(),
+                                api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+  }
+)
 
 #####################################################################
-# exportPDF
+# exportPDF                                                      ####
 
 test_that(
   "exportPDF Argument validation", 
