@@ -49,6 +49,14 @@
 #' @param records Either \code{logical(1)} indicating if user roles data should be
 #'   purged from the project; or a \code{data.frame} for restoring user roles
 #'   data via \code{importRecords}
+#' @param error_handling An option for how to handle errors returned by the API.
+#'   see \code{\link{redcap_error}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @details When restoring a project, all arguments are optional. Any argument 
 #' that is \code{NULL} will result in no import being made. The order of 
@@ -70,15 +78,18 @@
 #' }
 
 purgeProject <- function(rcon, 
-                         arms       = FALSE, 
-                         events     = FALSE, 
-                         users      = FALSE, 
-                         user_roles = FALSE, 
-                         dags       = FALSE, 
-                         records    = FALSE){
+                         arms           = FALSE, 
+                         events         = FALSE, 
+                         users          = FALSE, 
+                         user_roles     = FALSE, 
+                         dags           = FALSE, 
+                         records        = FALSE, 
+                         error_handling = getOption("redcap_error_handling"), 
+                         config         = list(), 
+                         api_param      = list()){
   ###################################################################
   # Argument Validation                                          ####
-  checkmate::makeAssertCollection()
+  coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
@@ -114,38 +125,79 @@ purgeProject <- function(rcon,
                             any.missing = FALSE, 
                             add = coll)
   
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling",
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
   # Functional Code                                              ####
   
   if (records){
-    RecordId <- exportRecordsTyped(rcon, fields = rcon$metadata()$field_name[1])
+    RecordId <- exportRecordsTyped(rcon, 
+                                   fields = rcon$metadata()$field_name[1], 
+                                   error_handling = error_handling, 
+                                   config = config, 
+                                   api_param = api_param)
     
-    deleteRecords(rcon, records = RecordId[[1]])
+    deleteRecords(rcon, 
+                  records = RecordId[[1]], 
+                  error_handling = error_handling, 
+                  config = config, 
+                  api_param = api_param)
   }
   
   if (dags){
     # FIXME: Uncomment after writing DAG methods
-    # deleteDags(rcon, dags = rcon$dags()$unique_group_name)
+    # deleteDags(rcon, 
+    #            dags = rcon$dags()$unique_group_name, 
+    #            error_handling = error_handling, 
+    #            config = config, 
+    #            api_param = api_param)
   }
 
   if (user_roles){
     # FIXME: Uncomment after writing User Role methods
-    # deleteUserRoles(rcon, rcon$user_roles()$unique_role_name)
+    # deleteUserRoles(rcon, 
+    #                 rcon$user_roles()$unique_role_name, 
+    #                 error_handling = error_handling, 
+    #                 config = config, 
+    #                 api_param = api_param)
   }
   
   if (users){
     # FIXME: Uncomment after writing User methods
-    # deleteUsers(rcon, rcon$users()$username)
+    # deleteUsers(rcon, 
+    #             rcon$users()$username, 
+    #             error_handling = error_handling, 
+    #             config = config, 
+    #             api_param = api_param)
   }
   
   if (events){
-    deleteEvents(rcon, rcon$events()$unique_event_name)
+    deleteEvents(rcon, 
+                 events = rcon$events()$unique_event_name, 
+                 error_handling = error_handling, 
+                 config = config, 
+                 api_param = api_param)
   }
   
   if (arms){
-    deleteArms(rcon, rcon$arms()$arm_num)
+    deleteArms(rcon, 
+               arms = rcon$arms()$arm_num, 
+               error_handling = error_handling, 
+               config = config, 
+               api_param = api_param)
   }
 }
 
@@ -163,10 +215,13 @@ restoreProject <- function(rcon,
                            user_role_assignments = NULL,
                            dags                  = NULL, 
                            dag_assignments       = NULL,
-                           records               = NULL){
+                           records               = NULL, 
+                           error_handling        = getOption("redcap_error_handling"), 
+                           config                = list(), 
+                           api_param             = list()){
   ###################################################################
   # Argument Validation                                          ####
-  checkmate::makeAssertCollection()
+  coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
@@ -232,72 +287,123 @@ restoreProject <- function(rcon,
                                col.names = "named",
                                add = coll)
   
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling",
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   ###################################################################
   # Functional Code                                              ####
   
-  if (!is.null()){
+  if (!is.null(project_information)){
     importProjectInformation(rcon, 
-                             data = project_information)
+                             data = project_information, 
+                             error_handling = error_handling, 
+                             config = config, 
+                             api_param = api_param)
   }
   
   if (!is.null(arms)){
     importArms(rcon, 
-               arms_data = arms)
+               arms_data = arms, 
+               error_handling = error_handling, 
+               config = config, 
+               api_param = api_param)
   }
   
   if (!is.null(events)){
     importEvents(rcon, 
-                 event_data = events)
+                 event_data = events, 
+                 error_handling = error_handling, 
+                 config = config, 
+                 api_param = api_param)
   }
   
   if (!is.null(meta_data)){
     importMetaData(rcon, 
-                   data = meta_data)
+                   data = meta_data, 
+                   error_handling = error_handling, 
+                   config = config, 
+                   api_param = api_param)
   }
   
   if (!is.null(mappings)){
     importMappings(rcon, 
-                   data = mappings)
+                   data = mappings, 
+                   error_handling = error_handling, 
+                   config = config, 
+                   api_param = api_param)
   }
   
   if (!is.null(repeating_instruments)){
    # FIXME: Uncomment after implementing Repeating Instrument methods
-   # importRepeatingInstrumentsEvents(rcon,
-   #                                  data = repeating_instruments)
+    # importRepeatingInstrumentsEvents(rcon,
+    #                                  data = repeating_instruments,
+    #                                  error_handling = error_handling, 
+    #                                  config = config, 
+    #                                  api_param = api_param)
   }
   
   if (!is.null(users)){
     # FIXME: Uncomment after implementing User methods
-    # importUsers(rcon, 
-    #             data = users)
+    # importUsers(rcon,
+    #             data = users, 
+    #             error_handling = error_handling, 
+    #             config = config, 
+    #             api_param = api_param)
   }
   
   if (!is.null(user_roles)){
     # FIXME: Uncomment after implementing User Role methods
-    # importUserRoles(rcon, 
-    #                 data = user_roles)
+    # importUserRoles(rcon,
+    #                 data = user_roles, 
+    #                 error_handling = error_handling, 
+    #                 config = config, 
+    #                 api_param = api_param)
   }
   
   if (!is.null(user_role_assignments)){
     # FIXME: Uncomment after implementing User Role methods
-    # importUserRoleAssignments(rcon, 
-    #                           data = user_role_assignments)
+    # importUserRoleAssignments(rcon,
+    #                           data = user_role_assignments, 
+    #                           error_handling = error_handling, 
+    #                           config = config, 
+    #                           api_param = api_param)
   }
   
   if (!is.null(dags)){
     # FIXME: Uncomment after implementing DAG methods
-    # importDags(rcon, 
-    #            data = dags)
+    # importDags(rcon,
+    #            data = dags, 
+    #            error_handling = error_handling, 
+    #            config = config, 
+    #            api_param = api_param)
   }
   
   if (!is.null(dag_assignments)){
     # FIXME: Uncomment after implementing DAG methods
-    # importDagAssignments(rcon, 
-    #                      data = dag_assignments)
+    # importDagAssignments(rcon,
+    #                      data = dag_assignments, 
+    #                      error_handling = error_handling, 
+    #                      config = config, 
+    #                      api_param = api_param)
   }
   
   if (!is.null(records)){
     importRecords(rcon, 
-                  data = records)
+                  data = records, 
+                  error_handling = error_handling, 
+                  config = config, 
+                  api_param = api_param)
   }
 }
