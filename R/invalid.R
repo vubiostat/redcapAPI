@@ -37,7 +37,8 @@ format.invalid <- function(x, ...)
            paste0("  * Row ", data$row, ", Record Id '", data$record_id, "', Value '", data$value, "'") else
            paste0("  * Row ", data$row, ", Value '", data$value, "'")
       )
-    })), collapse="\n")
+    })), collapse="\n"),
+    collapse=''
   )
 }
 
