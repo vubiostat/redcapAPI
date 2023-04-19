@@ -38,7 +38,9 @@
 #' values are typically more compact and their meaning may not be obvious.
 #' 
 #' \code{castRaw} constructs a casting function that returns the content
-#' from REDCap as it was received. It is functionally equivalent to \code{identity}
+#' from REDCap as it was received. It is functionally equivalent to \code{identity}. 
+#' For multiple choice variables, the result will be coerced to numeric, if possible; 
+#' otherwise, the result is character vector.
 #' 
 #' \code{castChecked} constructs a casting function for checkbox fields. It
 #' returns values in the form of Unchecked/Checked.
@@ -52,7 +54,11 @@
 #' parameter.
 #' 
 #' @author Shawn Garbett, Benjamin Nutter
-#' 
+
+#####################################################################
+# Validation                                                     ####
+
+#' @rdname fieldValidationAndCasting
 #' @export
 isNAorBlank <- function(x, ...) is.na(x) | x==''
 
@@ -64,29 +70,124 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 #' @export
 valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
 
-#' @rdname fieldValidationAndCasting
-#' @export
-castLabel      <- function(x, coding, field_name) factor(x, levels=coding, labels=names(coding))
+#####################################################################
+# Casting                                                        ####
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCode       <- function(x, coding, field_name) factor(x, levels=coding, labels=coding)
+castLabel <- function(x, coding, field_name){
+  code_match <- getCodingIndex(x, coding)
+  
+  factor(unname(coding[code_match]), levels = coding, labels = names(coding))
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castRaw        <- function(x, coding, field_name) x
+castCode <- function(x, coding, field_name){
+  code_match <- getCodingIndex(x, coding)
+  
+  factor(unname(coding[code_match]), levels = coding, labels = coding)
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castChecked    <- function(x, coding, field_name) factor(c("Unchecked", "Checked")[(x=='1'|x=='yes')+1], levels=c("Unchecked", "Checked"))
+castRaw <- function(x, coding, field_name){
+  raw <- 
+    if (grepl(".*___(.*)", field_name)){
+      as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
+    } else {
+      code_match <- getCodingIndex(x, coding)
+      unname(coding[code_match])
+    }
+  coerceNumericIfAble(raw)
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCheckLabel <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=names(coding))
+castChecked <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+  
+  x_checked <- x %in% checked_value 
+  
+  factor(c("Unchecked", "Checked")[(x_checked)+1], levels=c("Unchecked", "Checked"))
+}
 
 #' @rdname fieldValidationAndCasting
 #' @export
-castCheckCode  <- function(x, coding, field_name) factor(c("", gsub(".*___(.*)", "\\1",field_name))[(x=='1'|x=='yes')+1], levels=coding, labels=coding)
+castCheckLabel <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+
+  x_checked <- x %in% checked_value 
+  
+  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
+         levels=c("", checked_value[1]), 
+         labels=c("", names(checked_value)[1]))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+castCheckCode <- function(x, coding, field_name){
+  checked_value <- getCheckedValue(coding, field_name)
+  
+  x_checked <- x %in% checked_value 
+  
+  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
+         levels=c("", checked_value[1]), 
+         labels=c("", checked_value[1]))
+}
+
+# I'm not sold on this one yet, but it could be a way to get around some thorny 
+# issues we've heard about where a checkbox is being labeled where 0 = Checked, 
+# which our current import function can't accommodate. 
+# with this, you could set the cast function to 
+# cast = list(castCheckForImport(checked = "0"))
+# #' @rdname fieldValidationAndCasting
+# #' @export
+# castCheckForImport <- function(checked = c("Checked", "1")){
+#   function(x, coding, field_name){
+#     (x %in% checked) + 0L
+#   }
+# }
+
+# utility function returns the index of the codebook matching the 
+# content of the vector. Permits accurate matching without foreknowledge
+# of whether the data are coded or labelled.
+getCodingIndex <- function(x, coding){
+  code_match <- match(as.character(x), coding)
+  
+  ifelse(is.na(match(x, coding)), 
+         match(x, names(coding)), 
+         code_match)
+}
+
+# Assembles the values that are associated with Checked
+getCheckedValue <- function(coding, field_name){
+  this_code <- sub(REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
+                   "\\2", field_name, perl = TRUE)
+  # to match, we will convert all of the punctuation to underscore. 
+  # this is consistent with how REDCap converts codes to variable names.
+  # for instance, a checkbox with code 4-3, label produce variable name checkbox___4_3 
+  this_code_index <- match(this_code, 
+                           tolower(gsub("[[:punct:]]", "_", coding)))  
+
+  checked_value <- c(coding[this_code_index], 
+                     names(coding)[this_code_index], 
+                     "1", 
+                     "Checked", 
+                     "yes")
+  checked_value
+}
+
+# Coerce to a numeric vector if possible, otherwise return the original value
+coerceNumericIfAble <- function(x){
+  x <- tryCatch(as.numeric(x), 
+                warning = function(cond) x, 
+                error = function(cond) x)
+  x
+}
+
+#####################################################################
+# Cast function lists                                            ####
 
 #' @rdname fieldValidationAndCasting
 #' @export
