@@ -427,12 +427,15 @@ exportRecordsTyped.redcapApiConnection <-
     
    ###################################################################
   # Attach invalid record information
-  Records <- .exportRecordsTyped_attachInvalid(Records = Records, 
+  
+  Records <- .exportRecordsTyped_attachInvalid(conn = rcon,
+                                               Records = Records, 
                                                Raw = Raw, 
                                                validations = validations, 
                                                nas = nas, 
-                                               field_names = field_names)
-
+                                               field_names = field_names,
+                                               field_types = field_types)
+  
    ###################################################################
   # Return Results 
   Records
@@ -620,11 +623,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Attach invalid record information
   
-  Records <- .exportRecordsTyped_attachInvalid(Records = Records, 
+  Records <- .exportRecordsTyped_attachInvalid(conn = NULL,
+                                               Records = Records, 
                                                Raw = Raw, 
                                                validations = validations, 
                                                nas = nas, 
-                                               field_names = field_names)
+                                               field_names = field_names,
+                                               field_types = field_types)
   
   ###################################################################
   # Return Results 
@@ -1132,11 +1137,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 }
 
 # .exportRecordsTyped_attachInvalid ---------------------------------
-.exportRecordsTyped_attachInvalid <- function(Records, 
+.exportRecordsTyped_attachInvalid <- function(conn,
+                                              Records, 
                                               Raw, 
                                               validations, 
                                               nas, 
-                                              field_names){
+                                              field_names,
+                                              field_types){
   selector <- !validations & !nas
   attr(Records, "invalid") <-
     do.call(rbind, lapply(seq_along(Raw), function(i)
@@ -1148,17 +1155,33 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
         {
           data.frame(row=seq_len(nrow(Raw))[sel],
                      record_id=Raw[sel, "record_id"],
+                     field_type=field_types[i],
                      field_name=field_names[i],
                      value=Raw[sel, i])
         } else
         {
           data.frame(row=seq_len(nrow(Raw))[sel],
                      field_name=field_names[i],
+                     field_type=field_types[i],
                      value=Raw[sel, i])
         }
       } else NULL
     }))
-  if(!is.null(attr(Records, "invalid"))) warning("Some records failed validation. See 'invalid' attr.")
+  if(!is.null(attr(Records, "invalid")))
+  {
+    class(attr(Records, "invalid")) <- c("invalid", "data.frame")
+    attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")
+    if(is.null(conn))
+    {
+      attr(attr(Records, "invalid"), "version") <- "offline"
+      attr(attr(Records, "invalid"), "project") <- "offline"
+    } else
+    {
+      attr(attr(Records, "invalid"), "version") <- conn$version()
+      attr(attr(Records, "invalid"), "project") <- conn$projectInfo()$project_title
+    }
+    warning("Some records failed validation. See 'invalid' attr.")
+  }
   
   Records
 }
