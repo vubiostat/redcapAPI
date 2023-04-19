@@ -64,7 +64,7 @@ key_saved <- function(envir, key)
 #'              searching for the ../<basename>.yml.
 #' @param url character. The url of the REDCap server's api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
-#' @param \dots Additional arguments passed to \link{\code{redcapConnection}}.
+#' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
 #' @return Nothing
 #' @importFrom getPass getPass
 #' @importFrom yaml read_yaml
@@ -82,9 +82,9 @@ key_saved <- function(envir, key)
 #' options(keyring_backend=keyring::backend_file)
 #' 
 #' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
-#'              sandbox_conn = 'SandboxAPI'),
-#'             keyring      = 'MyKeyring',
-#'             url          = 'https://<REDCAP_URL>/api/') 
+#'                sandbox_conn = 'SandboxAPI'),
+#'              keyring      = 'MyKeyring',
+#'              url          = 'https://<REDCAP_URL>/api/') 
 #' }
 #'
 #' @export
@@ -143,31 +143,28 @@ unlockREDCap    <- function(connections,
   # Create an environment to house API_KEYS locally
   if(!exists("apiKeyStore", inherits=FALSE)) apiKeyStore <- new.env()
   
-  # Was a keyring specified?
-  if(!is.null(keyring))
+  state <- keyring::keyring_list()
+  state <- state[state$keyring==keyring,]
+  
+  # If so, does it exist?
+  if(nrow(state) == 1)
   {
-    state <- keyring::keyring_list()
-    state <- state[state$keyring==keyring,]
-    
-    # If so, does it exist?
-    if(nrow(state) == 1)
-    {
-      # Is it locked
-      if(state$locked)
-      {
-        password <- passwordFUN(msg =
-                                  paste0("Please enter password to unlock API keyring ",keyring, " "))
-        keyring::keyring_unlock(keyring, password)
-      }
-    } else # Keyring does not exist
+    # Is it locked
+    if(state$locked)
     {
       password <- passwordFUN(msg =
-                                paste0("Creating keyring. Enter password for the API keyring ",
-                                       keyring, " "))
-      # Create keyring if it doesn't exist
-      keyring::keyring_create(keyring, password)
+                                paste0("Please enter password to unlock API keyring ",keyring, " "))
+      keyring::keyring_unlock(keyring, password)
     }
+  } else # Keyring does not exist
+  {
+    password <- passwordFUN(msg =
+                              paste0("Creating keyring. Enter password for the API keyring ",
+                                     keyring, " "))
+    # Create keyring if it doesn't exist
+    keyring::keyring_create(keyring, password)
   }
+
   
   # For each dataset requested
   for(i in seq_along(connections))
@@ -199,7 +196,7 @@ unlockREDCap    <- function(connections,
       
       if(!is.null(keyring))
       {
-        keyring::key_set_with_value("redcapAPI", username=i, password=apiKeyStore[[connections[i]]], keyring=keyring)
+        keyring::key_set_with_value("redcapAPI", username=connections[[i]], password=apiKeyStore[[connections[i]]], keyring=keyring)
       }
     }
     
@@ -210,7 +207,8 @@ unlockREDCap    <- function(connections,
       },
       error = function(e)
       {
-        if(grepl("Could not resolve host", e))
+        if(grepl("Could not resolve host", e) ||
+           grepl("403", e))
         {
           rm(varnames[i], envir = apiKeyStore)
           if(!is.null(keyring)) keyring::key_delete("redcapAPI", connections[i], keyring)

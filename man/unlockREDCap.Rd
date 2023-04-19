@@ -34,7 +34,7 @@ searching for the ../<basename>.yml.}
 
 \item{passwordFUN}{function. Function to get the password for the keyring. Defaults to getPass::getPass().}
 
-\item{\dots}{Additional arguments passed to \link{\code{redcapConnection}}.}
+\item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
 }
 \value{
 Nothing
@@ -65,9 +65,9 @@ file in clear text.
 options(keyring_backend=keyring::backend_file)
 
 unlockREDCap(c(test_conn    = 'TestRedcapAPI',
-             sandbox_conn = 'SandboxAPI'),
-            keyring      = 'MyKeyring',
-            url          = 'https://<REDCAP_URL>/api/') 
+               sandbox_conn = 'SandboxAPI'),
+             keyring      = 'MyKeyring',
+             url          = 'https://<REDCAP_URL>/api/') 
 }
 
 }
