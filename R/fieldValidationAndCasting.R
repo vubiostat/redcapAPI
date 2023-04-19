@@ -26,7 +26,7 @@
 #' \code{valRx} constructs a validation function from a regular expression pattern. 
 #' The function returns a TRUE/FALSE if the value matches the pattern.
 #' 
-#' \code{valchoice} constructs a validation function from a set of choices 
+#' \code{valChoice} constructs a validation function from a set of choices 
 #' defined in the MetaData. The functions returns a TRUE/FALSE if the value
 #' matches one of the choices.
 #' 
@@ -218,21 +218,21 @@ raw_cast <- list(
 # Unexported - default lists for exportRecordsTyped
 
 .default_validate <- list(
-  date_              = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"),
-  datetime_          = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
-  datetime_seconds_  = valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time_mm_ss         = valRx("[0-5][0-9]:[0-5][0-9]"),
-  time_hh_mm_ss      = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"),
-  time               = valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"),
-  float              = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  number             = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
-  calc               = valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?"),
+  date_              = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
+  datetime_          = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
+  datetime_seconds_  = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
+  time_mm_ss         = valRx("^[0-5][0-9]:[0-5][0-9]$"),
+  time_hh_mm_ss      = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
+  time               = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
+  float              = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
+  number             = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
+  calc               = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
   int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
-  integer            = valRx("[-+]?[0-9]+"),
+  integer            = valRx("^[-+]?[0-9]+$"),
   yesno              = valRx("^(?i)(0|1|yes|no)$"),
-  truefalse          = valRx("(0|1|true|false)"),
+  truefalse          = valRx("^(0|1|true|false)$"),
   checkbox           = valRx("^(?i)(0|1|yes|no)$"),
-  form_complete      = valRx("[012]"),
+  form_complete      = valRx("^[012]$"),
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
