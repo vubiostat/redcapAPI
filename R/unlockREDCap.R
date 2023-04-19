@@ -96,6 +96,20 @@ unlockREDCap    <- function(connections,
                             passwordFUN = getPass::getPass,
                             ...)
 {
+   ###########################################################################
+  # Check parameters passed to function
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = url,          null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = config,       null.ok = TRUE,  add = coll)
+  checkmate::assert_function( x = passwordFUN,  null.ok = FALSE, add = coll)
+  checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
+  checkmate::reportAssertions(coll)
+  
+   ###########################################################################
+  # Connection function
   FUN <- function(key, ...)
   {
     conn <- redcapConnection(key, url=url, ...)
