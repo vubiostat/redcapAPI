@@ -10,14 +10,24 @@ rcon <- redcapConnection(url = url,
 # thought into what project we want to restore for testing.
 
 # test_that(
-#   "Purge and restore a project", 
+#   "Purge and restore a project from data frames",
+#   {
+#     expect_no_error(purgeProject(rcon, records = TRUE))
+# 
+#     expect_no_error(restoreProject(rcon,
+#                                    project_information = TestingBranchingLogic$project_information,
+#                                    meta_data = TestingBranchingLogic$meta_data,
+#                                    records = TestingBranchingLogic$records))
+#   }
+# )
+# 
+# test_that(
+#   "Purge and restore a project from a list",
 #   {
 #     expect_no_error(purgeProject(rcon, records = TRUE))
 #     
-#     expect_no_error(restoreProject(rcon, 
-#                                    project_information = TestingBranchingLogic$ProjectInformation, 
-#                                    meta_data = TestingBranchingLogic$MetaData,
-#                                    records = TestingBranchingLogic$Records))
+#     expect_no_error(restoreProject(TestingBranchingLogic, 
+#                                    rcon = rcon))
 #   }
 # )
 

@@ -74,20 +74,24 @@
 #'  \item{12}{Import Records}
 #' }
 
-purgeProject <- function(rcon, 
-                         arms           = FALSE, 
-                         events         = FALSE, 
-                         users          = FALSE, 
-                         user_roles     = FALSE, 
-                         dags           = FALSE, 
-                         records        = FALSE, 
-                         error_handling = getOption("redcap_error_handling"), 
-                         config         = list()){
+purgeProject <- function(object, ...){
+  UseMethod("purgeProject")
+}
+
+purgeProject.redcapApiConnection <- function(object, 
+                                             arms           = FALSE, 
+                                             events         = FALSE, 
+                                             users          = FALSE, 
+                                             user_roles     = FALSE, 
+                                             dags           = FALSE, 
+                                             records        = FALSE, 
+                                             error_handling = getOption("redcap_error_handling"), 
+                                             config         = list()){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = rcon, 
+  checkmate::assert_class(x = object, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -186,28 +190,37 @@ purgeProject <- function(rcon,
   }
 }
 
+#####################################################################
+# restoreProject                                                 ####
+
 #' @rdname purgeRestoreProject
 
-restoreProject <- function(rcon, 
-                           project_information   = NULL,
-                           arms                  = NULL, 
-                           events                = NULL, 
-                           meta_data             = NULL,
-                           mappings              = NULL, 
-                           repeating_instruments = NULL,
-                           users                 = NULL, 
-                           user_roles            = NULL, 
-                           user_role_assignments = NULL,
-                           dags                  = NULL, 
-                           dag_assignments       = NULL,
-                           records               = NULL, 
-                           error_handling        = getOption("redcap_error_handling"), 
-                           config                = list()){
+restoreProject <- function(object, ...){
+  UseMethod("restoreProject")
+}
+
+#' @rdname purgeRestoreProject
+
+restoreProject.redcapApiConnection <- function(object, 
+                                               project_information   = NULL,
+                                               arms                  = NULL, 
+                                               events                = NULL, 
+                                               meta_data             = NULL,
+                                               mappings              = NULL, 
+                                               repeating_instruments = NULL,
+                                               users                 = NULL, 
+                                               user_roles            = NULL, 
+                                               user_role_assignments = NULL,
+                                               dags                  = NULL, 
+                                               dag_assignments       = NULL,
+                                               records               = NULL, 
+                                               error_handling        = getOption("redcap_error_handling"), 
+                                               config                = list()){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = rcon, 
+  checkmate::assert_class(x = object, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -374,4 +387,42 @@ restoreProject <- function(rcon,
                   error_handling = error_handling, 
                   config = config)
   }
+}
+
+restoreProject.list <- function(object, 
+                                rcon, 
+                                ..., 
+                                error_handling = getOption("redcap_error_handling"), 
+                                config         = list()){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_list(x = object, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  checkmate::assert_subset(x = names(object), 
+                           choices = c("project_information", 
+                                       "arms", 
+                                       "events", 
+                                       "meta_data", 
+                                       "mappings", 
+                                       "repeating_instruments", 
+                                       "users", 
+                                       "user_roles", 
+                                       "user_role_assignments", 
+                                       "dags", 
+                                       "dag_assignments", 
+                                       "records"), 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+
+  do.call(restoreProject.redcapApiConnection, 
+          c(list(object = rcon), object))
 }
