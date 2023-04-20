@@ -32,7 +32,6 @@ exportRecordsTyped(
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
-  mChoice = NULL,
   ...,
   config = list(),
   api_param = list(),
@@ -51,7 +50,6 @@ exportRecordsTyped(
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
-  mChoice = NULL,
   ...
 )
 }
@@ -129,13 +127,6 @@ label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
-
-\item{mChoice}{character. Must be NULL, logical(1), \code{"coded"} or \code{"labelled"}.
-If NULL, \code{coded}, or \code{labelled} and \code{Hmisc} is loaded, it will summarize a multiple choice variable
-convert. If NULL and \code{Hmisc} is not loaded it will
-do no conversion. If FALSE it is disabled entirely. The summarized
-\code{Hmisc::mChoice} class is returned as an additional column in the
-\code{data.frame}.}
 
 \item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 These are appended to any parameters in \code{rcon$config}}

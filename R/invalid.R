@@ -33,7 +33,7 @@ format.invalid <- function(x, ...)
     paste0(unlist(sapply(seq_along(x), function(i) {
       data <- x[[i]]
       c(paste0("* Field[",data$field_type[1], "] '", names(x)[i], "' has ", nrow(data), " failure", ifelse(nrow(data) > 1, "s", "")),
-        if(!is.na(data$record_id[1])) 
+        if("record_id" %in% names(data) && !is.na(data$record_id[1])) 
            paste0("  * Row ", data$row, ", Record Id '", data$record_id, "', Value '", data$value, "'") else
            paste0("  * Row ", data$row, ", Value '", data$value, "'")
       )

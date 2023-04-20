@@ -4,13 +4,13 @@
 # instance is required that matches the intended test cases.
 #
 # This helper will pull the required values from a keyring
-# similar to how `rccola` works for securitiy purposes.
+# similar to how `rccola` works for security purposes.
 # This package cannot depend on `rccola` without creating 
 # a circular dependency so minimal code is copied locally
 # 
 # To duplicate our test database see: inst/extdata
 #
-# Create a keyring with
+# Create a keyring: 
 # This will create a keyring "API_KEYs"
 # It will name it the service "redcapAPI"
 # It will ask to save an API_KEY in this ring (there can be multiple!)
