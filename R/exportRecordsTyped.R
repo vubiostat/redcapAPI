@@ -623,7 +623,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Attach invalid record information
   
-  Records <- .exportRecordsTyped_attachInvalid(conn = NULL,
+  Records <- .exportRecordsTyped_attachInvalid(conn = rcon,
                                                Records = Records, 
                                                Raw = Raw, 
                                                validations = validations, 
@@ -1145,18 +1145,21 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                               field_names,
                                               field_types){
   selector <- !validations & !nas
+  
+  id_field <- conn$metadata()$field_name[1]
+  
   attr(Records, "invalid") <-
     do.call(rbind, lapply(seq_along(Raw), function(i)
     {
       sel <- selector[,i]
       if(any(sel))
       {
-        if("record_id" %in% colnames(Raw))
+        if(id_field %in% colnames(Raw))
         {
           data.frame(row=seq_len(nrow(Raw))[sel],
-                     record_id=Raw[sel, "record_id"],
-                     field_type=field_types[i],
+                     record_id=Raw[sel, id_field],
                      field_name=field_names[i],
+                     field_type=field_types[i],
                      value=Raw[sel, i])
         } else
         {
@@ -1171,7 +1174,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   {
     class(attr(Records, "invalid")) <- c("invalid", "data.frame")
     attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")
-    if(is.null(conn))
+    if(inherits(conn, "redcapOfflineConnection"))
     {
       attr(attr(Records, "invalid"), "version") <- "offline"
       attr(attr(Records, "invalid"), "project") <- "offline"
