@@ -197,3 +197,14 @@ test_that(
     expect_true(all(Rec$prereq_yesno %in% c("Yes", "No", NA)))
   }
 )
+
+#####################################################################
+# Avoid error on System Fields (Issue #102)                      ####
+
+test_that(
+  "Including system fields in 'fields' doesn't produce an error", 
+  {
+    expect_no_error(exportRecordsTyped(rcon, 
+                                       fields = REDCAP_SYSTEM_FIELDS))
+  }
+)
