@@ -296,6 +296,8 @@ exportRecordsTyped.redcapApiConnection <-
 
   checkmate::reportAssertions(coll)
   
+  fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
+  
   .exportRecordsTyped_validateFieldForm(rcon = rcon, 
                                         fields = fields, 
                                         drop_fields = drop_fields, 
