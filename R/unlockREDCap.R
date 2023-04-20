@@ -198,15 +198,7 @@ unlockREDCap    <- function(connections,
     # Check again if it's set properly
     if(!key_saved(apiKeyStore, connections[i]))
     {
-      # Pull from knit with params if that exists
-      if(exists("params") && !is.null(params[[connections[i]]]) && params[[connections[i]]] != "")
-      {
-        # Pull from Rmarkdown parameters
-        apiKeyStore[[connections[i]]] <- params[[connections[i]]]
-      } else # Ask the user for it
-      {
-        apiKeyStore[[connections[i]]] <- passwordFUN(msg=paste("Please enter RedCap API_KEY for", connections[i]))
-      }
+      apiKeyStore[[connections[i]]] <- passwordFUN(msg=paste("Please enter RedCap API_KEY for", connections[i]))
       
       if(!is.null(keyring))
       {
