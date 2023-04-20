@@ -29,6 +29,7 @@ offlineConnection(
   version = NULL,
   project_info = NULL,
   file_repo = NULL,
+  repeat_instrument = NULL,
   records = NULL
 )
 
@@ -92,6 +93,11 @@ Project Information can be read, or a \code{data.frame}.}
 
 \item{file_repo}{Either a \code{character} giving the file from which the 
 File Repository Listing can be read, or a \code{data.frame}.}
+
+\item{repeat_instrument}{Either a \code{character} giving the file from which the 
+Repeating Instruments and Events settings can be read, or a \code{data.frame}.
+Note: The REDCap GUI doesn't offer a download file of these settings 
+(at the time of this writing).}
 
 \item{records}{Either a \code{character} giving the file from which the 
 Records can be read, or a \code{data.frame}. This should be the raw 
