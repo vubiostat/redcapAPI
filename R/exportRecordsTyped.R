@@ -1,18 +1,3 @@
-# Style Guideline Note
-# 
-# Exported function names: dromedaryCase
-# Internal function names: .dromedaryCase
-# Constant data exported: UPPERCASE
-# Function parameters: snake_case
-# Function variables: snake_case
-#  * (exception) data.frame variable: CamelCase
-
-# FIXME: Test cases (If we put in broken data, this will break existing method). Thus get the existing tests working with new method and expect the old one to break.
-# [EXTERNALIZED CONCERN-NOT DONE HERE]Handle retries--with batched backoff(?)
-# [DEFERRED] Offline version? testing? [A lot of the code could be reused if we
-#            can identify pieces to turn into subroutines.]
-# [DEFERED] `sql` coding type needs adding #46 (this is too complex to include with this patch).
-
 #' @name exportRecordsTyped
 #' 
 #' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 
@@ -80,12 +65,6 @@
 #'   to the column. Defaults to creating a label attribute from the stripped
 #'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 #'   to use as a units attribute.
-#' @param mChoice character. Must be NULL, logical(1), \code{"coded"} or \code{"labelled"}.
-#'   If NULL, \code{coded}, or \code{labelled} and \code{Hmisc} is loaded, it will summarize a multiple choice variable
-#'   convert. If NULL and \code{Hmisc} is not loaded it will
-#'   do no conversion. If FALSE it is disabled entirely. The summarized
-#'   \code{Hmisc::mChoice} class is returned as an additional column in the
-#'   \code{data.frame}.
 #' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 #'   These are appended to any parameters in \code{rcon$config}
 #' @param api_param named \code{list}. Additional API parameters to pass into the body of the
@@ -246,7 +225,6 @@ exportRecordsTyped.redcapApiConnection <-
     cast          = list(),
     assignment    = list(label=stripHTMLandUnicode,
                          units=unitsFieldAnnotation),
-    mChoice       = NULL,
     ..., 
     config        = list(),
     api_param     = list(),
@@ -272,7 +250,6 @@ exportRecordsTyped.redcapApiConnection <-
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             mChoice     = mChoice,
                                              coll        = coll)
   
   checkmate::assert_logical(x = survey, 
@@ -342,11 +319,6 @@ exportRecordsTyped.redcapApiConnection <-
                                             forms       = forms)
   
    ###################################################################
-  # Figure out defaults for mChoice
-  
-  mChoice <- .exportRecordsTyped_setmChoice(mChoice = mChoice)
-  
-   ###################################################################
   # Call API for Raw Results
   
   # We don't need to pass forms to the API because we have 
@@ -404,8 +376,7 @@ exportRecordsTyped.redcapApiConnection <-
                                                    field_text_types = field_text_types)
 
    ###################################################################
-  # Derive codings (This is probably a good internal helper)
-  
+  # Derive codings
   codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
                                             field_map = field_map, 
                                             field_names = field_names, 
@@ -421,7 +392,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Locate NA's
-
   nas <- .exportRecordsTyped_getNas(na = na, 
                                     field_types = field_types, 
                                     args = args, 
@@ -439,7 +409,6 @@ exportRecordsTyped.redcapApiConnection <-
   
    ###################################################################
   # Type Casting
-  
   Records <- .exportRecordsTyped_castRecords(Raw = Raw, 
                                              cast = cast, 
                                              field_types = field_types, 
@@ -450,7 +419,6 @@ exportRecordsTyped.redcapApiConnection <-
 
    ###################################################################
   # Handle Attributes assignments on columns, #24, #45
-  
   Records <- .exportRecordsTyped_attributeAssignment(Records = Records, 
                                                      assignment = assignment, 
                                                      field_names = field_names, 
@@ -468,15 +436,6 @@ exportRecordsTyped.redcapApiConnection <-
                                                field_names = field_names,
                                                field_types = field_types)
   
-   ###################################################################
-  # Convert checkboxes to mChoice if Hmisc is installed and requested
-  
-  Records <- .exportRecordsTyped_addmChoiceField(Records = Records, 
-                                                 Raw = Raw, 
-                                                 rcon = rcon, 
-                                                 fields = fields, 
-                                                 mChoice = mChoice)
-
    ###################################################################
   # Return Results 
   Records
@@ -501,7 +460,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        cast          = list(),
                                                        assignment    = list(label=stripHTMLandUnicode,
                                                                             units=unitsFieldAnnotation),
-                                                       mChoice       = NULL, 
                                                        ...){
   
   if (is.numeric(records)) records <- as.character(records)
@@ -524,7 +482,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             mChoice     = mChoice,
                                              coll = coll)
   
   checkmate::reportAssertions(coll)
@@ -578,24 +535,17 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                 fields)
   }
 
-  
-  ###################################################################
-  # Figure out defaults for mChoice
-  
-  mChoice <- .exportRecordsTyped_setmChoice(mChoice = mChoice)
-  
   ###################################################################
   # Raw Data comes from the rcon object for offlineConnections
   
   Raw <- rcon$records()[fields]
   
-  if (length(records) > 0){
+  if (length(records) > 0)
     Raw <- Raw[Raw[[ rcon$metadata()$field_name[1] ]] %in% records, ]
-  }
+
   
-  if (length(events) > 0){
+  if (length(events) > 0)
     Raw <- Raw[Raw$redcap_event_name %in% events, ]
-  }
   
   ###################################################################
   # Process meta data for useful information
@@ -682,15 +632,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                field_types = field_types)
   
   ###################################################################
-  # Convert checkboxes to mChoice if Hmisc is installed and requested
-  
-  Records <- .exportRecordsTyped_addmChoiceField(Records = Records, 
-                                                 Raw = Raw, 
-                                                 rcon = rcon, 
-                                                 fields = fields, 
-                                                 mChoice = mChoice)
-  
-  ###################################################################
   # Return Results 
   Records
 }
@@ -710,7 +651,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        validation, 
                                                        cast, 
                                                        assignment,
-                                                       mChoice,
                                                        coll){
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
@@ -754,19 +694,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                          types = "function",
                          add = coll)
   
-  # mChoice is a bit loose with user expectations
-  checkmate::assert(
-    checkmate::check_character(
-      x = mChoice,
-      len=1,
-      null.ok=TRUE,
-      pattern="coded|labelled"),
-    checkmate::check_logical(
-      x = mChoice, 
-      len = 1, 
-      null.ok=TRUE),
-    add = coll
-  )
+
 }
 
 
@@ -923,29 +851,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   } else {
     Fields$export_field_name
   }
-}
-
-
-# .exportRecordsTyped_setmChoice ------------------------------------
-
-.exportRecordsTyped_setmChoice <- function(mChoice){
-  if("package:Hmisc" %in% search()) # Hmisc Loaded?
-  {
-    if(is.null(mChoice) || mChoice == TRUE) mChoice <- "coded"
-    if(mChoice == FALSE) mChoice <- NULL
-    # Otherwise do what user requests for mChoice
-  } else # Hmisc not loaded
-  {
-    if(is.null(mChoice) || mChoice==FALSE)
-    {
-      mChoice <- NULL
-    } else 
-    {
-      warning("mChoice requires the package Hmisc to be loaded to function properly.")
-      mChoice <- NULL
-    }
-  }
-  mChoice
 }
 
 # .exportRecordsTyped_Unbatched -------------------------------------
@@ -1282,100 +1187,4 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   }
   
   Records
-}
-
-# .exportRecordsTyped_addmChoiceField -------------------------------
-.exportRecordsTyped_addmChoiceField <- function(Records, 
-                                                Raw, 
-                                                rcon, 
-                                                fields, 
-                                                mChoice){
-  if(!is.null(mChoice))
-  {
-    MetaData <- rcon$metadata()
-    CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
-    
-    checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
-    
-    for (i in seq_along(checkbox_fields))
-      Records[[ checkbox_fields[i] ]] <- 
-      .mChoiceField(rcon, 
-                    records_raw = Raw, 
-                    checkbox_fieldname = checkbox_fields[i], 
-                    style = mChoice)
-  }
-  Records
-}
-
-# mChoice Function --------------------------------------------------
-.mChoiceField <- function(rcon, 
-                          records_raw, 
-                          checkbox_fieldname, 
-                          style = c("coded", "labelled")){
-  
-  ##################################################################
-  # Argument Validation 
-  
-  coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_class(x = rcon, 
-                          classes = "redcapApiConnection", 
-                          add = coll)
-  
-  checkmate::assert_data_frame(records_raw, 
-                               add = coll)
-  
-  checkmate::assert_character(x = checkbox_fieldname, 
-                              len = 1, 
-                              any.missing = FALSE, 
-                              add = coll)
-  
-  style <- checkmate::matchArg(x = style, 
-                               choices = c("coded", "labelled"), 
-                               add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  FieldNames <- rcon$fieldnames()
-  
-  checkmate::assert_subset(x = checkbox_fieldname, 
-                           choices = FieldNames$original_field_name, 
-                           add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
-  MetaData <- rcon$metadata()
-  
-  field_type <- MetaData$field_type[MetaData$field_name == checkbox_fieldname]
-  
-  if (field_type != "checkbox"){
-    coll$push(sprintf("'%s' is not a checkbox field; it cannot be made into an mChoice field", 
-                      checkbox_fieldname))
-    
-    checkmate::reportAssertions(coll)
-  }
-  
-  ##################################################################
-  # Make the mChoice field
-  
-  # get the suffixed field names
-  fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% checkbox_fieldname]
-  
-  if (length(fields) == 0) return(NULL)
-  
-  # get the options
-  opts   <- fieldChoiceMapping(rcon, checkbox_fieldname)
-  levels <- opts[, 1+(style == "labelled"), drop = TRUE]
-  
-  # Make the data frame to store the status of the options
-  opts <- as.data.frame(matrix(rep(seq_along(fields), nrow(records_raw)), nrow=nrow(records_raw), byrow=TRUE))
-  checked <- records_raw[,fields] != '1' # Logical value indicating if the choice was checked
-  opts[which(checked,arr.ind=TRUE)] <- "" # Make unchecked choices an empty string
-  
-  # Consolidate choices into the mChoice object
-  structure(
-    gsub(";$|^;", "",gsub(";{2,}",";", do.call('paste', c(opts, sep=";")))),
-    label  = checkbox_fieldname,
-    levels = levels,
-    class  = c("mChoice", "labelled"))
 }
