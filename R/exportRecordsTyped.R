@@ -673,7 +673,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Attach invalid record information
   
-  Records <- .exportRecordsTyped_attachInvalid(conn = NULL,
+  Records <- .exportRecordsTyped_attachInvalid(conn = rcon,
                                                Records = Records, 
                                                Raw = Raw, 
                                                validations = validations, 
@@ -1269,7 +1269,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   {
     class(attr(Records, "invalid")) <- c("invalid", "data.frame")
     attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")
-    if(is.null(conn))
+    if(inherits(conn, "redcapOfflineConnection"))
     {
       attr(attr(Records, "invalid"), "version") <- "offline"
       attr(attr(Records, "invalid"), "project") <- "offline"
