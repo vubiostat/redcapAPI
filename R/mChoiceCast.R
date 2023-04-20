@@ -38,16 +38,18 @@ mChoiceCast <- function(Records, rcon, style="labelled")
   if(!"package:Hmisc" %in% search())
     warning("Hmisc is not loaded. Required to use an mChoice class.")
   
-  fields <- colnames(Records)
+  FieldNames <- rcon$fieldnames()
+  export_fields <- FieldNames$export_field_name[FieldNames$export_field_name %in% colnames(Records)]
+  fields <- FieldNames$original_field_name[FieldNames$export_field_name %in% colnames(Records)]
+  fields <- unique(fields)
 
   MetaData <- rcon$metadata()
   CheckboxMetaData <- MetaData[MetaData$field_type == "checkbox", ]
   
-  checkbox_fields <- lapply(CheckboxMetaData$field_name,
-    function(fn) fields[grepl(paste0("^", fn,"___"), fields)])
+  checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
   
-  Raw <- Records |> recastRecords(rcon, fields=unlist(checkbox_fields), cast=list(checkbox=castRaw))
-  for (i in CheckboxMetaData$field_name)
+  Raw <- Records |> recastRecords(rcon, fields = export_fields, cast=list(checkbox=castRaw))
+  for (i in checkbox_fields)
     Records[[ i ]] <- 
       .mChoiceField(rcon, 
                     records_raw = Raw, 
