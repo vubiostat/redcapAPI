@@ -101,8 +101,26 @@ test_that(
     inv <- attr(recV, "invalid")
     expect_true(!is.null(inv))
     expect_equal(unique(inv$value), "1")
+    expect_data_frame(inv)
+    expect_equal(names(inv), 
+                 c("row", "field_name", "field_type", "value"))
     sapply(c(14, 15, 18, 19), function(i) expect_true(!i %in% inv$row))
     sapply(1:13, function(i) expect_true(i %in% inv$row))
+    
+
+    # Validation report where the id_field is present has the correct number of columns
+    recV <- expect_warning(
+      exportRecordsTyped(
+        rcon,
+        fields=c("record_id", "prereq_number"),
+        validation=list(number=valRx("^5$|^-100$"))),
+      "failed validation")
+    inv <- attr(recV, "invalid")
+    expect_true(!is.null(inv))
+    expect_equal(unique(inv$value), "1")
+    expect_data_frame(inv)
+    expect_equal(names(inv), 
+                 c("row", "record_id", "field_name", "field_type", "value"))
   }
 )
 
