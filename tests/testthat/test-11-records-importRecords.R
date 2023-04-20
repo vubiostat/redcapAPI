@@ -122,7 +122,8 @@ test_that(
     local_reproducible_output(width = 200)
     require(Hmisc)
     TheData <- exportRecordsTyped(rcon)
-    expect_message(importRecords(rcon, TheData), 
+    WithMChoice <- mChoiceCast(TheData, rcon)
+    expect_message(importRecords(rcon, WithMChoice), 
                    "The variable[(]s[)] file_import_field, signature_test, file_upload_test, prereq_checkbox, no_prereq_checkbox, checkbox_test are not found in the project and/or cannot be imported.")
     TheDataAfter <- exportRecordsTyped(rcon)
     expect_true(identical(TheData, TheDataAfter))

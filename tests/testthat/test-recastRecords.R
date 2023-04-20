@@ -18,8 +18,7 @@ export_fields <- c("dropdown_test",
                    "truefalse_test")
 
 Records <- exportRecordsTyped(rcon, 
-                              fields = fields, 
-                              mChoice = FALSE)
+                              fields = fields)
 
 #####################################################################
 # Functionality                                                  ####
@@ -188,9 +187,10 @@ test_that(
     skip_if(!hmisc_installed, 
             "Hmisc is not installed")
     
-    Records <- exportRecordsTyped(rcon, 
-                                  fields = fields, 
-                                  mChoice = TRUE)
+    Records <- 
+      exportRecordsTyped(rcon, 
+                         fields = fields) |>
+      mChoiceCast(rcon)
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
