@@ -275,6 +275,13 @@ PROJECT_INFO_FIELDS_FIXED <- # These cannot be updated via the API
     "missing_data_codes",
     "external_modules")
 
+# Repeating Instruments and Events ----------------------------------
+
+REDCAP_REPEAT_INSTRUMENT_STRUCTURE <- 
+  data.frame(event_name = character(0), 
+             form_name = character(0), 
+             custom_form_label = character(0))
+
 # Users -------------------------------------------------------------
 # Users Structure
 
