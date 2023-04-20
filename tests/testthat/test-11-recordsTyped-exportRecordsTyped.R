@@ -204,7 +204,33 @@ test_that(
 test_that(
   "Including system fields in 'fields' doesn't produce an error", 
   {
-    expect_no_error(exportRecordsTyped(rcon, 
-                                       fields = REDCAP_SYSTEM_FIELDS))
+    # FIXME: This test would be better run on a project that has
+    #        repeating instruments and events, and possibly DAGs
+    # Four use cases from #102
+    
+    # 1. User requests no fields (fields = NULL) return all fields
+    #    This is covered in other tests.
+    
+    # 2. User requests only actual fields (no system fields in 'fields')
+    #    Return actual fields + system fields
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = "record_id")
+    expect_true("redcap_event_name" %in% names(Rec))
+    
+    # 3. User requests actual fields + system fields. 
+    #    Return only the requested fields
+    # FIXME: This test would be better if it had more system fields 
+    #        available in the project
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = c("record_id", "redcap_event_name"))
+    expect_true(all(c("record_id", "redcap_event_name") %in% names(Rec)))
+    # 4. User requests only system fields
+    #    Return only system fields
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = c("redcap_event_name"))
+    expect_true(names(Rec) == "redcap_event_name")
   }
 )
