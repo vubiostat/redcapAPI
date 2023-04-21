@@ -124,7 +124,7 @@ test_that(
                  "'names[(]data[)]': Must be a subset of [{]'arm_num','unique_event_name','form'[}]")
 
     new_map <- rcon$mapping()
-    new_map$arm_num <- 3:4
+    new_map$arm_num <- 3:11
     expect_error(importMappings(rcon = rcon,
                                 data = new_map),
                  "'data[$]arm_num': Must be a subset of [{]'1','2'[}]")
