@@ -139,7 +139,7 @@ test_that(
     new_map$form[1] <- "not_a_real_form"
     expect_error(importMappings(rcon = rcon,
                                 data = new_map),
-                 "Variable 'data[$]form': Must be a subset of [{]'fieldtovar_datetimes','randomization','branching_logic','data_import_export'[}]")
+                 "Variable 'data[$]form': Must be a subset of [{]'fieldtovar_datetimes','randomization','branching_logic','data_import_export','repeating_instrument'[}]")
   }
 )
 
