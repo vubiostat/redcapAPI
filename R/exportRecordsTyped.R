@@ -302,6 +302,23 @@ exportRecordsTyped.redcapApiConnection <-
                                         forms = forms, 
                                         coll = coll)
   
+  ###################################################################
+  # Handle System Fields in the Request
+  
+  user_requested_system_fields <- length(fields) > 0 && any(fields %in% REDCAP_SYSTEM_FIELDS)
+  user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
+  system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
+  
+  # The REDCap API won't accept system fields in the fields argument. 
+  # we have to remove them from the request.
+  fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
+  
+  # But if the user only requested system fields, we need to provide 
+  # at least one actual field to get anything back from the API
+  if (user_requested_only_system_fields){
+    fields <- rcon$metadata()$field_name[1]
+  }
+  
   # Check that the events exist in the project
   
   checkmate::assert_subset(x = events, 
@@ -356,6 +373,15 @@ exportRecordsTyped.redcapApiConnection <-
                                     csv_delimiter  = csv_delimiter, 
                                     batch_size     = batch_size)
     }
+  
+  if (user_requested_system_fields){
+    if (user_requested_only_system_fields){
+      Raw <- Raw[-1]
+    }
+    
+    unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
+    Raw <- Raw[!names(Raw) %in% unrequested_fields]
+  }
   
    ###################################################################
   # Process meta data for useful information
@@ -505,15 +531,29 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   ###################################################################
+  # Handle System Fields in the Request
+  
+  user_requested_system_fields <- length(fields) > 0 && any(fields %in% REDCAP_SYSTEM_FIELDS)
+  user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
+  system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
+  
+  # The REDCap API won't accept system fields in the fields argument. 
+  # we have to remove them from the request.
+  fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
+  
+  # But if the user only requested system fields, we need to provide 
+  # at least one actual field to get anything back from the API
+  if (user_requested_only_system_fields){
+    fields <- rcon$metadata()$field_name[1]
+  }
+  
+  ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be exported
   
   MetaData <- rcon$metadata()
   
   system_field <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% names(rcon$records())]
-  if (length(fields) > 0){
-    system_field <- system_field[system_field %in% fields]
-  }
   
   fields <- .exportRecordsTyped_fieldsArray(rcon         = rcon, 
                                             fields       = fields, 
@@ -546,6 +586,16 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   if (length(events) > 0)
     Raw <- Raw[Raw$redcap_event_name %in% events, ]
+  
+  
+  if (user_requested_system_fields){
+    if (user_requested_only_system_fields){
+      Raw <- Raw[-1]
+    }
+    
+    unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
+    Raw <- Raw[!names(Raw) %in% unrequested_fields]
+  }
   
   ###################################################################
   # Process meta data for useful information
@@ -710,7 +760,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ProjectFields <- rcon$fieldnames()
   available_fields <- unique(c(ProjectFields$original_field_name, 
                                ProjectFields$export_field_name, 
-                               MetaData$field_name[MetaData$field_type %in% c("calc", "file")]))
+                               MetaData$field_name[MetaData$field_type %in% c("calc", "file")], 
+                               REDCAP_SYSTEM_FIELDS))
   
   checkmate::assert_subset(x = fields, 
                            choices = available_fields, 
