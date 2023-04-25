@@ -112,13 +112,16 @@ deleteArms.redcapApiConnection <- function(rcon,
    ##################################################################
   # Call the API
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  if (length(arms) > 0){ # Skip the call if there are no arms to delete
+    response <- makeApiCall(rcon, 
+                            body = c(body, api_param), 
+                            config = config)
+    
+    if (response$status_code != 200) return(redcap_error(response, error_handling))
+  }
   
-  if (response$status_code != 200) return(redcap_error(response, error_handling))
-  
-  message("Arms ", paste0(arms, collapse = ", "), " deleted.")
+  message(sprintf("Arms Deleted: %s", 
+                  if (length(arms) > 0) paste0(arms, collapse = ", ") else "None."))
   
   if (refresh && rcon$has_arms()){
     rcon$refresh_arms()

@@ -49,6 +49,8 @@
 #' @param records Either \code{logical(1)} indicating if user roles data should be
 #'   purged from the project; or a \code{data.frame} for restoring user roles
 #'   data via \code{importRecords}
+#' @param purge_all \code{logical(1)}. A shortcut option to purge all 
+#'   data elements from a project. 
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -73,10 +75,16 @@
 #'  \item{11}{Import Data Access Group Assignments}
 #'  \item{12}{Import Records}
 #' }
+#' 
+#' @export
 
 purgeProject <- function(object, ...){
   UseMethod("purgeProject")
 }
+
+
+#' @rdname purgeRestoreProject
+#' @export
 
 purgeProject.redcapApiConnection <- function(object, 
                                              arms           = FALSE, 
@@ -85,6 +93,8 @@ purgeProject.redcapApiConnection <- function(object,
                                              user_roles     = FALSE, 
                                              dags           = FALSE, 
                                              records        = FALSE, 
+                                             purge_all      = FALSE,
+                                             ..., 
                                              error_handling = getOption("redcap_error_handling"), 
                                              config         = list()){
   ###################################################################
@@ -125,6 +135,11 @@ purgeProject.redcapApiConnection <- function(object,
                             any.missing = FALSE, 
                             add = coll)
   
+  checkmate::assert_logical(x = purge_all, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
                                         .var.name = "error_handling",
@@ -139,16 +154,35 @@ purgeProject.redcapApiConnection <- function(object,
   ###################################################################
   # Functional Code                                              ####
   
+  if (purge_all){
+    arms <- events <- users <- user_roles <- dags <- records <- purge_all
+  }
+  
   if (records){
     RecordId <- exportRecordsTyped(rcon, 
                                    fields = rcon$metadata()$field_name[1], 
                                    error_handling = error_handling, 
                                    config = config)
     
-    deleteRecords(rcon, 
-                  records = RecordId[[1]], 
-                  error_handling = error_handling, 
-                  config = config)
+    if (nrow(RecordId)){
+      if ("redcap_event_name" %in% names(RecordId)){
+        RecordId$arm_num <- sub("^(.+)(arm_)(\\d+)$", "\\3", RecordId$redcap_event_name)
+        
+        RecordId <- RecordId[c(names(RecordId)[1], "arm_num")]
+        RecordId <- RecordId[!duplicated(RecordId), ]
+        
+        deleteRecords(rcon, 
+                      records = RecordId[[1]], 
+                      arm = RecordId$arm_num,
+                      error_handling = error_handling, 
+                      config = config)
+      } else {
+        deleteRecords(rcon, 
+                      records = RecordId[[1]], 
+                      error_handling = error_handling, 
+                      config = config)
+      }
+    }
   }
   
   if (dags){
@@ -194,12 +228,14 @@ purgeProject.redcapApiConnection <- function(object,
 # restoreProject                                                 ####
 
 #' @rdname purgeRestoreProject
+#' @export
 
 restoreProject <- function(object, ...){
   UseMethod("restoreProject")
 }
 
 #' @rdname purgeRestoreProject
+#' @export
 
 restoreProject.redcapApiConnection <- function(object, 
                                                project_information   = NULL,
@@ -389,6 +425,9 @@ restoreProject.redcapApiConnection <- function(object,
   }
 }
 
+#' @rdname purgeRestoreProject
+#' @export
+
 restoreProject.list <- function(object, 
                                 rcon, 
                                 ..., 
@@ -425,4 +464,77 @@ restoreProject.list <- function(object,
 
   do.call(restoreProject.redcapApiConnection, 
           c(list(object = rcon), object))
+}
+
+#' @rdname purgeRestoreProject
+#' @export
+
+preserveProject <- function(object, 
+                            ...){
+  UseMethod("preserveProject")
+}
+
+#' @rdname purgeRestoreProject
+#' @export
+
+preserveProject.redcapApiConnection <- function(object,
+                                                ..., 
+                                                error_handling = getOption("redcap_error_handling"), 
+                                                config         = list()){
+  ###################################################################
+  # Argument Validation                                          ####
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = object, 
+                          classes = "redcapApiConnection", 
+                          add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"), 
+                                        .var.name = "error_handling",
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # Make the List object                                         ####
+  
+  RedcapList <- 
+    list(project_information   = exportProjectInformation(object, 
+                                                          error_handling = error_handling, 
+                                                          config = config),
+         arms                  = exportArms(object, 
+                                            error_handling = error_handling, 
+                                            config = config), 
+         events                = exportEvents(object, 
+                                              error_handling = error_handling, 
+                                              config = config), 
+         meta_data             = exportMetaData(object, 
+                                                error_handling = error_handling, 
+                                                config = config),
+         mappings              = exportMappings(object, 
+                                                error_handling = error_handling, 
+                                                config = config), 
+         repeating_instruments = exportRepeatingInstrumentsEvents(object, 
+                                                                  error_handling = error_handling, 
+                                                                  config = config),
+         users                 = exportUsers(object, 
+                                             error_handling = error_handling, 
+                                             config = config), 
+         user_roles            = NULL, # FIXME: Add this when methods are available 
+         user_role_assignments = NULL, # FIXME: Add this when methods are available
+         dags                  = NULL, # FIXME: Add this when methods are available
+         dag_assignments       = NULL, # FIXME: Add this when methods are available
+         records               = exportRecordsTyped(object, 
+                                                    cast = raw_cast,
+                                                    error_handling = error_handling, 
+                                                    config = config)
+         )
+  
+  RedcapList
 }
