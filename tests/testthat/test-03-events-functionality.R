@@ -1,10 +1,23 @@
 context("export/import/delete Events Functionality")
 
+# NOTE: All of the tests for how events behave in classic projects
+#       were tested alongside the arms testing. We will no 
+#       recreate those tests here. Instead, we will focus only on 
+#       behaviors in longitudinal projects.
+
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
 
 #####################################################################
-# Events Functionality
+# Make the connection and purge the project                      ####
+rcon <- redcapConnection(url = url, 
+                         token = API_KEY)
+
+purgeProject(rcon, 
+             purge_all = TRUE)
+
+#####################################################################
+# Object to aid in testing                                       ####
 
 Arms <- data.frame(arm_num = 1:3, 
                    name = c("Arm 1", "Arm 2", "Arm 3"), 
@@ -19,17 +32,25 @@ Events <- data.frame(event_name = c("event_1", "event_1", "event_1"),
 Events2 <- data.frame(event_name = c("event_x", "event_y"), 
                       arm_num = 10:11)
 
+#####################################################################
+# Functional Testing
+
 test_that(
   "Import, Export, and Deletion of Arms Execute Successfully", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
+
+    # We start start from an empty classic project. We need to make it
+    # longitudinal
     
-    # start from an empty project with no arms. It should be recognized as a classical project.
+    expect_message(importProjectInformation(rcon, 
+                                            data.frame(is_longitudinal = 1)), 
+                   "Fields updated: 1")
+    
+    # Because no arms or events are defined, it still registers as non-longitudinal
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
-    
+
     # To be considered 'longitudinal', both arms and events must be defined.
     expect_message(importArms(rcon, 
                               arms_data = Arms), 
@@ -62,22 +83,15 @@ test_that(
     # Now the project should no longer be considered longitudinal
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
-    
-    # Clean up
-    expect_message(deleteArms(rcon, 
-                              arms = 1:3), 
-                   "Arms 1, 2, 3 deleted.")
   }
 )
 
 # This is a test of the override argument in importEvents
 
 test_that(
-  "Test the override argument in importArms",
+  "Test the override argument in importEvents",
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
@@ -124,7 +138,7 @@ test_that(
     # Now Clean up from the test
     rcon$refresh_arms()
     expect_message(deleteArms(rcon, arms = 1:3), 
-                   "Arms 1, 2, 3 deleted.")
+                   "Arms Deleted: 1, 2, 3")
   }
 )
 
@@ -133,8 +147,6 @@ test_that(
   "Confirm that we can add additional events and delete specific events", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
@@ -186,6 +198,6 @@ test_that(
     # clean up
     expect_message(deleteArms(rcon, 
                               arms = c(1, 2, 11)), 
-                   "Arms 1, 2, 11 deleted.")
+                   "Arms Deleted: 1, 2, 11")
   }
 )
