@@ -20,9 +20,9 @@ url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 unlockREDCap(c(conn="TestRedcapAPI"), url=url, keyring='API_KEYs')
 
 if(!exists("API_KEY"))
-  API_KEY <- keyring::key_get('redcapAPI', 'TestRedcapAPI', 'API_KEYs')
+  # API_KEY <- keyring::key_get('redcapAPI', 'TestRedcapAPI', 'API_KEYs')
+  API_KEY <- keyring::key_get('redcapAPI', 'RepeatInstrumentEvent', 'API_KEYs')
 
-
-STRUCTURAL_TEST_READY <- FALSE
 
 library(checkmate) # for additional expect_* functions.
+

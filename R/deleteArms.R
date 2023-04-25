@@ -100,7 +100,7 @@ deleteArms.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-   ##################################################################
+  ###################################################################
   # Make API Body List
   body <- c(list(token = rcon$token,
                  content = "arm",
@@ -109,9 +109,9 @@ deleteArms.redcapApiConnection <- function(rcon,
 
   body <- body[lengths(body) > 0]
   
-   ##################################################################
+  ###################################################################
   # Call the API
-  
+
   if (length(arms) > 0){ # Skip the call if there are no arms to delete
     response <- makeApiCall(rcon, 
                             body = c(body, api_param), 
