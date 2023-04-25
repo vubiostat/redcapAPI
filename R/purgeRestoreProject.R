@@ -159,8 +159,8 @@ purgeProject.redcapApiConnection <- function(object,
   }
   
   if (records){
-    RecordId <- exportRecordsTyped(rcon, 
-                                   fields = rcon$metadata()$field_name[1], 
+    RecordId <- exportRecordsTyped(object, 
+                                   fields = object$metadata()$field_name[1], 
                                    error_handling = error_handling, 
                                    config = config)
     
@@ -171,13 +171,13 @@ purgeProject.redcapApiConnection <- function(object,
         RecordId <- RecordId[c(names(RecordId)[1], "arm_num")]
         RecordId <- RecordId[!duplicated(RecordId), ]
         
-        deleteRecords(rcon, 
+        deleteRecords(object, 
                       records = RecordId[[1]], 
                       arm = RecordId$arm_num,
                       error_handling = error_handling, 
                       config = config)
       } else {
-        deleteRecords(rcon, 
+        deleteRecords(object, 
                       records = RecordId[[1]], 
                       error_handling = error_handling, 
                       config = config)
@@ -187,38 +187,38 @@ purgeProject.redcapApiConnection <- function(object,
   
   if (dags){
     # FIXME: Uncomment after writing DAG methods
-    # deleteDags(rcon, 
-    #            dags = rcon$dags()$unique_group_name, 
+    # deleteDags(object, 
+    #            dags = object$dags()$unique_group_name, 
     #            error_handling = error_handling, 
     #            config = config)
   }
 
   if (user_roles){
     # FIXME: Uncomment after writing User Role methods
-    # deleteUserRoles(rcon, 
-    #                 rcon$user_roles()$unique_role_name, 
+    # deleteUserRoles(object, 
+    #                 object$user_roles()$unique_role_name, 
     #                 error_handling = error_handling, 
     #                 config = config)
   }
   
   if (users){
     # FIXME: Uncomment after writing User methods
-    # deleteUsers(rcon, 
-    #             rcon$users()$username, 
+    # deleteUsers(object, 
+    #             object$users()$username, 
     #             error_handling = error_handling, 
     #             config = config)
   }
   
   if (events){
-    deleteEvents(rcon, 
-                 events = rcon$events()$unique_event_name, 
+    deleteEvents(object, 
+                 events = object$events()$unique_event_name, 
                  error_handling = error_handling, 
                  config = config)
   }
   
   if (arms){
-    deleteArms(rcon, 
-               arms = rcon$arms()$arm_num, 
+    deleteArms(object, 
+               arms = object$arms()$arm_num, 
                error_handling = error_handling, 
                config = config)
   }
@@ -335,35 +335,35 @@ restoreProject.redcapApiConnection <- function(object,
   # Functional Code                                              ####
   
   if (!is.null(project_information)){
-    importProjectInformation(rcon, 
+    importProjectInformation(object, 
                              data = project_information, 
                              error_handling = error_handling, 
                              config = config)
   }
   
   if (!is.null(arms) && nrow(arms) > 0){
-    importArms(rcon, 
+    importArms(object, 
                arms_data = arms, 
                error_handling = error_handling, 
                config = config)
   }
   
   if (!is.null(events) && nrow(events) > 0){
-    importEvents(rcon, 
+    importEvents(object, 
                  event_data = events, 
                  error_handling = error_handling, 
                  config = config)
   }
   
   if (!is.null(meta_data)){
-    importMetaData(rcon, 
+    importMetaData(object, 
                    data = meta_data, 
                    error_handling = error_handling, 
                    config = config)
   }
   
   if (!is.null(mappings) && nrow(mappings) > 0){
-    importMappings(rcon, 
+    importMappings(object, 
                    data = mappings, 
                    error_handling = error_handling, 
                    config = config)
@@ -371,7 +371,7 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
    # FIXME: Uncomment after implementing Repeating Instrument methods
-    # importRepeatingInstrumentsEvents(rcon,
+    # importRepeatingInstrumentsEvents(object,
     #                                  data = repeating_instruments,
     #                                  error_handling = error_handling, 
     #                                  config = config)
@@ -379,7 +379,7 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(users)){
     # FIXME: Uncomment after implementing User methods
-    # importUsers(rcon,
+    # importUsers(object,
     #             data = users, 
     #             error_handling = error_handling, 
     #             config = config)
@@ -387,7 +387,7 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(user_roles)){
     # FIXME: Uncomment after implementing User Role methods
-    # importUserRoles(rcon,
+    # importUserRoles(object,
     #                 data = user_roles, 
     #                 error_handling = error_handling, 
     #                 config = config)
@@ -395,7 +395,7 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(user_role_assignments)){
     # FIXME: Uncomment after implementing User Role methods
-    # importUserRoleAssignments(rcon,
+    # importUserRoleAssignments(object,
     #                           data = user_role_assignments, 
     #                           error_handling = error_handling, 
     #                           config = config)
@@ -403,7 +403,7 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(dags)){
     # FIXME: Uncomment after implementing DAG methods
-    # importDags(rcon,
+    # importDags(object,
     #            data = dags, 
     #            error_handling = error_handling, 
     #            config = config)
@@ -411,14 +411,14 @@ restoreProject.redcapApiConnection <- function(object,
   
   if (!is.null(dag_assignments)){
     # FIXME: Uncomment after implementing DAG methods
-    # importDagAssignments(rcon,
+    # importDagAssignments(object,
     #                      data = dag_assignments, 
     #                      error_handling = error_handling, 
     #                      config = config)
   }
   
   if (!is.null(records) && nrow(records) > 0){
-    importRecords(rcon, 
+    importRecords(object, 
                   data = records, 
                   error_handling = error_handling, 
                   config = config)

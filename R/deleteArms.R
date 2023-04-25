@@ -125,5 +125,6 @@ deleteArms.redcapApiConnection <- function(rcon,
   
   if (refresh && rcon$has_arms()){
     rcon$refresh_arms()
+    rcon$refresh_projectInformation()
   }
 }

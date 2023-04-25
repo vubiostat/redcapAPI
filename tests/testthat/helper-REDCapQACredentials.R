@@ -25,4 +25,3 @@ if(!exists("API_KEY"))
 
 
 library(checkmate) # for additional expect_* functions.
-

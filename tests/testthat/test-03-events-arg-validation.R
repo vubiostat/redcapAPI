@@ -33,12 +33,12 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importEvents(rcon, 
-                              Arms, 
+                              Events, 
                               override = c(TRUE, FALSE)), 
                  "'override': Must have length 1")
     
     expect_error(importEvents(rcon, 
-                              Arms, 
+                              Events, 
                               override = "TRUE"), 
                  "'override': Must be of type 'logical'")
   }
@@ -100,7 +100,7 @@ test_that(
     # Has the correct column names
     expect_error(importEvents(rcon, 
                               event_data = EventsImproper), 
-                 "Variable 'names[(]event_data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','days_offset','offset_min','offset_max'[}]")
+                 "Variable 'names[(]event_data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','custom_event_label','event_id','days_offset','offset_min','offset_max'[}]")
   }
 )
 

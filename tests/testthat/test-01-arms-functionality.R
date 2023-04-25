@@ -8,6 +8,7 @@ rcon <- redcapConnection(url = url,
 purgeProject(rcon, 
              purge_all = TRUE)
 
+load(test_path("testdata", "RedcapProject_EmptyProject.Rdata"))
 #####################################################################
 # Object to aid in testing                                       ####
 
@@ -105,6 +106,9 @@ test_that(
                  Arms)
     expect_equal(exportEvents(rcon)[1:2], # we didn't provide a full specification for Events 
                  Events)
+    
+    rcon$refresh_arms()
+    rcon$refresh_events()
     
     # And now we clean up from our testing.
     

@@ -5,9 +5,6 @@ context("export/import/delete Events Functionality")
 #       recreate those tests here. Instead, we will focus only on 
 #       behaviors in longitudinal projects.
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 #####################################################################
 # Make the connection and purge the project                      ####
 rcon <- redcapConnection(url = url, 
@@ -15,6 +12,8 @@ rcon <- redcapConnection(url = url,
 
 purgeProject(rcon, 
              purge_all = TRUE)
+
+load(test_path("testdata", "RedcapProject_EmptyProject.Rdata"))
 
 #####################################################################
 # Object to aid in testing                                       ####
@@ -197,7 +196,7 @@ test_that(
     
     # clean up
     expect_message(deleteArms(rcon, 
-                              arms = c(1, 2, 11)), 
-                   "Arms Deleted: 1, 2, 11")
+                              arms = c(1, 2, 3, 10, 11)), 
+                   "Arms Deleted: 1, 2, 3, 10, 11")
   }
 )

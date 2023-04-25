@@ -90,9 +90,7 @@ importEvents <- function(rcon,
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = names(event_data), 
-                           choices = c("event_name", "arm_num", 
-                                       "unique_event_name", 
-                                       "days_offset", "offset_min", "offset_max"), 
+                           choices = names(REDCAP_EVENT_STRUCTURE), # Defined in redcapDataStructure.R 
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -123,5 +121,6 @@ importEvents <- function(rcon,
   
   if (refresh && rcon$has_events()){
     rcon$refresh_events()
+    rcon$refresh_projectInformation()
   }
 }
