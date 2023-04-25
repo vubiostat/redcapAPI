@@ -341,14 +341,14 @@ restoreProject.redcapApiConnection <- function(object,
                              config = config)
   }
   
-  if (!is.null(arms)){
+  if (!is.null(arms) && nrow(arms) > 0){
     importArms(rcon, 
                arms_data = arms, 
                error_handling = error_handling, 
                config = config)
   }
   
-  if (!is.null(events)){
+  if (!is.null(events) && nrow(events) > 0){
     importEvents(rcon, 
                  event_data = events, 
                  error_handling = error_handling, 
@@ -362,14 +362,14 @@ restoreProject.redcapApiConnection <- function(object,
                    config = config)
   }
   
-  if (!is.null(mappings)){
+  if (!is.null(mappings) && nrow(mappings) > 0){
     importMappings(rcon, 
                    data = mappings, 
                    error_handling = error_handling, 
                    config = config)
   }
   
-  if (!is.null(repeating_instruments)){
+  if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
    # FIXME: Uncomment after implementing Repeating Instrument methods
     # importRepeatingInstrumentsEvents(rcon,
     #                                  data = repeating_instruments,
@@ -417,7 +417,7 @@ restoreProject.redcapApiConnection <- function(object,
     #                      config = config)
   }
   
-  if (!is.null(records)){
+  if (!is.null(records) && nrow(records) > 0){
     importRecords(rcon, 
                   data = records, 
                   error_handling = error_handling, 
