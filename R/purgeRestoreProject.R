@@ -171,11 +171,18 @@ purgeProject.redcapApiConnection <- function(object,
         RecordId <- RecordId[c(names(RecordId)[1], "arm_num")]
         RecordId <- RecordId[!duplicated(RecordId), ]
         
-        deleteRecords(object, 
-                      records = RecordId[[1]], 
-                      arm = RecordId$arm_num,
-                      error_handling = error_handling, 
-                      config = config)
+        RecordId <- split(RecordId, 
+                          RecordId$arm_num, 
+                          drop = TRUE)
+        
+        # Delete records from each arm individually
+        for (i in seq_along(RecordId)){
+          deleteRecords(object, 
+                        records = RecordId[[i]][[1]], 
+                        arm = unique(RecordId[[i]]$arm_num),
+                        error_handling = error_handling, 
+                        config = config)
+        }
       } else {
         deleteRecords(object, 
                       records = RecordId[[1]], 
@@ -370,11 +377,10 @@ restoreProject.redcapApiConnection <- function(object,
   }
   
   if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
-   # FIXME: Uncomment after implementing Repeating Instrument methods
-    # importRepeatingInstrumentsEvents(object,
-    #                                  data = repeating_instruments,
-    #                                  error_handling = error_handling, 
-    #                                  config = config)
+    importRepeatingInstrumentsEvents(object,
+                                     data = repeating_instruments,
+                                     error_handling = error_handling,
+                                     config = config)
   }
   
   if (!is.null(users)){
