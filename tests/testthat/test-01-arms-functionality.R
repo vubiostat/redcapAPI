@@ -61,6 +61,10 @@ test_that(
 # bypasses the error and returns an empty data frame instead. 
 # Let's test that we get back what we intend after importing these.
 
+purgeProject(rcon, 
+             arms = TRUE, 
+             events = TRUE)
+
 test_that(
   "Import arms into a empty project.", 
   {
