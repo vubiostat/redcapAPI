@@ -205,7 +205,10 @@ exportFiles.redcapApiConnection <- function(rcon,
   if (response$status_code != 200) redcap_error(response, error_handling)
   
   prefix <- 
-    if (filePrefix) sprintf("%s-%s", record, event) else ""
+    if (filePrefix) sprintf("%s%s%s", 
+                            record,
+                            if (is.null(event)) "" else "-",
+                            if (is.null(event)) "" else event) else ""
   
   file_saved <- reconstituteFileFromExport(response = response, 
                                            dir = dir, 
