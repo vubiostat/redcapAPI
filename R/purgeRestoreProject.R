@@ -53,6 +53,9 @@
 #'   data via \code{importRecords}
 #' @param purge_all \code{logical(1)}. A shortcut option to purge all 
 #'   data elements from a project.
+#' @param flush \code{logical(1)}. If \code{TRUE}, the all caches in the connection
+#'   object will be flushed after completing the operation. This is highly 
+#'   recommended.
 #' @param ... Arguments to pass to other methods. 
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -178,6 +181,7 @@ purgeProject.redcapApiConnection <- function(object,
                                              dags           = FALSE, 
                                              records        = FALSE, 
                                              purge_all      = FALSE,
+                                             flush          = TRUE, 
                                              ..., 
                                              error_handling = getOption("redcap_error_handling"), 
                                              config         = list()){
@@ -220,6 +224,11 @@ purgeProject.redcapApiConnection <- function(object,
                             add = coll)
   
   checkmate::assert_logical(x = purge_all, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
+  checkmate::assert_logical(x = flush, 
                             len = 1, 
                             any.missing = FALSE,
                             add = coll)
@@ -313,6 +322,8 @@ purgeProject.redcapApiConnection <- function(object,
                error_handling = error_handling, 
                config = config)
   }
+  
+  if (flush) object$flush_all()
 }
 
 #####################################################################
@@ -341,6 +352,7 @@ restoreProject.redcapApiConnection <- function(object,
                                                dags                  = NULL, 
                                                dag_assignments       = NULL,
                                                records               = NULL, 
+                                               flush                 = TRUE, 
                                                ..., 
                                                error_handling        = getOption("redcap_error_handling"), 
                                                config                = list()){
@@ -514,6 +526,8 @@ restoreProject.redcapApiConnection <- function(object,
                   error_handling = error_handling, 
                   config = config)
   }
+  
+  if (flush) object$flush_all()
 }
 
 #' @rdname purgeRestoreProject
