@@ -236,6 +236,32 @@ test_that(
 )
 
 test_that(
+  "Repeating Instruments and Events loads from data frame and file", 
+  {
+    skip_if(!STRUCTURAL_TEST_READY, 
+            "Infrastructure not quite ready for structural tests.")
+    
+    this_file_name <- file.path(tempdir(), "repeatInst.csv")
+    this_data <- rcon$repeatInstrumentEvent()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
+    
+    # From data frame
+    roff <- expect_no_error(offlineConnection(repeat_instrument = this_data))
+    
+    expect_true(roff$has_repeatInstrumentEvent())
+    
+    # From File
+    roff <- 
+      expect_no_error(
+        offlineConnection(repeat_instrument = this_file_name))
+    
+    expect_true(roff$has_repeatInstrumentEvent())
+  }
+)
+
+test_that(
   "Records loads from data frame and file", 
   {
     this_file_name <- file.path(tempdir(), "records.csv")
