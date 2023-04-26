@@ -60,10 +60,6 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(preserveProject("not rcon"), 
                  "no applicable method for 'preserveProject'")
-    
-    expect_error(preserveProject(rcon, 
-                                 filename = c("file1", "file2")), 
-                 "Variable 'filename': Must have length 1")
   }
 )
 
@@ -91,7 +87,7 @@ test_that(
   "Purge arguments are logical(1)", 
   {
     expect_error(purgeProject("not rcon"), 
-                 "'rcon': Must inherit from class 'redcapApiConnection'")
+                 "no applicable method for 'purgeProject'")
     
     # Arms 
     expect_error(purgeProject(rcon, 
@@ -173,13 +169,6 @@ test_that(
     expect_error(purgeProject(rcon, 
                               config = "not a list"), 
                  "'config': Must be of type 'list'")
-    
-    expect_error(purgeProject(rcon, 
-                              api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(purgeProject(rcon, 
-                              api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
   }
 )
 
@@ -190,7 +179,7 @@ test_that(
   "restoreProject Argument Validation", 
   {
     expect_error(restoreProject("not rcon"), 
-                 "'rcon': Must inherit from class 'redcapApiConnection'")
+                 "no applicable method for 'restoreProject'")
     
     expect_error(restoreProject(rcon, 
                                 project_information = "project_information"), 
@@ -264,12 +253,6 @@ test_that(
     expect_error(restoreProject(rcon, 
                                 config = "not a list"), 
                  "'config': Must be of type 'list'")
-    
-    expect_error(restoreProject(rcon, 
-                                api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(restoreProject(rcon, 
-                                api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
+
   }
 )

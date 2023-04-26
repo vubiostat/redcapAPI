@@ -75,14 +75,12 @@ test_that(
               row.names = FALSE)
     
     # From data frame
-    roff <- expect_no_error(offlineConnection(events = this_data))
+    roff <- suppressWarnings({ offlineConnection(events = this_data) })
     
     expect_true(roff$has_events())
     
     # From File
-    roff <- 
-      expect_no_error(
-        offlineConnection(events = this_file_name))
+    roff <- suppressWarnings({ offlineConnection(events = this_file_name) })
     
     expect_true(roff$has_events())
   }
@@ -238,9 +236,6 @@ test_that(
 test_that(
   "Repeating Instruments and Events loads from data frame and file", 
   {
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
-    
     this_file_name <- file.path(tempdir(), "repeatInst.csv")
     this_data <- rcon$repeatInstrumentEvent()
     write.csv(this_data, 

@@ -213,6 +213,8 @@ test_that(
                                 event_data = Events2), 
                    "Events imported: 2")
     
+    rcon$refresh_projectInformation()
+    
     expect_equal(exportArms(rcon), 
                  Arms2)
     
@@ -258,6 +260,8 @@ test_that(
     expect_message(importEvents(rcon, 
                                 event_data = Events2), 
                    "Events imported: 2")
+    
+    rcon$refresh_projectInformation()
     
     # Confirm that all of the arms are present.
     expect_equal(exportArms(rcon), 
