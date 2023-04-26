@@ -2,15 +2,24 @@
 % Please edit documentation in R/purgeRestoreProject.R
 \name{purgeRestoreProject}
 \alias{purgeRestoreProject}
+\alias{preserveProject}
+\alias{preserveProject.redcapApiConnection}
 \alias{purgeProject}
 \alias{purgeProject.redcapApiConnection}
 \alias{restoreProject}
 \alias{restoreProject.redcapApiConnection}
 \alias{restoreProject.list}
-\alias{preserveProject}
-\alias{preserveProject.redcapApiConnection}
 \title{Purge and Restore Project Data}
 \usage{
+preserveProject(object, ...)
+
+\method{preserveProject}{redcapApiConnection}(
+  object,
+  ...,
+  error_handling = getOption("redcap_error_handling"),
+  config = list()
+)
+
 purgeProject(object, ...)
 
 \method{purgeProject}{redcapApiConnection}(
@@ -43,6 +52,7 @@ restoreProject(object, ...)
   dags = NULL,
   dag_assignments = NULL,
   records = NULL,
+  ...,
   error_handling = getOption("redcap_error_handling"),
   config = list()
 )
@@ -54,17 +64,21 @@ restoreProject(object, ...)
   error_handling = getOption("redcap_error_handling"),
   config = list()
 )
-
-preserveProject(object, ...)
-
-\method{preserveProject}{redcapApiConnection}(
-  object,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
-)
 }
 \arguments{
+\item{object, rcon}{A \code{redcapConnection} object. Except in 
+\code{restoreProject.list}, where \code{object} is a list of data frames
+to use in restoring the project.}
+
+\item{...}{Arguments to pass to other methods.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
+
+\item{config}{\code{list} Additional configuration parameters to pass to 
+\code{\link[httr]{POST}}. These are appended to any parameters in 
+\code{rcon$config}.}
+
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
 purged from the project; or a \code{data.frame} for restoring arms 
 data via \code{importArms}.}
@@ -92,12 +106,8 @@ data via \code{importRecords}}
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all 
 data elements from a project.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
-
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
-\code{rcon$config}.}
+\item{project_information}{\code{data.frame} for restoring data. Provides the 
+project settings to load via \code{importProjectInformation}.}
 
 \item{meta_data}{A \code{data.frame} for restoring metadata
 data via \code{importMetaData}. The API doesn't support deleting 
@@ -107,6 +117,11 @@ metadata, but an import replaces the existing metadata.}
 via \code{importMappings}. The API doesn't support deleting 
 mappings, but an import replaces the existing mappings.}
 
+\item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
+configuration via \code{importRepeatingInstrumentsEvents}. The API doesn't support deleting 
+repeating instruments, but an import replaces the existing instruments.
+NOT YET IMPLEMENTED}
+
 \item{user_role_assignments}{A \code{data.frame} for restoring user role 
 assignments via \code{importUserRoleAssignments}. The API doesn't support deleting 
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
@@ -114,16 +129,6 @@ assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTE
 \item{dag_assignments}{A \code{data.frame} for restoring DAG 
 assignments via \code{importDagAssignments}. The API doesn't support deleting 
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
-
-\item{rcon}{A \code{redcapConnection} object.}
-
-\item{project_info}{\code{data.frame} for restoring data. Provides the 
-project settings to load via \code{importProjectInformation}.}
-
-\item{repeating_insruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{importRepeatingInstrumentsEvents}. The API doesn't support deleting 
-repeating instruments, but an import replaces the existing instruments.
-NOT YET IMPLEMENTED}
 }
 \description{
 These functions are primarily intended to assist with testing
@@ -143,17 +148,17 @@ that is \code{NULL} will result in no import being made. The order of
 reconstructing the project is (purging data occurs in the reverse order):
 
 \itemize{
- \item{1}{Update project information}
- \item{2}{Import Arms Data}
- \item{3}{Import Events Data}
- \item{4}{Import Meta Data}
- \item{5}{Import Mappings}
- \item{6}{Import Repeating Instruments}
- \item{7}{Import Users}
- \item{8}{Import User Roles}
- \item{9}{Import User Role Assignments}
- \item{10}{Import Data Access Groups}
- \item{11}{Import Data Access Group Assignments}
- \item{12}{Import Records}
+ \item{1. }{Update project information}
+ \item{2. }{Import Arms Data}
+ \item{3. }{Import Events Data}
+ \item{4. }{Import Meta Data}
+ \item{5. }{Import Mappings}
+ \item{6. }{Import Repeating Instruments}
+ \item{7. }{Import Users}
+ \item{8. }{Import User Roles}
+ \item{9. }{Import User Role Assignments}
+ \item{10. }{Import Data Access Groups}
+ \item{11. }{Import Data Access Group Assignments}
+ \item{12. }{Import Records}
 }
 }

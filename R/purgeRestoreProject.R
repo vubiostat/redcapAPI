@@ -12,8 +12,10 @@
 #'   practice to back up your data and project structure before purging
 #'   a project. 
 #'   
-#' @param object A \code{redcapConnection} object. 
-#' @param project_info \code{data.frame} for restoring data. Provides the 
+#' @param object,rcon A \code{redcapConnection} object. Except in 
+#'   \code{restoreProject.list}, where \code{object} is a list of data frames
+#'   to use in restoring the project. 
+#' @param project_information \code{data.frame} for restoring data. Provides the 
 #'   project settings to load via \code{importProjectInformation}. 
 #' @param arms Either \code{logical(1)} indicating if arms data should be
 #'   purged from the project; or a \code{data.frame} for restoring arms 
@@ -27,7 +29,7 @@
 #' @param mappings A \code{data.frame} for restoring instrument-event mappings
 #'   via \code{importMappings}. The API doesn't support deleting 
 #'   mappings, but an import replaces the existing mappings.
-#' @param repeating_insruments A \code{data.frame} for restoring repeating instruments
+#' @param repeating_instruments A \code{data.frame} for restoring repeating instruments
 #'   configuration via \code{importRepeatingInstrumentsEvents}. The API doesn't support deleting 
 #'   repeating instruments, but an import replaces the existing instruments.
 #'   NOT YET IMPLEMENTED
@@ -50,7 +52,8 @@
 #'   purged from the project; or a \code{data.frame} for restoring user roles
 #'   data via \code{importRecords}
 #' @param purge_all \code{logical(1)}. A shortcut option to purge all 
-#'   data elements from a project. 
+#'   data elements from a project.
+#' @param ... Arguments to pass to other methods. 
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -338,6 +341,7 @@ restoreProject.redcapApiConnection <- function(object,
                                                dags                  = NULL, 
                                                dag_assignments       = NULL,
                                                records               = NULL, 
+                                               ..., 
                                                error_handling        = getOption("redcap_error_handling"), 
                                                config                = list()){
   ###################################################################
