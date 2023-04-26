@@ -1,13 +1,20 @@
 context("Export and Import Repeating Instruments and Events Functionality")
 
+rcon <- redcapConnection(url = url, token = API_KEY)
+load(test_path("testdata", "RedcapProject_RepeatingInstrument.Rdata"))
+
+purgeProject(rcon, purge_all = TRUE)
+rcon$flush_all() # Clear the cache.
+restoreProject(RedcapProject_RepeatingInstrument, rcon)
+rcon$flush_all()
+
 #####################################################################
 # exportRepeatingInstrumentsEvents                               ####
 
 test_that(
+  "Test exportRepeatingInstrumentsEvents functionality",
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_data_frame(exportRepeatingInstrumentsEvents(rcon), 
                       ncols = 3)
@@ -18,10 +25,9 @@ test_that(
 # importRepeatingInstrumentsEvents                               ####
 
 test_that(
+  "Test importRepeatingInstrumentEvents",
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     Current <- rcon$repeatInstrumentEvent()
     

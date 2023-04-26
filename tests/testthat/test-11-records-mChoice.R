@@ -4,7 +4,8 @@
 
 require(Hmisc)
  
-rcon <- conn
+ rcon <- redcapConnection(url = url, 
+                          token = API_KEY)
 
 test_that(
   "mChoice type conversion for checkbox with Hmisc attached",

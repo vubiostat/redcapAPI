@@ -31,6 +31,7 @@ Events2 <- data.frame(event_name = c("event_x", "event_y"),
 # We are going to start with an empty/classic project. We want 
 # export and delete to respond appropriately when we are starting
 # from scratch.
+rcon$flush_all()
 restoreProject(RedcapProject_EmptyProject, rcon)
 
 test_that(
