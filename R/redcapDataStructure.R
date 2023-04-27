@@ -280,6 +280,9 @@ PROJECT_INFO_FIELDS_FIXED <- # These cannot be updated via the API
 
 # Repeating Instruments and Events ----------------------------------
 
+#' @rdname redcapDataStructures
+#' @export
+
 REDCAP_REPEAT_INSTRUMENT_STRUCTURE <- 
   data.frame(event_name = character(0), 
              form_name = character(0), 

@@ -28,6 +28,16 @@
 #'   body of the API call. This provides users to execute calls with options
 #'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
+#' @details It should be noted that it is \emph{not} possible to update the
+#' \code{has_repeating_instruments_or_events} property of the project through
+#' \code{importProjectInformation}. Enabling of repeating instruments and 
+#' events must be done through the GUI.
+#' 
+#' Although the API does not provide a delete method, it is possible to 
+#' remove settings by doing an import that excludes the settings you wish
+#' to remove. All settings can be cleared by executing
+#' \code{importRepeatingInstrumentsEvents(rcon, REDCAP_REPEAT_INSTRUMENT_STRUCTURE)}.
+#'   
 #' @export
 
 importRepeatingInstrumentsEvents <- function(rcon, 
@@ -107,6 +117,7 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
                   as.character(response)))
   
   if (refresh && rcon$has_repeatInstrumentEvent()){
+    rcon$refresh_projectInformation()
     rcon$refresh_repeatInstrumentEvent()
   }
 }
