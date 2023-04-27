@@ -29,6 +29,8 @@ guessDate(
 \item{Records}{A \code{data.frame} containing the records from
 \code{\link{exportRecordsTyped}}}
 
+\item{conn}{The REDCap connection object.}
+
 \item{na}{function. A function of the signature function(x) that determines
 if a field is NA.}
 
@@ -38,9 +40,9 @@ determines if a field is valid.}
 \item{cast}{function. A function of the signature function(x) that
 casts a column passing the validation.}
 
-\item{threshold}{numeric(1). The threshold of non-NA data to trigger casting.}
+\item{quiet}{Print no messages if triggered, Default=FALSE.}
 
-\item{conn.}{The REDCap connection object.}
+\item{threshold}{numeric(1). The threshold of non-NA data to trigger casting.}
 }
 \description{
 Will do a type cast if a validation is met above

@@ -11,6 +11,8 @@ dropRepeatingNA(Records, rcon, quiet = FALSE)
 \code{\link{exportRecordsTyped}}}
 
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
+
+\item{quiet}{logical. Suppress messages.}
 }
 \description{
 Drops rows where the repeat instrument is NA. Returns a data frame of records where repeat instruments have a value.

@@ -7,7 +7,8 @@
 #'  \code{invalid} attribute to reflect the cast. 
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
-#' @param conn. The REDCap connection object. 
+#' @param conn The REDCap connection object. 
+#' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param na function. A function of the signature function(x) that determines
 #' if a field is NA.
 #' @param validation function. A function of the signature function(x) that

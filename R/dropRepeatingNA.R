@@ -1,12 +1,12 @@
 #' @name dropRepeatingNA
-#' @title Drop Row Where Repeat Instrment Is NA
+#' @title Drop Row Where Repeat Instrument Is NA
 #' 
 #' @description Drops rows where the repeat instrument is NA. Returns a data frame of records where repeat instruments have a value.
 #'   
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-
+#' @param quiet logical. Suppress messages. 
 dropRepeatingNA <- function(Records, rcon, quiet=FALSE)
 {
   if('redcap_repeat_instrument' %in% names(Records))
