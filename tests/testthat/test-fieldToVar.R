@@ -55,15 +55,12 @@ test_that("dates = TRUE returns 12:04:55 for time_mmss in first rec",
           expect_true(rec_dt$time_mmss[1] ==
                        chron::times("00:02:45", format=c(times="h:m:s"))))
 
-# FIXME: These aren't importing correctly
 test_that("dates = TRUE returns 2023-02-24 12:04 for datetime_dmy_hm in first rec",
           expect_true(rec_dt$datetime_dmy_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
-# FIXME: These aren't importing correctly
 test_that("dates = TRUE returns 2023-02-24 12:04 for datetime_mdy_hm in first rec",
           expect_true(rec_dt$datetime_mdy_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
-# FIXME: These aren't importing correctly
 test_that("dates = TRUE returns 2023-02-24 12:04 datetime_ymd_hm in first rec",
           expect_true(rec_dt$datetime_ymd_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
@@ -89,11 +86,8 @@ test_that("dates = FALSE returns class character for time_hhmmss", expect_is(rec
 test_that("dates = FALSE returns class character for time_hhmm", expect_is(rec_df$time_hhmm, "character"))
 test_that("dates = FALSE returns class character for time_mmss", expect_is(rec_df$time_mmss, "character"))
 
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns class character for datetime_dmy_hm", expect_is(rec_df$datetime_dmy_hm, "character"))
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns class character for datetime_mdy_hm", expect_is(rec_df$datetime_mdy_hm, "character"))
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns class character for datetime_ymd_hm", expect_is(rec_df$datetime_ymd_hm, "character"))
 
 test_that("dates = FALSE returns class character for datetime_dmy_hms", expect_is(rec_df$datetime_dmy_hms, "character"))
@@ -114,13 +108,10 @@ test_that("dates = FALSE returns '12:04' for time_hhmm first rec",
 test_that("dates = FALSE returns '02:45' for time_mmss first rec",
           expect_true(rec_df$time_mmss[1] == "02:45"))
 
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns '2023-02-24 12:04' for datetime_dmy_hm first rec",
           expect_true(rec_df$datetime_dmy_hm[1] == "2023-02-24 12:04"))
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns '2023-02-24 12:04' for datetime_mdy_hm first rec",
           expect_true(rec_df$datetime_mdy_hm[1] == "2023-02-24 12:04"))
-# FIXME: These aren't importing correctly
 test_that("dates = FALSE returns '2023-02-24 12:04' for datetime_ymd_hm first rec",
           expect_true(rec_df$datetime_ymd_hm[1] == "2023-02-24 12:04"))
 
