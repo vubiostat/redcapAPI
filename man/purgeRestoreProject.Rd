@@ -31,6 +31,7 @@ purgeProject(object, ...)
   dags = FALSE,
   records = FALSE,
   purge_all = FALSE,
+  flush = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list()
@@ -52,6 +53,7 @@ restoreProject(object, ...)
   dags = NULL,
   dag_assignments = NULL,
   records = NULL,
+  flush = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list()
@@ -105,6 +107,10 @@ data via \code{importRecords}}
 
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all 
 data elements from a project.}
+
+\item{flush}{\code{logical(1)}. If \code{TRUE}, the all caches in the connection
+object will be flushed after completing the operation. This is highly 
+recommended.}
 
 \item{project_information}{\code{data.frame} for restoring data. Provides the 
 project settings to load via \code{importProjectInformation}.}

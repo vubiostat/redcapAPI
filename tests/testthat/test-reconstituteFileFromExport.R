@@ -18,11 +18,11 @@ RESPONSE <- makeApiCall(rcon,
                                     field = 'file_upload_test', 
                                     event = 'event_1_arm_1'))
 
+EXISTENT_DIR <- tempdir()
+
 test_that(
   "File is saved to the directory", 
   {
-    EXISTENT_DIR <- tempdir()
-    
     SavedFile <- reconstituteFileFromExport(RESPONSE,  
                                             dir = EXISTENT_DIR)
     filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
