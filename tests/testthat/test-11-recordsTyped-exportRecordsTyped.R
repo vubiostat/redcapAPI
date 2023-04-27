@@ -167,7 +167,7 @@ test_that(
     expect_data_frame(
       exportRecordsTyped(rcon, 
                          records = "1"), 
-      nrows = 1
+      nrows = 3
     )
     
     expect_data_frame(

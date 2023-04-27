@@ -255,8 +255,8 @@ test_that(
     inv <- attr(recV, "invalid")
     expect_true(!is.null(inv))
     expect_equal(unique(inv$value), "1")
-    sapply(c(17, 18, 21, 22), function(i) expect_true(!i %in% inv$row))
-    sapply(4:16, function(i) expect_true(i %in% inv$row))
+    sapply(c(23, 24, 25, 26), function(i) expect_true(!i %in% inv$row))
+    sapply(6:18, function(i) expect_true(i %in% inv$row))
   }
 )
 
