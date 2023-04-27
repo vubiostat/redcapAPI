@@ -1205,35 +1205,19 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
       sel <- selector[,i]
       if(any(sel))
       {
-        if(id_field %in% colnames(Raw))
-        {
-          data.frame(row=seq_len(nrow(Raw))[sel],
-                     record_id=Raw[sel, id_field],
-                     field_name=field_names[i],
-                     field_type=field_types[i],
-                     value=Raw[sel, i])
-        } else
-        {
-          data.frame(row=seq_len(nrow(Raw))[sel],
-                     field_name=field_names[i],
-                     field_type=field_types[i],
-                     value=Raw[sel, i])
-        }
+        data.frame(row=seq_len(nrow(Raw))[sel],
+                   record_id=if(id_field %in% colnames(Raw)) Raw[sel, id_field] else NA,
+                   field_name=field_names[i],
+                   field_type=field_types[i],
+                   value=Raw[sel, i])
       } else NULL
     }))
   if(!is.null(attr(Records, "invalid")))
   {
     class(attr(Records, "invalid")) <- c("invalid", "data.frame")
-    attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")
-    if(inherits(conn, "redcapOfflineConnection"))
-    {
-      attr(attr(Records, "invalid"), "version") <- "offline"
-      attr(attr(Records, "invalid"), "project") <- "offline"
-    } else
-    {
-      attr(attr(Records, "invalid"), "version") <- conn$version()
-      attr(attr(Records, "invalid"), "project") <- conn$projectInfo()$project_title
-    }
+    attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")  
+    attr(attr(Records, "invalid"), "version") <- conn$version()
+    attr(attr(Records, "invalid"), "project") <- conn$projectInfo()$project_title
     warning("Some records failed validation. See 'invalid' attr.")
   }
   

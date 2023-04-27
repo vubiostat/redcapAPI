@@ -24,6 +24,10 @@ format.invalid <- function(x, ...)
   dt <- attr(x, "time")
   vr <- attr(x, "version")
   pt <- attr(x, "project")
+  
+  if(is.null(vr)) vr <- "offline"
+  if(is.null(pt)) pt <- "offline"
+  
   x <- split(x, x$field_name)
   paste0(
     "# Failed Validations from REDCap project '",  pt, "'\n\n",
