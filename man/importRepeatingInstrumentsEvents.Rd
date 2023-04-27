@@ -52,3 +52,14 @@ This method allows you to import a list of the repeated
   instrument name will be blank/null to indicate that it is a repeating 
   event (rather than a repeating instrument).
 }
+\details{
+It should be noted that it is \emph{not} possible to update the
+\code{has_repeating_instruments_or_events} property of the project through
+\code{importProjectInformation}. Enabling of repeating instruments and 
+events must be done through the GUI.
+
+Although the API does not provide a delete method, it is possible to 
+remove settings by doing an import that excludes the settings you wish
+to remove. All settings can be cleared by executing
+\code{importRepeatingInstrumentsEvents(rcon, REDCAP_REPEAT_INSTRUMENT_STRUCTURE)}.
+}

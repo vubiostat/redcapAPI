@@ -115,7 +115,7 @@ test_that(
 test_that(
   "Enforce the proper value types for each property", 
   {
-    
+    local_reproducible_output(width = 200)
     NewData <- 
       data.frame(project_title = 123,
                  project_language = 123,

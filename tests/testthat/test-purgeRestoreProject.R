@@ -178,6 +178,7 @@ test_that(
 test_that(
   "restoreProject Argument Validation", 
   {
+    local_reproducible_output(width = 200)
     expect_error(restoreProject("not rcon"), 
                  "no applicable method for 'restoreProject'")
     

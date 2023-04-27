@@ -7,6 +7,7 @@
 \alias{REDCAP_SYSTEM_FIELDS}
 \alias{REDCAP_METADATA_FIELDTYPE}
 \alias{REDCAP_METADATA_VALIDATION_TYPE}
+\alias{REDCAP_REPEAT_INSTRUMENT_STRUCTURE}
 \title{REDCap Data Structures}
 \format{
 An object of class \code{character} of length 4.
@@ -14,6 +15,8 @@ An object of class \code{character} of length 4.
 An object of class \code{character} of length 11.
 
 An object of class \code{character} of length 23.
+
+An object of class \code{data.frame} with 0 rows and 3 columns.
 }
 \usage{
 validateRedcapData(data, redcap_data)
@@ -23,6 +26,8 @@ REDCAP_SYSTEM_FIELDS
 REDCAP_METADATA_FIELDTYPE
 
 REDCAP_METADATA_VALIDATION_TYPE
+
+REDCAP_REPEAT_INSTRUMENT_STRUCTURE
 }
 \arguments{
 \item{data}{\code{data.frame} User provided data to be compared against
