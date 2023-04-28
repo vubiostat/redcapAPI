@@ -374,6 +374,10 @@ exportRecordsTyped.redcapApiConnection <-
                                     batch_size     = batch_size)
     }
   
+  if (identical(Raw, data.frame())){
+    return(Raw)
+  }
+  
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
       Raw <- Raw[-1]
@@ -918,6 +922,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                    vectorToApiBodyList(records, "records")), 
                           config = config)
   
+  if (trimws(as.character(response)) == ""){
+    message("No data found in the project.")
+    return(data.frame())
+  }
+  
   read.csv(text = as.character(response), 
            stringsAsFactors = FALSE, 
            na.strings = "", 
@@ -944,6 +953,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
+    
+    if (trimws(as.character(record_response)) == ""){
+      message("No data found in the project.")
+      return(data.frame())
+    }
     
     records <- read.csv(text = as.character(record_response), 
                         stringsAsFactors = FALSE, 

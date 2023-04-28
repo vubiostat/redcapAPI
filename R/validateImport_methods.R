@@ -105,9 +105,9 @@ validate_import_datetime <- function(x, field_name, field_min, field_max, logfil
   {
     suppressWarnings(
       x <- lubridate::parse_date_time(x = x,
-                                      orders = c("ymd", "ymd HMS",
-                                                 "mdy", "mdy HMS",
-                                                 "dmy", "dmy HMS"))
+                                      orders = c("ymd", "ymd HMS", "ymd HM", 
+                                                 "mdy", "mdy HMS", "mdy HM",
+                                                 "dmy", "dmy HMS", "dmy HM"))
     )
   }
   

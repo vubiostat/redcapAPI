@@ -3,6 +3,9 @@ context("export/import/delete Events Argument Validation")
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
 
+Events <- data.frame(event_name = c("event_1", "event_1", "event_1"), 
+                     arm_num = 1:3)
+
 #####################################################################
 # Export Events Validation
 
@@ -22,6 +25,22 @@ test_that(
     expect_error(exportEvents(rcon, 
                               arms = c(TRUE, FALSE)), 
                  "'arms': Must be of type 'integerish'")
+  }
+)
+
+test_that(
+  "Return an error if override is not logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(importEvents(rcon, 
+                              Events, 
+                              override = c(TRUE, FALSE)), 
+                 "'override': Must have length 1")
+    
+    expect_error(importEvents(rcon, 
+                              Events, 
+                              override = "TRUE"), 
+                 "'override': Must be of type 'logical'")
   }
 )
 
@@ -81,7 +100,7 @@ test_that(
     # Has the correct column names
     expect_error(importEvents(rcon, 
                               event_data = EventsImproper), 
-                 "Variable 'names[(]event_data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','days_offset','offset_min','offset_max'[}]")
+                 "Variable 'names[(]event_data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','custom_event_label','event_id','days_offset','offset_min','offset_max'[}]")
   }
 )
 
@@ -153,8 +172,6 @@ test_that(
   "Return an error when rcon is not redcapApiConnection", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteEvents("not an rcon"), 
                  "'rcon': Must inherit from class 'redcapApiConnection'")
@@ -165,8 +182,6 @@ test_that(
   "Return an error when events is not character", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteEvents(rcon, 
                             events = c(TRUE, FALSE)), 
@@ -178,8 +193,6 @@ test_that(
   "Return an error if refresh is not logical(1)", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteEvents(rcon, 
                               Events, 
@@ -197,8 +210,6 @@ test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteEvents(rcon,
                             events = "event_1_arm_1",

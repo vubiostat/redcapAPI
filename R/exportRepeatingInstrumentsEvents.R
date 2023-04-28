@@ -64,6 +64,13 @@ exportRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   ###################################################################
+  # Handle Project w/o repeating instruments                     ####
+  
+  if (rcon$projectInformation()$has_repeating_instruments_or_events == 0){
+    return(REDCAP_REPEAT_INSTRUMENT_STRUCTURE)
+  }
+  
+  ###################################################################
   # Make the Body List                                           ####
   
   body <- list(content = "repeatingFormsEvents", 
