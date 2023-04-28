@@ -2,7 +2,7 @@
 % Please edit documentation in R/dropRepeatingNA.R
 \name{dropRepeatingNA}
 \alias{dropRepeatingNA}
-\title{Drop Row Where Repeat Instrment Is NA}
+\title{Drop Row Where Repeat Instrument Is NA}
 \usage{
 dropRepeatingNA(Records, rcon, quiet = FALSE)
 }

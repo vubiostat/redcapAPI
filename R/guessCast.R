@@ -7,7 +7,7 @@
 #'  \code{invalid} attribute to reflect the cast. 
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
-#' @param conn The REDCap connection object. 
+#' @param rcon The REDCap connection object. 
 #' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param na function. A function of the signature function(x) that determines
 #' if a field is NA.
@@ -20,21 +20,52 @@
 #' @examples
 #' \dontrun{
 #' recs <- exportRecordsTyped(rcon, cast=raw_cast) |> 
-#'   guessCast(validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+#'   guessCast(rcon, 
+#'             validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
 #'             cast=as.Date,
 #'             threshold=0.6)
 #' }
-guessCast <- function(Records, conn, 
+guessCast <- function(Records, rcon, 
                       na=isNAorBlank, validation, cast,
                       quiet=FALSE, threshold=0.8)
 {
+   ##########################################
+  ## Validate Arguments
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x       = Records,
+                          classes = "data.frame",
+                          add     = coll)
+  checkmate::assert_class(x = rcon,
+                          classes = "redcapApiConnection",
+                          add = coll)
+  checkmate::assert_function(x = na,
+                             add=coll)
+  checkmate::assert_function(x = validation,
+                             add=coll)
+  checkmate::assert_function(x = cast,
+                             add=coll)
+  checkmate::assert_logical(x = quiet, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  checkmate::assert_numeric(x = threshold, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+   ##########################################
+  ## Loop over text columns to guess on
   field_classes <- sapply(Records, class)
   text_fields   <- names(Records)[field_classes == "character"]
   for(i in text_fields)
   {
     nas   <- isNAorBlank(Records[[i]])
     valid <- validation(Records[[i]])
-    if ( (sum(valid) - sum(nas))/length(Records[i]) >= threshold )
+    sel   <- !valid & !nas
+    if ( any(!nas) && sum(valid)/sum(!nas) >= threshold )
     {
       if(!quiet)
         message(paste0("guessCast triggered on ", i,
@@ -42,11 +73,11 @@ guessCast <- function(Records, conn,
                        " of ", length(valid), " records."))
       x <- Records[[i]]
 
-      # Modify "invalid" attribute
-      if(any(!valid))
+      # Modify "invalid" attribute if needed.
+      if(any(sel))
       {
         inv <- attr(Records, "invalid")
-        sel <- !valid & !nas
+
         inv <- rbind(
                  inv,
                  data.frame(row        = seq_len(nrow(Records))[sel],
@@ -67,8 +98,8 @@ guessCast <- function(Records, conn,
   {
     class(attr(Records, "invalid")) <- c("invalid", "data.frame")
     attr(attr(Records, "invalid"), "time")    <- format(Sys.Date(), "%c")
-    attr(attr(Records, "invalid"), "version") <- conn$version()
-    attr(attr(Records, "invalid"), "project") <- conn$projectInfo()$project_title
+    attr(attr(Records, "invalid"), "version") <- rcon$version()
+    attr(attr(Records, "invalid"), "project") <- rcon$projectInfo()$project_title
   }
   
   Records
@@ -77,13 +108,13 @@ guessCast <- function(Records, conn,
 #' @rdname guessCast
 #' @export
 guessDate <- function(Records,
-                      conn,
+                      rcon,
                       na         = isNAorBlank,
                       validation = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
                       cast       = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
                       quiet      = FALSE,
                       threshold  = 0.8)
-  guessCast(Records,  conn,
+  guessCast(Records,  rcon,
             na = na,  validation = validation, cast = cast,
             quiet = quiet,
             threshold = threshold)

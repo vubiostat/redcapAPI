@@ -7,7 +7,7 @@
 \usage{
 guessCast(
   Records,
-  conn,
+  rcon,
   na = isNAorBlank,
   validation,
   cast,
@@ -17,7 +17,7 @@ guessCast(
 
 guessDate(
   Records,
-  conn,
+  rcon,
   na = isNAorBlank,
   validation = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
   cast = function(x, ...) as.POSIXct(x, format = "\%Y-\%m-\%d"),
@@ -29,7 +29,7 @@ guessDate(
 \item{Records}{A \code{data.frame} containing the records from
 \code{\link{exportRecordsTyped}}}
 
-\item{conn}{The REDCap connection object.}
+\item{rcon}{The REDCap connection object.}
 
 \item{na}{function. A function of the signature function(x) that determines
 if a field is NA.}
@@ -52,7 +52,8 @@ Will do a type cast if a validation is met above
 \examples{
 \dontrun{
 recs <- exportRecordsTyped(rcon, cast=raw_cast) |> 
-  guessCast(validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+  guessCast(rcon, 
+            validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
             cast=as.Date,
             threshold=0.6)
 }
