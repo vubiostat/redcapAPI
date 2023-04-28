@@ -1,6 +1,18 @@
 context("instruments, import/export mappings, export PDF argument validations")
 
+#####################################################################
+# Make the connection and purge the project                      ####
+
 rcon <- redcapConnection(url = url, token = API_KEY)
+
+purgeProject(rcon, 
+             purge_all = TRUE)
+
+load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
+
+rcon$flush_all()
+
+restoreProject(RedcapProject_RedcapTestApi, rcon)
 
 #####################################################################
 # exportInstruments                                              ####
@@ -124,7 +136,7 @@ test_that(
                  "'names[(]data[)]': Must be a subset of [{]'arm_num','unique_event_name','form'[}]")
 
     new_map <- rcon$mapping()
-    new_map$arm_num <- 3:4
+    new_map$arm_num <- 3:11
     expect_error(importMappings(rcon = rcon,
                                 data = new_map),
                  "'data[$]arm_num': Must be a subset of [{]'1','2'[}]")
@@ -139,7 +151,7 @@ test_that(
     new_map$form[1] <- "not_a_real_form"
     expect_error(importMappings(rcon = rcon,
                                 data = new_map),
-                 "Variable 'data[$]form': Must be a subset of [{]'fieldtovar_datetimes','randomization','branching_logic','data_import_export'[}]")
+                 "Variable 'data[$]form': Must be a subset of [{]'fieldtovar_datetimes','randomization','branching_logic','data_import_export','repeating_instrument'[}]")
   }
 )
 

@@ -183,6 +183,25 @@ test_that(
 )
 
 test_that(
+  "caching of repeatInstrumentEvent", 
+  {
+    local_reproducible_output(width = 200)
+
+    rcon$flush_all()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
+    
+    rcon$flush_repeatInstrumentEvent()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$refresh_repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
+  }
+)
+
+test_that(
   "retrieve and set retries", 
   {
     expect_equal(rcon$retries(), 5)

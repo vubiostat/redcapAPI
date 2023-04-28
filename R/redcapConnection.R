@@ -149,6 +149,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_project <- NULL
   this_instrument <- NULL
   this_fileRepository <- NULL
+  this_repeat <- NULL
   rtry <- retries
   rtry_int <- rep(retry_interval, 
                   length.out = rtry)
@@ -166,6 +167,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "project" = exportProjectInformation(rc), 
            "instrument" = exportInstruments(rc), 
            "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
+           "repeat" = exportRepeatingInstrumentsEvents(rc),
            NULL)
   }
   
@@ -214,7 +216,6 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_projectInformation = function() !is.null(this_project), 
       flush_projectInformation = function() this_project <<- NULL, 
       refresh_projectInformation = function() this_project <<- getter("project"), 
-      push_projectInformation = function(push) this_project <<- push, 
       
       instruments = function(){ if (is.null(this_instrument)) this_instrument <<- getter("instrument"); this_instrument },
       has_instruments = function() !is.null(this_instrument), 
@@ -226,10 +227,15 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_fileRepository = function() this_fileRepository <<- NULL,
       refresh_fileRepository = function() this_fileRepository <<- getter("fileRepo"),
       
+      repeatInstrumentEvent = function(){ if (is.null(this_repeat)) this_repeat <<- getter("repeat"); this_repeat }, 
+      has_repeatInstrumentEvent = function() !is.null(this_repeat),
+      flush_repeatInstrumentEvent = function() this_repeat <<- NULL,
+      refresh_repeatInstrumentEvent = function() this_repeat <<- getter("repeat"),
+      
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
           this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- NULL}, 
+          this_instrument <<- this_fileRepository <<- this_repeat <<- NULL}, 
       
       refresh_all = function(){
         this_metadata <<- getter("metadata")
@@ -242,6 +248,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_project <<- getter("project")
         this_instrument <<- getter("instrument")
         this_fileRepository <<- getter("fileRepo")
+        this_repeat <<- getter("this_repeat")
       },
       
       retries = function() rtry, 
@@ -287,6 +294,7 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("Instruments : %s", is_cached(x$has_instruments())),
       sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
       sprintf("Mapping     : %s", is_cached(x$has_mapping())),
+      sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
       sprintf("Users       : %s", is_cached(x$has_users())), 
       sprintf("Version     : %s", is_cached(x$has_version())), 
       sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
@@ -315,6 +323,10 @@ print.redcapApiConnection <- function(x, ...){
 #'   Project Information can be read, or a \code{data.frame}.
 #' @param file_repo Either a \code{character} giving the file from which the 
 #'   File Repository Listing can be read, or a \code{data.frame}.
+#' @param repeat_instrument Either a \code{character} giving the file from which the 
+#'   Repeating Instruments and Events settings can be read, or a \code{data.frame}.
+#'   Note: The REDCap GUI doesn't offer a download file of these settings 
+#'   (at the time of this writing).
 #' @param records Either a \code{character} giving the file from which the 
 #'   Records can be read, or a \code{data.frame}. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labelled or formatted
@@ -331,6 +343,7 @@ offlineConnection <- function(meta_data = NULL,
                               version = NULL, 
                               project_info = NULL, 
                               file_repo = NULL, 
+                              repeat_instrument = NULL,
                               records = NULL){
   ###################################################################
   # Argument Validation 
@@ -438,6 +451,16 @@ offlineConnection <- function(meta_data = NULL,
   )
   
   checkmate::assert(
+    checkmate::check_character(x = repeat_instrument, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = repeat_instrument, 
+                                null.ok = TRUE), 
+    .var.name = "repeat_instrument", 
+    add = coll
+  )
+  
+  checkmate::assert(
     checkmate::check_character(x = records, 
                                len = 1, 
                                null.ok = TRUE), 
@@ -497,6 +520,11 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
+  if (is.character(repeat_instrument)){
+    checkmate::assert_file_exists(x = repeat_instrument, 
+                                  add = coll)
+  }
+  
   if (is.character(records)){
     checkmate::assert_file_exists(x = records, 
                                   add = coll)
@@ -533,6 +561,9 @@ offlineConnection <- function(meta_data = NULL,
     validateRedcapData(data = .offlineConnection_readFile(project_info), 
                        redcap_data = REDCAP_PROJECT_INFORMATION_STRUCTURE)
   this_fileRepository <- .offlineConnection_readFile(file_repo)
+  
+  this_repeat <- .offlineConnection_readFile(repeat_instrument)
+  
   this_instrument <- 
     if (is.null(instruments) & !is.null(this_metadata)){
       data.frame(instrument_name = unique(this_metadata$form_name), 
@@ -624,6 +655,12 @@ offlineConnection <- function(meta_data = NULL,
       flush_fileRepository = function() this_fileRepository <<- NULL,
       refresh_fileRepository = function(x) {this_fileRepository <<- .offlineConnection_readFile(x)},
       
+      repeatInstrumentEvent = function(){ this_repeat }, 
+      has_repeatInstrumentEvent = function() !is.null(this_repeat), 
+      flush_repeatInstrumentEvent = function() this_project <<- NULL, 
+      refresh_repeatInstrumentEvent = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                                       redcap_data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE)},
+      
       records = function(){ this_record },
       has_records = function() !is.null(this_record),
       flush_records = function() this_record <<- NULL,
@@ -632,7 +669,7 @@ offlineConnection <- function(meta_data = NULL,
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
           this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- NULL}, 
+          this_instrument <<- this_fileRepository <<- this_repeat <<- NULL}, 
       
       refresh_all = function(){} # provided only to match the redcapApiConnection. Has no effect
     )
@@ -655,6 +692,7 @@ print.redcapOfflineConnection <- function(x, ...){
         sprintf("Instruments : %s", is_cached(x$has_instruments())),
         sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
         sprintf("Mapping     : %s", is_cached(x$has_mapping())),
+        sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
         sprintf("Users       : %s", is_cached(x$has_users())), 
         sprintf("Version     : %s", is_cached(x$has_version())), 
         sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 

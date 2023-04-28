@@ -155,16 +155,15 @@ importFiles.redcapApiConnection <- function(rcon,
   
   if (!overwrite)
   {
-    # FIXME: exportRecords is returning a warning about colClasses. 
-    #        we may want to utilize exportRecordsTyped when complete.
-    suppressWarnings({
-      fileThere <- exportRecords(rcon, 
-                                 records = record, 
-                                 fields = field, 
-                                 events = event)
-    })
+    fileThere <- exportRecordsTyped(rcon, 
+                                    records = record, 
+                                    fields = c(MetaData$field_name[1], field), 
+                                    events = event)
+    if (nrow(fileThere) > 0 && length(repeat_instance) > 0){
+      fileThere <- fileThere[fileThere$redcap_repeat_instance %in% repeat_instance, ]
+    }
     
-    if (!is.na(fileThere[field])) 
+    if (nrow(fileThere) > 0 && !is.na(fileThere[[field]])) 
       coll$push("A file exists and overwrite = FALSE")
   }
   
