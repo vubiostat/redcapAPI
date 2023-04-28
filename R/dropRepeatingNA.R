@@ -1,5 +1,5 @@
 #' @name dropRepeatingNA
-#' @title Drop Row Where Repeat Instrment Is NA
+#' @title Drop Row Where Repeat Instrument Is NA
 #' 
 #' @description Drops rows where the repeat instrument is NA. Returns a data frame of records where repeat instruments have a value.
 #'   
