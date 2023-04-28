@@ -84,6 +84,9 @@ REDCAP_EVENT_STRUCTURE <-
              unique_event_name = character(0), 
              custom_event_label = character(0), 
              event_id = numeric(0),
+             days_offset = numeric(0), 
+             offset_min = numeric(0), 
+             offset_max = numeric(0),
              stringsAsFactors = FALSE)
 
 # Field Names -------------------------------------------------------
@@ -276,6 +279,9 @@ PROJECT_INFO_FIELDS_FIXED <- # These cannot be updated via the API
     "external_modules")
 
 # Repeating Instruments and Events ----------------------------------
+
+#' @rdname redcapDataStructures
+#' @export
 
 REDCAP_REPEAT_INSTRUMENT_STRUCTURE <- 
   data.frame(event_name = character(0), 

@@ -1,0 +1,4 @@
+This file is intended for use in testing file import/export operations in the redcapAPI package. 
+
+The quick brown fox jumps over the lazy dog.
+_The Boston Journal_, "Current Notes" February 9, 1885
