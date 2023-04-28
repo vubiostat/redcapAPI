@@ -163,9 +163,6 @@ test_that(
   {
     local_reproducible_output(width = 200)
     
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
-    
     expect_error(deleteArms("not an rcon"), 
                  "no applicable method for 'deleteArms'")
   }
@@ -175,8 +172,6 @@ test_that(
   "Return an error when deleteArms is not character", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteArms(rcon, 
                             arms = c(TRUE, FALSE)), 
@@ -188,8 +183,6 @@ test_that(
   "Return an error if refresh is not logical(1)", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteArms(rcon, 
                             arms = 1, 
@@ -207,8 +200,6 @@ test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(deleteArms(rcon,
                             arms = 1,

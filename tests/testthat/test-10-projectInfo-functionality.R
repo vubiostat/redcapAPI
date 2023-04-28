@@ -28,9 +28,6 @@ CurrentInfo <- rcon$projectInformation()
 test_that(
   "Import new values", 
   {
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
-    
     NewInfo <- data.frame(project_pi_lastname = "Not Garbett", 
                           display_today_now_button = 0)
     

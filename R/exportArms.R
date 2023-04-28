@@ -98,8 +98,7 @@ exportArms.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   if(rcon$projectInformation()$is_longitudinal == 0){
-    return(data.frame(arm_num = character(0), 
-                      name = character(0)))
+    return(REDCAP_ARMS_STRUCTURE) # defined in redcapDataStructure.R
   }
   
   # Build the body list ---------------------------------------------

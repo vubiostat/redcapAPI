@@ -116,11 +116,7 @@ exportEvents.redcapApiConnection <- function(rcon,
   # Return for Classical projects
   
   if (rcon$projectInformation()$is_longitudinal == 0){
-    return(data.frame(event_name = character(0), 
-                      arm_num = numeric(0), 
-                      unique_event_name = character(0), 
-                      custom_event_label = character(0), 
-                      event_id = character(0)))
+    return(REDCAP_EVENT_STRUCTURE) # Defined in redcapDataStructure.R
   }
   
    ##################################################################
@@ -143,8 +139,12 @@ exportEvents.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200) return(redcap_error(response, error_handling))
-  
-  utils::read.csv(text = as.character(response),
-                  stringsAsFactors = FALSE,
-                  na.strings = "")
+
+  if (trimws(as.character(response)) == ""){
+    REDCAP_EVENT_STRUCTURE
+  } else {
+    utils::read.csv(text = as.character(response),
+                    stringsAsFactors = FALSE,
+                    na.strings = "")
+  }
 }

@@ -97,5 +97,6 @@ deleteEvents <- function(rcon,
   
   if (refresh && rcon$has_events()){
     rcon$refresh_events()
+    rcon$refresh_projectInformation()
   }
 }

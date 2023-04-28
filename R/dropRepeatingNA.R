@@ -6,6 +6,9 @@
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
+#' @param quiet \code{logical(1)}. When \code{FALSE}, a message is printed
+#'   indicating how many rows were in \code{Records} at the start and 
+#'   completion of the subset.
 
 dropRepeatingNA <- function(Records, rcon, quiet=FALSE)
 {

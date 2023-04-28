@@ -1,10 +1,16 @@
 context("export/import/delete Arms Functionality")
 
+#####################################################################
+# Make the connection and purge the project                      ####
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
 
+purgeProject(rcon, 
+             purge_all = TRUE)
+
+load(test_path("testdata", "RedcapProject_EmptyProject.Rdata"))
 #####################################################################
-# Arms Functionality
+# Object to aid in testing                                       ####
 
 Arms <- data.frame(arm_num = 1:3, 
                    name = c("Arm 1", "Arm 2", "Arm 3"), 
@@ -19,12 +25,118 @@ Events <- data.frame(event_name = c("event_1", "event_1", "event_1"),
 Events2 <- data.frame(event_name = c("event_x", "event_y"), 
                       arm_num = 10:11)
 
+#####################################################################
+# Classic Project Testing                                        ####
+
+# We are going to start with an empty/classic project. We want 
+# export and delete to respond appropriately when we are starting
+# from scratch.
+rcon$flush_all()
+restoreProject(RedcapProject_EmptyProject, rcon)
+
+test_that(
+  "exportArms returns an empty data frame", 
+  {
+    local_reproducible_output(width = 200)
+    expect_equal(rcon$projectInformation()$is_longitudinal, 
+                 0)
+    expect_data_frame(exportArms(rcon), 
+                      nrows = 0, 
+                      ncols = 2)
+  }
+)
+
+test_that(
+  "deleteArms returns a message indicating no arms deleted.", 
+  {
+    local_reproducible_output(width = 200)
+    expect_message(deleteArms(rcon, 
+                              arms = rcon$arms()$arm_num), 
+                   "Arms Deleted: None")
+  }
+)
+
+# importArms deserves some explanation. Even though we are working on a
+# classic project, we can import Arms and Events. But if we try to 
+# export them again, the API will kick back an error. The R package
+# bypasses the error and returns an empty data frame instead. 
+# Let's test that we get back what we intend after importing these.
+
+purgeProject(rcon, 
+             arms = TRUE, 
+             events = TRUE)
+
+test_that(
+  "Import arms into a empty project.", 
+  {
+    # Import the arms
+    expect_message(importArms(rcon, 
+                              arms_data = Arms), 
+                   "Arms imported: 3")
+    
+    rcon$refresh_projectInformation()
+    expect_equal(rcon$projectInformation()$is_longitudinal, 
+                 0)
+    
+    # Because we aren't yet longitudinal, we don't want arms back yet.
+    expect_equal(exportArms(rcon), 
+                 REDCAP_ARMS_STRUCTURE)
+    
+    # Now let's import the events. This should make the project longitudinal
+    expect_message(importEvents(rcon, 
+                                event_data = Events), 
+                   "Events imported: 3")
+    
+    rcon$refresh_projectInformation()
+    
+    # We haven't allowed the project to use arms/events, so it should 
+    # still not be longitudinal, even though we've uploaded arms and events.
+    expect_equal(rcon$projectInformation()$is_longitudinal, 
+                 0)
+    
+    # We also shouldn't get back any arms or events on export
+    expect_equal(exportArms(rcon), 
+                 REDCAP_ARMS_STRUCTURE)
+    expect_equal(exportEvents(rcon), 
+                 REDCAP_EVENT_STRUCTURE)
+    
+    # Now let's enable the longitudinal study and make sure we can 
+    # get the arms and events out.
+    
+    expect_message(importProjectInformation(rcon, 
+                                            data.frame(is_longitudinal = 1)), 
+                   "Fields updated: 1")
+    
+    expect_equal(exportArms(rcon), 
+                 Arms)
+    expect_equal(exportEvents(rcon)[1:2], # we didn't provide a full specification for Events 
+                 Events)
+    
+    rcon$refresh_arms()
+    rcon$refresh_events()
+    
+    # And now we clean up from our testing.
+    
+    purgeProject(rcon, 
+                 arms = TRUE, 
+                 events = TRUE)
+    
+    importProjectInformation(rcon, 
+                             data.frame(is_longitudinal = 0))
+    
+    expect_equal(exportArms(rcon), 
+                 REDCAP_ARMS_STRUCTURE)
+    expect_equal(exportEvents(rcon), 
+                 REDCAP_EVENT_STRUCTURE)
+  }
+)
+
+#####################################################################
+# Longitudinal Project Testing                                   ####
 test_that(
   "Import, Export, and Deletion of Arms Execute Successfully", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     if(rcon$projectInformation()$is_longitudinal == 0){
       importProjectInformation(rcon, 
@@ -55,7 +167,7 @@ test_that(
     # delete the Arms
     expect_message(deleteArms(rcon, 
                               arms = 1:3), 
-                   "Arms 1, 2, 3 deleted.")
+                   "Arms Deleted: 1, 2, 3")
     
     rcon$refresh_projectInformation()
     
@@ -71,8 +183,6 @@ test_that(
   "Test the override argument in importArms",
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
@@ -103,6 +213,8 @@ test_that(
                                 event_data = Events2), 
                    "Events imported: 2")
     
+    rcon$refresh_projectInformation()
+    
     expect_equal(exportArms(rcon), 
                  Arms2)
     
@@ -111,7 +223,7 @@ test_that(
     # Now Clean up from the test
     rcon$refresh_arms()
     expect_message(deleteArms(rcon, arms = 10:11), 
-                   "Arms 10, 11 deleted.")
+                   "Arms Deleted: 10, 11")
   }
 )
 
@@ -120,8 +232,6 @@ test_that(
   "Confirm that we can add additional arms and delete specific arms", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
@@ -151,6 +261,8 @@ test_that(
                                 event_data = Events2), 
                    "Events imported: 2")
     
+    rcon$refresh_projectInformation()
+    
     # Confirm that all of the arms are present.
     expect_equal(exportArms(rcon), 
                  rbind(Arms, Arms2))
@@ -161,7 +273,7 @@ test_that(
     
     expect_message(deleteArms(rcon, 
                               arms = c(3, 10)), 
-                   "Arms 3, 10 deleted")
+                   "Arms Deleted: 3, 10")
     
     expect_data_frame(exportArms(rcon), 
                       nrows = 3, 
@@ -170,6 +282,6 @@ test_that(
     # clean up
     expect_message(deleteArms(rcon, 
                               arms = c(1, 2, 11)), 
-                   "Arms 1, 2, 11 deleted.")
+                   "Arms Deleted: 1, 2, 11")
   }
 )

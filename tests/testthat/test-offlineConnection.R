@@ -13,7 +13,7 @@ test_that(
 )
 
 #####################################################################
-# Functionality - Data from API
+# Functionality - Data from API                                  ####
 
 test_that(
   "Meta Data loads from data frame and file", 
@@ -75,14 +75,12 @@ test_that(
               row.names = FALSE)
     
     # From data frame
-    roff <- expect_no_error(offlineConnection(events = this_data))
+    roff <- suppressWarnings({ offlineConnection(events = this_data) })
     
     expect_true(roff$has_events())
     
     # From File
-    roff <- 
-      expect_no_error(
-        offlineConnection(events = this_file_name))
+    roff <- suppressWarnings({ offlineConnection(events = this_file_name) })
     
     expect_true(roff$has_events())
   }
@@ -238,9 +236,6 @@ test_that(
 test_that(
   "Repeating Instruments and Events loads from data frame and file", 
   {
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
-    
     this_file_name <- file.path(tempdir(), "repeatInst.csv")
     this_data <- rcon$repeatInstrumentEvent()
     write.csv(this_data, 
@@ -288,12 +283,12 @@ test_that(
 #####################################################################
 # Functionality - Files Downloaded from REDCap UI
 
-filedir <- system.file("extdata/offlineConnectionFiles",
-                       package = "redcapAPI")
+filedir <- test_path("testdata", "offlineConnectionFiles")
 
 test_that(
   "Meta Data loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_DataDictionary.csv")
     
     roff <- expect_no_error(offlineConnection(meta_data = file))
@@ -307,6 +302,7 @@ test_that(
 test_that(
   "Arms loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_Arms.csv")
     
     roff <- expect_no_error(offlineConnection(arms = file))
@@ -318,10 +314,11 @@ test_that(
 test_that(
   "Events loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_Events.csv")
     
     roff <- expect_warning(offlineConnection(events = file), 
-                           "as expected. [{]event_id[}]")
+                           "as expected. [{]event_id,")
     
     expect_true(roff$has_events())
   }
@@ -330,6 +327,7 @@ test_that(
 test_that(
   "Mappings loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_InstrumentDesignations.csv")
     
     roff <- expect_no_error(offlineConnection(mapping = file))
@@ -341,6 +339,7 @@ test_that(
 test_that(
   "Users loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_Users.csv")
     
     roff <- 
@@ -355,6 +354,7 @@ test_that(
 test_that(
   "Records loads using file from UI", 
   {
+    local_reproducible_output(width = 200)
     file <- file.path(filedir, "TestRedcapAPI_Records.csv")
     
     roff <- expect_no_error(offlineConnection(records = file))

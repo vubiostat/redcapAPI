@@ -1,28 +1,49 @@
 context("Export/Import/Delete File Repository Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
+#####################################################################
+# Establish a project for testing.                               ####
+# It will need one record in order to have a place to store a record
+
+rcon <- redcapConnection(url, API_KEY)
+
+purgeProject(rcon, 
+             purge_all = TRUE)
+
+load(test_path("testdata", "RedcapProject_BasicData.Rdata"))
+rcon$flush_all()
+restoreProject(RedcapProject_BasicData, 
+               rcon)
+importRecords(rcon, 
+              data.frame(record_id = "1"))
+
+
+local_file <- test_path("testdata", "FileForImportExportTesting.txt")
 
 #####################################################################
-# Export/Import/Delete a Single File
+# Import/Export/Delete a Single File                             ####
 
 FileRepo <- rcon$fileRepository()
 
-DOCUMENT_ID <- FileRepo$doc_id[FileRepo$parent_folder == 114]
-DOCUMENT_ID <- DOCUMENT_ID[!is.na(DOCUMENT_ID)]
-DOCUMENT_ID <- head(DOCUMENT_ID, 1)
+test_that(
+  "Import a single file to the file repository", 
+  {
+    expect_data_frame(
+      importToFileRepository(rcon, 
+                             file = local_file, 
+                             folder_id = FileRepo$folder_id[FileRepo$name == "SubSubFolder"]), 
+      nrows = 1, 
+      ncols = 2)
+  }
+)
 
-SaveFileForImport <- exportFromFileRepository(rcon, 
-                                              doc_id = DOCUMENT_ID, 
-                                              dir = tempdir())
+FileRepo <- rcon$fileRepository()
+EXISTING_DIR <- tempdir()
+DOCUMENT_ID <- FileRepo$doc_id[!is.na(FileRepo$doc_id)]
+DOCUMENT_ID <- DOCUMENT_ID[1]
 
 test_that(
-  "Export a file can be saved to an existing directory", 
+  "Export a file to an existing directory", 
   {
-    skip_if(length(DOCUMENT_ID) == 0, 
-            "No document to export. Please seed the File Repository With a Document in Folder ID 114")
-    
-    EXISTING_DIR <- tempdir()
-    
     SavedFile <- exportFromFileRepository(rcon, 
                                           doc_id = DOCUMENT_ID, 
                                           dir = EXISTING_DIR)
@@ -36,11 +57,6 @@ test_that(
 test_that(
   "File can be saved to a directory that has to be created", 
   {
-    skip_if(length(DOCUMENT_ID) == 0, 
-            "No document to export. Please seed the File Repository With a Document in Folder ID 114")
-    
-    EXISTING_DIR <- tempdir()
-    
     SavedFile <- exportFromFileRepository(rcon, 
                                           doc_id = DOCUMENT_ID, 
                                           dir = file.path(EXISTING_DIR, "Subfolder"), 
@@ -57,9 +73,6 @@ test_that(
 test_that(
   "File can be deleted from the File Repository", 
   {
-    skip_if(length(DOCUMENT_ID), 
-            "No file to delete. Please seed the File Repository With a Document in Folder ID 114")
-    
     DeletedFile <- deleteFromFileRepository(rcon, 
                                             doc_id = DOCUMENT_ID)
     expect_data_frame(DeletedFile, 
@@ -68,27 +81,27 @@ test_that(
   }
 )
 
-test_that(
-  "File can be imported to the File Repository", 
-  {
-    skip_if(length(DOCUMENT_ID), 
-            "No file to delete. Please seed the File Repository With a Document in Folder ID 114")
-    
-    ImportedFile <- importToFileRepository(rcon, 
-                                           file = file.path(SaveFileForImport$directory, 
-                                                            SaveFileForImport$filename), 
-                                           folder_id = 114)
-    
-    expect_data_frame(ImportedFile, 
-                      nrows = 1, 
-                      ncols = 2)
-  }
-)
-
-
 
 #####################################################################
-# Export/Import/Delete Multiple Files
+# Import/Export/Delete Multiple Files
+
+rcon$flush_fileRepository()
+FileRepo <- rcon$fileRepository()
+
+# We won't test the import of a file repository because we have no way to 
+# delete newly created folders. 
+# We do need to put a file into the repository to test the export and delete
+test_that(
+  "Import a single file to the file repository", 
+  {
+    expect_data_frame(
+      importToFileRepository(rcon, 
+                             file = local_file, 
+                             folder_id = FileRepo$folder_id[FileRepo$name == "SubSubFolder"]), 
+      nrows = 1, 
+      ncols = 2)
+  }
+)
 
 FileRepo <- rcon$fileRepository()
 
@@ -123,7 +136,6 @@ test_that(
     expect_data_frame(exportFileRepository(rcon,
                                            dir = test_dir,
                                            recursive = TRUE))
-    
   }
 )
 
@@ -164,18 +176,6 @@ test_that(
     
     expect_data_frame(Deleted, 
                       ncols = 4)
-    
-    # Replace the file that was deleted.
-    Imported <- importFileRepository(rcon, 
-                                     dir = td, 
-                                     recursive = TRUE)
-    
-    expect_data_frame(Imported, 
-                      ncols = 6)
-    unlink(list.files(td, 
-                      recursive = TRUE, 
-                      full.names = TRUE, 
-                      all.file = TRUE))
   }
 )
 

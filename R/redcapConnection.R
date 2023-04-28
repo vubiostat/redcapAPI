@@ -216,7 +216,6 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_projectInformation = function() !is.null(this_project), 
       flush_projectInformation = function() this_project <<- NULL, 
       refresh_projectInformation = function() this_project <<- getter("project"), 
-      push_projectInformation = function(push) this_project <<- push, 
       
       instruments = function(){ if (is.null(this_instrument)) this_instrument <<- getter("instrument"); this_instrument },
       has_instruments = function() !is.null(this_instrument), 

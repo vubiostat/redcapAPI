@@ -186,8 +186,7 @@ test_that(
   "caching of repeatInstrumentEvent", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
+
     rcon$flush_all()
     expect_false(rcon$has_repeatInstrumentEvent())
     
