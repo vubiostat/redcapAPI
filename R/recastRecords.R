@@ -52,9 +52,10 @@ recastRecords <- function(data,
                           add = coll)
   
   checkmate::assert(
-    checkmate::test_character(x = fields), 
-    checkmate::test_logical(x = fields), 
-    checkmate::test_integerish(x = fields, lower = 0), 
+    checkmate::test_character(x = fields, null.ok = TRUE), 
+    checkmate::test_logical(x = fields, null.ok = TRUE), 
+    checkmate::test_integerish(x = fields, lower = 0, null.ok = TRUE), 
+    .var.name = "fields",
     add = coll
   )
   
@@ -108,42 +109,33 @@ recastRecords <- function(data,
   ###################################################################
   # Derive field information
   MetaData <- rcon$metadata()
-  
+
   field_names <- fields
-  field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
+  field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R
                      "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
   
-  field_types <- .exportRecordsTyped_getFieldTypes(rcon = rcon, 
-                                                   field_map = field_map,
-                                                   field_bases = field_bases, 
-                                                   field_text_types = field_text_types)
+  field_types <- .castRecords_getFieldTypes(rcon = rcon,
+                                            field_map = field_map,
+                                            field_bases = field_bases,
+                                            field_text_types = field_text_types)
   
   ###################################################################
   # Derive codings (This is probably a good internal helper)
   
-  codings <- .exportRecordsTyped_getCodings(rcon = rcon, 
-                                            field_map = field_map, 
-                                            field_names = field_names, 
-                                            field_types = field_types, 
-                                            code_check = TRUE)
-
-  data <- .exportRecordsTyped_recastRecords(Raw = data, 
-                                            cast = cast, 
-                                            field_types = field_types, 
-                                            codings = codings, 
-                                            field_names = field_names, 
-                                            suffix = suffix)
+  codings <- .castRecords_getCodings(rcon = rcon,
+                                     field_map = field_map,
+                                     field_names = field_names,
+                                     field_types = field_types,
+                                     code_check = TRUE)
+  
+  data <- .castRecords_recastRecords(Raw = data,
+                                     cast = cast,
+                                     field_types = field_types,
+                                     codings = codings,
+                                     field_names = field_names,
+                                     suffix = suffix)
   
   data
 }
-
-#' #' @rdname recastRecords
-#' #' @export
-#' 
-#' invert_default_cast <- list(checkbox = uncastChecked, 
-#'                             dropdown = uncastLabel,
-#'                             radio = uncastLabel, 
-#'                             yesno = function(x, field_name, coding) as.numeric(x == "Yes"),
-#'                             truefalse = as.numeric)

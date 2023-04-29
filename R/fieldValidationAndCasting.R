@@ -68,7 +68,7 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
 #' @rdname fieldValidationAndCasting
 #' @export
-valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
+valChoice <- function(x, field_name, coding) grepl(paste0(c(coding, names(coding)),collapse='|'), x)
 
 #####################################################################
 # Casting                                                        ####
@@ -218,21 +218,21 @@ raw_cast <- list(
 # Unexported - default lists for exportRecordsTyped
 
 .default_validate <- list(
-  date_              = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
-  datetime_          = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
-  datetime_seconds_  = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
-  time_mm_ss         = valRx("^[0-5][0-9]:[0-5][0-9]$"),
-  time_hh_mm_ss      = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
-  time               = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
-  float              = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  number             = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  calc               = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
-  integer            = valRx("^[-+]?[0-9]+$"),
-  yesno              = valRx("^(?i)(0|1|yes|no)$"),
-  truefalse          = valRx("^(0|1|true|false)$"),
-  checkbox           = valRx("^(?i)(0|1|yes|no)$"),
-  form_complete      = valRx("^[012]$"),
+  date_              = valRx(REGEX_DATE),              # REGEX values defined in constants.R
+  datetime_          = valRx(REGEX_DATETIME),
+  datetime_seconds_  = valRx(REGEX_DATETIME_SECONDS),
+  time_mm_ss         = valRx(REGEX_TIME_MMSS),
+  time_hh_mm_ss      = valRx(REGEX_TIME_HHMMSS),
+  time               = valRx(REGEX_TIME),
+  float              = valRx(REGEX_FLOAT),
+  number             = valRx(REGEX_NUMBER),
+  calc               = valRx(REGEX_CALC),
+  int                = valRx(REGEX_INT),
+  integer            = valRx(REGEX_INTEGER),
+  yesno              = valRx(REGEX_YES_NO),
+  truefalse          = valRx(REGEX_TRUE_FALSE),
+  checkbox           = valRx(REGEX_CHECKBOX),
+  form_complete      = valRx(REGEX_FORM_COMPLETE),
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
@@ -259,5 +259,52 @@ raw_cast <- list(
   select             = castLabel,
   radio              = castLabel,
   dropdown           = castLabel,
+  sql                = NA
+)
+
+#####################################################################
+# Default Lists for recastForImport                              ####
+
+.default_validate_import <- list(
+  date_              = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATE)(x),
+  datetime_          = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME)(x),
+  datetime_seconds_  = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME_SECONDS)(x),
+  time_mm_ss         = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_MMSS)(x),
+  time_hh_mm_ss      = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_HHMMSS)(x),
+  time               = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME)(x),
+  float              = valRx(REGEX_FLOAT),
+  number             = valRx(REGEX_NUMBER),
+  calc               = valRx(REGEX_CALC),
+  int                = valRx(REGEX_INT),
+  integer            = valRx(REGEX_INTEGER),
+  yesno              = valRx(REGEX_YES_NO),
+  truefalse          = valRx(REGEX_TRUE_FALSE),
+  checkbox           = valRx(REGEX_CHECKBOX),
+  form_complete      = valRx(REGEX_FORM_COMPLETE),
+  select             = valChoice,
+  radio              = valChoice,
+  dropdown           = valChoice,
+  sql                = NA # This requires a bit more effort !?
+)
+
+.default_cast_import <- list(
+  date_              = as.character,
+  datetime_          = as.character,
+  datetime_seconds_  = as.character,
+  time_mm_ss         = as.character,
+  time_hh_mm_ss      = as.character,
+  time               = as.character,
+  float              = as.character,
+  number             = as.character,
+  calc               = as.character,
+  int                = function(x, ...) as.character(as.integer(x)),
+  integer            = function(x, ...) as.character(as.integer(x)),
+  yesno              = castRaw,
+  truefalse          = function(x, ...) (x=='1' | tolower(x) =='true') + 0L,
+  checkbox           = castRaw,
+  form_complete      = castRaw,
+  select             = castRaw,
+  radio              = castRaw,
+  dropdown           = castRaw,
   sql                = NA
 )
