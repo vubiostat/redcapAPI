@@ -187,6 +187,27 @@ coerceNumericIfAble <- function(x){
 }
 
 #####################################################################
+# Casting numerics                                               ####
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castDpNumeric <- function(dec_symbol = ","){
+  function(x, field_name, coding){
+    as.numeric(sub(dec_symbol, getOption("OutDec"), x))
+  }
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castDpCharacter <- function(n_dec, dec_symbol = ","){
+  function(x, field_name, coding){
+    format(round(as.numeric(x), n_dec), nsmall = n_dec, decimal.mark = dec_symbol)
+  }
+}
+
+#####################################################################
 # Cast function lists                                            ####
 
 #' @rdname fieldValidationAndCasting
@@ -240,26 +261,30 @@ raw_cast <- list(
 )
 
 .default_cast <- list(
-  date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
-  datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
-  datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
-  time_mm_ss         = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
-  time_hh_mm_ss      = function(x, ...) chron::times(x, format=c(times="h:m:s")),
-  time               = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
-                                                     format=c(times="h:m:s")),
-  float              = as.numeric,
-  number             = as.numeric,
-  calc               = as.numeric,
-  int                = as.integer,
-  integer            = as.numeric,
-  yesno              = castLabel,
-  truefalse          = function(x, ...) x=='1' | tolower(x) =='true',
-  checkbox           = castChecked,
-  form_complete      = castLabel,
-  select             = castLabel,
-  radio              = castLabel,
-  dropdown           = castLabel,
-  sql                = NA
+  date_                    = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
+  datetime_                = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
+  datetime_seconds_        = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
+  time_mm_ss               = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
+  time_hh_mm_ss            = function(x, ...) chron::times(x, format=c(times="h:m:s")),
+  time                     = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
+                                                           format=c(times="h:m:s")),
+  float                    = as.numeric,
+  number                   = as.numeric,
+  number_1dp               = as.numeric, 
+  number_1dp_comma_decimal = castDpNumeric,
+  number_2dp               = as.numeric, 
+  number_2dp_comma_decimal = castDpNumeric,
+  calc                     = as.numeric,
+  int                      = as.integer,
+  integer                  = as.numeric,
+  yesno                    = castLabel,
+  truefalse                = function(x, ...) x=='1' | tolower(x) =='true',
+  checkbox                 = castChecked,
+  form_complete            = castLabel,
+  select                   = castLabel,
+  radio                    = castLabel,
+  dropdown                 = castLabel,
+  sql                      = NA
 )
 
 #####################################################################
@@ -273,7 +298,7 @@ raw_cast <- list(
   time_hh_mm_ss      = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_HHMMSS)(x),
   time               = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME)(x),
   float              = valRx(REGEX_FLOAT),
-  number             = valRx(REGEX_NUMBER),
+  number             = valRx(REGEX_NUMBER), 
   calc               = valRx(REGEX_CALC),
   int                = valRx(REGEX_INT),
   integer            = valRx(REGEX_INTEGER),
