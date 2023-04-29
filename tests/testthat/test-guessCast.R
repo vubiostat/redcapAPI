@@ -1,0 +1,79 @@
+context("guessCast")
+
+#conn <- offlineConnection()
+
+x <- data.frame(
+  x=c("xyz", "2023-01-01", "", "2003-12-12", "2003-12-12", "2012-10-10")
+)
+
+
+test_that(
+  "no guess cast below threshold",
+  {
+    y <- guessDate(x[1:4,,drop=FALSE], conn)
+    expect_class(y$x, "character")
+  }
+)
+
+
+test_that(
+  "guess cast above threshold",
+  {
+    y <- guessDate(x, conn)
+    expect_class(y$x, "POSIXct")
+  }
+)
+
+test_that(
+  "guess cast gives message when triggered",
+  {
+    expect_message(guessDate(x, conn), "guessCast")
+  }
+)
+
+test_that(
+  "guess cast respects_quiet",
+  {
+    expect_message(guessDate(x, conn, quiet=TRUE), NA)
+  }
+)
+
+
+test_that(
+  "guess cast reports invalid",
+  {
+    y <- guessDate(x, conn)
+    expect_class(attr(y, "invalid"), "invalid")
+  }
+)
+
+test_that(
+  "guess cast works across multiple casts",
+  {
+    rcon <- conn
+    recs <- exportRecordsTyped(rcon, cast=raw_cast) |> 
+      guessCast(rcon, 
+                validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+                cast=as.Date,
+                threshold=0.3)
+    expect_class(recs$prereq_date,   "Date")
+    expect_class(recs$date_dmy_test, "Date")
+    expect_class(recs$date_mdy_test, "Date")
+    expect_class(recs$date_ymd_test, "Date")
+    
+  }
+)
+
+test_that(
+  "guess cast validates arguments",
+  {
+    expect_error(guessDate(1:3, conn, quiet=TRUE), "Variable 'Records'")
+    expect_error(guessDate(x, 1:3, quiet=TRUE), "Variable 'rcon'")
+    expect_error(guessDate(x, conn, quiet=1.3), "Variable 'quiet'")
+    expect_error(guessDate(x, conn, quiet=TRUE,na=TRUE), "Variable 'na'")
+    expect_error(guessDate(x, conn, quiet=TRUE,validation=TRUE), "Variable 'validation'")
+    expect_error(guessDate(x, conn, quiet=TRUE,cast=TRUE), "Variable 'cast'")
+    expect_error(guessDate(x, conn, quiet=TRUE,threshold=TRUE), "Variable 'threshold'")
+    
+  }
+)

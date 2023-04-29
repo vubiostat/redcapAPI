@@ -103,7 +103,7 @@ test_that(
     expect_equal(unique(inv$value), "1")
     expect_data_frame(inv)
     expect_equal(names(inv), 
-                 c("row", "field_name", "field_type", "value"))
+                 c("row", "record_id", "field_name", "field_type", "value"))
     sapply(c(14, 15, 18, 19), function(i) expect_true(!i %in% inv$row))
     sapply(1:13, function(i) expect_true(i %in% inv$row))
     

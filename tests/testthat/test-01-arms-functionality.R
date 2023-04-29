@@ -65,6 +65,7 @@ test_that(
 purgeProject(rcon, 
              arms = TRUE, 
              events = TRUE)
+rcon$flush_all()
 
 test_that(
   "Import arms into a empty project.", 

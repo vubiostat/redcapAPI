@@ -97,7 +97,7 @@ test_that(
     expect_data_frame(
       importToFileRepository(rcon, 
                              file = local_file, 
-                             folder_id = FileRepo$folder_id[FileRepo$name == "SubSubFolder"]), 
+                             folder_id = FileRepo$folder_id[FileRepo$name == "SubSubFolder1A"]), 
       nrows = 1, 
       ncols = 2)
   }
@@ -144,7 +144,8 @@ test_that(
   "deleteFileRepository: folder has no files",
   {
     expect_message(Deleted <- deleteFileRepository(rcon, 
-                                                   folder_id = 0), 
+                                                   folder_id = 0, 
+                                                   confirm = "yes"), 
                    "No files to delete")
     
     expect_data_frame(Deleted, 
