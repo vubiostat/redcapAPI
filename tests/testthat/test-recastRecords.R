@@ -3,6 +3,12 @@ context("recastRecords.R")
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
 
+load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
+purgeProject(rcon, purge_all = TRUE)
+rcon$flush_all()
+restoreProject(RedcapProject_RedcapTestApi, 
+               rcon)
+
 fields <- c("dropdown_test",
             "radio_test", 
             "checkbox_test", 

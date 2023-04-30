@@ -12,6 +12,8 @@
 \alias{castChecked}
 \alias{castCheckLabel}
 \alias{castCheckCode}
+\alias{castDpNumeric}
+\alias{castDpCharacter}
 \alias{raw_cast}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
@@ -35,6 +37,10 @@ castChecked(x, field_name, coding)
 castCheckLabel(x, field_name, coding)
 
 castCheckCode(x, field_name, coding)
+
+castDpNumeric(dec_symbol = ",")
+
+castDpCharacter(n_dec, dec_symbol = ",")
 
 raw_cast
 }

@@ -1,6 +1,6 @@
 context("guessCast")
 
-#conn <- offlineConnection()
+rcon <- conn <- redcapConnection(url = url, token = API_KEY)
 
 x <- data.frame(
   x=c("xyz", "2023-01-01", "", "2003-12-12", "2003-12-12", "2012-10-10")

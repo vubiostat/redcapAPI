@@ -23,7 +23,7 @@ test_that(
                           "2023-04-31",  # FIXME This isn't really a valid date 
                           "2023-00-17", 
                           "23-01-01")
-    expect_equal(valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])")(date_to_validate), 
+    expect_equal(valRx(REGEX_DATE)(date_to_validate), 
                  c(TRUE, FALSE, TRUE, FALSE, TRUE))
     
     #datetime_  
@@ -32,7 +32,7 @@ test_that(
                               "2023-04-01 12:60", 
                               "2023-04 01 12:00", 
                               "2023-04-01 12 00") 
-    expect_equal(valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")(datetime_to_validate), 
+    expect_equal(valRx(REGEX_DATETIME)(datetime_to_validate), 
                  c(TRUE, FALSE, FALSE, FALSE, FALSE))
     
     # datetime_seconds_  
@@ -43,10 +43,8 @@ test_that(
                               "2023-04 01 12:00:00", 
                               "2023-04-01 12 00:00", 
                               "2023-04-01 12:00 00")
-    expect_equal(
-      valRx("[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]")(datetime_to_validate),
-      c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
-    )
+    expect_equal(valRx(REGEX_DATETIME_SECONDS)(datetime_to_validate),
+                 c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE))
     
     # time_mm_ss     
     time_to_validate <- c("03:59", 
@@ -56,7 +54,7 @@ test_that(
                           "60:23", 
                           "12 00")
     expect_equal(
-      valRx("[0-5][0-9]:[0-5][0-9]")(time_to_validate), 
+      valRx(REGEX_TIME_MMSS)(time_to_validate), 
       c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
     )
     
@@ -65,24 +63,24 @@ test_that(
                           "00:12:00", 
                           "1:3:30", 
                           "01:60:59", 
-                          "60:23:12",  # FIXME: This isn't actually a time. Do we need to enforce start and end of string?
+                          "60:23:12",
                           "12 00:37", 
                           "12:45:60", 
                           "12:45 10", 
                           "12:45:9") 
     expect_equal(
-      valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]")(time_to_validate), 
-      c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
+      valRx(REGEX_TIME_HHMMSS)(time_to_validate), 
+      c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
     )
     
     # time
     time_to_validate <- c("6:23", 
-                          "24:50",   # FIXME: This isn't a valid time. It passes because we dont enfoce the start of string
+                          "24:50",
                           "12:60", 
                           "13 11")
     expect_equal(
-      valRx("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]")(time_to_validate), 
-      c(TRUE, TRUE, FALSE, FALSE)
+      valRx(REGEX_TIME)(time_to_validate), 
+      c(TRUE, FALSE, FALSE, FALSE)
     )
     
     # float              
@@ -94,10 +92,10 @@ test_that(
                            "1E9", 
                            "9e1", 
                            "3e-3", 
-                           "2.a")  # FIXME: this isn't a valid float
+                           "2.a") 
     expect_equal(
-      valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?")(float_to_validate), 
-      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+      valRx(REGEX_FLOAT)(float_to_validate), 
+      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
     )
     
     # number
@@ -109,10 +107,10 @@ test_that(
                      "1E9", 
                      "9e1", 
                      "3e-3", 
-                     "2.a")  # FIXME: this isn't a valid number
+                     "2.a")  
     expect_equal(
-      valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?")(to_validate), 
-      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+      valRx(REGEX_NUMBER)(to_validate), 
+      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
     )
     
     # This is the same REGEX used for float and number.  Should we make this a constant?
@@ -128,20 +126,22 @@ test_that(
                          "2.001", 
                          "19.00000000000000003")
     expect_equal(
-      valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$")(int_to_validate), 
+      valRx(REGEX_INT)(int_to_validate), 
       c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE)
     )
     
     # integer
+    # The integer regex differs from the int regex, in that it does not 
+    # allow for a decimal point.
     integer_to_validate <-c("1", 
                             "1.0", 
                             "1.00", 
-                            "1.1",   # FIXME: not an integer
+                            "1.1",   
                             "123.000", 
-                            "2.001", # FIXME: not an integer
-                            "19.00000000000000003")  # FIXME: not an integer
-    expect_equal(valRx("[-+]?[0-9]+")(integer_to_validate), 
-                 c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE))
+                            "2.001", 
+                            "19.00000000000000003") 
+    expect_equal(valRx(REGEX_INTEGER)(integer_to_validate), 
+                 c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE))
     
     # yesno              
     yesno_to_validate <- c("yes", 
@@ -155,7 +155,7 @@ test_that(
                            "3",
                            "-")
     expect_equal(
-      valRx("^(?i)(0|1|yes|no)$")(yesno_to_validate), 
+      valRx(REGEX_YES_NO)(yesno_to_validate), 
       c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE)
     )
     
@@ -166,18 +166,31 @@ test_that(
                                "FalSE",  # FIXME: do we want to ignore case
                                "0", 
                                "1", 
-                               "00",     # FIXME: Should we enfoce start and end of string?
-                               "01",     # FIXME: Should we enfoce start and end of string?
+                               "00",     
+                               "01",     
                                "3", 
                                "-")
     expect_equal(
-      valRx("(0|1|true|false)")(truefalse_to_validate), 
-      c(TRUE, TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
+      valRx(REGEX_TRUE_FALSE)(truefalse_to_validate), 
+      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
     )
     
-    # FIXME: this is the same regex as yesno. Should the be made a constant?
-    # checkbox           
-    # valRx("^(?i)(0|1|yes|no)$")
+    # checkbox 
+    checkbox_to_validate <- c("0", 
+                              "1", 
+                              "yes", 
+                              "no", 
+                              "checked", 
+                              "unchecked", 
+                              "Yes", 
+                              "nO", 
+                              "chEcked", 
+                              "unchecKed", 
+                              "other")
+    expect_equal(
+      valRx(REGEX_CHECKBOX)(checkbox_to_validate), 
+      c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
+    )
     
     # form_complete
     form_to_validate <- c("0", 
@@ -203,7 +216,7 @@ test_that(
     expect_equal(valChoice(c("1", "2", "3", "apple", "banana", "Apple"), 
                            field_name = "some_field", 
                            coding = coding), 
-                 c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE))
+                 c(TRUE, TRUE, FALSE, FALSE, FALSE, TRUE))
   }
 )
 
@@ -507,3 +520,21 @@ test_that(
   }
 )
 
+#####################################################################
+# castCheckForImport                                             ####
+
+test_that(
+  "castCheckForImport", 
+  {
+    x <- c("a", "b", "c", "d", "1", "Checked", "0")
+    
+    expect_equal(castCheckForImport()(x), 
+                 c(0, 0, 0, 0, 1, 1, 0))
+    
+    expect_equal(castCheckForImport(c("b", "c"))(x), 
+                 c(0, 1, 1, 0, 0, 0, 0))
+    
+    expect_equal(castCheckForImport("0")(x), 
+                 c(0, 0, 0, 0, 0, 0, 1))
+  }
+)

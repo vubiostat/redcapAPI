@@ -57,9 +57,9 @@ recastForImport <- function(data,
                           add = coll)
   
   checkmate::assert(
-    checkmate::test_character(x = fields), 
-    checkmate::test_logical(x = fields), 
-    checkmate::test_integerish(x = fields, lower = 0), 
+    checkmate::test_character(x = fields, null.ok = TRUE), 
+    checkmate::test_logical(x = fields, null.ok = TRUE), 
+    checkmate::test_integerish(x = fields, lower = 0, null.ok = TRUE), 
     .var.name = "fields",
     add = coll
   )
