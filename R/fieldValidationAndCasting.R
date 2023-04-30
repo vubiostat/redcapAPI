@@ -83,6 +83,10 @@
 #' appropriate usage when casting for one decimal place is 
 #' \code{cast = list(number_1dp_comma = castDpCharacter(1))}.
 #' 
+#' \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to 
+#' facilitate importing data. They convert time data into a character format 
+#' that will pass the API requirements. 
+#' 
 #' \code{raw_cast} overrides all casting if passed as the \code{cast}
 #' parameter.
 #' 
@@ -247,6 +251,26 @@ castDpCharacter <- function(n_dec, dec_symbol = ","){
   }
 }
 
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castTimeHHMM <- function(x, field_name, coding){
+  x <- as.character(x)
+  time <- strsplit(x, ":")
+  time <- lapply(time, function(t) utils::head(t, 2))
+  vapply(time, paste0, character(1), collapse = ":")
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castTimeMMSS <- function(x, field_name, coding){
+  x <- as.character(x)
+  time <- strsplit(x, ":")
+  time <- lapply(time, function(t) utils::tail(t, 2))
+  vapply(time, paste0, character(1), collapse = ":")
+}
+
 #####################################################################
 # Cast function lists                                            ####
 
@@ -365,15 +389,15 @@ raw_cast <- list(
   date_                    = as.character,
   datetime_                = as.character,
   datetime_seconds_        = as.character,
-  time_mm_ss               = as.character,
+  time_mm_ss               = castTimeMMSS,
   time_hh_mm_ss            = as.character,
-  time                     = as.character,
+  time                     = castTimeHHMM,
   alpha_only               = as.character,
   float                    = as.character,
   number                   = as.character,
-  number_1dp               = as.numeric, 
+  number_1dp               = castDpCharacter(1, dec_symbol = "."), 
   number_1dp_comma_decimal = castDpCharacter(1),
-  number_2dp               = as.numeric, 
+  number_2dp               = castDpCharacter(2, dec_symbol = "."), 
   number_2dp_comma_decimal = castDpCharacter(2),
   calc                     = as.character,
   int                      = function(x, ...) as.character(as.integer(x)),

@@ -16,6 +16,8 @@
 \alias{castCheckForImport}
 \alias{castDpNumeric}
 \alias{castDpCharacter}
+\alias{castTimeHHMM}
+\alias{castTimeMMSS}
 \alias{raw_cast}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
@@ -47,6 +49,10 @@ castCheckForImport(checked = c("Checked", "1"))
 castDpNumeric(dec_symbol = ",")
 
 castDpCharacter(n_dec, dec_symbol = ",")
+
+castTimeHHMM(x, field_name, coding)
+
+castTimeMMSS(x, field_name, coding)
 
 raw_cast
 }
@@ -142,6 +148,10 @@ the defaults is \code{cast = list(number_1dp_comma = castDpNumeric())}
 is a function that returns the appropriate casting function, thus the 
 appropriate usage when casting for one decimal place is 
 \code{cast = list(number_1dp_comma = castDpCharacter(1))}.
+
+\code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to 
+facilitate importing data. They convert time data into a character format 
+that will pass the API requirements. 
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.
