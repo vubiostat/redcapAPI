@@ -387,15 +387,16 @@ exportRecordsTyped.redcapApiConnection <-
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
   }
   
-  castRecords(Raw              = Raw, 
-              Records          = NULL,
-              rcon             = rcon, 
-              na               = na, 
-              validation       = validation, 
-              cast             = cast, 
-              assignment       = assignment, 
-              default_cast     = .default_cast, 
-              default_validate = .default_validate)
+  # See fieldCastingFunctions.R for definition of .castRecords
+  .castRecords(Raw              = Raw, 
+               Records          = NULL,
+               rcon             = rcon, 
+               na               = na, 
+               validation       = validation, 
+               cast             = cast, 
+               assignment       = assignment, 
+               default_cast     = .default_cast, 
+               default_validate = .default_validate)
 }
 
 
@@ -531,15 +532,16 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   ###################################################################
   # Process meta data for useful information
   
-  castRecords(Raw              = Raw, 
-              Records          = NULL,
-              rcon             = rcon, 
-              na               = na, 
-              validation       = validation, 
-              cast             = cast, 
-              assignment       = assignment, 
-              default_cast     = .default_cast, 
-              default_validate = .default_validate)
+  # See fieldCastingFunctions.R for definition of .castRecords
+  .castRecords(Raw              = Raw, 
+               Records          = NULL,
+               rcon             = rcon, 
+               na               = na, 
+               validation       = validation, 
+               cast             = cast, 
+               assignment       = assignment, 
+               default_cast     = .default_cast, 
+               default_validate = .default_validate)
 }
 
 
@@ -843,4 +845,3 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   rownames(Batched) <- NULL
   Batched
 }
-

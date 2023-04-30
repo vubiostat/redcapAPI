@@ -6,12 +6,14 @@
 \alias{isNAorBlank}
 \alias{valRx}
 \alias{valChoice}
+\alias{valPhone}
 \alias{castLabel}
 \alias{castCode}
 \alias{castRaw}
 \alias{castChecked}
 \alias{castCheckLabel}
 \alias{castCheckCode}
+\alias{castCheckForImport}
 \alias{castDpNumeric}
 \alias{castDpCharacter}
 \alias{raw_cast}
@@ -26,6 +28,8 @@ valRx(rx)
 
 valChoice(x, field_name, coding)
 
+valPhone(x, field_name, coding)
+
 castLabel(x, field_name, coding)
 
 castCode(x, field_name, coding)
@@ -37,6 +41,8 @@ castChecked(x, field_name, coding)
 castCheckLabel(x, field_name, coding)
 
 castCheckCode(x, field_name, coding)
+
+castCheckForImport(checked = c("Checked", "1"))
 
 castDpNumeric(dec_symbol = ",")
 
@@ -55,6 +61,15 @@ coding.}
 \item{field_name}{\code{character(1)}. Name of the field(s)}
 
 \item{coding}{named \code{character} vector. The defined coding from the meta data.}
+
+\item{checked}{\code{character}. Values to recognize as checked in a 
+checkbox field.}
+
+\item{dec_symbol}{\code{character(1)}. The symbol in the field used to 
+denote a decimal.}
+
+\item{n_dec}{\code{integeris(1)}. The number of decimal places permitted
+by the field validation.}
 }
 \description{
 This set of functions assists in validating that the content of 
@@ -81,6 +96,10 @@ The function returns a TRUE/FALSE if the value matches the pattern.
 defined in the MetaData. The functions returns a TRUE/FALSE if the value
 matches one of the choices.
 
+\code{valPhone} constructs a validation function for (North American) 
+  phone numbers. It removes punctuation and spaces prior to validating
+  with the regular expression.
+
 \code{castLabel} constructs a casting function for multiple choice variables. 
 The field will be cast to return the choice label (generally more human readable)
 
@@ -100,6 +119,29 @@ returns values in the form of Unchecked/Checked.
 for checkbox fields. For both, unchecked variables are cast to an empty 
 string (""). Checked variables are cast to the option label and option code, 
 respectively.
+
+\code{castCheckForImport} is a special case function to allow the user to
+specify exactly which values are to be considered "Checked". Values that
+match are returned as 1 and all other values are returned as 0. This is
+motivated by the special case where the coding on a checkbox includes 
+"0, Option". In the resulting field \code{checkbox___0}, a coded value
+of 0 actually implies the choice was selected. In order to perform an 
+import on such data, it is necessary to cast it using 
+\code{castCheckForImport(c("0"))}.
+
+\code{castDpNumeric} is a casting function for fields that use the 
+\code{number_ndp_comma} field type (where \code{n} is the number of 
+decimal places). This function will convert the values to numeric
+values for use in analysis. This is a function that returns the 
+appropriate casting function, thus the appropriate usage when using 
+the defaults is \code{cast = list(number_1dp_comma = castDpNumeric())}
+(using the parentheses).
+
+\code{castDpCharacter} is a casting function to return fields that use
+\code{number_ndp_comma} field types to character strings for import. This 
+is a function that returns the appropriate casting function, thus the 
+appropriate usage when casting for one decimal place is 
+\code{cast = list(number_1dp_comma = castDpCharacter(1))}.
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.

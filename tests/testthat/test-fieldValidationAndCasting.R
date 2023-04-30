@@ -113,9 +113,20 @@ test_that(
       c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
     )
     
-    # This is the same REGEX used for float and number.  Should we make this a constant?
-    # calc               
-    #valRx("[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?")
+    # number with comma as decimal place
+    to_validate <- c("12,345", 
+                     "123", 
+                     "9923", 
+                     "99.", 
+                     "1,0", 
+                     "1E9", 
+                     "9e1", 
+                     "3e-3", 
+                     "2,a")  
+    expect_equal(
+      valRx(REGEX_NUMBER_COMMA)(to_validate), 
+      c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, FALSE)
+    )
     
     # int    
     int_to_validate <- c("1", 
