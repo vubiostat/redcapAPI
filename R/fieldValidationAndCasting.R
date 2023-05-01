@@ -256,9 +256,12 @@ castDpCharacter <- function(n_dec, dec_symbol = ","){
 
 castTimeHHMM <- function(x, field_name, coding){
   x <- as.character(x)
-  time <- strsplit(x, ":")
+  x_not_missing <- x[!is.na(x)]
+  time <- strsplit(x_not_missing, ":")
   time <- lapply(time, function(t) utils::head(t, 2))
-  vapply(time, paste0, character(1), collapse = ":")
+  time <- vapply(time, paste0, character(1), collapse = ":")
+  x[!is.na(x)] <- time
+  x
 }
 
 #' @rdname fieldValidationAndCasting
@@ -266,9 +269,12 @@ castTimeHHMM <- function(x, field_name, coding){
 
 castTimeMMSS <- function(x, field_name, coding){
   x <- as.character(x)
-  time <- strsplit(x, ":")
+  x_not_missing <- x[!is.na(x)]
+  time <- strsplit(x_not_missing, ":")
   time <- lapply(time, function(t) utils::tail(t, 2))
-  vapply(time, paste0, character(1), collapse = ":")
+  time <- vapply(time, paste0, character(1), collapse = ":")
+  x[!is.na(x)] <- time
+  x
 }
 
 #####################################################################

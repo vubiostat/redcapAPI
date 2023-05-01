@@ -103,6 +103,7 @@ test_that(
   }
 )
 
+rcon$flush_fileRepository()
 FileRepo <- rcon$fileRepository()
 
 test_that(
