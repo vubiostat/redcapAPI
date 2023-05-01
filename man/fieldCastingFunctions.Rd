@@ -3,7 +3,7 @@
 \name{fieldCastingFunctions}
 \alias{fieldCastingFunctions}
 \alias{recastRecords}
-\alias{recastForImport}
+\alias{castForImport}
 \alias{guessCast}
 \alias{guessDate}
 \alias{mChoiceCast}
@@ -11,7 +11,7 @@
 \usage{
 recastRecords(data, rcon, fields, cast = list(), suffix = "")
 
-recastForImport(
+castForImport(
   data,
   rcon,
   fields = NULL,
@@ -107,7 +107,7 @@ The functions provided here allow for recasting fields
   of fields; fields that can not be successfully cast will be quietly 
   returned as missing values. 
   
-  \code{recastForImport} is written with defaults that will return data 
+  \code{castForImport} is written with defaults that will return data 
   in a format ready to be imported to a project via \code{importRecords}. 
   All fields are returned as character vectors. If any values fail to
   validation check, are report is returned as an attribute named \code{invalid}. 

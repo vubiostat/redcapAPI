@@ -430,14 +430,14 @@ mChoiceCast <- function(data,
 # Unexported                                                     ####
 
 .castRecords <- function(Raw, 
-                        Records          = NULL,
-                        rcon, 
-                        na               = NULL, 
-                        validation       = NULL, 
-                        cast             = NULL, 
-                        assignment       = NULL, 
-                        default_cast     = .default_cast, 
-                        default_validate = .default_validate){
+                         Records          = NULL,
+                         rcon, 
+                         na               = NULL, 
+                         validation       = NULL, 
+                         cast             = NULL, 
+                         assignment       = NULL, 
+                         default_cast     = .default_cast, 
+                         default_validate = .default_validate){
   
   ###################################################################
   # Process meta data for useful information                     ####
