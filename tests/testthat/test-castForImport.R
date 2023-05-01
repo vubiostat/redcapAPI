@@ -1,4 +1,4 @@
-context("recastForImport.R")
+context("castForImport.R")
 
 rcon <- redcapConnection(url = url, 
                          token = API_KEY)
@@ -22,13 +22,13 @@ test_that(
     test_field <- "email_test"
     invalid_value <- "invalid-email"
       
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -45,13 +45,13 @@ test_that(
     test_field <- "letters_only_test"
     invalid_value <- "123"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -68,13 +68,13 @@ test_that(
     test_field <- "phone_test"
     invalid_value <- "not a phone number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -91,13 +91,13 @@ test_that(
     test_field <- "text_test"
     invalid_value <- "There actually isn't an invalid value for this one"
       
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                     rcon = rcon))
   }
 )
@@ -109,13 +109,13 @@ test_that(
     test_field <- "zipcode_test"
     invalid_value <- "not a zipcode"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -132,14 +132,14 @@ test_that(
     test_field <- "date_dmy_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -156,14 +156,14 @@ test_that(
     test_field <- "date_mdy_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -180,14 +180,14 @@ test_that(
     test_field <- "date_ymd_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
 
     TheData[[test_field]] <- as.character(TheData[[test_field]])    
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -204,14 +204,14 @@ test_that(
     test_field <- "datetime_dmy_hm_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
 
     TheData[[test_field]] <- as.character(TheData[[test_field]])    
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -228,14 +228,14 @@ test_that(
     test_field <- "datetime_mdy_hm_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -252,14 +252,14 @@ test_that(
     test_field <- "datetime_ymd_hm_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
 
     TheData[[test_field]] <- as.character(TheData[[test_field]])    
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -276,14 +276,14 @@ test_that(
     test_field <- "datetime_dmy_hms_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])    
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -300,14 +300,14 @@ test_that(
     test_field <- "datetime_mdy_hms_test"
     invalid_value <- "not a date"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -324,14 +324,14 @@ test_that(
     test_field <- "datetime_ymd_hms_test"
     invalid_value <- "not a data"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])    
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -348,7 +348,7 @@ test_that(
     test_field <- "time_hhmm_test"
     invalid_value <- "not a time"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     
@@ -356,7 +356,7 @@ test_that(
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -373,14 +373,14 @@ test_that(
     test_field <- "time_mmss_test"
     invalid_value <- "not a time"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -397,13 +397,13 @@ test_that(
     test_field <- "integer_test"
     invalid_value <- "1.2"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -420,13 +420,13 @@ test_that(
     test_field <- "number_1dp_comma_test"
     invalid_value <- "invalid value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                     rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -443,13 +443,13 @@ test_that(
     test_field <- "number_1dp_test"
     invalid_value <- "not a number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -466,13 +466,13 @@ test_that(
     test_field <- "number_2dp_comma_test"
     invalid_value <- "not a number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -489,13 +489,13 @@ test_that(
     test_field <- "number_2dp_test"
     invalid_value <- "not a number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -512,13 +512,13 @@ test_that(
     test_field <- "number_test"
     invalid_value <- "not a number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -535,13 +535,13 @@ test_that(
     test_field <- "slider_no_label_test"
     invalid_value <- "not a number"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -558,14 +558,14 @@ test_that(
     test_field <- "checkbox_test___x"
     invalid_value <- "not a checked value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -580,14 +580,14 @@ test_that(
     test_field <- "dropdown_test"
     invalid_value <- "wrong value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -604,14 +604,14 @@ test_that(
     test_field <- "radio_test"
     invalid_value <- "wrong value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -628,13 +628,13 @@ test_that(
     test_field <- "truefalse_test"
     invalid_value <- "bad value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -651,14 +651,14 @@ test_that(
     test_field <- "yesno_test"
     invalid_value <- "bad value"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]] <- as.character(TheData[[test_field]])
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -675,13 +675,13 @@ test_that(
     test_field <- "notes_test"
     invalid_value <- "We can't actually make an invalid value here"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                     rcon = rcon))
   }
 )
@@ -693,13 +693,13 @@ test_that(
     test_field <- "calc_addition"
     invalid_value <- "some text"
     
-    expect_silent(recastForImport(data = TheData[c("record_id", test_field)], 
+    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
                                   rcon = rcon))
     
     TheData[[test_field]][1] <- invalid_value
     
     ImportData <- 
-      expect_warning(recastForImport(data = TheData[c("record_id", test_field)], 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
                                      rcon = rcon), 
                      "Some records failed validation")
     
@@ -714,55 +714,55 @@ test_that(
 # Argument Validation                                            ####
 
 test_that(
-  "recastForImport Validation", 
+  "castForImport Validation", 
   {
     testthat::local_reproducible_output(width = 200)
-    expect_error(recastForImport(data = "not a data frame", 
+    expect_error(castForImport(data = "not a data frame", 
                                  rcon = rcon), 
                  "'data': Must be of type 'data.frame'")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = "not a redcap connection"), 
                  "'rcon': Must inherit from class 'redcapConnection'")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  fields = TRUE))
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  fields = 100))
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  fields = "not a field name"))
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  na = "not a list"), 
                  "'na': Must be of type 'list'")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  na = list('unnamed list')), 
                  "'na': Must have names")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  validation = "not a list"), 
                  "'validation': Must be of type 'list'")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  validation = list('unnamed list')), 
                  "'validation': Must have names")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  cast = "not a list"), 
                  "'cast': Must be of type 'list'")
     
-    expect_error(recastForImport(data = BasicData, 
+    expect_error(castForImport(data = BasicData, 
                                  rcon = rcon, 
                                  cast = list('unnamed list')), 
                  "'cast': Must have names")

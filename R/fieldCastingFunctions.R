@@ -54,7 +54,7 @@
 #'   of fields; fields that can not be successfully cast will be quietly 
 #'   returned as missing values. 
 #'   
-#'   \code{recastForImport} is written with defaults that will return data 
+#'   \code{castForImport} is written with defaults that will return data 
 #'   in a format ready to be imported to a project via \code{importRecords}. 
 #'   All fields are returned as character vectors. If any values fail to
 #'   validation check, are report is returned as an attribute named \code{invalid}. 
@@ -199,7 +199,7 @@ recastRecords <- function(data,
 #' @rdname fieldCastingFunctions
 #' @export
 
-recastForImport <- function(data, 
+castForImport <- function(data, 
                             rcon, 
                             fields     = NULL,
                             na         = list(),
