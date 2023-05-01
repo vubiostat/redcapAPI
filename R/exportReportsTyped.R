@@ -120,7 +120,8 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                          add = coll)
   
   csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
-                                       choices = c(",", "\t", ";", "|", "^"), 
+                                       choices = c(",", "\t", ";", "|", "^"),
+                                       .var.name = "csv_delimiter",
                                        add = coll)
   
   checkmate::reportAssertions(coll)
@@ -158,6 +159,7 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
   
   Raw <- read.csv(text = as.character(response), 
                   na.strings = "", 
+                  sep = csv_delimiter,
                   stringsAsFactors = FALSE)
   
   if (length(drop_fields) > 0){
