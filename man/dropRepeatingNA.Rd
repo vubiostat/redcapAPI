@@ -2,7 +2,7 @@
 % Please edit documentation in R/dropRepeatingNA.R
 \name{dropRepeatingNA}
 \alias{dropRepeatingNA}
-\title{Drop Row Where Repeat Instrment Is NA}
+\title{Drop Row Where Repeat Instrument Is NA}
 \usage{
 dropRepeatingNA(Records, rcon, quiet = FALSE)
 }
@@ -15,6 +15,7 @@ dropRepeatingNA(Records, rcon, quiet = FALSE)
 \item{quiet}{\code{logical(1)}. When \code{FALSE}, a message is printed
 indicating how many rows were in \code{Records} at the start and 
 completion of the subset.}
+
 }
 \description{
 Drops rows where the repeat instrument is NA. Returns a data frame of records where repeat instruments have a value.
