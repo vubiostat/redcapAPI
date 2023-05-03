@@ -103,3 +103,32 @@ REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 #             $ : end of string
 REGEX_SLIDER <- "^(.|)+[|](.|\\s|)+[|](.|\\s|)+$"
 
+# REGEX_POSIXCT - matches the pattern of a POSIXct value converted to character
+# See: https://www.regular-expressions.info/dates.html#:~:text=To%20match%20a%20date%20in,%5D)%5B%2D%20%2F.%5D
+REGEX_POSIXCT <- "^\\d{4}[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+
+# REGEX_HHMMSS - matches the pattern of time in HH:MM:SS format
+REGEX_HHMMSS <- "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+
+# Regular Expressions for Date, DateTime, and Time formats
+
+REGEX_DATE <- "^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"
+REGEX_DATETIME <- "^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+REGEX_DATETIME_SECONDS <- "^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+REGEX_TIME_MMSS <- "^[0-5][0-9]:[0-5][0-9]$"
+REGEX_TIME_HHMMSS <- "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+REGEX_TIME <- "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+REGEX_LETTERS_ONLY <- "^(?i)[a-z]+$"
+REGEX_FLOAT <- "^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"
+REGEX_NUMBER <- "^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"
+REGEX_NUMBER_COMMA <- "^[-+]?(([0-9]+,?[0-9]*)|(,[0-9]+))([Ee][+-]?[0-9]+)?$"
+REGEX_CALC <- "^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"
+REGEX_INT <- "^[-+]?[0-9]+(|\\.|\\.[0]+)$"
+REGEX_INTEGER <- "^[-+]?[0-9]+$"
+REGEX_YES_NO <- "^(?i)(0|1|yes|no)$"
+REGEX_TRUE_FALSE <- "^(?i)(0|1|true|false)$"
+REGEX_CHECKBOX <- "^(?i)(0|1|yes|no|checked|unchecked)$"
+REGEX_FORM_COMPLETE <- "^(?i)([012]|complete|incomplete)$"
+REGEX_EMAIL <- "^(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$"
+REGEX_PHONE <- "^[2-9][0-8][0-9][2-9][0-9]{6}$" # Remove punctuation before using
+REGEX_ZIPCODE <- "^(\\d{5}|\\d{5}-\\d{4})$"

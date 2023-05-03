@@ -10,6 +10,12 @@
 #' @param rx \code{character}. The regular expression pattern to check.
 #' @param coding named \code{character} vector. The defined coding from the meta data.
 #' @param field_name \code{character(1)}. Name of the field(s)
+#' @param dec_symbol \code{character(1)}. The symbol in the field used to 
+#'   denote a decimal. 
+#' @param n_dec \code{integeris(1)}. The number of decimal places permitted
+#'   by the field validation. 
+#' @param checked \code{character}. Values to recognize as checked in a 
+#'   checkbox field.
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
 #'
@@ -29,6 +35,10 @@
 #' \code{valChoice} constructs a validation function from a set of choices 
 #' defined in the MetaData. The functions returns a TRUE/FALSE if the value
 #' matches one of the choices.
+#' 
+#' \code{valPhone} constructs a validation function for (North American) 
+#'   phone numbers. It removes punctuation and spaces prior to validating
+#'   with the regular expression.
 #' 
 #' \code{castLabel} constructs a casting function for multiple choice variables. 
 #' The field will be cast to return the choice label (generally more human readable)
@@ -50,6 +60,33 @@
 #' string (""). Checked variables are cast to the option label and option code, 
 #' respectively.
 #' 
+#' \code{castCheckForImport} is a special case function to allow the user to
+#' specify exactly which values are to be considered "Checked". Values that
+#' match are returned as 1 and all other values are returned as 0. This is
+#' motivated by the special case where the coding on a checkbox includes 
+#' "0, Option". In the resulting field \code{checkbox___0}, a coded value
+#' of 0 actually implies the choice was selected. In order to perform an 
+#' import on such data, it is necessary to cast it using 
+#' \code{castCheckForImport(c("0"))}.
+#' 
+#' \code{castDpNumeric} is a casting function for fields that use the 
+#' \code{number_ndp_comma} field type (where \code{n} is the number of 
+#' decimal places). This function will convert the values to numeric
+#' values for use in analysis. This is a function that returns the 
+#' appropriate casting function, thus the appropriate usage when using 
+#' the defaults is \code{cast = list(number_1dp_comma = castDpNumeric())}
+#' (using the parentheses).
+#' 
+#' \code{castDpCharacter} is a casting function to return fields that use
+#' \code{number_ndp_comma} field types to character strings for import. This 
+#' is a function that returns the appropriate casting function, thus the 
+#' appropriate usage when casting for one decimal place is 
+#' \code{cast = list(number_1dp_comma = castDpCharacter(1))}.
+#' 
+#' \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to 
+#' facilitate importing data. They convert time data into a character format 
+#' that will pass the API requirements. 
+#' 
 #' \code{raw_cast} overrides all casting if passed as the \code{cast}
 #' parameter.
 #' 
@@ -68,7 +105,15 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
 #' @rdname fieldValidationAndCasting
 #' @export
-valChoice <- function(x, field_name, coding) grepl(paste0(coding,collapse='|'), x)
+valChoice <- function(x, field_name, coding) grepl(sprintf("^(%s)$", paste0(c(coding, names(coding)),collapse='|')), x)
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+valPhone <- function(x, field_name, coding){
+  x <- gsub("[[:punct:][:space:]]", "", x)
+  grepl(REGEX_PHONE, x)
+}
 
 #####################################################################
 # Casting                                                        ####
@@ -136,18 +181,14 @@ castCheckCode <- function(x, field_name, coding){
          labels=c("", checked_value[1]))
 }
 
-# I'm not sold on this one yet, but it could be a way to get around some thorny 
-# issues we've heard about where a checkbox is being labeled where 0 = Checked, 
-# which our current import function can't accommodate. 
-# with this, you could set the cast function to 
-# cast = list(castCheckForImport(checked = "0"))
-# #' @rdname fieldValidationAndCasting
-# #' @export
-# castCheckForImport <- function(checked = c("Checked", "1")){
-#   function(x, coding, field_name){
-#     (x %in% checked) + 0L
-#   }
-# }
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castCheckForImport <- function(checked = c("Checked", "1")){
+  function(x, coding, field_name){
+    (x %in% checked) + 0L
+  }
+}
 
 # utility function returns the index of the codebook matching the 
 # content of the vector. Permits accurate matching without foreknowledge
@@ -187,6 +228,56 @@ coerceNumericIfAble <- function(x){
 }
 
 #####################################################################
+# Casting numerics                                               ####
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castDpNumeric <- function(dec_symbol = ","){
+  function(x, field_name, coding){
+    as.numeric(sub(dec_symbol, getOption("OutDec"), x))
+  }
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castDpCharacter <- function(n_dec, dec_symbol = ","){
+  function(x, field_name, coding){
+    x[!is.na(x)] <- format(round(as.numeric(x[!is.na(x)]), n_dec), 
+                           nsmall = n_dec, 
+                           decimal.mark = dec_symbol)
+    x
+  }
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castTimeHHMM <- function(x, field_name, coding){
+  x <- as.character(x)
+  x_not_missing <- x[!is.na(x)]
+  time <- strsplit(x_not_missing, ":")
+  time <- lapply(time, function(t) utils::head(t, 2))
+  time <- vapply(time, paste0, character(1), collapse = ":")
+  x[!is.na(x)] <- time
+  x
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castTimeMMSS <- function(x, field_name, coding){
+  x <- as.character(x)
+  x_not_missing <- x[!is.na(x)]
+  time <- strsplit(x_not_missing, ":")
+  time <- lapply(time, function(t) utils::tail(t, 2))
+  time <- vapply(time, paste0, character(1), collapse = ":")
+  x[!is.na(x)] <- time
+  x
+}
+
+#####################################################################
 # Cast function lists                                            ####
 
 #' @rdname fieldValidationAndCasting
@@ -218,21 +309,21 @@ raw_cast <- list(
 # Unexported - default lists for exportRecordsTyped
 
 .default_validate <- list(
-  date_              = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
-  datetime_          = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
-  datetime_seconds_  = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
-  time_mm_ss         = valRx("^[0-5][0-9]:[0-5][0-9]$"),
-  time_hh_mm_ss      = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
-  time               = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
-  float              = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  number             = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  calc               = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
-  int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
-  integer            = valRx("^[-+]?[0-9]+$"),
-  yesno              = valRx("^(?i)(0|1|yes|no)$"),
-  truefalse          = valRx("^(0|1|true|false)$"),
-  checkbox           = valRx("^(?i)(0|1|yes|no)$"),
-  form_complete      = valRx("^[012]$"),
+  date_              = valRx(REGEX_DATE),              # REGEX values defined in constants.R
+  datetime_          = valRx(REGEX_DATETIME),
+  datetime_seconds_  = valRx(REGEX_DATETIME_SECONDS),
+  time_mm_ss         = valRx(REGEX_TIME_MMSS),
+  time_hh_mm_ss      = valRx(REGEX_TIME_HHMMSS),
+  time               = valRx(REGEX_TIME),
+  float              = valRx(REGEX_FLOAT),
+  number             = valRx(REGEX_NUMBER),
+  calc               = valRx(REGEX_CALC),
+  int                = valRx(REGEX_INT),
+  integer            = valRx(REGEX_INTEGER),
+  yesno              = valRx(REGEX_YES_NO),
+  truefalse          = valRx(REGEX_TRUE_FALSE),
+  checkbox           = valRx(REGEX_CHECKBOX),
+  form_complete      = valRx(REGEX_FORM_COMPLETE),
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
@@ -240,24 +331,93 @@ raw_cast <- list(
 )
 
 .default_cast <- list(
-  date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
-  datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
-  datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
-  time_mm_ss         = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
-  time_hh_mm_ss      = function(x, ...) chron::times(x, format=c(times="h:m:s")),
-  time               = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
-                                                     format=c(times="h:m:s")),
-  float              = as.numeric,
-  number             = as.numeric,
-  calc               = as.numeric,
-  int                = as.integer,
-  integer            = as.numeric,
-  yesno              = castLabel,
-  truefalse          = function(x, ...) x=='1' | tolower(x) =='true',
-  checkbox           = castChecked,
-  form_complete      = castLabel,
-  select             = castLabel,
-  radio              = castLabel,
-  dropdown           = castLabel,
-  sql                = NA
+  date_                    = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
+  datetime_                = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
+  datetime_seconds_        = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
+  time_mm_ss               = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
+  time_hh_mm_ss            = function(x, ...) chron::times(x, format=c(times="h:m:s")),
+  time                     = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
+                                                           format=c(times="h:m:s")),
+  float                    = as.numeric,
+  number                   = as.numeric,
+  number_1dp               = as.numeric, 
+  number_1dp_comma_decimal = castDpNumeric(),
+  number_2dp               = as.numeric, 
+  number_2dp_comma_decimal = castDpNumeric(),
+  calc                     = as.numeric,
+  int                      = as.integer,
+  integer                  = as.numeric,
+  yesno                    = castLabel,
+  truefalse                = function(x, ...) x=='1' | tolower(x) =='true',
+  checkbox                 = castChecked,
+  form_complete            = castLabel,
+  select                   = castLabel,
+  radio                    = castLabel,
+  dropdown                 = castLabel,
+  sql                      = NA
+)
+
+#####################################################################
+# Default Lists for recastForImport                              ####
+
+.default_validate_import <- list(
+  date_                    = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATE)(x),
+  datetime_                = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME)(x),
+  datetime_seconds_        = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME_SECONDS)(x),
+  time_mm_ss               = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_MMSS)(x),
+  time_hh_mm_ss            = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_HHMMSS)(x),
+  time                     = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME)(x),
+  alpha_only               = valRx(REGEX_LETTERS_ONLY), 
+  float                    = valRx(REGEX_FLOAT),
+  number                   = valRx(REGEX_NUMBER), 
+  number_1dp               = valRx(REGEX_NUMBER), 
+  number_1dp_comma_decimal = valRx(REGEX_NUMBER),
+  number_2dp               = valRx(REGEX_NUMBER),
+  number_2dp_comma_decimal = valRx(REGEX_NUMBER),
+  calc                     = valRx(REGEX_CALC),
+  int                      = valRx(REGEX_INT),
+  integer                  = valRx(REGEX_INT),
+  yesno                    = valRx(REGEX_YES_NO),
+  truefalse                = valRx(REGEX_TRUE_FALSE),
+  checkbox                 = valRx(REGEX_CHECKBOX),
+  form_complete            = valRx(REGEX_FORM_COMPLETE),
+  select                   = valChoice,
+  radio                    = valChoice,
+  dropdown                 = valChoice,
+  email                    = valRx(REGEX_EMAIL),
+  phone                    = valPhone,
+  zipcode                  = valRx(REGEX_ZIPCODE),
+  slider                   = valRx(REGEX_NUMBER),
+  sql                      = NA # This requires a bit more effort !?
+)
+
+.default_cast_import <- list(
+  date_                    = as.character,
+  datetime_                = as.character,
+  datetime_seconds_        = as.character,
+  time_mm_ss               = castTimeMMSS,
+  time_hh_mm_ss            = as.character,
+  time                     = castTimeHHMM,
+  alpha_only               = as.character,
+  float                    = as.character,
+  number                   = as.character,
+  number_1dp               = castDpCharacter(1, dec_symbol = "."), 
+  number_1dp_comma_decimal = castDpCharacter(1),
+  number_2dp               = castDpCharacter(2, dec_symbol = "."), 
+  number_2dp_comma_decimal = castDpCharacter(2),
+  calc                     = as.character,
+  int                      = function(x, ...) as.character(as.integer(x)),
+  integer                  = function(x, ...) as.character(as.integer(x)),
+  yesno                    = castRaw,
+  truefalse                = function(x, ...) (x=='1' | tolower(x) =='true') + 0L,
+  checkbox                 = castRaw,
+  form_complete            = castRaw,
+  select                   = castRaw,
+  radio                    = castRaw,
+  dropdown                 = castRaw,
+  email                    = as.character, 
+  phone                    = as.character,
+  zipcode                  = as.character, 
+  slider                   = as.numeric,
+  sql                      = NA
 )

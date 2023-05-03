@@ -53,6 +53,7 @@ test_that(
     expect_message(deleteArms(rcon, 
                               arms = rcon$arms()$arm_num), 
                    "Arms Deleted: None")
+    rcon$flush_arms()
   }
 )
 

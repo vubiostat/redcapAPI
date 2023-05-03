@@ -1,6 +1,6 @@
 context("guessCast")
 
-#conn <- offlineConnection()
+rcon <- conn <- redcapConnection(url = url, token = API_KEY)
 
 x <- data.frame(
   x=c("xyz", "2023-01-01", "", "2003-12-12", "2003-12-12", "2012-10-10")
@@ -67,7 +67,7 @@ test_that(
 test_that(
   "guess cast validates arguments",
   {
-    expect_error(guessDate(1:3, conn, quiet=TRUE), "Variable 'Records'")
+    expect_error(guessDate(1:3, conn, quiet=TRUE), "Variable 'data'")
     expect_error(guessDate(x, 1:3, quiet=TRUE), "Variable 'rcon'")
     expect_error(guessDate(x, conn, quiet=1.3), "Variable 'quiet'")
     expect_error(guessDate(x, conn, quiet=TRUE,na=TRUE), "Variable 'na'")
