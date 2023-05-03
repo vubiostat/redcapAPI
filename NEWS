@@ -4,6 +4,7 @@
 far better stability in calling--full inversion of control over casting, retries through the connection object, and a clear error report as part of the final dataframe. Please take a moment to read the documentation on exportRecordsTyped and start moving over to using it over exportRecords.
 * bundle argument has been removed from all API methods. (It is no longer needed, thanks to caching). Backward compatibility is unaffected.
 * Introduces the offlineConnection function, which creates the redcapOfflineConnection object. This connection object can be built using either data frames structured like those received from the API methods, or the CSV files downloaded from the REDCap UI. The object function in the same way as an API connection with caching. Meta data can be retrieved via rcon$metadata(), etc..
+* added castForImport. Recasts a `data.frame` back into the expected text values.
 
 
 ## Changes in Version 2.6.2
