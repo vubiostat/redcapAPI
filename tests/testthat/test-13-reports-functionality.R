@@ -1,7 +1,5 @@
 context("exportReports functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("reports can be exported",{
   expect_silent(rep <- exportReports(rcon, 357209))
 })

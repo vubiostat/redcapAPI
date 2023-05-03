@@ -1,7 +1,5 @@
 context("exportLogging.R")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 BEGIN_TIME <- tail(seq(Sys.time(), by = "-7 days", length.out = 2), 1)
 

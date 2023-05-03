@@ -1,7 +1,5 @@
 context("allocationTable")
 
-rcon <- redcapConnection(url, API_KEY)
-
 test_that("allocation table can be generated",{
   expect_silent(
     allocationTable(rcon, 

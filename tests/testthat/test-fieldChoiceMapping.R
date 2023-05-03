@@ -1,7 +1,5 @@
 context("fieldChoiceMapping.R")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that(
   "Return an error if object is neither character nor redcapApiConnection", 
   {

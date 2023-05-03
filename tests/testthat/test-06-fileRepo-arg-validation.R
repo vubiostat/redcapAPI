@@ -1,7 +1,5 @@
 context("export/import/delete FileRepository Argument Validations")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 #####################################################################
 # exportFromFileRepository

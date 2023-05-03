@@ -1,6 +1,5 @@
 context("exportFieldNames.R")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
 
 purgeProject(rcon, purge_all = TRUE)

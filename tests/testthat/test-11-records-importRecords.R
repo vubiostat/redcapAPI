@@ -1,7 +1,5 @@
 context("importRecords Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 rec <- exportRecords(rcon, mChoice=FALSE)
 rows <- nrow(rec)
 

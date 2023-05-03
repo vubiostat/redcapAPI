@@ -1,8 +1,5 @@
 context("castForImport.R")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 load(test_path("testdata", "RedcapProject_BasicData.Rdata"))
 
 purgeProject(rcon, purge_all = TRUE)

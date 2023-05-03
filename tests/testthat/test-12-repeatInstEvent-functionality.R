@@ -1,6 +1,5 @@
 context("Export and Import Repeating Instruments and Events Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 load(test_path("testdata", "RedcapProject_RepeatingInstrument.Rdata"))
 
 purgeProject(rcon, purge_all = TRUE)

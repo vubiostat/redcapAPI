@@ -1,8 +1,5 @@
 context("Purge and Restore Projects")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 #####################################################################
 # Preserve, Purge,  and Restore a Project                        ####
 

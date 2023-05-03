@@ -1,7 +1,5 @@
 context("fieldToVar")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 # pull data for tests with handler
 rec_ht <- exportRecords(rcon, handlers = list(date_ = as.Date, time = function(x) 1.23, time_mm_ss = function(x) 1.23, time_hh_mm_ss = function(x) 1.23, datetime_ = as.Date, datetime_seconds_ = as.Date))
 test_that("date_ = as.Date returns class Date for date_dmy", expect_is(rec_ht$date_dmy, "Date"))

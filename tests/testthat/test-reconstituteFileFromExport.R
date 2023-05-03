@@ -1,7 +1,5 @@
 context("reconstituteFileFromExport.R")
 
-rcon <- redcapConnection(url= url, 
-                         token = API_KEY)
 
 local_file <- test_path("testdata", "FileForImportExportTesting.txt")
 

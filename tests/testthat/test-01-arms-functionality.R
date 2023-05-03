@@ -2,8 +2,6 @@ context("export/import/delete Arms Functionality")
 
 #####################################################################
 # Make the connection and purge the project                      ####
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 purgeProject(rcon, 
              purge_all = TRUE)

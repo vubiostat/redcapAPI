@@ -1,8 +1,5 @@
 context("export/import ProjectInformation argument validation")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 #####################################################################
 # exportProjectInformation argument validation
 

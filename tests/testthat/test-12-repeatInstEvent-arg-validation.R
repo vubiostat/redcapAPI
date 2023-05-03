@@ -1,7 +1,5 @@
 context("Repeated Instruments and Events Argument Validation")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 #####################################################################
 # exportRepeatingInstrumentEvents Argument Validation            ####
