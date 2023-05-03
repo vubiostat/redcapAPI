@@ -26,7 +26,9 @@ name, or if a named vector the name associated.}
 
 \item{keyring}{character. Potential keyring, not used by default.}
 
-\item{envir}{environment. The target environment for the data. Defaults to .Global}
+\item{envir}{environment. The target environment for the connections. Defaults to NULL
+which returns the keys as a list. Use \code{\link{globalenv()}} to assign the
+global environment.}
 
 \item{config}{string. Defaults to 'auto'. If set to NULL no configuration file is searched for. If set to anything
 but 'auto', that will be the config file override that is used if it exists instead of
@@ -37,7 +39,8 @@ searching for the ../<basename>.yml.}
 \item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
 }
 \value{
-Nothing
+If \code{envir} is NULL returns a list of opened connections. Otherwise
+        returns NULL and connections are assigned into the specified \code{envir}.
 }
 \description{
 The first thing it does is check for a yaml config file of
@@ -56,7 +59,7 @@ keys in memory. Otherwise it will request the user enter
 each key using getPass and store it in memory.
 
 IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
-as this is the equivalent of writing the API_KEY to a local
+as this *is* writing the API_KEY to a local
 file in clear text.
 }
 \examples{
@@ -67,6 +70,7 @@ options(keyring_backend=keyring::backend_file)
 unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = 'MyKeyring',
+             envir        = globalenv(),
              url          = 'https://<REDCAP_URL>/api/') 
 }
 
