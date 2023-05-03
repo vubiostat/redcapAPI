@@ -11,18 +11,17 @@
 
 
 widerRepeated <- function(rcon, idvar){
-  # Records <- reshape(Records, idvar = idvar, timevar = timevar, direction = 'wide')
   # export data dictionary
-  meta <- exportMetaData(rcon)
+  meta <- rcon$metadata()
   
   # export repeating
-  repeating <- exportRepeatingInstrumentsEvents(rcon)
+  repeating <- rcon$repeatInstrumentEvent()
   
   # export events
-  events <- exportEvents(rcon)
+  events <- rcon$events()
   
   # export mappings
-  mappings <- exportMappings(rcon)
+  mappings <- rcon$mapping()
   
   # export data
   records <- exportRecordsTyped(rcon)
@@ -43,12 +42,11 @@ widerRepeated <- function(rcon, idvar){
   } else {
     event.map = data.frame(
       unique_event_name = "",
-      form = sort(unique(dd$form_name)))
+      form = rcon$instruments()$instrument_name)
   }
   
   # because not all projects will have all id modifier fields
-  df.all_ids <- data.frame(id.tmp = character(0), redcap_event_name = character(0), 
-                           redcap_repeat_instrument = character(0), redcap_repeat_instance = character(0))
+  df.all_ids <- data.frame(id.tmp = character(0), redcap_event_name = character(0), redcap_repeat_instrument = character(0), redcap_repeat_instance = character(0))
   tmpd <- merge(
     data.frame(dat),
     df.all_ids,
@@ -64,17 +62,13 @@ widerRepeated <- function(rcon, idvar){
   map[is.na(map)] <- ""
   
   for (i in sort(unique(dd$form_name))) {
-    # print(i)
-    vars.tmp <- names(dat)[sub("___.*", "", names(dat)) %in% dd$field_name[dd$form_name == i]]
+    vars.tmp <- names(dat)[sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", names(dat)) %in% dd$field_name[dd$form_name == i]]
     
-    # vars.tmp <- names(dat)[names(dat) %in% dd$field_name[dd$form_name == i]] # golden
-    
-    if (length(vars.tmp) == 0) next    #form with descriptive only
+    if (length(vars.tmp) == 0) next #form with descriptive only
     
     tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | is.blank(tmpd$redcap_repeat_instrument)),
       select = c(id.fields, vars.tmp))
     
-   
     # reshape to eliminate empty instances or any variable empty in all instances
     tmp_long <- reshape(tmp[, c(id.fields, vars.tmp)], 
                         varying = list(vars.tmp),
@@ -82,10 +76,9 @@ widerRepeated <- function(rcon, idvar){
                         direction = "long")
     tmp <- tmp_long[complete.cases(tmp_long), ]
     
-    
     if (nrow(tmp) > 0) {
       # Convert tmp to wide format
-      tmp <- reshape(tmp, idvar = c("id.tmp", "redcap_event_name", "redcap_repeat_instrument", "redcap_repeat_instance"), direction = "wide")
+      tmp <- reshape(tmp, idvar = c(id.fields), direction = "wide")
       # drop redcap_repeat_instrument column
       tmp$redcap_repeat_instrument <- NULL
       # add form column
