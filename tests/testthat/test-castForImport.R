@@ -706,6 +706,23 @@ test_that(
   }
 )
 
+test_that(
+  "only requested fields are recast", 
+  {
+    Records <- data.frame(checkbox_test___x = c("0", "", "", "0"), 
+                          checkbox_test___y = c("y", "y", "", "y"))
+    
+    ForImport <- castForImport(Records, 
+                               rcon, 
+                               fields = "checkbox_test___x",
+                               cast = list(checkbox = castCheckForImport(checked = "0")))
+    expect_equal(ForImport$checkbox_test___x, 
+                 c(1, 0, 0, 1))
+    expect_equal(ForImport$checkbox_test___y, 
+                 c("y", "y", "", "y"))
+  }
+)
+
 
 #####################################################################
 # Argument Validation                                            ####

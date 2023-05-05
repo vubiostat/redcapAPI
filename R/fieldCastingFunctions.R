@@ -254,15 +254,23 @@ castForImport <- function(data,
   Raw <- as.data.frame(lapply(data, 
                               function(x) trimws(as.character(x))))
   
-  .castRecords(Raw              = Raw, 
-               Records          = data, 
-               rcon             = rcon, 
-               na               = na, 
-               validation       = validation, 
-               cast             = cast, 
-               assignment       = NULL, 
-               default_cast     = .default_cast_import, 
-               default_validate = .default_validate_import)
+  Recast <- .castRecords(Raw              = Raw[fields], 
+                         Records          = data[fields], 
+                         rcon             = rcon, 
+                         na               = na, 
+                         validation       = validation, 
+                         cast             = cast, 
+                         assignment       = NULL, 
+                         default_cast     = .default_cast_import, 
+                         default_validate = .default_validate_import)
+  
+  for (i in fields){
+    data[[i]] <- Recast[[i]]
+  }
+  
+  attr(data, "invalid") <- attr(Recast, "invalid")
+  
+  data
 }
 
 #' @rdname fieldCastingFunctions
@@ -430,14 +438,14 @@ mChoiceCast <- function(data,
 # Unexported                                                     ####
 
 .castRecords <- function(Raw, 
-                        Records          = NULL,
-                        rcon, 
-                        na               = NULL, 
-                        validation       = NULL, 
-                        cast             = NULL, 
-                        assignment       = NULL, 
-                        default_cast     = .default_cast, 
-                        default_validate = .default_validate){
+                         Records          = NULL,
+                         rcon, 
+                         na               = NULL, 
+                         validation       = NULL, 
+                         cast             = NULL, 
+                         assignment       = NULL, 
+                         default_cast     = .default_cast, 
+                         default_validate = .default_validate){
   
   ###################################################################
   # Process meta data for useful information                     ####
