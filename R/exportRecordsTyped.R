@@ -845,3 +845,98 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   rownames(Batched) <- NULL
   Batched
 }
+
+
+#' @name exportBulkRecords
+#' @title A helper function to export multiple recordss and forms using
+#' a single call.
+#' @description Exports records from multiple REDCap Databases using
+#' multiple calls to \code{\link{exportRecordsTyped}}
+#'
+#' @param rcon A named list of REDCap connection object as created by \code{\link{redcapConnection}}.
+#' @param forms A named list that is a subset of rcon's names. A specified \code{rcon}
+#'              will provide a list of forms for repeated calls to \code{exportRecordsType}.
+#' @param envir A environment to write the resulting Records in as variables
+#'   given by their name in rcon or if from a form their rcon named pasted to 
+#'   their form name joined by \code{sep}. If not specified the function
+#'   will return a named list with the results.
+#' @param sep A character string to use when joining the rcon name to the form name
+#' for storing variables. 
+#' @param post A function that will run on all returned sets of Records. 
+#' @param \dots Any additional variables to pass to \code{\link{exportRecordsTyped}}.
+#' @value Will return a named list of the resulting records if \code{envir} is 
+#'    NULL. Otherwise will assign them to the specified \code{envir}.
+#' @examples
+#' \dontrun{
+#' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
+#'                sandbox_conn = 'SandboxAPI'),
+#'              keyring      = 'MyKeyring',
+#'              envir        = globalenv(),
+#'              url          = 'https://<REDCAP_URL>/api/') 
+#'
+#'# After user interaction to unlock the local encrypted keyring
+#'# the global environment will contain the REDCap connections
+#'# `test_conn` and `sandbox_conn`
+#'# 
+#'# Next the user wants to bulk specify importing all the forms
+#'# of interest and post process
+#'
+#'exportBulkRecords(
+#'  rcon  = list(test = test_conn,
+#'               sand = sandbox_conn),
+#'  forms = list(test = c('form1', 'form2'),
+#'  envir = globalenv(),
+#'  post  = function(Records, rcon)
+#'          {
+#'            Records              |>
+#'            mChoiceCast(rcon)    |>
+#'            guessDat(rcon)       |>
+#'            widerRepeating(rcon)
+#'          }
+#'  )
+#'  
+#'# The environment now contains the data.frames: `test.form1`, `test.form2`, `sand`.
+#'# Each of these were retrieved, possibly using the forms argument and all were
+#'# post processed in the same manner as specified by `post`.
+#' }
+#' @export
+exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
+{
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_list(     x       = rcon,
+                              types   = "redcapApiConnection",
+                              min.len = 1,
+                              add     = coll)
+  
+  checkmate::assert_named(    x       = rcon,
+                              add     = coll)
+  
+  checkmate::assert_list(     x       = forms,
+                              types   = "character",
+                              null.ok = TRUE,
+                              add     = coll)
+  
+  checkmate::assert_class(    x       = envir,
+                              classes = "environment",
+                              null.ok = TRUE,
+                              add     = coll)
+  
+  checkmate::assert_character(x       = sep,
+                              len     = 1,
+                              add     = coll)
+  
+  checkmate::assert_function( x       = post,
+                              nargs   = 2,
+                              null.ok = TRUE,
+                              add     = coll)
+  
+  if(!is.null(forms))
+    checkmate::assert_subset( x       = names(forms),
+                              choices = names(rcon),
+                              add     = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  invisible(NULL)
+}
