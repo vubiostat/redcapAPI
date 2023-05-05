@@ -939,5 +939,38 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   
   checkmate::reportAssertions(coll)
   
-  invisible(NULL)
+  # Use the global environment for variable storage unless one was specified
+  dest <- if(is.null(envir)) list() else envir
+  
+  # For each dataset requested
+  for(i in names(rcon))
+  {
+    if(is.null(forms))
+    {
+      data <- exportRecordsTyped(rcon[[i]], ...) |> post(rcon[[i]])
+      if(is.environment(dest))
+      {
+        base::assign(i, data, envir=dest)
+      } else
+      {
+        dest[[i]] <-data
+      }
+    } else
+    {
+      for(j in forms[[i]])
+      {
+        name <- paste0(i, sep, j)
+        data <- exportRecordsTyped(rcon[[i]], forms=j, ...) |> post(rcon[[i]])
+        if(is.environment(dest))
+        {
+          base::assign(i, exportRecordsTyped(rcon[[i]], ...), envir=dest)
+        } else
+        {
+          dest[[i]] <- exportRecordsTyped(rcon[[i]], ...)
+        }
+      }
+    }
+  }
+  
+  return(if(is.environment(dest)) invisible() else dest)
 }
