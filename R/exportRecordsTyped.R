@@ -182,6 +182,7 @@
 #'
 #' exportRecordsTyped(rcon_off)
 #' }
+#' @seealso \code{\link{exportBulkRecords}}
 #' @export
 
 exportRecordsTyped <-
@@ -864,7 +865,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' for storing variables. 
 #' @param post A function that will run on all returned sets of Records. 
 #' @param \dots Any additional variables to pass to \code{\link{exportRecordsTyped}}.
-#' @value Will return a named list of the resulting records if \code{envir} is 
+#' @return Will return a named list of the resulting records if \code{envir} is 
 #'    NULL. Otherwise will assign them to the specified \code{envir}.
 #' @examples
 #' \dontrun{
