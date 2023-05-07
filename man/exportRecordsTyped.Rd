@@ -261,3 +261,6 @@ rcon_off <-
 exportRecordsTyped(rcon_off)
 }
 }
+\seealso{
+\code{\link{exportBulkRecords}}
+}

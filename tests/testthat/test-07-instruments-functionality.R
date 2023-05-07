@@ -1,7 +1,5 @@
 context("instruments, import/export mappings, export PDF argument functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 #####################################################################
 # exportInstruments                                              ####
 
@@ -36,15 +34,17 @@ test_that(
     # We will alter the project information and push it into the 
     # cached value in order to mimic the state of a non-longitudinal project
     # This only works because the API isn't every called for a non-longitudinal project
-    tmp_proj <- rcon$projectInformation()
-    tmp_proj$is_longitudinal <- 0
-    
-    rcon$push_projectInformation(tmp_proj)
+    importProjectInformation(rcon, 
+                             data.frame(is_longitudinal = 0))
+    rcon$flush_projectInformation()
+    # tmp_proj <- rcon$projectInformation()
+    # tmp_proj$is_longitudinal <- 0
     
     expect_data_frame(exportMappings(rcon), 
                       ncols = 3, 
                       nrows = 0)
-    
+    importProjectInformation(rcon, 
+                             data.frame(is_longitudinal = 1))
     rcon$flush_projectInformation()
   }
 )

@@ -2,8 +2,6 @@ context("Export/Import/Delete Users Functionality")
 
 # FIXME: Expand testing after writing import and delete methods
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that(
   "Returns a data frame when called with defaults", 
   {

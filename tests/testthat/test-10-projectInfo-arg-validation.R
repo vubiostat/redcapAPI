@@ -1,8 +1,5 @@
 context("export/import ProjectInformation argument validation")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 #####################################################################
 # exportProjectInformation argument validation
 
@@ -69,8 +66,6 @@ test_that(
   "Return an error if refresh is not logical(1)",
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(importProjectInformation(rcon, 
                                           data = NewInfo, 
@@ -88,8 +83,6 @@ test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
     
     expect_error(importProjectInformation(rcon, 
                                           data = NewInfo, 
@@ -119,9 +112,7 @@ test_that(
 test_that(
   "Enforce the proper value types for each property", 
   {
-    skip_if(!STRUCTURAL_TEST_READY, 
-            "Infrastructure not quite ready for structural tests.")
-    
+    local_reproducible_output(width = 200)
     NewData <- 
       data.frame(project_title = 123,
                  project_language = 123,

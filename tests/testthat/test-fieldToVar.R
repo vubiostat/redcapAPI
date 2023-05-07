@@ -1,7 +1,5 @@
 context("fieldToVar")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 # pull data for tests with handler
 rec_ht <- exportRecords(rcon, handlers = list(date_ = as.Date, time = function(x) 1.23, time_mm_ss = function(x) 1.23, time_hh_mm_ss = function(x) 1.23, datetime_ = as.Date, datetime_seconds_ = as.Date))
 test_that("date_ = as.Date returns class Date for date_dmy", expect_is(rec_ht$date_dmy, "Date"))
@@ -56,13 +54,13 @@ test_that("dates = TRUE returns 12:04:55 for time_mmss in first rec",
                        chron::times("00:02:45", format=c(times="h:m:s"))))
 
 test_that("dates = TRUE returns 2023-02-24 12:04 for datetime_dmy_hm in first rec",
-          expect_true(rec_dt$datetime_dmy_hm[1] == 
+          expect_true(rec_dt$datetime_dmy_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
 test_that("dates = TRUE returns 2023-02-24 12:04 for datetime_mdy_hm in first rec",
-          expect_true(rec_dt$datetime_mdy_hm[1] == 
+          expect_true(rec_dt$datetime_mdy_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
 test_that("dates = TRUE returns 2023-02-24 12:04 datetime_ymd_hm in first rec",
-          expect_true(rec_dt$datetime_ymd_hm[1] == 
+          expect_true(rec_dt$datetime_ymd_hm[1] ==
                         as.POSIXct("2023-02-24 12:04", format="%Y-%m-%d %H:%M")))
 
 test_that("dates = TRUE returns 2023-02-24 12:40:50 for datetime_dmy_hms in first rec",

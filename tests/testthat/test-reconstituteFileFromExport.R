@@ -1,22 +1,22 @@
 context("reconstituteFileFromExport.R")
 
-rcon <- redcapConnection(url= url, 
-                         token = API_KEY)
+
+local_file <- test_path("testdata", "FileForImportExportTesting.txt")
+
+importFiles(rcon, 
+            file = local_file, 
+            record = "10", 
+            field = "file_upload_test", 
+            event = "event_1_arm_1")
+
+RESPONSE <- makeApiCall(rcon, 
+                        body = list(content = 'file', 
+                                    action = 'export', 
+                                    record = '10', 
+                                    field = 'file_upload_test', 
+                                    event = 'event_1_arm_1'))
 
 EXISTENT_DIR <- tempdir()
-
-NON_EXISTENT_DIR <- file.path(EXISTENT_DIR, "NotAFolderYet")
-
-FileRepo <- exportFileRepositoryListing(rcon, 
-                                        recursive = TRUE)
-DOC_ID <- FileRepo$doc_id[!is.na(FileRepo$doc_id)][1]
-
-RESPONSE <- 
-  makeApiCall(rcon, 
-              body = list(content = "fileRepository", 
-                          action = "export", 
-                          returnFormat = "csv", 
-                          doc_id = DOC_ID))
 
 test_that(
   "File is saved to the directory", 
@@ -26,9 +26,11 @@ test_that(
     filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
                      replacement = "", 
                      x = RESPONSE$headers$'content-type')
-    expect_equal(SavedFile, 
-                 data.frame(directory = EXISTENT_DIR, 
-                            filename = filename))
+    filename <- sub(pattern = ";charset.+$", 
+                    replacement = "", 
+                    x = filename)
+    expect_equal(SavedFile$filename, 
+                 "FileForImportExportTesting.txt")
     expect_true(file.exists(file.path(EXISTENT_DIR, filename)))
     
     unlink(file.path(EXISTENT_DIR, filename))
@@ -38,15 +40,18 @@ test_that(
 test_that(
   "New directory is created and file is saved to that directory", 
   {
+    NON_EXISTENT_DIR <- file.path(tempdir(), "this_dir_no_findy")
     SavedFile <- reconstituteFileFromExport(RESPONSE,  
                                             dir = NON_EXISTENT_DIR, 
                                             dir_create = TRUE)
     filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
                      replacement = "", 
                      x = RESPONSE$headers$'content-type')
-    expect_equal(SavedFile, 
-                 data.frame(directory = NON_EXISTENT_DIR, 
-                            filename = filename))
+    filename <- sub(pattern = ";charset.+$", 
+                    replacement = "", 
+                    x = filename)
+    expect_equal(SavedFile$filename, 
+                 "FileForImportExportTesting.txt")
     expect_true(file.exists(file.path(NON_EXISTENT_DIR, filename)))
     
     unlink(file.path(NON_EXISTENT_DIR, filename))

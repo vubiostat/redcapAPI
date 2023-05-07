@@ -1,7 +1,5 @@
 context("exportRecordsTyped Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("records can be exported",{
   rec <- exportRecordsTyped(rcon)
   expect_gte(length(rec), 1)
@@ -103,7 +101,7 @@ test_that(
     expect_equal(unique(inv$value), "1")
     expect_data_frame(inv)
     expect_equal(names(inv), 
-                 c("row", "field_name", "field_type", "value"))
+                 c("row", "record_id", "field_name", "field_type", "value"))
     sapply(c(14, 15, 18, 19), function(i) expect_true(!i %in% inv$row))
     sapply(1:13, function(i) expect_true(i %in% inv$row))
     
@@ -167,7 +165,7 @@ test_that(
     expect_data_frame(
       exportRecordsTyped(rcon, 
                          records = "1"), 
-      nrows = 1
+      nrows = 3
     )
     
     expect_data_frame(
@@ -195,5 +193,42 @@ test_that(
     Rec <- exportRecordsTyped(rcon, fields = "prereq_yesno")
     
     expect_true(all(Rec$prereq_yesno %in% c("Yes", "No", NA)))
+  }
+)
+
+#####################################################################
+# Avoid error on System Fields (Issue #102)                      ####
+
+test_that(
+  "Including system fields in 'fields' doesn't produce an error", 
+  {
+    # FIXME: This test would be better run on a project that has
+    #        repeating instruments and events, and possibly DAGs
+    # Four use cases from #102
+    
+    # 1. User requests no fields (fields = NULL) return all fields
+    #    This is covered in other tests.
+    
+    # 2. User requests only actual fields (no system fields in 'fields')
+    #    Return actual fields + system fields
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = "record_id")
+    expect_true("redcap_event_name" %in% names(Rec))
+    
+    # 3. User requests actual fields + system fields. 
+    #    Return only the requested fields
+    # FIXME: This test would be better if it had more system fields 
+    #        available in the project
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = c("record_id", "redcap_event_name"))
+    expect_true(all(c("record_id", "redcap_event_name") %in% names(Rec)))
+    # 4. User requests only system fields
+    #    Return only system fields
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = c("redcap_event_name"))
+    expect_true(names(Rec) == "redcap_event_name")
   }
 )

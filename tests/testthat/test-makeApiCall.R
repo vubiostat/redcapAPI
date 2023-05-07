@@ -5,8 +5,6 @@ context("makeApiCall.R")
 # is ubiquitous throughout the package. If we break it, it's bound
 # to pop up in other tests.
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 # Test .makeApiCall_validateResponse
 
 test_that(

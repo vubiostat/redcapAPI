@@ -1,9 +1,7 @@
 context("deleteRecords")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("records can be deleted",{
-  rec <- exportRecords(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
   rows <- nrow(rec)
   
   rec <- rbind(rec[1,], rec[1,])
@@ -12,7 +10,7 @@ test_that("records can be deleted",{
   expect_error(deleteRecords(rcon, c("delete.me", "delete.too")), NA)
   
   
-  rec <- exportRecords(rcon)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
   
   expect_equal(nrow(rec), rows)
 })
@@ -22,7 +20,7 @@ test_that("error when trying to delete something that doesn't exist",{
 })
 
 test_that("arm restrictions are honored",{
-  rec <- exportRecords(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
   rows <- nrow(rec)
   
   rec <- rec[1:2,]
@@ -37,7 +35,7 @@ test_that("arm restrictions are honored",{
   # Expect an error when deleting from wrong arm
   expect_error(deleteRecords(rcon, c("delete.too"), arm=1), "delete.too")
   
-  rec <- exportRecords(rcon)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
   expect_equal(nrow(rec), rows+1)
   
   # Delete from proper arm

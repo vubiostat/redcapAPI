@@ -1,7 +1,5 @@
 context("Export / Import Meta Data Argument Validation")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 #####################################################################
 # exportMetaData
 

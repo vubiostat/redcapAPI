@@ -1,5 +1,7 @@
 context("redcapConnection")
 
+API_KEY <- keyring::key_get('redcapAPI', 'TestRedcapAPI', 'API_KEYs')
+
 test_that("redcapApiConnection can be created",
           expect_class(
             redcapConnection(url = url, token = API_KEY),
@@ -179,6 +181,25 @@ test_that(
     
     rcon$refresh_fileRepository()
     expect_true(rcon$has_fileRepository())
+  }
+)
+
+test_that(
+  "caching of repeatInstrumentEvent", 
+  {
+    local_reproducible_output(width = 200)
+
+    rcon$flush_all()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
+    
+    rcon$flush_repeatInstrumentEvent()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$refresh_repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
   }
 )
 

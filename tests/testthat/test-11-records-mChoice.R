@@ -4,7 +4,6 @@
 
 require(Hmisc)
  
-rcon <- conn
 
 test_that(
   "mChoice type conversion for checkbox with Hmisc attached",

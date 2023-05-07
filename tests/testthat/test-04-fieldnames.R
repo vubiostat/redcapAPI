@@ -1,6 +1,10 @@
-context("exportFieldsNames.R")
+context("exportFieldNames.R")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
+load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
+
+purgeProject(rcon, purge_all = TRUE)
+rcon$flush_all() # Clear the cache.
+restoreProject(RedcapProject_RedcapTestApi, rcon)
 
 test_that(
   "Return a data frame when called with defaults",

@@ -1,7 +1,5 @@
 context("importRecords Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 rec <- exportRecords(rcon, mChoice=FALSE)
 rows <- nrow(rec)
 
@@ -123,6 +121,7 @@ test_that(
     require(Hmisc)
     TheData <- exportRecordsTyped(rcon)
     WithMChoice <- mChoiceCast(TheData, rcon)
+    WithMChoice <- suppressWarnings(castForImport(WithMChoice, rcon))
     expect_message(importRecords(rcon, WithMChoice), 
                    "The variable[(]s[)] file_import_field, signature_test, file_upload_test, prereq_checkbox, no_prereq_checkbox, checkbox_test are not found in the project and/or cannot be imported.")
     TheDataAfter <- exportRecordsTyped(rcon)
