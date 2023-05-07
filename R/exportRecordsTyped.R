@@ -908,9 +908,7 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   checkmate::assert_list(     x       = rcon,
                               types   = "redcapApiConnection",
                               min.len = 1,
-                              add     = coll)
-  
-  checkmate::assert_named(    x       = rcon,
+                              names   = "named",
                               add     = coll)
   
   checkmate::assert_list(     x       = forms,

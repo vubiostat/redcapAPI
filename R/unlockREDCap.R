@@ -55,7 +55,7 @@
 #'          it can be anything. The variable name in the environment is this
 #'          name, or if a named vector the name associated.
 #' @param envir environment. The target environment for the connections. Defaults to NULL
-#'          which returns the keys as a list. Use \code{\link{globalenv()}} to assign the
+#'          which returns the keys as a list. Use \code{\link{globalenv}} to assign the
 #'          global environment.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param config string. Defaults to 'auto'. If set to NULL no configuration file is searched for. If set to anything

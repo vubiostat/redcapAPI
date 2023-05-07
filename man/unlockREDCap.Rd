@@ -27,7 +27,7 @@ name, or if a named vector the name associated.}
 \item{keyring}{character. Potential keyring, not used by default.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
-which returns the keys as a list. Use \code{\link{globalenv()}} to assign the
+which returns the keys as a list. Use \code{\link{globalenv}} to assign the
 global environment.}
 
 \item{config}{string. Defaults to 'auto'. If set to NULL no configuration file is searched for. If set to anything
