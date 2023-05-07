@@ -1,7 +1,5 @@
 context("exportNextRecordName.R")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that(
   "Return the next record name", 
   {

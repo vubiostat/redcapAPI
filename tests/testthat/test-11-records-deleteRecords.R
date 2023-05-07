@@ -1,7 +1,5 @@
 context("deleteRecords")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("records can be deleted",{
   rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
   rows <- nrow(rec)

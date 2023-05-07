@@ -1,6 +1,5 @@
 context("exportReports functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 
 #####################################################################
 # exportReports                                                  ####

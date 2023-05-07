@@ -1,7 +1,5 @@
 context("Export/Import/Delete Records Argument Validation")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 #####################################################################
 # exportRecords
 

@@ -1,7 +1,5 @@
 context("exportRecordsTyped Functionality")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("records can be exported",{
   rec <- exportRecordsTyped(rcon)
   expect_gte(length(rec), 1)

@@ -2,8 +2,6 @@ context("fieldToVar mChoice")
 
 require(Hmisc)
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that("records can be exported with Hmisc attached",{
   skip_if(!requireNamespace("Hmisc", quietly=TRUE), 
           "Hmisc is required to test mChoice export")

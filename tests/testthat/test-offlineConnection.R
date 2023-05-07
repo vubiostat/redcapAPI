@@ -1,7 +1,5 @@
 context("offlineConnection object")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that(
   "offlineConnection creates the right class", 
   {

@@ -1,7 +1,5 @@
 context("exportVersion.R")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 test_that(
   "exportVersion returns a version number", 
   {

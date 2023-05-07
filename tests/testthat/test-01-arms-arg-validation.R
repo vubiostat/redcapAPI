@@ -1,7 +1,5 @@
 context("export/import/delete Arms Argument Validation")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 #####################################################################
 # Export Arms Validation

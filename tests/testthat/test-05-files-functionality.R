@@ -4,8 +4,6 @@ context("export/import/delete Files Functionality")
 # Establish a project for testing.                               ####
 # It will need one record in order to have a place to store a record
 
-rcon <- redcapConnection(url, API_KEY)
-
 purgeProject(rcon, 
              purge_all = TRUE)
 

@@ -3,7 +3,6 @@ context("instruments, import/export mappings, export PDF argument validations")
 #####################################################################
 # Make the connection and purge the project                      ####
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 
 purgeProject(rcon, 
              purge_all = TRUE)

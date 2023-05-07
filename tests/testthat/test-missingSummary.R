@@ -1,8 +1,5 @@
 context("missingSummary")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 DesiredOutput <- 
   structure(
     list(

@@ -1,6 +1,5 @@
 context("dropRepeatingNA")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 rec <- exportRecordsTyped(rcon)
 
 # Note: This test assumes that there is at least one instance of a redcap_repeat_instrument field that is NA

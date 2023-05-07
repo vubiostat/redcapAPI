@@ -1,7 +1,5 @@
 context("export/import/delete Users Argument Validation")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 #####################################################################
 # Export Users
 

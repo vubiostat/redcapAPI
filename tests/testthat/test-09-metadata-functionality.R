@@ -2,8 +2,6 @@ context("Export / Import MetaData Functionality")
 
 # FIXME: realign tests when importMetaData is written
 
-rcon <- redcapConnection(url = url, token = API_KEY)
-
 #####################################################################
 # Export Meta Data
 

@@ -1,7 +1,5 @@
 context("Export/Import Project Information Functionality")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 #####################################################################
 # exportProjectInformation functionality
