@@ -67,13 +67,14 @@ widerRepeated <- function(rcon, idvar){
     # form with descriptive only
     if (length(vars.tmp) == 0) next
     
-    tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | is.blank(tmpd$redcap_repeat_instrument)),
-      select = c(id.fields, vars.tmp))
-    
+    tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | is.blank(tmpd$redcap_repeat_instrument)), 
+                  select = c(id.fields, vars.tmp))
+
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
-    tmp <- tmp[rowSums(is.na(tmp) | is.blank(tmp)) == 0,]
+    tmp <- tmp[!(is.na(tmp$value) | is.blank(tmp$value)),]
     
     if (nrow(tmp) > 0) {
+      
       # Convert tmp to wide format
       tmp <- reshape(tmp, idvar = id.fields, direction = "wide", timevar = 'variable', v.names = 'value', varying = vars.tmp) # reshape(tmp, idvar = c(id.fields), direction = "wide")
       # drop redcap_repeat_instrument column
@@ -83,12 +84,8 @@ widerRepeated <- function(rcon, idvar){
       rownames(tmp) <- NULL
       
     } else {
-      tmp <- data.frame(
-        matrix(
-          ncol = length(c(id.fields, vars.tmp)),
-          nrow = 0))
+      tmp <- data.frame(matrix(NA, 0, length(c(id.fields, vars.tmp))))
       names(tmp) = c(id.fields, vars.tmp)
-      data.frame(tmp)
     }
     
     what.has <- with(
@@ -96,8 +93,8 @@ widerRepeated <- function(rcon, idvar){
       c(
         all(is.blank(redcap_event_name)),
         all(is.blank(redcap_repeat_instance))))
-    if (what.has[[1]] == TRUE) tmp <- tmp$redcap_event_name <- NULL
-    if (what.has[[2]] == TRUE) tmp <- tmp$redcap_event_name <- NULL
+    if (what.has[[1]] == TRUE) tmp$redcap_event_name <- NULL
+    if (what.has[[2]] == TRUE) tmp$redcap_repeat_instance <- NULL
     
     tmp2 <- list(tmp)
     names(tmp2) <- i
