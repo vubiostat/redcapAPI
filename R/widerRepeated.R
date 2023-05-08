@@ -10,7 +10,7 @@
 #'        These variables may also be present in wide format. (e.g., 'record_id')
 
 
-widerRepeated <- function(rcon, idvar){
+widerRepeated <- function(Records, idvar){
   # export data dictionary
   meta <- rcon$metadata()
   
@@ -23,14 +23,11 @@ widerRepeated <- function(rcon, idvar){
   # export mappings
   mappings <- rcon$mapping()
   
-  # export data
-  records <- exportRecordsTyped(rcon)
-  
   # helper function
   is.blank <- function(x) is.na(x) | x == ""
   
   # set everything as character in data and data dictionary and assign id.temp to data
-  dat <- data.frame(lapply(records, as.character), stringsAsFactors = FALSE)
+  dat <- data.frame(lapply(Records, as.character), stringsAsFactors = FALSE)
   names(dat)[names(dat) == idvar] <- "id.tmp"
   
   dd <- data.frame(lapply(meta, as.character), stringsAsFactors = FALSE)
