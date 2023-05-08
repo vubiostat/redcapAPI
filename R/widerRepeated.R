@@ -49,7 +49,6 @@ widerRepeated <- function(Records, rcon, idvar)
     by = names(df.all_ids)[
       names(df.all_ids) %in% names(dat)],
     all = TRUE)
-  #tmpd[is.na(tmpd)] <- ""
   
   id.fields = names(df.all_ids)
   
@@ -66,7 +65,8 @@ widerRepeated <- function(Records, rcon, idvar)
     tmp <- tmpd[ tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] &
                  (tmpd$redcap_repeat_instrument == i | isNAorBlank(tmpd$redcap_repeat_instrument)),
                 c(id.fields, vars.tmp) ]
-
+# FIXME: tmp[,id.fields] must be blank here instead of NA to work. 
+    
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
     tmp <- tmp[!isNAorBlank(tmp$value),]
     
