@@ -8,23 +8,9 @@
 #' @param rcon A REDCap connection object as created by \code{unlockREDCap}.
 #' @param idvar \code{character}, Names of one or more variables in long format that identify multiple records belonging to the same group. 
 #'        These variables may also be present in wide format. (e.g., 'record_id')
-#' @export
-widerRepeated <- function(Records, rcon, idvar)
-{
-   ###########################################################################
-  # Check parameters passed to function
-  coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_data_frame(x = Records)
-  checkmate::assert_class(x = rcon,
-                          classes = "redcapApiConnection",
-                          add = coll)
-  checkmate::assert_character(x = idvar,
-                              len = 1,
-                              add = coll)
-  checkmate::assert_subset(x = idvar, names(Records))
-  checkmate::reportAssertions(coll)
-  
+
+
+widerRepeated <- function(Records, idvar){
   # export data dictionary
   meta <- rcon$metadata()
   
