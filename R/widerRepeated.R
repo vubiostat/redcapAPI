@@ -106,6 +106,7 @@ widerRepeated <- function(rcon, idvar){
     }
     rm(i, tmp)
   }
-  return(list.forms)
+  # return(list.forms)
+  return(if(length(list.forms) == 1) list.forms[[1]] else list.forms)
 }
 
