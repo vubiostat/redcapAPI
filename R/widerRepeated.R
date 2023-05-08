@@ -25,31 +25,16 @@ widerRepeated <- function(Records, rcon, idvar)
   checkmate::assert_subset(x = idvar, names(Records))
   checkmate::reportAssertions(coll)
   
-  # export data dictionary
-  meta <- rcon$metadata()
-  
-  # export repeating
-  repeating <- rcon$repeatInstrumentEvent()
-  
-  # export events
-  events <- rcon$events()
-  
-  # export mappings
-  mappings <- rcon$mapping()
-  
-  # helper function
-  is.blank <- function(x) is.na(x) | x == ""
-  
   # set everything as character in data and data dictionary and assign id.temp to data
-  dat <- data.frame(lapply(Records, as.character), stringsAsFactors = FALSE)
+  dat <- Records # data.frame(lapply(Records, as.character), stringsAsFactors = FALSE)
   names(dat)[names(dat) == idvar] <- "id.tmp"
   
-  dd <- data.frame(lapply(meta, as.character), stringsAsFactors = FALSE)
+  dd <- data.frame(lapply(rcon$metadata(), as.character), stringsAsFactors = FALSE)
   
   # get correct event mappings if redcap_event_name is present or not
   if ("redcap_event_name" %in% names(dat)) {
     #get the event-form mapping
-    event.map <- mappings
+    event.map <- rcon$mapping()
   } else {
     event.map = data.frame(
       unique_event_name = "",
@@ -78,7 +63,7 @@ widerRepeated <- function(Records, rcon, idvar)
     # form with descriptive only
     if (length(vars.tmp) == 0) next
     
-    tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | is.blank(tmpd$redcap_repeat_instrument)), 
+    tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | isNAorBlank(tmpd$redcap_repeat_instrument)), 
                   select = c(id.fields, vars.tmp))
 
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
