@@ -64,25 +64,23 @@ widerRepeated <- function(rcon, idvar){
   for (i in sort(unique(dd$form_name))) {
     vars.tmp <- names(dat)[sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", names(dat)) %in% dd$field_name[dd$form_name == i]]
     
-    if (length(vars.tmp) == 0) next #form with descriptive only
+    # form with descriptive only
+    if (length(vars.tmp) == 0) next
     
     tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | is.blank(tmpd$redcap_repeat_instrument)),
       select = c(id.fields, vars.tmp))
     
-    # reshape to eliminate empty instances or any variable empty in all instances
-    tmp_long <- reshape(tmp[, c(id.fields, vars.tmp)], 
-                        varying = list(vars.tmp),
-                        times = vars.tmp,
-                        direction = "long")
-    tmp <- tmp_long[complete.cases(tmp_long), ]
+    tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
+    tmp <- tmp[rowSums(is.na(tmp) | is.blank(tmp)) == 0,]
     
     if (nrow(tmp) > 0) {
       # Convert tmp to wide format
-      tmp <- reshape(tmp, idvar = c(id.fields), direction = "wide")
+      tmp <- reshape(tmp, idvar = id.fields, direction = "wide", timevar = 'variable', v.names = 'value', varying = vars.tmp) # reshape(tmp, idvar = c(id.fields), direction = "wide")
       # drop redcap_repeat_instrument column
       tmp$redcap_repeat_instrument <- NULL
       # add form column
       tmp$name.form <- i
+      rownames(tmp) <- NULL
       
     } else {
       tmp <- data.frame(
