@@ -26,7 +26,7 @@ widerRepeated <- function(Records, rcon, idvar)
   checkmate::reportAssertions(coll)
   
   # set everything as character in data and data dictionary and assign id.temp to data
-  dat <- Records # data.frame(lapply(Records, as.character), stringsAsFactors = FALSE)
+  dat <- Records #data.frame(lapply(Records, as.character), stringsAsFactors = FALSE)
   names(dat)[names(dat) == idvar] <- "id.tmp"
   
   dd <- data.frame(lapply(rcon$metadata(), as.character), stringsAsFactors = FALSE)
@@ -49,7 +49,7 @@ widerRepeated <- function(Records, rcon, idvar)
     by = names(df.all_ids)[
       names(df.all_ids) %in% names(dat)],
     all = TRUE)
-  tmpd[is.na(tmpd)] <- ""
+  #tmpd[is.na(tmpd)] <- ""
   
   id.fields = names(df.all_ids)
   
@@ -63,8 +63,9 @@ widerRepeated <- function(Records, rcon, idvar)
     # form with descriptive only
     if (length(vars.tmp) == 0) next
     
-    tmp <- subset(tmpd, tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] & (tmpd$redcap_repeat_instrument == i | isNAorBlank(tmpd$redcap_repeat_instrument)), 
-                  select = c(id.fields, vars.tmp))
+    tmp <- tmpd[ tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] &
+                 (tmpd$redcap_repeat_instrument == i | isNAorBlank(tmpd$redcap_repeat_instrument)),
+                c(id.fields, vars.tmp) ]
 
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
     tmp <- tmp[!isNAorBlank(tmp$value),]
@@ -86,9 +87,8 @@ widerRepeated <- function(Records, rcon, idvar)
     
     what.has <- with(
       tmp,
-      c(
-        all(is.blank(redcap_event_name)),
-        all(is.blank(redcap_repeat_instance))))
+      c(all(isNAorBlank(redcap_event_name)),
+        all(isNAorBlank(redcap_repeat_instance))))
     if (what.has[[1]] == TRUE) tmp$redcap_event_name <- NULL
     if (what.has[[2]] == TRUE) tmp$redcap_repeat_instance <- NULL
     
