@@ -1,8 +1,5 @@
 context("Purge and Restore Projects")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
-
 #####################################################################
 # Preserve, Purge,  and Restore a Project                        ####
 
@@ -86,6 +83,7 @@ test_that(
 test_that(
   "Purge arguments are logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(purgeProject("not rcon"), 
                  "no applicable method for 'purgeProject'")
     

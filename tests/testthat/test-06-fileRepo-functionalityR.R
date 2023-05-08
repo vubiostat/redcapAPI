@@ -4,8 +4,6 @@ context("Export/Import/Delete File Repository Functionality")
 # Establish a project for testing.                               ####
 # It will need one record in order to have a place to store a record
 
-rcon <- redcapConnection(url, API_KEY)
-
 purgeProject(rcon, 
              purge_all = TRUE)
 
@@ -103,6 +101,7 @@ test_that(
   }
 )
 
+rcon$flush_fileRepository()
 FileRepo <- rcon$fileRepository()
 
 test_that(

@@ -1,7 +1,10 @@
 context("checkbox_suffixes.R")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
+load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
+purgeProject(rcon, purge_all = TRUE)
+rcon$flush_all()
+restoreProject(RedcapProject_RedcapTestApi, 
+               rcon)
 
 CheckboxMetaData <- exportMetaData(rcon)
 CheckboxMetaData <- CheckboxMetaData[CheckboxMetaData$field_name %in% c("prereq_checkbox"), ]

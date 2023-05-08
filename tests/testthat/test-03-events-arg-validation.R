@@ -1,7 +1,5 @@
 context("export/import/delete Events Argument Validation")
 
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 Events <- data.frame(event_name = c("event_1", "event_1", "event_1"), 
                      arm_num = 1:3)

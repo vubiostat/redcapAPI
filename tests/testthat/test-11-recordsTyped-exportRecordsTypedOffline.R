@@ -1,6 +1,5 @@
 context("exportRecordsTyped redcapOfflineConnection")
 
-rcon <- redcapConnection(url = url, token = API_KEY)
 
 Raw <- exportRecordsTyped(rcon, 
                           cast = raw_cast)

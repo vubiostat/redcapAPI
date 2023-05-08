@@ -1,7 +1,5 @@
 context("export/import/delete Files Argument Validation")
 
-rcon <- redcapConnection(url, API_KEY)
-
 #####################################################################
 # exportFiles
 

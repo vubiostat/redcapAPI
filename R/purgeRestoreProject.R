@@ -316,7 +316,7 @@ purgeProject.redcapApiConnection <- function(object,
                  config = config)
   }
   
-  if (arms){
+  if (arms && !is.null(object$arms()$arm_num)){
     deleteArms(object, 
                arms = object$arms()$arm_num, 
                error_handling = error_handling, 

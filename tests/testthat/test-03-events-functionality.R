@@ -5,10 +5,6 @@ context("export/import/delete Events Functionality")
 #       recreate those tests here. Instead, we will focus only on 
 #       behaviors in longitudinal projects.
 
-#####################################################################
-# Make the connection and purge the project                      ####
-rcon <- redcapConnection(url = url, 
-                         token = API_KEY)
 
 purgeProject(rcon, 
              purge_all = TRUE)

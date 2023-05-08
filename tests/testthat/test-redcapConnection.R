@@ -1,5 +1,7 @@
 context("redcapConnection")
 
+API_KEY <- keyring::key_get('redcapAPI', 'TestRedcapAPI', 'API_KEYs')
+
 test_that("redcapApiConnection can be created",
           expect_class(
             redcapConnection(url = url, token = API_KEY),
