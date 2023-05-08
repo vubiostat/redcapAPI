@@ -67,7 +67,7 @@ widerRepeated <- function(Records, rcon, idvar)
                   select = c(id.fields, vars.tmp))
 
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
-    tmp <- tmp[!(is.na(tmp$value) | is.blank(tmp$value)),]
+    tmp <- tmp[!isNAorBlank(tmp$value),]
     
     if (nrow(tmp) > 0) {
       
