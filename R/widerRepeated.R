@@ -53,10 +53,11 @@ widerRepeated <- function(Records, rcon, idvar)
   id.fields = names(df.all_ids)
   
   map <- event.map
-  data.frame(map)
+  # data.frame(map) # This appears to do nothing
   map[is.na(map)] <- ""
   
-  for (i in sort(unique(dd$form_name))) {
+  for (i in sort(unique(dd$form_name)))
+  {
     vars.tmp <- names(dat)[sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", names(dat)) %in% dd$field_name[dd$form_name == i]]
     
     # form with descriptive only
@@ -65,13 +66,15 @@ widerRepeated <- function(Records, rcon, idvar)
     tmp <- tmpd[ tmpd$redcap_event_name %in% map[map$form == i, "unique_event_name"] &
                  (tmpd$redcap_repeat_instrument == i | isNAorBlank(tmpd$redcap_repeat_instrument)),
                 c(id.fields, vars.tmp) ]
-# FIXME: tmp[,id.fields] must be blank here instead of NA to work. 
     
+    for(j in id.fields) tmp[is.na(tmp[,j]),j] <- ""
+
     tmp <- reshape(tmp, varying = list(vars.tmp), times = vars.tmp, timevar = 'variable', v.names = 'value', idvar = id.fields, direction = "long")
     tmp <- tmp[!isNAorBlank(tmp$value),]
     
     if (nrow(tmp) > 0) {
       
+      cat(i, "\n")
       # Convert tmp to wide format
       tmp <- reshape(tmp, idvar = id.fields, direction = "wide", timevar = 'variable', v.names = 'value', varying = vars.tmp) # reshape(tmp, idvar = c(id.fields), direction = "wide")
       # drop redcap_repeat_instrument column
