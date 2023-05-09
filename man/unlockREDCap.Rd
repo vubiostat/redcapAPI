@@ -10,7 +10,6 @@ unlockREDCap(
   url,
   keyring,
   envir = NULL,
-  config = "auto",
   passwordFUN = getPass::getPass,
   ...
 )
@@ -29,10 +28,6 @@ name, or if a named vector the name associated.}
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
 which returns the keys as a list. Use \code{\link{globalenv}} to assign the
 global environment.}
-
-\item{config}{string. Defaults to 'auto'. If set to NULL no configuration file is searched for. If set to anything
-but 'auto', that will be the config file override that is used if it exists instead of
-searching for the ../<basename>.yml.}
 
 \item{passwordFUN}{function. Function to get the password for the keyring. Defaults to getPass::getPass().}
 
@@ -57,6 +52,24 @@ Next it will use an api environment in memory to keep api_keys.
 If one is knitting with parameters, it will request and store these
 keys in memory. Otherwise it will request the user enter
 each key using getPass and store it in memory.
+
+For production servers where the password must be stored in a readable
+plain text file, it will search for `../<basename>.yml`. DO NOT USE
+this unless your are a sysadmin, as this defeats the purpose of using
+a local encrypted file. The expected structure of this yaml file is
+as follows:
+
+\preformatted{
+other-config-stuff1: blah blah
+redcapAPI:
+  args:
+  url: https://redcap.vanderbilt.edu/api/
+  keys:
+    intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
+    details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
+other-config-stuff2: blah blah
+other-config-stuff3: blah blah
+}
 
 IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 as this *is* writing the API_KEY to a local
