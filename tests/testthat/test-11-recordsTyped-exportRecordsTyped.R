@@ -151,7 +151,7 @@ test_that(
       exportRecordsTyped(rcon, 
                          fields = c("left_operand", "right_operand", 
                                     "calc_addition", "calc_squared")), 
-      ncols = 4
+      ncols = 8
     )
   }
 )
@@ -230,5 +230,45 @@ test_that(
     Rec <- exportRecordsTyped(rcon, 
                               fields = c("redcap_event_name"))
     expect_true(names(Rec) == "redcap_event_name")
+  }
+)
+
+#####################################################################
+# Always include ID fields                                       ####
+
+test_that(
+  "ID fields are included on all calls", 
+  {
+    minimum_field <- c("record_id", 
+                       "redcap_event_name", 
+                       "redcap_repeat_instrument", 
+                       "redcap_repeat_instance")
+    
+    # ID field and system fields when just the ID field is requested
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              fields = "record_id")
+    expect_equal(names(Rec), 
+                 minimum_field)
+    
+    # ID field and system fields when a single form is requested
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              forms = c("randomization"))
+    expect_true(all(minimum_field %in% names(Rec)))
+    
+    # Now let's make a secondary unique field
+    NewInfo <- data.frame(secondary_unique_field = "text_test")
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
+    
+    Rec <- exportRecordsTyped(rcon, 
+                              forms = c("randomization"))
+    expect_true(all(c(minimum_field, "text_test") %in% names(Rec)))
+    
+    NewInfo <- data.frame(secondary_unique_field = "", 
+                          surveys_enabled = 0)
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
   }
 )

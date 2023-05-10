@@ -269,14 +269,6 @@ importRecords.redcapApiConnection <- function(rcon,
   else 
     MetaData$field_name[1]
   
-  msg <- paste0("REDCap Data Import Log: ", Sys.time(),
-                "\nThe following (if any) conditions were noted about the data.\n\n")
-  
-  if (is.null(logfile)) 
-    message(msg) 
-  else 
-    write(msg, logfile)
-  
   data <- validateImport(data = data,
                          meta_data = MetaData,
                          logfile = logfile)

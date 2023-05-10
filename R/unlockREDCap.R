@@ -45,6 +45,24 @@
 #' keys in memory. Otherwise it will request the user enter
 #' each key using getPass and store it in memory.
 #' 
+#' For production servers where the password must be stored in a readable
+#' plain text file, it will search for `../<basename>.yml`. DO NOT USE
+#' this unless one is a sysadmin, as this defeats the security and purpose of
+#' a local encrypted file. The expected structure of this yaml file is
+#' as follows:
+#' 
+#' \preformatted{
+#' other-config-stuff1: blah blah
+#' redcapAPI:
+#'   args:
+#'   url: https://redcap.vanderbilt.edu/api/
+#'   keys:
+#'     intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
+#'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
+#' other-config-stuff2: blah blah
+#' other-config-stuff3: blah blah
+#' }
+#' 
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 #' as this *is* writing the API_KEY to a local
 #' file in clear text.
@@ -58,9 +76,6 @@
 #'          which returns the keys as a list. Use \code{\link{globalenv}} to assign the
 #'          global environment.
 #' @param keyring character. Potential keyring, not used by default.
-#' @param config string. Defaults to 'auto'. If set to NULL no configuration file is searched for. If set to anything
-#'              but 'auto', that will be the config file override that is used if it exists instead of
-#'              searching for the ../<basename>.yml.
 #' @param url character. The url of the REDCap server's api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
 #' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
@@ -93,7 +108,6 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            config      = 'auto',
                             passwordFUN = getPass::getPass,
                             ...)
 {
@@ -104,7 +118,6 @@ unlockREDCap    <- function(connections,
   checkmate::assert_character(x = url,          null.ok = FALSE, add = coll)
   checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
   checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
-  checkmate::assert_character(x = config,       null.ok = TRUE,  add = coll)
   checkmate::assert_function( x = passwordFUN,  null.ok = FALSE, add = coll)
   checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
   checkmate::reportAssertions(coll)
@@ -131,14 +144,9 @@ unlockREDCap    <- function(connections,
     }
   
   # Use config if it exists
-  config_file <- if(config == 'auto')
-  {
-    file.path("..", paste0(basename(getwd()),".yml"))
-  } else
-  {
-    config
-  }
-  if(!is.null(config_file) && file.exists(config_file))
+  config_file <- file.path("..", paste0(basename(getwd()),".yml"))
+
+  if(file.exists(config_file))
   {
     config <- read_yaml(config_file)
     config <- config$redcapAPI

@@ -423,7 +423,7 @@ mChoiceCast <- function(data,
   
   checkbox_fields <- fields[fields %in% CheckboxMetaData$field_name]
   
-  Raw <- data |> recastRecords(rcon, fields = export_fields, cast=list(checkbox=castRaw))
+  Raw <- recastRecords(data, rcon, fields = export_fields, cast=list(checkbox=castRaw))
   for (i in checkbox_fields)
     data[[ i ]] <- 
     .mChoiceField(rcon, 
@@ -593,7 +593,7 @@ mChoiceCast <- function(data,
                                 correct_length){
   funs <- lapply(field_types, function(x) if(is.null(na[[x]])) isNAorBlank else na[[x]])
   nas  <- mapply(do.call, funs, args, SIMPLIFY = FALSE)
-  
+
   is_correct_length <- vapply(nas, function(x) length(x) == correct_length, logical(1))
   is_logical <- vapply(nas, is.logical, logical(1))
   
@@ -614,7 +614,7 @@ mChoiceCast <- function(data,
   }
   
   checkmate::reportAssertions(cm)
-  
+
   matrix(unlist(nas), ncol = length(nas), byrow = FALSE)
 }  
 
