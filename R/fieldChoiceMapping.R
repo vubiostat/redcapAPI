@@ -89,7 +89,7 @@ fieldChoiceMapping.redcapApiConnection <- function(object,
   
   MetaData <- MetaData[MetaData$field_name == field_name, ]
   
-  if (!MetaData$field_type %in% c("checkbox", "dropown", "radio")){
+  if (!MetaData$field_type %in% c("checkbox", "dropdown", "radio")){
     coll$push(sprintf("'%s' is not a checkbox, dropdown, or radio field", 
                       field_name))
     checkmate::reportAssertions(coll)
