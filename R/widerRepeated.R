@@ -3,7 +3,10 @@
 #' 
 #' @description Converts a dataframe into wide format given a single REDCap form.
 #' This function assumes that the Records argument is the result of exportRecordsTyped,
-#' and that all empty values have been previously dropped.
+#' and that all empty values have been previously dropped. This will only widen dataframes 
+#' that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and 
+#' "redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned 
+#' unchanged.
 #'   
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
@@ -29,8 +32,6 @@ widerRepeated <- function(Records, rcon)
   # check that redcap_repeat_instrument is present and that all values are the same
   if ("redcap_repeat_instrument" %in% colnames(Records) && all(!is.na(Records$redcap_repeat_instrument))) {
     if (length(unique(Records$redcap_repeat_instrument)) == 1) {
-      cat("Great! The redcap_repeat_instrument column has unique values.\n")
-      
       Records_wide <- reshape(
         data = Records,
         idvar = c(idvar, "redcap_event_name", "redcap_repeat_instrument"),
@@ -43,7 +44,6 @@ widerRepeated <- function(Records, rcon)
       stop("The redcap_repeat_instrument column does not have unique values.\n")
     }
   } else {
-    cat("The redcap_repeat_instrument column is not present.\n")
     return(Records)
   }
 }
