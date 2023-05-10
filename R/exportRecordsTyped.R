@@ -392,7 +392,7 @@ exportRecordsTyped.redcapApiConnection <-
     return(Raw)
   }
   
-  # Raw <- filterEmptyRow(Raw, rcon)
+  Raw <- filterEmptyRow(Raw, rcon)
   
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
@@ -545,7 +545,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
   }
   
-  # Raw <- filterEmptyRow(Raw, rcon)
+  Raw <- filterEmptyRow(Raw, rcon)
   
   ###################################################################
   # Process meta data for useful information

@@ -33,12 +33,14 @@ filterEmptyRow <- function(data,
   
   for (i in seq_along(is_all_missing)){
     this_row <- data[ i, names(data)[!names(data) %in% id_fields], drop = FALSE]
-    if (isTRUE(all(is.na(unlist(this_row))))){
+    if (ncol(this_row) == 0){ # This occurs when all of the columns are ID fields.
+      is_all_missing[i] <- FALSE
+    } else if (all(is.na(unlist(this_row)))){
       is_all_missing[i] <- TRUE
     }
   }
   
-  data <- data[!is_all_missing, ]
+  data <- data[!is_all_missing, , drop = FALSE]
   
   attr(data, "invalid") <- invalid
   
