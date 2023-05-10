@@ -11,7 +11,7 @@
 #' @export
 widerRepeated <- function(Records, rcon)
 {
-  idvar <- rcon$metadata()$field_name[1]
+  idvar <- getProjectIdFields(rcon)
   ###########################################################################
   # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
