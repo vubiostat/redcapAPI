@@ -77,6 +77,24 @@
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @details
 #' 
+#' In all calls, the project's ID field will be included--there is no option
+#' provided to prevent this. Additionally, if the project has a secondary
+#' unique field specified, it will also be included. Inclusion of these fields
+#' is necessary to support some post-processing functions. 
+#' 
+#' By default, the system fields \code{redcap_event_name}, 
+#' \code{redcap_repeat_instrument}, and \code{redcap_repeat_instance} are 
+#' exported (when they are appropriate to the project). These are automatically
+#' included by the API. However, \code{exportRecordsTyped} assumes that if 
+#' you include only a subset of these system fields, then you truly only 
+#' want that subset and unrequested fields will be removed. Be aware that 
+#' this may cause problems with some post-processing functions that operate
+#' on repeating instrument data. 
+#' 
+#' The combination of the project ID field, secondary unique field, and the
+#' system fields are what uniquely identify an experimental unit. In nearly 
+#' all cases, it is desirable to have them all included.
+#' 
 #' A record of exports through the API is recorded in the Logging section 
 #' of the project.
 #' 
@@ -84,11 +102,6 @@
 #' file downloaded from REDCap along with the data dictionary.  
 #' This is made available for instances where the API can not be accessed for 
 #' some reason (such as waiting for API approval from the REDCap administrator).
-#' 
-#' It is unnecessary to include "redcap_event_name" in the fields argument.  
-#' This field is automatically exported for any longitudinal database.  
-#' If the user does include it in the fields argument, it is removed quietly 
-#' in the parameter checks.
 #' 
 #' A 'batched' export is one where the export is performed over a series of 
 #' API calls rather than one large call.  For large projects on small servers, 
@@ -379,6 +392,8 @@ exportRecordsTyped.redcapApiConnection <-
     return(Raw)
   }
   
+  Raw <- filterEmptyRow(Raw, rcon)
+  
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
       Raw <- Raw[-1]
@@ -529,6 +544,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
   }
+  
+  Raw <- filterEmptyRow(Raw, rcon)
   
   ###################################################################
   # Process meta data for useful information
@@ -749,18 +766,27 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   FieldFormMap <- do.call("rbind", FieldFormMap)
   rownames(FieldFormMap) <- NULL
   
-  # FieldFormMap <- FieldFormMap[!duplicated(FieldFormMap$original_field_name), ]
-  
   # Reduce to fields in either fields or forms
   Fields <- FieldFormMap[FieldFormMap$is_in_fields | 
                            FieldFormMap$is_in_forms, ]
   Fields <- Fields[order(Fields$index), ]
   
-  if (use_original){
-    unique(Fields$original_field_name)
-  } else {
-    Fields$export_field_name
-  }
+  fields_to_request <- 
+    if (use_original){
+      unique(Fields$original_field_name)
+    } else {
+      Fields$export_field_name
+    }
+  
+  # Lastly, we need to ensure that the identifier fields are included.
+  # We will include the record ID field if it is not already included.
+  # We will also include the secondary unique ID field if one is specified.
+
+  id_fields <- getProjectIdFields(rcon)
+
+  fields_to_request <- c(id_fields, fields_to_request)
+  fields_to_request <- fields_to_request[!duplicated(fields_to_request)]
+  fields_to_request
 }
 
 # .exportRecordsTyped_Unbatched -------------------------------------
