@@ -35,23 +35,23 @@ widerRepeated <- function(Records, rcon)
     if (length(unique(Records$redcap_repeat_instrument)) == 1) {
       # preserve column attributes
       Records <- data.frame(Records, check.names = FALSE)
-      recordsWide <- reshape(
+      RecordsWide <- reshape(
         data = Records,
         idvar = form_ids,
         timevar = "redcap_repeat_instance",
         direction = "wide"
       )
       
-      for(rw in names(recordsWide)){
+      for(rw in names(RecordsWide)){
         if(rw %in% form_ids){
-          attributes(recordsWide[[rw]]) <- attributes(Records[[rw]])
+          attributes(RecordsWide[[rw]]) <- attributes(Records[[rw]])
         } else {
           r <- sub("^(.*)[.].*", "\\1", rw) # Remove text from last period and after.
-          attributes(recordsWide[[rw]]) <-  attributes(Records[[r]])
+          attributes(RecordsWide[[rw]]) <-  attributes(Records[[r]])
         }
       }
       
-      return(recordsWide)
+      return(RecordsWide)
       
     } else {
       stop("The redcap_repeat_instrument column does not have unique values.\n")
