@@ -55,7 +55,7 @@ each key using getPass and store it in memory.
 
 For production servers where the password must be stored in a readable
 plain text file, it will search for `../<basename>.yml`. DO NOT USE
-this unless your are a sysadmin, as this defeats the purpose of using
+this unless one is a sysadmin, as this defeats the security and purpose of
 a local encrypted file. The expected structure of this yaml file is
 as follows:
 
