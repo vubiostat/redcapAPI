@@ -19,26 +19,39 @@ widerRepeated <- function(Records, rcon)
   # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_data_frame(x = Records)
+  checkmate::assert_data_frame(x = Records, 
+                               add = coll)
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
-  checkmate::assert_character(x = idvar,
-                              len = 1,
-                              add = coll)
-  checkmate::assert_subset(x = idvar, names(Records))
   checkmate::reportAssertions(coll)
+  
+  form_ids <- c(idvar, "redcap_data_access_group", 
+                "redcap_event_name", "redcap_repeat_instrument")
+  form_ids <- form_ids[form_ids %in% names(Records)]
   
   # check that redcap_repeat_instrument is present and that all values are the same
   if ("redcap_repeat_instrument" %in% colnames(Records) && all(!is.na(Records$redcap_repeat_instrument))) {
     if (length(unique(Records$redcap_repeat_instrument)) == 1) {
-      Records_wide <- reshape(
+      # preserve column attributes
+      Records <- data.frame(Records, check.names = FALSE)
+      recordsWide <- reshape(
         data = Records,
-        idvar = c(idvar, "redcap_event_name", "redcap_repeat_instrument"),
+        idvar = form_ids,
         timevar = "redcap_repeat_instance",
         direction = "wide"
       )
-      return(Records_wide)
+      
+      for(rw in names(recordsWide)){
+        if(rw %in% form_ids){
+          attributes(recordsWide[[rw]]) <- attributes(Records[[rw]])
+        } else {
+          r <- sub("^(.*)[.].*", "\\1", rw) # Remove text from last period and after.
+          attributes(recordsWide[[rw]]) <-  attributes(Records[[r]])
+        }
+      }
+      
+      return(recordsWide)
       
     } else {
       stop("The redcap_repeat_instrument column does not have unique values.\n")
