@@ -4,17 +4,19 @@
 \alias{widerRepeated}
 \title{Transform Data Into Wide Format}
 \usage{
-widerRepeated(Records, rcon, idvar)
+widerRepeated(Records, rcon)
 }
 \arguments{
 \item{Records}{A \code{data.frame} containing the records from
 \code{\link{exportRecordsTyped}}}
 
 \item{rcon}{A REDCap connection object as created by \code{unlockREDCap}.}
-
-\item{idvar}{\code{character}, Names of one or more variables in long format that identify multiple records belonging to the same group. 
-These variables may also be present in wide format. (e.g., 'record_id')}
 }
 \description{
-Converts a dataframe into wide format given the column names to expand.
+Converts a dataframe into wide format given a single REDCap form.
+This function assumes that the Records argument is the result of exportRecordsTyped,
+and that all empty values have been previously dropped. This will only widen dataframes 
+that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and 
+"redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned 
+unchanged.
 }
