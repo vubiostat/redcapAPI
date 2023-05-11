@@ -352,6 +352,7 @@ guessCast <- function(data,
       
       x[ nas | !valid ] <- NA
       data[[i]] <- cast(x)
+      for(j in names(attributes(x))) attr(data[[i]], j) <- attr(x, j)
     }
   }
   
