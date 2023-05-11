@@ -22,7 +22,7 @@ widerRepeated <- function(Records, rcon)
   checkmate::assert_data_frame(x = Records, 
                                add = coll)
   checkmate::assert_class(x = rcon,
-                          classes = "redcapApiConnection",
+                          classes = "redcapConnection",
                           add = coll)
   checkmate::reportAssertions(coll)
   
@@ -41,6 +41,11 @@ widerRepeated <- function(Records, rcon)
         timevar = "redcap_repeat_instance",
         direction = "wide"
       )
+      
+      if (!is.null(attr(Records, "invalid"))){
+        attr(RecordsWide, "invalid") <- attr(Records, "invalid")
+        attr(RecordsWide, "invalid")$row <- NA
+      }
       
       for(rw in names(RecordsWide)){
         if(rw %in% form_ids){
