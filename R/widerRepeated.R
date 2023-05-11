@@ -11,6 +11,7 @@
 #' @param Records A \code{data.frame} containing the records from
 #'        \code{\link{exportRecordsTyped}}
 #' @param rcon A REDCap connection object as created by \code{unlockREDCap}.
+#' @importFrom stats reshape
 #' @export
 widerRepeated <- function(Records, rcon)
 {
