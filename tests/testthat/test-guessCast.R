@@ -74,3 +74,16 @@ test_that(
     
   }
 )
+
+test_that(
+  "guess cast preserves attributes",
+  {
+    recs <- exportRecordsTyped(rcon, cast=raw_cast) |>
+      guessCast(rcon, 
+                validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+                cast=as.Date,
+                threshold=0.3)
+    
+    expect_class(attr(recs$prereq_date, "label"),   "character")
+  }
+)
