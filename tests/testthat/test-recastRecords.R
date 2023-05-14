@@ -65,7 +65,7 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = 1:3, 
+                            fields = 5:7, 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -82,7 +82,7 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = c(2, 4, 6), 
+                            fields = c(6, 8, 10), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -99,8 +99,8 @@ test_that(
     
     expect_error(recastRecords(Records, 
                                rcon = rcon, 
-                               fields = c(6:12)), 
-                 "Columns [{]8, 9, 10, 11, 12[}] requested in a data frame with 7 columns")
+                               fields = c(10:16)), 
+                 "Columns [{]12, 13, 14, 15, 16[}] requested in a data frame with 11 columns")
   }
 )
 
@@ -110,7 +110,7 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = rep(c(TRUE, FALSE), c(3, 4)), 
+                            fields = rep(c(FALSE, TRUE, FALSE), c(4,3, 4)), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -146,8 +146,8 @@ test_that(
     expect_error(recastRecords(Records, 
                                rcon = rcon, 
                                fields = rep(c(FALSE, TRUE), 
-                                            length.out = 3)), 
-                 "'fields' [(]logical[)] should be of length 7 and is length 3")
+                                            length.out = 7)), 
+                 "'fields' [(]logical[)] should be of length 11 and is length 7")
   }
 )
 

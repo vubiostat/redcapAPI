@@ -255,7 +255,7 @@ test_that(
     expect_true(!is.null(inv))
     expect_equal(unique(inv$value), "1")
     sapply(c(23, 24, 25, 26), function(i) expect_true(!i %in% inv$row))
-    sapply(6:18, function(i) expect_true(i %in% inv$row))
+    sapply(1:13, function(i) expect_true(i %in% inv$row))
   }
 )
 

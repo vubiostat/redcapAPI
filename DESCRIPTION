@@ -14,7 +14,8 @@ Authors@R: c(
     person("Will", "Gray", role = "ctb"),
     person("Jeremy", "Stephens", role = "ctb"), 
     person("Marcus", "Lehr", role = "ctb", email = "marcus.j.lehr@gmail.com"), 
-    person("Cole", "Beck", role = "ctb"))
+    person("Cole", "Beck", role = "ctb"),
+    person("Savannah", "Obregon", role = "ctb"))
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
@@ -27,7 +28,7 @@ Description: Access data stored in 'REDCap' databases using the Application
     consistent with the definitions in a database's data dictionary.
 License: GPL-2
 Depends:
-    R (>= 3.0.0)
+    R (>= 3.5.0)
 Imports:
     checkmate,
     chron,

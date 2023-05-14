@@ -9,7 +9,7 @@
 #' 
 #' @author Benjamin Nutter with thanks to Philip Chase for showing me how 
 #'   these need to be formatted.
-#'   
+#' @export
 #' @section Functional Requirements: 
 #' \enumerate{
 #'  \item Return a named list. 
