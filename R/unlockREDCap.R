@@ -140,7 +140,7 @@ unlockREDCap    <- function(connections,
   if(is.environment(dest))
     for(i in seq_along(connections))
     {
-      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest)
+      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(varnames[i], envir=dest)
     }
   
   # Use config if it exists
