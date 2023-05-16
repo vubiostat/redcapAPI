@@ -196,7 +196,7 @@ importRecords.redcapApiConnection <- function(rcon,
   if (length(w.remove)) data <- data[-w.remove]
   
   # Validate field names
-  unrecognized_names <- !(names(data) %in% c(with_complete_fields, "redcap_event_name", "redcap_repeat_instrument", "redcap_repeat_instance"))
+  unrecognized_names <- !(names(data) %in% c(with_complete_fields, REDCAP_SYSTEM_FIELDS))
 
   if (any(unrecognized_names))
   {
