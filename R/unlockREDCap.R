@@ -141,7 +141,7 @@ unlockREDCap    <- function(connections,
     for(i in seq_along(connections))
     {
       if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest, inherits=FALSE)
-    
+    }
   
   # Use config if it exists
   config_file <- file.path("..", paste0(basename(getwd()),".yml"))
