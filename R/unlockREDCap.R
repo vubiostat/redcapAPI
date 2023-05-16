@@ -237,7 +237,8 @@ unlockREDCap    <- function(connections,
         if(grepl("Could not resolve host", e) ||
            grepl("403", e))
         {
-          rm(varnames[i], envir = apiKeyStore)
+          if(is.environment(dest) && exists(varnames[i], envir=dest, inherits=FALSE))
+            rm(list=varnames[i], envir=dest, inherits=FALSE)
           if(!is.null(keyring)) keyring::key_delete("redcapAPI", connections[i], keyring)
         }
         stop(e)
