@@ -52,6 +52,9 @@ splitForms <- function(Records,
   
   checkmate::reportAssertions(coll)
   
+  # Use the global environment for variable storage unless one was specified
+  dest <- if(is.null(envir)) list() else envir
+  
   ###################################################################
   # Split Forms                                                  ####
   
@@ -61,8 +64,8 @@ splitForms <- function(Records,
   
   FieldNames <- rcon$fieldnames()
   FieldNames <- FieldNames[FieldNames$export_field_name %in% names(Records), , drop = FALSE]
-  FieldNames <- FieldNames[!FieldNames$original_field_name %in% id_vars, , drop = FALSE
-                           ]
+  FieldNames <- FieldNames[!FieldNames$original_field_name %in% id_vars, , drop = FALSE]
+  
   MetaData <- rcon$metadata()
   MetaData <- MetaData[MetaData$field_name %in% FieldNames$original_field_name, , drop = FALSE]
   
@@ -92,6 +95,23 @@ splitForms <- function(Records,
                        Records[fn]
                      })
   
+  FormData <- lapply(FormData, 
+                     filterEmptyRow, 
+                     rcon = rcon)
+  
+  ###################################################################
+  # Add the invalid attribute to each element                    ####
+  
+  FormData <- lapply(FormData, 
+                     function(fd){
+                       inv <- attr(Records, "invalid")
+                       inv <- inv[inv$field_name %in% names(fd), , drop = FALSE]
+                       if (nrow(inv) > 0){
+                         attr(fd, "invalid") <- inv
+                       }
+                       fd
+                     })
+  
   ###################################################################
   # Apply the base name, if necessary                            ####
   
@@ -110,5 +130,15 @@ splitForms <- function(Records,
   ###################################################################
   # Return the Result                                            ####
   
-  FormData
+  if (is.environment(dest)){
+    for (i in seq_along(FormData)){
+      assign(names(FormData)[i],
+             FormData[[i]],
+             envir = dest)
+    }
+  } else {
+    dest <- FormData
+  }
+  
+  return(if(is.environment(dest)) invisible() else dest)
 }
