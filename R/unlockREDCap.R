@@ -140,7 +140,7 @@ unlockREDCap    <- function(connections,
   if(is.environment(dest))
     for(i in seq_along(connections))
     {
-      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest)
+      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest, inherits=FALSE)
     }
   
   # Use config if it exists
@@ -182,14 +182,12 @@ unlockREDCap    <- function(connections,
     # Is it locked
     if(state$locked)
     {
-      password <- passwordFUN(msg =
-                                paste0("Please enter password to unlock API keyring ",keyring, " "))
+      password <- passwordFUN(paste0("Please enter password to unlock API keyring ",keyring, " "))
       keyring::keyring_unlock(keyring, password)
     }
   } else # Keyring does not exist
   {
-    password <- passwordFUN(msg =
-                              paste0("Creating keyring. Enter password for the API keyring ",
+    password <- passwordFUN(paste0("Creating keyring. Enter password for the API keyring ",
                                      keyring, " "))
     # Create keyring if it doesn't exist
     keyring::keyring_create(keyring, password)
@@ -213,7 +211,7 @@ unlockREDCap    <- function(connections,
     # Check again if it's set properly
     if(!.key_saved(apiKeyStore, connections[i]))
     {
-      key <- passwordFUN(msg=paste("Please enter RedCap API_KEY for", connections[i]))
+      key <- passwordFUN(paste("Please enter RedCap API_KEY for", connections[i]))
       
       if(is.null(key) || key == '') stop(paste("No Key Entered for", connections[i]))
       
@@ -239,8 +237,10 @@ unlockREDCap    <- function(connections,
         if(grepl("Could not resolve host", e) ||
            grepl("403", e))
         {
-          rm(varnames[i], envir = apiKeyStore)
-          if(!is.null(keyring)) keyring::key_delete("redcapAPI", connections[i], keyring)
+          apiKeyStore[[connections[i]]] <- NULL
+          if(is.environment(dest) && exists(varnames[i], envir=dest, inherits=FALSE))
+            rm(list=varnames[i], envir=dest, inherits=FALSE)
+          keyring::key_delete("redcapAPI", connections[i], keyring)
         }
         stop(e)
       }
