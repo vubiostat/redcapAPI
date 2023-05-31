@@ -105,7 +105,7 @@ valRx <- function(rx) { function(x, ...) grepl(rx, x) }
 
 #' @rdname fieldValidationAndCasting
 #' @export
-valChoice <- function(x, field_name, coding) grepl(sprintf("^(%s)$", paste0(c(coding, names(coding)),collapse='|')), x)
+valChoice <- function(x, field_name, coding) x %in% coding | x %in% names(coding)
 
 #' @rdname fieldValidationAndCasting
 #' @export
