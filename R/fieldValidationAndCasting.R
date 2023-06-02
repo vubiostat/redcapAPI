@@ -421,3 +421,20 @@ raw_cast <- list(
   slider                   = as.numeric,
   sql                      = NA
 )
+
+field_types <- c(
+  "date_",          "datetime_",  "datetime_seconds_",  "time_mm_ss",
+  "time_hh_mm_ss",  "time",       "float",              "number",
+  "calc",           "int",        "integer",            "yesno",
+  "truefalse",      "checkbox",   "form_complete",      "select",
+  "radio",          "dropdown",   "sql")
+
+na_list <- function(FUN)
+{
+  l <- lapply(field_types, function(f) FUN)
+  names(l) <- field_types
+  l
+}
+
+# Example
+na_list(isNAorBlank)
