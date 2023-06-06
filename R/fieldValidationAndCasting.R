@@ -16,6 +16,7 @@
 #'   by the field validation. 
 #' @param checked \code{character}. Values to recognize as checked in a 
 #'   checkbox field.
+#' @param FUN \code{function}. A function that takes a character vector. 
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
 #'
@@ -89,6 +90,11 @@
 #' 
 #' \code{raw_cast} overrides all casting if passed as the \code{cast}
 #' parameter.
+#' 
+#' \code{na_values} A helper function to create a list of functions
+#' to test for NA based on field type. Useful for bulk override of
+#' NA detection for a project. The output can be directly passed to the \code{na}
+#' parameter of \code{\link{exportRecordsTyped}}.
 #' 
 #' @author Shawn Garbett, Benjamin Nutter
 
@@ -422,19 +428,25 @@ raw_cast <- list(
   sql                      = NA
 )
 
-field_types <- c(
+FIELD_TYPES <- c(
   "date_",          "datetime_",  "datetime_seconds_",  "time_mm_ss",
   "time_hh_mm_ss",  "time",       "float",              "number",
   "calc",           "int",        "integer",            "yesno",
   "truefalse",      "checkbox",   "form_complete",      "select",
   "radio",          "dropdown",   "sql")
 
-na_list <- function(FUN)
+#' @rdname fieldValidationAndCasting
+#' @export
+na_values <- function(FUN)
 {
-  l <- lapply(field_types, function(f) FUN)
-  names(l) <- field_types
+  coll <- checkmate::makeAssertCollection()
+  checkmate::assert_function( x       = FUN,
+                              null.ok = FALSE,
+                              add     = coll)
+  checkmate::reportAssertions(coll)
+  
+  l <- lapply(FIELD_TYPES, function(f) FUN)
+  names(l) <- FIELD_TYPES
   l
 }
 
-# Example
-na_list(isNAorBlank)

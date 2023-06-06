@@ -19,6 +19,7 @@
 \alias{castTimeHHMM}
 \alias{castTimeMMSS}
 \alias{raw_cast}
+\alias{na_values}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
 An object of class \code{list} of length 19.
@@ -55,6 +56,8 @@ castTimeHHMM(x, field_name, coding)
 castTimeMMSS(x, field_name, coding)
 
 raw_cast
+
+na_values(FUN)
 }
 \arguments{
 \item{x}{\code{character}. A vector to check.}
@@ -76,6 +79,8 @@ denote a decimal.}
 
 \item{n_dec}{\code{integeris(1)}. The number of decimal places permitted
 by the field validation.}
+
+\item{FUN}{\code{function}. A function that takes a character vector.}
 }
 \description{
 This set of functions assists in validating that the content of 
@@ -155,6 +160,11 @@ that will pass the API requirements.
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.
+
+\code{na_values} A helper function to create a list of functions
+to test for NA based on field type. Useful for bulk override of
+NA detection for a project. The output can be directly passed to the \code{na}
+parameter of \code{\link{exportRecordsTyped}}.
 }
 \author{
 Shawn Garbett, Benjamin Nutter
