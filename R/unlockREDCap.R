@@ -55,7 +55,7 @@
 #' other-config-stuff1: blah blah
 #' redcapAPI:
 #'   args:
-#'   url: https://redcap.vanderbilt.edu/api/
+#'     url: https://redcap.vanderbilt.edu/api/
 #'   keys:
 #'     intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
 #'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
@@ -124,7 +124,7 @@ unlockREDCap    <- function(connections,
   
    ###########################################################################
   # Connection function
-  FUN <- function(key, ...)
+  FUN <- function(key, url, ...)
   {
     conn <- redcapConnection(key, url=url, ...)
     conn$metadata() # Test connection by reading metadata into cache
@@ -149,9 +149,11 @@ unlockREDCap    <- function(connections,
   if(file.exists(config_file))
   {
     config <- read_yaml(config_file)
+    
     config <- config$redcapAPI
     keys   <- config$keys
     args   <- c(config$args, list(...))
+    
     
     for(i in seq_along(connections))
     {
@@ -224,7 +226,7 @@ unlockREDCap    <- function(connections,
     
     withCallingHandlers(
       { 
-        data <- FUN(apiKeyStore[[connections[i]]], ...)
+        data <- FUN(apiKeyStore[[connections[i]]], url, ...)
         if(is.environment(dest))
         {
           base::assign(varnames[i], data, envir=dest)
