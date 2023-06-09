@@ -83,8 +83,9 @@ REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 #                         : a terminating sequence of pipe, characters, comma, characters.
 #                         : That is, the last in the sequence does not end with a pipe
 #                       $ : end of string
-REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 
+REGEX_MULT_CHOICE <- "^.*?(?:\\|.*?|,).*?$"
+                     
 # REGEX_SLIDER - matches acceptable definition of slider bar settings
 # Specifically, low point | midpoint | high point
 # Any of the three values may be missing, but the two pipes must be 
