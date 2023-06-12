@@ -41,7 +41,7 @@ fieldChoiceMapping.character <- function(object,
   checkmate::reportAssertions(coll)
   
   if (!(grepl(REGEX_MULT_CHOICE, # defined in constants.R 
-              object))){
+              object, perl = TRUE))){
     coll$push(
       sprintf("'%s' choice string does not appear to be formatted for choices.", 
               field_name))
@@ -49,16 +49,29 @@ fieldChoiceMapping.character <- function(object,
   }
   
   mapping <- unlist(strsplit(object, "[|]"))
-  # split on only the first comma. This allows commas to remain in the field label.
-  mapping <- regmatches(mapping, 
-                        regexec("([^,]*),(.*)", 
-                                mapping, 
-                                perl=TRUE))
-  mapping <- do.call("rbind", mapping)
-  mapping <- trimws(mapping[, -1, drop=FALSE]) # the first column is the original string. 
+  #split on only the first comma. This allows commas to remain in the field label.
+  # if no commas the code is likely from a legacy project
+  if (!any(grepl(",", mapping))) {
+    matrix <- matrix(nrow = length(mapping), ncol = 2,
+                            dimnames = list(NULL, c("choice_value", "choice_label")))
 
-  colnames(mapping) <- c("choice_value", "choice_label")
-  mapping
+    matrix[, "choice_value"] <- trimws(mapping)
+    matrix[, "choice_label"] <- trimws(mapping)
+
+    mapping <- matrix
+    return(mapping)
+
+  } else {
+    mapping <- regmatches(mapping, 
+                          regexec("([^,]*),(.*)", 
+                                  mapping, 
+                                  perl=TRUE))
+    mapping <- do.call("rbind", mapping)
+    mapping <- trimws(mapping[, -1, drop=FALSE]) # the first column is the original string. 
+
+    colnames(mapping) <- c("choice_value", "choice_label")
+    return(mapping)
+  }
 }
 
 #' @rdname fieldChoiceMapping

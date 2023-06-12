@@ -67,8 +67,15 @@ REGEX_FIELD_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 #            $ : end of string
 REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 
-# REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options
+# REGEX_MULT_CHOICE_STRICT - matches acceptable formats for multiple choice options
 # It's a good idea to trim whitespace before using this
+# This 'STRICT' regex requires that definitions follow the pattern of 
+# [code1], [label1] | [code2], [label2]. It turns out that there are ways 
+# that users can define multiple choice fields using only the labels 
+# (via the metadata CSV import and the API will actually allow it, too). 
+# We have decided that we don't want to permit this through importMetaData
+# so a separate regex is needed for the import than we use for the export.
+# See issue 145.
 # Explanation - this one makes my head swim a bit, but I'll do my best. (BN)
 #                       ^ : Start of string
 #                 [^\\|]+ : Any number of character, but the sequence may not 
@@ -83,8 +90,24 @@ REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 #                         : a terminating sequence of pipe, characters, comma, characters.
 #                         : That is, the last in the sequence does not end with a pipe
 #                       $ : end of string
-REGEX_MULT_CHOICE <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 
+REGEX_MULT_CHOICE_STRICT <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
+
+# REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options, 
+# to include formats that use only the label. See Issue 145. 
+# It's a good idea to trim whitespace before using this. 
+# Explanation - uses the same pattern as REGEX_MULT_CHOICE_STRICT and also includes the following
+#               for matching shorthand multiple choice fields.
+#                       ^ : Start of string
+#           (?:[^|,]+\|)+ : Look for a repeating pattern of character, pipe, character, where
+#                           the last in the sequence does not end with a pipe and characters 
+#                           do not include commas
+#                  [^|,]+ : any number of characters, but the sequence may not 
+#                           include a pipe or comma
+#                       $ : end of string
+
+REGEX_MULT_CHOICE <- "^(^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$|^(?:[^|,]+\\|)+[^|,]+$)$"
+                     
 # REGEX_SLIDER - matches acceptable definition of slider bar settings
 # Specifically, low point | midpoint | high point
 # Any of the three values may be missing, but the two pipes must be 
