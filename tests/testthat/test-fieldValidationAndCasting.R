@@ -549,3 +549,35 @@ test_that(
                  c(0, 0, 0, 0, 0, 0, 1))
   }
 )
+
+#####################################################################
+# na_values Testing                                              ####
+
+test_that(
+  "na_values returns the desired lists", 
+  {
+    local_reproducible_output(width = 200)
+    use_na_or_blank <- na_values(isNAorBlank)
+    expect_true(all(vapply(use_na_or_blank, 
+                           function(x) identical(x, isNAorBlank), 
+                           logical(1))))
+    expect_equal(names(use_na_or_blank), 
+                 FIELD_TYPES)
+    
+    
+    
+    use_sum <- na_values(sum)
+    expect_true(all(vapply(use_sum, 
+                           function(x) identical(x, sum), 
+                           logical(1))))
+    expect_equal(names(use_sum), 
+                 FIELD_TYPES)
+    
+    
+    
+    # Return an error if the FUN is not a function
+    
+    expect_error(na_values(mtcars), 
+                 "Variable 'FUN': Must be a function")
+  }
+)

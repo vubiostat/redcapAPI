@@ -40,9 +40,13 @@ filterEmptyRow <- function(data,
     }
   }
   
-  data <- data[!is_all_missing, , drop = FALSE]
+  NewData <- data[!is_all_missing, , drop = FALSE]
   
-  attr(data, "invalid") <- invalid
+  for (field in names(NewData)){
+    attributes(NewData[[field]]) <- attributes(data[[field]])
+  }
   
-  data
+  attr(NewData, "invalid") <- invalid
+  
+  NewData
 }
