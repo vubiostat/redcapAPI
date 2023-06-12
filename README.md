@@ -21,14 +21,14 @@ unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              envir       = globalenv(),
              url         = 'https://<REDCAP_URL>/api/',
              passwordFUN = rstudioapi::askForPassword)
-exportBulkRecords(list(rcon = rcon),
-  forms = list(rcon = unique(rcon$metadata()$form_name)),
+exportBulkRecords(list(db = rcon),
+  forms = list(db = unique(rcon$metadata()$form_name)),
   envir = globalenv())
 ```
 
-The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The passwordFUN specified is an override if one is using RStudio. It's not required, but on a Mac this is the only option that works well. The `envir` call is where to write the connection object; if not specified the call will return a list.
+The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The `passwordFUN` specified is an override if one is using RStudio. It's not required, but on a Mac this is the only option that works well. The `envir` call is where to write the connection object; if not specified the call will return a list.
 
-The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a reference to the connection opened, and naming it the same thing. The second call is saying for this connection export back the all the forms present in that project connection. The `envir` has it writting it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
+The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened, and naming it the same thing. The second call is saying for this connection export back the all the forms present in that `db`. The `envir` has it writting it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
 
 These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`
 
