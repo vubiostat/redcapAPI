@@ -556,6 +556,7 @@ test_that(
 test_that(
   "na_values returns the desired lists", 
   {
+    local_reproducible_output(width = 200)
     use_na_or_blank <- na_values(isNAorBlank)
     expect_true(all(vapply(use_na_or_blank, 
                            function(x) identical(x, isNAorBlank), 
@@ -571,5 +572,12 @@ test_that(
                            logical(1))))
     expect_equal(names(use_sum), 
                  FIELD_TYPES)
+    
+    
+    
+    # Return an error if the FUN is not a function
+    
+    expect_error(na_values(mtcars), 
+                 "Variable 'FUN': Must be a function")
   }
 )
