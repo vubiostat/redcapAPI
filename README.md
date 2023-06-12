@@ -6,8 +6,32 @@
 redcapAPI
 ======
 
-2.7.1 Please see `vignette("redcapAPI-best-practices")` for a full explanation
-of all changes with 2.7.0.
+## Quick Start Guide for 2.7.1
+
+There are 2 basic functions that are key to understanding the major changes with this version:
+
+* `unlockREDCap`
+* `exportBulkRecords`
+
+Here's a typical call for these two:
+
+```
+unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
+             keyring     = 'API_KEYs',
+             envir       = globalenv(),
+             url         = 'https://<REDCAP_URL>/api/',
+             passwordFUN = rstudioapi::askForPassword)
+exportBulkRecords(list(rcon = rcon),
+  forms = list(rcon = unique(rcon$metadata()$form_name)),
+  envir = globalenv())
+```
+
+The <MY PROJECT NAME> is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The passwordFUN specified is an override if one is using RStudio. It's not required, but on a Mac this is the only option that works well. The `envir` call is where to write the connection object; if not specified the call will return a list.
+
+The next call to exportBulkRecords, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a reference to the connection opened, and naming it the same thing. The second call is saying for this connection export back the all the forms present in that project connection. The `envir` has it writting it back to the global environment as variables.
+
+These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`
+
 
 2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependeable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
