@@ -310,7 +310,7 @@ isValidChoiceField <- function(field_name,
   
   # for multiple choice fields, update is_valid_select for invalid entries
   w_mult <- which(field_type %in% c("checkbox", "dropdown", "radio"))
-  is_valid_mult <- grepl(REGEX_MULT_CHOICE, # defined in constants.R 
+  is_valid_mult <- grepl(REGEX_MULT_CHOICE_STRICT, # defined in constants.R 
                          choices[w_mult])
   is_valid_select[w_mult] <- is_valid_mult                  # set invalid rows
   

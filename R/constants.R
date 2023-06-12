@@ -67,8 +67,15 @@ REGEX_FIELD_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 #            $ : end of string
 REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 
-# REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options
+# REGEX_MULT_CHOICE_STRICT - matches acceptable formats for multiple choice options
 # It's a good idea to trim whitespace before using this
+# This 'STRICT' regex requires that definitions follow the pattern of 
+# [code1], [label1] | [code2], [label2]. It turns out that there are ways 
+# that users can define multiple choice fields using only the labels 
+# (via the metadata CSV import and the API will actually allow it, too). 
+# We have decided that we don't want to permit this through importMetaData
+# so a separate regex is needed for the import than we use for the export.
+# See issue 145.
 # Explanation - this one makes my head swim a bit, but I'll do my best. (BN)
 #                       ^ : Start of string
 #                 [^\\|]+ : Any number of character, but the sequence may not 
@@ -84,6 +91,17 @@ REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 #                         : That is, the last in the sequence does not end with a pipe
 #                       $ : end of string
 
+REGEX_MULT_CHOICE_STRICT <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
+
+# REGEX_MULT_CHOICE - matches acceptable formats for mulitple choice options, 
+#    to include formats that use only the label. See Issue 145. 
+# It's a good idea to trim whitespace before using this. 
+# Explanation
+#            ^ : Start of a string
+#          .*? : Any number of characters up to the character matched in the parentheses
+# (?:\\|.*?|,) : Look ahead to either the next pipe or the next comma (non greedy)
+#          .*? : any characters 
+#            $ : end of string
 REGEX_MULT_CHOICE <- "^.*?(?:\\|.*?|,).*?$"
                      
 # REGEX_SLIDER - matches acceptable definition of slider bar settings
