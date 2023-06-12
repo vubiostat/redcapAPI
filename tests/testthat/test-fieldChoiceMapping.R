@@ -1,6 +1,24 @@
 context("fieldChoiceMapping.R")
 
 test_that(
+  "REGEX_MULT_CHOICE_STRICT doesn't allow legacy short specification",
+  {
+    expect_false(grepl(REGEX_MULT_CHOICE_STRICT, "x | y | z"))
+    expect_true(grepl(REGEX_MULT_CHOICE_STRICT, "1, x | 2, y | 3, z"))
+    expect_false(grepl(REGEX_MULT_CHOICE_STRICT, "x | 2, y | z"))
+  }
+)
+
+test_that(
+  "REGEX_MULT_CHOICE accepts legacy and current but not mixed",
+  {
+    expect_true(grepl(REGEX_MULT_CHOICE, "x | y | z"))
+    expect_true(grepl(REGEX_MULT_CHOICE, "1, x | 2, y | 3, z"))
+    expect_false(grepl(REGEX_MULT_CHOICE, "x | 2, y | z"))  
+  }
+)
+
+test_that(
   "Return an error if object is neither character nor redcapApiConnection", 
   {
     local_reproducible_output(width = 200)
