@@ -93,16 +93,20 @@ REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 
 REGEX_MULT_CHOICE_STRICT <- "^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$"
 
-# REGEX_MULT_CHOICE - matches acceptable formats for mulitple choice options, 
-#    to include formats that use only the label. See Issue 145. 
+# REGEX_MULT_CHOICE - matches acceptable formats for multiple choice options, 
+# to include formats that use only the label. See Issue 145. 
 # It's a good idea to trim whitespace before using this. 
-# Explanation
-#            ^ : Start of a string
-#          .*? : Any number of characters up to the character matched in the parentheses
-# (?:\\|.*?|,) : Look ahead to either the next pipe or the next comma (non greedy)
-#          .*? : any characters 
-#            $ : end of string
-REGEX_MULT_CHOICE <- "^.*?(?:\\|.*?|,).*?$"
+# Explanation - uses the same pattern as REGEX_MULT_CHOICE_STRICT and also includes the following
+#               for matching shorthand multiple choice fields.
+#                       ^ : Start of string
+#           (?:[^|,]+\|)+ : Look for a repeating pattern of character, pipe, character, where
+#                           the last in the sequence does not end with a pipe and characters 
+#                           do not include commas
+#                  [^|,]+ : any number of characters, but the sequence may not 
+#                           include a pipe or comma
+#                       $ : end of string
+
+REGEX_MULT_CHOICE <- "^(^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$|^(?:[^|,]+\\|)+[^|,]+$)$"
                      
 # REGEX_SLIDER - matches acceptable definition of slider bar settings
 # Specifically, low point | midpoint | high point
