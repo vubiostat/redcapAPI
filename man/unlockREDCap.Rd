@@ -3,7 +3,12 @@
 \name{unlockREDCap}
 \alias{unlockREDCap}
 \title{Create a set of connections to redcap in the current (or specified 
-environment) from API_KEYs stored in a crypto locker.}
+environment) from API_KEYs stored in a crypto locker. On the first
+execution it will ask to set the password for this locker. Next it
+will ask for the API_KEYs specified. It will request the user enter
+each key using getPass and store it in memory. If an API_KEY doesn't
+work, it will automatically delete it from the
+crypto locker and ask again on next execution.}
 \usage{
 unlockREDCap(
   connections,
@@ -38,21 +43,9 @@ If \code{envir} is NULL returns a list of opened connections. Otherwise
         returns NULL and connections are assigned into the specified \code{envir}.
 }
 \description{
-The first thing it does is check for a yaml config file of
-the same name as the current directory with a .yml extension
-one level above. This is intended for production environments
-where the API_KEY must be stored in a file. If this yaml exists, then it expects this file
-to contain `apiUrl` and `apiKeys`. `apiUrl` should be a
-string with the URL of the REDCap instance. `apiKeys` should
-be a list of variable name keys with values that are their
-actual REDCap API_KEY.
+If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
 }
 \details{
-Next it will use an api environment in memory to keep api_keys.
-If one is knitting with parameters, it will request and store these
-keys in memory. Otherwise it will request the user enter
-each key using getPass and store it in memory.
-
 For production servers where the password must be stored in a readable
 plain text file, it will search for `../<basename>.yml`. DO NOT USE
 this unless one is a sysadmin, as this defeats the security and purpose of

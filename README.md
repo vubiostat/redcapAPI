@@ -6,6 +6,9 @@
 redcapAPI
 ======
 
+2.7.1 Please see `vignette("redcapAPI-best-practices")` for a full explanation
+of all changes with 2.7.0.
+
 2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependeable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
 *NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.

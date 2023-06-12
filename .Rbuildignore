@@ -10,3 +10,5 @@
 ^tests/testthat.R$
 ^tests/testthat/local-token.R$
 ^tests/testthat/local-token.Rdata$
+^doc$
+^Meta$
