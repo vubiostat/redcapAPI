@@ -42,16 +42,11 @@ test_that("widerRepeated returns an error if the redcap_repeat_instrument column
 
 test_that("widerRepeated works if column attribute is invalid with no repeating instrument",{
   expect_warning(
-    exportRecordsTyped(
+    x <- exportRecordsTyped(
       rcon,
       fields="prereq_number",
       validation=list(number=valRx("^5$|^-100$"))),
     "failed validation")
-  
-  x <- exportRecordsTyped(
-    rcon,
-    fields="prereq_number",
-    validation=list(number=valRx("^5$|^-100$")))
   
   wider_x <- widerRepeated(x, rcon)
   expect_no_error(widerRepeated(x, rcon))
@@ -62,9 +57,8 @@ test_that("widerRepeated works if column attribute is invalid with no repeating 
 test_that("widerRepeated works if column attribute is invalid with repeating instrument",{
   f <- function(x, field_name, coding) {g <- valRx("^Good$"); if(field_name == 'repeat_question_1') g(x) else rep(TRUE, length(x))}
   
-  x  <- exportRecordsTyped(rcon, forms="repeating_instrument", validation=list(text=f))
   expect_warning(
-    exportRecordsTyped(
+    x <- exportRecordsTyped(
       rcon,
       fields="repeat_question_1",
       validation=list(text=f)),
@@ -114,16 +108,11 @@ test_that("widerRepeated returns an error if the redcap_repeat_instrument column
 
 test_that("widerRepeated works if column attribute is invalid with no repeating instrument offline",{
   expect_warning(
-    exportRecordsTyped(
+    x <- exportRecordsTyped(
       rcon_off,
       fields="prereq_number",
       validation=list(number=valRx("^5$|^-100$"))),
     "failed validation")
-  
-  x <- exportRecordsTyped(
-    rcon_off,
-    fields="prereq_number",
-    validation=list(number=valRx("^5$|^-100$")))
   
   wider_x <- widerRepeated(x, rcon_off)
   expect_no_error(widerRepeated(x, rcon_off))

@@ -55,7 +55,7 @@
 #' other-config-stuff1: blah blah
 #' redcapAPI:
 #'   args:
-#'   url: https://redcap.vanderbilt.edu/api/
+#'     url: https://redcap.vanderbilt.edu/api/
 #'   keys:
 #'     intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
 #'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
@@ -124,7 +124,7 @@ unlockREDCap    <- function(connections,
   
    ###########################################################################
   # Connection function
-  FUN <- function(key, ...)
+  FUN <- function(key, url, ...)
   {
     conn <- redcapConnection(key, url=url, ...)
     conn$metadata() # Test connection by reading metadata into cache
@@ -140,7 +140,7 @@ unlockREDCap    <- function(connections,
   if(is.environment(dest))
     for(i in seq_along(connections))
     {
-      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest)
+      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest, inherits=FALSE)
     }
   
   # Use config if it exists
@@ -149,9 +149,11 @@ unlockREDCap    <- function(connections,
   if(file.exists(config_file))
   {
     config <- read_yaml(config_file)
+    
     config <- config$redcapAPI
     keys   <- config$keys
     args   <- c(config$args, list(...))
+    
     
     for(i in seq_along(connections))
     {
@@ -182,14 +184,12 @@ unlockREDCap    <- function(connections,
     # Is it locked
     if(state$locked)
     {
-      password <- passwordFUN(msg =
-                                paste0("Please enter password to unlock API keyring ",keyring, " "))
+      password <- passwordFUN(paste0("Please enter password to unlock API keyring ",keyring, " "))
       keyring::keyring_unlock(keyring, password)
     }
   } else # Keyring does not exist
   {
-    password <- passwordFUN(msg =
-                              paste0("Creating keyring. Enter password for the API keyring ",
+    password <- passwordFUN(paste0("Creating keyring. Enter password for the API keyring ",
                                      keyring, " "))
     # Create keyring if it doesn't exist
     keyring::keyring_create(keyring, password)
@@ -213,7 +213,7 @@ unlockREDCap    <- function(connections,
     # Check again if it's set properly
     if(!.key_saved(apiKeyStore, connections[i]))
     {
-      key <- passwordFUN(msg=paste("Please enter RedCap API_KEY for", connections[i]))
+      key <- passwordFUN(paste("Please enter RedCap API_KEY for", connections[i]))
       
       if(is.null(key) || key == '') stop(paste("No Key Entered for", connections[i]))
       
@@ -226,7 +226,7 @@ unlockREDCap    <- function(connections,
     
     withCallingHandlers(
       { 
-        data <- FUN(apiKeyStore[[connections[i]]], ...)
+        data <- FUN(apiKeyStore[[connections[i]]], url, ...)
         if(is.environment(dest))
         {
           base::assign(varnames[i], data, envir=dest)
@@ -239,8 +239,10 @@ unlockREDCap    <- function(connections,
         if(grepl("Could not resolve host", e) ||
            grepl("403", e))
         {
-          rm(varnames[i], envir = apiKeyStore)
-          if(!is.null(keyring)) keyring::key_delete("redcapAPI", connections[i], keyring)
+          apiKeyStore[[connections[i]]] <- NULL
+          if(is.environment(dest) && exists(varnames[i], envir=dest, inherits=FALSE))
+            rm(list=varnames[i], envir=dest, inherits=FALSE)
+          keyring::key_delete("redcapAPI", connections[i], keyring)
         }
         stop(e)
       }
