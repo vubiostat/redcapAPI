@@ -63,7 +63,7 @@ as follows:
 other-config-stuff1: blah blah
 redcapAPI:
   args:
-  url: https://redcap.vanderbilt.edu/api/
+    url: https://redcap.vanderbilt.edu/api/
   keys:
     intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
