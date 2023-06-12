@@ -106,7 +106,7 @@ splitForms <- function(Records,
                      function(fd){
                        inv <- attr(Records, "invalid")
                        inv <- inv[inv$field_name %in% names(fd), , drop = FALSE]
-                       if (nrow(inv) > 0){
+                       if (!is.null(inv) && nrow(inv) > 0){
                          attr(fd, "invalid") <- inv
                        }
                        fd
