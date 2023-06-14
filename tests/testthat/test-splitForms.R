@@ -81,9 +81,9 @@ test_that(
 test_that(
   "Carry over invalid attributes, remove rows of all missing data", 
   {
-    TheseRecords <- exportRecordsTyped(rcon, 
+    TheseRecords <- suppressWarnings(exportRecordsTyped(rcon, 
                                        fields = c("date_mdy", "dropdown_test"), 
-                                       validation = list(dropdown = function(x, field_name, coding) x != "1"))
+                                       validation = list(dropdown = function(x, field_name, coding) x != "1")))
     
     Split <- splitForms(TheseRecords, 
                         rcon)
