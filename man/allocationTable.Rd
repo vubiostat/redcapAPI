@@ -5,7 +5,7 @@
 \alias{allocationTable.redcapApiConnection}
 \alias{makeChoices}
 \alias{allocationTable_offline}
-\title{Allocation Tables for the Randomization Module}
+\title{Generate Allocation Tables for the Randomization Module}
 \usage{
 allocationTable(
   rcon,

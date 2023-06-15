@@ -38,11 +38,11 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \value{
 Returns a data frame with six columns
 \itemize{
-  \item{\code{event_name} }{The desciptive name of the event.}
+  \item{\code{event_name} }{The descriptive name of the event.}
   \item{\code{arm_num} }{The arm number in which the event occurs.}
   \item{\code{day_offset} }{The days offset from the first event.}
   \item{\code{offset_min} }{The minimum offset value.}
-  \item{\code{offset_max} }{The maximium offset value.}
+  \item{\code{offset_max} }{The maximum offset value.}
   \item{\code{unique_event_name} }{A unique event identifying name.}
 }
 }

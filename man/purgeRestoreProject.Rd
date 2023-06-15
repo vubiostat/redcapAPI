@@ -124,7 +124,7 @@ via \code{importMappings}. The API doesn't support deleting
 mappings, but an import replaces the existing mappings.}
 
 \item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{importRepeatingInstrumentsEvents}. The API doesn't support deleting 
+configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting 
 repeating instruments, but an import replaces the existing instruments.
 NOT YET IMPLEMENTED}
 
@@ -139,7 +139,7 @@ assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTE
 \description{
 These functions are primarily intended to assist with testing
   features of \code{redcapAPI}. Purging and restoring project data permits 
-  us to perform tests on different project structures without havng to 
+  us to perform tests on different project structures without having to 
   manage multiple projects or API tokens. 
   
   When purging project data, many of these actions may 

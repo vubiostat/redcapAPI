@@ -12,7 +12,7 @@
 #' @param field_name \code{character(1)}. Name of the field(s)
 #' @param dec_symbol \code{character(1)}. The symbol in the field used to 
 #'   denote a decimal. 
-#' @param n_dec \code{integeris(1)}. The number of decimal places permitted
+#' @param n_dec \code{integerish(1)}. The number of decimal places permitted
 #'   by the field validation. 
 #' @param checked \code{character}. Values to recognize as checked in a 
 #'   checkbox field.

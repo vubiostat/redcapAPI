@@ -14,7 +14,7 @@ that has been downloaded using the REDCap user interface.}
 the cleaned meta data will be written.}
 
 \item{overwrite}{\code{logical(1)} Permit the new file to overwrite an 
-existing file}
+existing file.}
 }
 \description{
 There have been isolated cases observed where certain 

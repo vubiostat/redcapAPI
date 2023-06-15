@@ -5,7 +5,7 @@
 #' @description Validates the variables in a data frame prior to attempting 
 #'   an import to REDCap
 #'   
-#' @param data Data frame being prepared for import to REDCap.
+#' @param data \code{data.frame} being prepared for import to REDCap.
 #' @param meta_data REDCap database meta data.
 #' @param logfile A character string giving the filepath to which the 
 #'   results of the validation are printed.  If \code{""}, the results 

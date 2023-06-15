@@ -1,6 +1,6 @@
 #' @name allocationTable
 #' 
-#' @title Allocation Tables for the Randomization Module
+#' @title Generate Allocation Tables for the Randomization Module
 #' @description Generate allocation table for the REDCap 
 #' randomization module. Randomization may be stratified by other 
 #' (categorical) variables in the data set as well as by data 

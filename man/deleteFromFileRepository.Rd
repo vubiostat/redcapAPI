@@ -40,7 +40,7 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-Deletes a single file from the File Respository based on 
+Deletes a single file from the File Repository based on 
   its document ID.
 }
 \details{

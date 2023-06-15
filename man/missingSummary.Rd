@@ -64,9 +64,9 @@ see \code{\link{redcap_error}}}
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 
-\item{records}{\code{character(1)} A filename pointing to the raw records download from REDCap}
+\item{records}{\code{character(1)} A filename pointing to the raw records download from REDCap.}
 
-\item{meta_data}{\code{character(1)} A filename pointing to the data dictionary download from REDCap}
+\item{meta_data}{\code{character(1)} A filename pointing to the data dictionary download from REDCap.}
 }
 \description{
 Returns a data frame of subject events with missing values.

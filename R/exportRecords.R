@@ -51,7 +51,7 @@
 #'   is the label assigned to the level in the data dictionary. 
 #'   This option is only available after REDCap version 6.0.  See Checkbox Variables
 #'   for more on how this interacts with the \code{factors} argument.
-#' @param colClasses A (named) vector of colum classes passed to 
+#' @param colClasses A (named) vector of column classes passed to 
 #'   \code{\link[utils]{read.csv}} calls. 
 #'   Useful to force the interpretation of a column in a specific type and 
 #'   avoid an unexpected recast.

@@ -38,7 +38,7 @@ the data frame.}
 E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the
 datetime ordering directive from the tail is dropped. The following field
 types are supported: date_, datetime_, datetime_seconds_, time_mm_ss, time,
-float,number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+float, number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 checkbox, and form_complete.}
 
 \item{mChoice}{logical; defaults to TRUE. Convert checkboxes to mChoice if

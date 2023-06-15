@@ -20,7 +20,7 @@ far better stability in calling--full inversion of control over casting, retries
 
 ## Changes in Version 2.6.1
 
-* Emergency fix. REDCap latest version has changed it's API calling syntax.
+* Emergency fix. REDCap latest version changed it's API calling syntax.
 * Fix to choice name parsing when only a single choice is specified.
 * Fix to importMethod validators when event=NULL
 
@@ -57,7 +57,7 @@ each of these has a companion function
 There are also flush_all and refresh_all methods.
 * New method: exportLogging
 * Fixed minor bugs in validations and improved documentation
-* Fixed bug in formating vectors for API calls in multiple places #33
+* Fixed bug in formatting vectors for API calls in multiple places #33
 * Removed stringr and tidyr as dependencies
 * Removed unused version argument from checkbox_suffix
 * Fixed error thrown in export_users when labels=TRUE
@@ -98,14 +98,14 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
 * redcapDbConnection methods are being deprecated.  To our knowledge, no one
   is using these methods, and we do not believe they would work as previously 
   coded anyway. The methods definitions continue to be reserved although 
-  they will likely not be developed in the forseeable future (if at all).
+  they will likely not be developed in the foreseeable future (if at all).
   Please file an issue on GitHub if you feel such methods would be of use.
 * `redcapProjectInfo` is being deprecated, as it will inevitably create confusion
   with the API method `exportProjectInformation`.  The replacement function is
   `exportBundle`.
 * export bundles are now placed into the option `redcap_bundle` by default.
   For now, exportBundle will also return that same object.  This is to prevent
-  back-compatibility problems with existing code, but will change at a future date.
+  back-compatibility problems with existing code but will change at a future date.
 * Added several new API functions.  All functions up to REDCap 6.5.0 are included.
 * Optional arguments that previously had no default now default to NULL. There 
   should be no change in behavior related to this change.
@@ -129,7 +129,7 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
   `c("redcapFactor", "factor")`, otherwise, it may be something similar to 
   `c("redcapFactor", "numeric")`.  This is done to assist in converting factors 
   back and forth between classes as needed (particular when using `redcapFactorFlip`).
-* An package option is added for how to manage errors returned by the API.  This is
+* A package option is added for how to manage errors returned by the API.  This is
   used to assist in dealing with errors relating to bugs in the API and/or the user's
   version of REDCap.  For instance, if an API method doesn't exist for the user's 
   version of REDCap, the user can control if a hard error is returned, or if a 
@@ -184,7 +184,7 @@ Changes in Version 1.3 (2015-03-04)
     weren't being returned as factor levels when `checkboxLabels=TRUE`.
     The behavior is now consistent with expectations.
   * Bug fix: in `compareRedcapVersion`, a logical check was failing due 
-    to an ommitted argument in `grepl`.  This has been corrected.
+    to an omitted argument in `grepl`.  This has been corrected.
   * added function `apiCall`.  This wraps a call to `tryCatch`.  If a 
     Gnu/TLS recv error is returned, the encoding is changed from 'gzip' 
     to 'identity' to successfully retrieve the API response.
@@ -192,5 +192,5 @@ Changes in Version 1.3 (2015-03-04)
     errors when one of the API functions casts an error.  The output 
     is modified to indicate where the problem occurred.  This is most 
     likely to affect `exportUsers`. An unresolved issue behind this is 
-    logged in the issues on Github.
+    logged in the issues on GitHub.
     

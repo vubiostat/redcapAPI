@@ -77,7 +77,7 @@ checkbox field.}
 \item{dec_symbol}{\code{character(1)}. The symbol in the field used to 
 denote a decimal.}
 
-\item{n_dec}{\code{integeris(1)}. The number of decimal places permitted
+\item{n_dec}{\code{integerish(1)}. The number of decimal places permitted
 by the field validation.}
 
 \item{FUN}{\code{function}. A function that takes a character vector.}

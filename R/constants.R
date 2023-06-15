@@ -1,8 +1,5 @@
-#' @name constants
-#' @title Constants for Use in the redcapAPI Package
-#'
-#' @description Constants that are used inside the package
-#'
+# Constants that are used inside the package
+#
 
 # UNEXPORTED --------------------------------------------------------
 

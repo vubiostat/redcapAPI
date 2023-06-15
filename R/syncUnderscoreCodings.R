@@ -1,6 +1,6 @@
 #' @name syncUnderscoreCodings
 #' 
-#' @title Sychronize coding of checkbox variables between meta data and 
+#' @title Synchronize coding of checkbox variables between meta data and 
 #'   records field names.
 #' @description Due to a bug in the REDCap export module, underscores in 
 #'   checkbox codings are not retained in the suffixes of the field names 
