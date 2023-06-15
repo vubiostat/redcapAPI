@@ -28,7 +28,7 @@
 #'   
 #'   Attributes for the project in the format specified. For any values
 #'   that are boolean, they should be represented as either a '0' (no/false) 
-#'   or '1' (yes/true). The following project attributes can be udpated:
+#'   or '1' (yes/true). The following project attributes can be updated:
 #' 
 #' \itemize{
 #'  \item{\code{project_title}}

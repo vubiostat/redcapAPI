@@ -1,7 +1,7 @@
 Package: redcapAPI
 Type: Package
 Title: Interface to 'REDCap'
-Version: 2.7.1
+Version: 2.7.2
 Authors@R: c(
     person("Shawn", "Garbett", email = "shawn.garbett@vumc.org",
            comment = c(ORCID="0000-0003-4079-5621"),
@@ -19,7 +19,8 @@ Authors@R: c(
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
-    <https://projectredcap.org>) is
+    <https://projectredcap.org>, Harris et al (2009) <doi:10.1016/j.jbi.2008.08.010>, 
+    Harris et al (2019) <doi:10.1016/j.jbi.2019.103208>) is
     a web application for building and managing online surveys and databases
     developed at Vanderbilt University.  The API allows users to access data
     and project meta data (such as the data dictionary) from the web

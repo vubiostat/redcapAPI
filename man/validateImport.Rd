@@ -7,7 +7,7 @@
 validateImport(data, meta_data, logfile = "")
 }
 \arguments{
-\item{data}{Data frame being prepared for import to REDCap.}
+\item{data}{\code{data.frame} being prepared for import to REDCap.}
 
 \item{meta_data}{REDCap database meta data.}
 

@@ -875,7 +875,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 
 
 #' @name exportBulkRecords
-#' @title A helper function to export multiple recordss and forms using
+#' @title A helper function to export multiple records and forms using
 #' a single call.
 #' @description Exports records from multiple REDCap Databases using
 #' multiple calls to \code{\link{exportRecordsTyped}}

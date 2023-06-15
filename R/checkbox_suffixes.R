@@ -7,7 +7,7 @@
 #'   variables and to apply the correct labels.
 #'   
 #' @param fields The current field names of interest
-#' @param meta_data The meta data data frame.
+#' @param meta_data The metadata data frame.
 #' 
 #' @export
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/exportRecordsTyped.R
 \name{exportBulkRecords}
 \alias{exportBulkRecords}
-\title{A helper function to export multiple recordss and forms using
+\title{A helper function to export multiple records and forms using
 a single call.}
 \usage{
 exportBulkRecords(

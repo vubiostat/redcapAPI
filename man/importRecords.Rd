@@ -47,10 +47,10 @@ the value will be changed to \code{'ids'}.}
 
 \item{returnData}{Logical.  Prevents the REDCap import and instead
 returns the data frame that would have been given
-for import.  This is sometimes helpful if the API import fails without
+for import. This is sometimes helpful if the API import fails without
 providing an informative message. The data frame can be written to a csv
 and uploaded using the interactive tools to troubleshoot the
-problem.  Please shoot me an e-mail if you find errors I havne't
+problem. Please send us an e-mail if you find errors I haven't
 accounted for.}
 
 \item{logfile}{An optional filepath (preferably .txt) in which to print the

@@ -2,7 +2,7 @@
 % Please edit documentation in R/syncUnderscoreCodings.R
 \name{syncUnderscoreCodings}
 \alias{syncUnderscoreCodings}
-\title{Sychronize coding of checkbox variables between meta data and 
+\title{Synchronize coding of checkbox variables between meta data and 
   records field names.}
 \usage{
 syncUnderscoreCodings(records, meta_data, export = TRUE)

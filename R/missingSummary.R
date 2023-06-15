@@ -5,8 +5,8 @@
 #' @description Returns a data frame of subject events with missing values. 
 #' 
 #' @param rcon A \code{redcapConnection} object.
-#' @param records \code{character(1)} A filename pointing to the raw records download from REDCap
-#' @param meta_data \code{character(1)} A filename pointing to the data dictionary download from REDCap
+#' @param records \code{character(1)} A filename pointing to the raw records download from REDCap.
+#' @param meta_data \code{character(1)} A filename pointing to the data dictionary download from REDCap.
 #' @param excludeMissingForms \code{logical(1)} If all of the fields in a form are missing, would 
 #'   you like to assume that they are purposefully missing?  For instance, if
 #'   a patient did not experience an adverse event, the adverse event form would

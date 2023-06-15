@@ -1,7 +1,7 @@
 #' @name deleteFromFileRepository
 #' @title Delete a Single File from the File Repository
 #' 
-#' @description Deletes a single file from the File Respository based on 
+#' @description Deletes a single file from the File Repository based on 
 #'   its document ID.
 #'
 #' @param rcon A \code{redcapConnection} object. 

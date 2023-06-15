@@ -17,7 +17,7 @@
 #' @param refresh \code{logical(1)}. If \code{TRUE} and the file repository
 #' @param ... Arguments to pass to other methods.
 #'   File Repository data on \code{rcon} will be refreshed. 
-#' @param confirm \code{confirm} \code{character}. One of \code{c("ask", "no", "yes")}. 
+#' @param confirm \code{character}. One of \code{c("ask", "no", "yes")}. 
 #'   When \code{"ask"}, user will be prompted to confirm the deletion. 
 #'   When \code{"no"}, the function will terminate with no action. When 
 #'   \code{"yes"}, the function will proceed without confirmation (useful
