@@ -28,13 +28,13 @@ exportBulkRecords(list(db = rcon),
 
 The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The `passwordFUN` specified is an override if one is using RStudio. It's not required, but on a Mac this is the only option that works well. The `envir` call is where to write the connection object; if not specified the call will return a list.
 
-The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened, and naming it the same thing. The second call is saying for this connection export back the all the forms present in that `db`. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
+The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened and naming it the same thing. The second call is saying for this connection export back the all the forms present in that `db`. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
 
 These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`
 
 ## 2.7.0
 
-2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependeable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
+    2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
 ## Back Matter
 
