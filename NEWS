@@ -1,7 +1,11 @@
+## 2.7.2 
+
+* Spelling/Grammar cleanup
+* `envir` parameter allows passing a number of the environment
+
 ## 2.7.1
 
 Version bump for CRAN publication
-
 
 ## Changes in Version 2.7.0
 

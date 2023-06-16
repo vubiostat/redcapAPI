@@ -67,7 +67,7 @@
 #'          name, or if a named vector the name associated.
 #' @param envir environment. The target environment for the connections. Defaults to NULL
 #'          which returns the keys as a list. Use \code{\link{globalenv}} to assign the
-#'          global environment.
+#'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of the REDCap server's api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
@@ -108,6 +108,8 @@ unlockREDCap    <- function(connections,
   # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
   
+  if(is.numeric(envir)) envir <- as.environment(envir)
+  
   checkmate::assert_character(x = url,          null.ok = FALSE, add = coll)
   checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
   checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
@@ -125,15 +127,15 @@ unlockREDCap    <- function(connections,
   }
     
   # Use the global environment for variable storage unless one was specified
-  dest <- if(is.null(envir)) list() else envir
+  dest <- list()
   
   varnames <- if(is.null(names(connections))) connections else names(connections)
   
   # If the variable exists, clear from memory
-  if(is.environment(dest))
+  if(is.environment(envir))
     for(i in seq_along(connections))
     {
-      if(exists(varnames[i], envir=dest, inherits=FALSE)) rm(list=varnames[i], envir=dest, inherits=FALSE)
+      if(exists(varnames[i], envir=envir, inherits=FALSE)) rm(list=varnames[i], envir=envir, inherits=FALSE)
     }
   
   # Use config if it exists
@@ -153,16 +155,10 @@ unlockREDCap    <- function(connections,
       args$key  <- keys[[connections[i]]]
       args$form <- NULL
 
-      data <-  do.call(FUN, args)
-      if(is.environment(dest))
-      {
-        base::assign(varnames[i], data, envir=dest)
-      } else {
-        dest[[varnames[i]]] <- data
-      }
+      dest[[varnames[i]]] <- do.call(FUN, args)
     }
 
-    return(if(is.environment(dest)) invisible() else dest)
+    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
   }
   
   # Create an environment to house API_KEYS locally
@@ -219,13 +215,7 @@ unlockREDCap    <- function(connections,
     
     withCallingHandlers(
       { 
-        data <- FUN(apiKeyStore[[connections[i]]], url, ...)
-        if(is.environment(dest))
-        {
-          base::assign(varnames[i], data, envir=dest)
-        } else {
-          dest[[varnames[i]]] <- data
-        }
+        dest[[varnames[i]]] <- FUN(apiKeyStore[[connections[i]]], url, ...)
       },
       error = function(e)
       {
@@ -233,8 +223,8 @@ unlockREDCap    <- function(connections,
            grepl("403", e))
         {
           apiKeyStore[[connections[i]]] <- NULL
-          if(is.environment(dest) && exists(varnames[i], envir=dest, inherits=FALSE))
-            rm(list=varnames[i], envir=dest, inherits=FALSE)
+          if(is.environment(envir) && exists(varnames[i], envir=envir, inherits=FALSE))
+            rm(list=varnames[i], envir=envir, inherits=FALSE)
           keyring::key_delete("redcapAPI", connections[i], keyring)
         }
         stop(e)
@@ -242,6 +232,6 @@ unlockREDCap    <- function(connections,
     )
   }
   
-  return(if(is.environment(dest)) invisible() else dest)
+  if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
 

@@ -14,7 +14,8 @@ splitForms(Records, rcon, envir = NULL, base = NULL, post = NULL)
 
 \item{envir}{environment. The target environment for the resulting list
 of \code{data.frame}s. Defaults to \code{NULL} which returns the a list. 
-Use \code{globalenv} to assign the global environment.}
+Use \code{globalenv} to assign the global environment. Will accept a number
+of the environment.}
 
 \item{base}{\code{character(1)} giving the start of the naming scheme 
 for the elements of the list. By default, the names of the list will
@@ -22,7 +23,7 @@ be the form names. If this value is provided, it will follow the
 format \code{base.form_name}.}
 
 \item{post}{\code{function} to apply to each element of form data 
-after separating them.}
+after separating them, must be of signature `function(data, rcon)`.}
 }
 \description{
 Separates a data frame from REDCap into a list of data 

@@ -23,7 +23,8 @@ will provide a list of forms for repeated calls to \code{exportRecordsType}.}
 \item{envir}{A environment to write the resulting Records in as variables
 given by their name in rcon or if from a form their rcon named pasted to 
 their form name joined by \code{sep}. If not specified the function
-will return a named list with the results.}
+will return a named list with the results. Will accept a number of the
+environment.}
 
 \item{sep}{A character string to use when joining the rcon name to the form name
 for storing variables.}
