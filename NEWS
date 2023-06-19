@@ -24,7 +24,7 @@ far better stability in calling--full inversion of control over casting, retries
 
 ## Changes in Version 2.6.1
 
-* Emergency fix. REDCap latest version changed it's API calling syntax.
+* Emergency fix. REDCap latest version changed its API calling syntax.
 * Fix to choice name parsing when only a single choice is specified.
 * Fix to importMethod validators when event=NULL
 
