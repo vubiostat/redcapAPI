@@ -32,7 +32,7 @@ name, or if a named vector the name associated.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
 which returns the keys as a list. Use \code{\link{globalenv}} to assign the
-global environment.}
+global environment. Will accept a number such a '1' for global as well.}
 
 \item{passwordFUN}{function. Function to get the password for the keyring. Defaults to getPass::getPass().}
 

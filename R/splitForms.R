@@ -9,13 +9,14 @@
 #' @param rcon a \code{redcapConnection} object. 
 #' @param envir environment. The target environment for the resulting list
 #'   of \code{data.frame}s. Defaults to \code{NULL} which returns the a list. 
-#'   Use \code{globalenv} to assign the global environment.
+#'   Use \code{globalenv} to assign the global environment. Will accept a number
+#'   of the environment.
 #' @param base \code{character(1)} giving the start of the naming scheme 
 #'   for the elements of the list. By default, the names of the list will
 #'   be the form names. If this value is provided, it will follow the 
 #'   format \code{base.form_name}.
 #' @param post \code{function} to apply to each element of form data 
-#'   after separating them.
+#'   after separating them, must be of signature `function(data, rcon)`.
 #'   
 #' @export
 
@@ -26,6 +27,7 @@ splitForms <- function(Records,
                        post  = NULL){
   ###################################################################
   # Argument Validation                                          ####
+  if(is.numeric(envir)) envir <- as.environment(envir)
   
   coll <- checkmate::makeAssertCollection()
   
@@ -51,9 +53,6 @@ splitForms <- function(Records,
                              add = coll)
   
   checkmate::reportAssertions(coll)
-  
-  # Use the global environment for variable storage unless one was specified
-  dest <- if(is.null(envir)) list() else envir
   
   ###################################################################
   # Split Forms                                                  ####
@@ -121,24 +120,13 @@ splitForms <- function(Records,
   
   ###################################################################
   # Apply the function to the list                               ####
-  
   if (!is.null(post)){
     FormData <- lapply(FormData, 
-                       post)
+                       function(x) post(x, rcon))
   }
   
   ###################################################################
   # Return the Result                                            ####
-  
-  if (is.environment(dest)){
-    for (i in seq_along(FormData)){
-      assign(names(FormData)[i],
-             FormData[[i]],
-             envir = dest)
-    }
-  } else {
-    dest <- FormData
-  }
-  
-  return(if(is.environment(dest)) invisible() else dest)
+
+  if(is.null(envir)) FormData else list2env(FormData, envir=envir)
 }

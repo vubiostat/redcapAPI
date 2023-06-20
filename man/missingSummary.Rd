@@ -45,8 +45,7 @@ contain no data and you would not want it in this report.}
 the identifying fields in the output summary. This always includes the record
 identifier (ie, the first field in the data dictionary). By default it 
 also includes any fields identified in \code{REDCAP_SYSTEM_FIELDS}, which
-are fields that REDCap adds to exports to identify arms, events, etc. 
-see \code{\link{constants}}.}
+are fields that REDCap adds to exports to identify arms, events, etc..}
 
 \item{exportRecordsArgs}{named \code{list} with arguments to pass to \code{exportRecords}. 
 This allows for testing specific forms, events, and/or records. Internally, any 

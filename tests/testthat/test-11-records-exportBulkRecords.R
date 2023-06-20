@@ -56,6 +56,11 @@ test_that("assign to environment records",{
   expect_data_frame(test)
 })
 
+test_that("assign to environment number records",{
+  exportBulkRecords(list("test"=rcon), envir=1)
+  expect_data_frame(test)
+})
+
 test_that("assigns forms with proper separator",{
   exportBulkRecords(list(test=rcon),
                     list(test=c("fieldtovar_datetimes","randomization")),

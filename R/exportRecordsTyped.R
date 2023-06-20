@@ -886,7 +886,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @param envir A environment to write the resulting Records in as variables
 #'   given by their name in rcon or if from a form their rcon named pasted to 
 #'   their form name joined by \code{sep}. If not specified the function
-#'   will return a named list with the results.
+#'   will return a named list with the results. Will accept a number of the
+#'   environment.
 #' @param sep A character string to use when joining the rcon name to the form name
 #' for storing variables. 
 #' @param post A function that will run on all returned sets of Records. 
@@ -929,6 +930,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @export
 exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
 {
+  if(is.numeric(envir)) envir <- as.environment(envir)
+  
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_list(     x       = rcon,
@@ -963,40 +966,25 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   
   checkmate::reportAssertions(coll)
   
-  # Use a list to return unless envir specified
-  dest <- if(is.null(envir)) list() else envir
+  dest <- list()
   
   # For each dataset requested
   for(i in names(rcon))
   {
     if(is.null(forms))
     {
-      data <- exportRecordsTyped(rcon[[i]], ...)
-      if(!is.null(post)) data <- post(data, rcon[[i]])
-      if(is.environment(dest))
-      {
-        base::assign(i, data, envir=dest)
-      } else
-      {
-        dest[[i]] <-data
-      }
+      dest[[i]] <- exportRecordsTyped(rcon[[i]], ...)
+      if(!is.null(post)) dest[[i]] <- post(dest[[i]], rcon[[i]])
     } else
     {
       for(j in forms[[i]])
       {
         name <- paste0(i, sep, j)
-        data <- exportRecordsTyped(rcon[[i]], forms=j, ...)
-        if(!is.null(post)) data <- post(data, rcon[[i]])
-        if(is.environment(dest))
-        {
-          base::assign(name, data, envir=dest)
-        } else
-        {
-          dest[[name]] <- data
-        }
+        dest[[name]] <- exportRecordsTyped(rcon[[i]], forms=j, ...)
+        if(!is.null(post)) dest[[name]] <- post(dest[[name]], rcon[[i]])
       }
     }
   }
   
-  return(if(is.environment(dest)) invisible() else dest)
+  if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
