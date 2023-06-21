@@ -75,6 +75,9 @@
 #' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
 #' @param ... Consumes any additional parameters passed. Not used.
+#' @param error_handling An option for how to handle errors returned by the API.
+#'   see \code{\link{redcap_error}}
+#'   
 #' @details
 #' 
 #' In all calls, the project's ID field will be included--there is no option
@@ -223,27 +226,28 @@ exportRecordsTyped.redcapApiConnection <-
     rcon,  
     
     # Limiters
-    fields        = NULL,
-    drop_fields   = NULL,
-    forms         = NULL,
-    records       = NULL,
-    events        = NULL,
-    survey        = TRUE,
-    dag           = TRUE,
-    date_begin    = NULL,
-    date_end      = NULL,
+    fields         = NULL,
+    drop_fields    = NULL,
+    forms          = NULL,
+    records        = NULL,
+    events         = NULL,
+    survey         = TRUE,
+    dag            = TRUE,
+    date_begin     = NULL,
+    date_end       = NULL,
     
     # Type Casting Default Overrides Function Lists
-    na            = list(),
-    validation    = list(),
-    cast          = list(),
-    assignment    = list(label=stripHTMLandUnicode,
-                         units=unitsFieldAnnotation),
-    ..., 
-    config        = list(),
-    api_param     = list(),
-    csv_delimiter = ",",
-    batch_size    = NULL)
+    na             = list(),
+    validation     = list(),
+    cast           = list(),
+    assignment     = list(label=stripHTMLandUnicode,
+                          units=unitsFieldAnnotation),
+    ...,
+    config         = list(),
+    api_param      = list(),
+    csv_delimiter  = ",",
+    batch_size     = NULL, 
+    error_handling = getOption("redcap_error_handling"))
 {
   if (is.numeric(records)) records <- as.character(records)
 
@@ -371,12 +375,13 @@ exportRecordsTyped.redcapApiConnection <-
   Raw <- 
     if (length(batch_size) == 0)
     {
-      .exportRecordsTyped_Unbatched( rcon          = rcon, 
-                                     body          = body, 
-                                     records       = records, 
-                                     config        = config, 
-                                     api_param     = api_param, 
-                                     csv_delimiter = csv_delimiter)
+      .exportRecordsTyped_Unbatched( rcon           = rcon, 
+                                     body           = body, 
+                                     records        = records, 
+                                     config         = config, 
+                                     api_param      = api_param, 
+                                     csv_delimiter  = csv_delimiter, 
+                                     error_handling = error_handling)
     } else
     {
       .exportRecordsTyped_Batched(  rcon           = rcon, 
@@ -385,7 +390,8 @@ exportRecordsTyped.redcapApiConnection <-
                                     config         = config, 
                                     api_param      = api_param, 
                                     csv_delimiter  = csv_delimiter, 
-                                    batch_size     = batch_size)
+                                    batch_size     = batch_size, 
+                                    error_handling = error_handling)
     }
   
   if (identical(Raw, data.frame())){
@@ -795,13 +801,19 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                            records, 
                                            config, 
                                            api_param, 
-                                           csv_delimiter)
+                                           csv_delimiter, 
+                                           error_handling)
 {
   response <- makeApiCall(rcon, 
                           body = c(body, 
                                    api_param, 
                                    vectorToApiBodyList(records, "records")), 
                           config = config)
+  
+  if (response$status_code != 200){
+    redcap_error(response, 
+                 error_handling = error_handling)
+  } 
   
   if (trimws(as.character(response)) == ""){
     message("No data found in the project.")
@@ -817,12 +829,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 
 # .exportRecordsTyped_Batched ---------------------------------------
 .exportRecordsTyped_Batched <- function( rcon, 
-                                            body, 
-                                            records, 
-                                            config, 
-                                            api_param, 
-                                            csv_delimiter, 
-                                            batch_size)
+                                         body, 
+                                         records, 
+                                         config, 
+                                         api_param, 
+                                         csv_delimiter, 
+                                         batch_size, 
+                                         error_handling)
 {
   # If records were not provided, get all the record IDs from the project
   if (length(records) == 0)
@@ -834,6 +847,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
+    
+    if (record_response$status_code != 200){
+      redcap_error(record_response, 
+                   error_handling = error_handling)
+    }
     
     if (trimws(as.character(record_response)) == ""){
       message("No data found in the project.")
