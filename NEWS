@@ -2,6 +2,7 @@
 
 * Spelling/Grammar cleanup
 * `envir` parameter allows passing a number of the environment
+* New functions use pre-existing error handling strategy.
 
 ## 2.7.1
 

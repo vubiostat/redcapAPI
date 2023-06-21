@@ -6,7 +6,7 @@
 redcapAPI
 ======
 
-## Quick Start Guide for 2.7.1
+## Quick Start Guide
 
 There are 2 basic functions that are key to understanding the major changes with this version:
 
