@@ -300,6 +300,7 @@ REDCAP_USER_STRUCTURE <-
              data_access_group = character(0),
              data_access_group_id = character(0),
              design = character(0),
+             alerts = character(0),
              user_rights = character(0),
              data_access_groups = character(0),
              reports = character(0),
@@ -333,8 +334,9 @@ REDCAP_USER_STRUCTURE <-
 # These are variables in the Users table coded as 0 = No Access, 1 = Access
 REDCAP_USER_TABLE_ACCESS_VARIABLES <- 
   c("design", 
+    "alerts",
     "user_rights", 
-    "data_access_groups", 
+    "data_access_group", 
     "reports", 
     "stats_and_charts", 
     "manage_survey_participants", 
