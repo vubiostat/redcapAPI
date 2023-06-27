@@ -27,20 +27,6 @@
     !envir[[key]]==''
 }
 
- #############################################################################
-## Find the best password function
-## If rstudioapi is loaded and rstudio is running, then use that.
-.default_pass <- function()
-{
-  if(requireNamespace("rstudioapi", quietly = TRUE) &&
-     rstudioapi::isAvailable())
-  {
-     rstudioapi::askForPassword
-  } else
-  {
-    getPass::getPass
-  }
-}
 
 #' Create a set of connections to redcap in the current (or specified 
 #' environment) from API_KEYs stored in a crypto locker. On the first
@@ -69,7 +55,7 @@
 #'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
 #' other-config-stuff2: blah blah
 #' other-config-stuff3: blah blah
-#' }
+#' 
 #' 
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 #' as this *is* writing the API_KEY to a local
@@ -85,7 +71,7 @@
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of the REDCap server's api. 
-#' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
+#' @param passwordFUN function. Function to get the password for the keyring. Defaults to `askpass` option or `getPass::getPass`.
 #' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
 #' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
 #'         returns NULL and connections are assigned into the specified \code{envir}.
@@ -116,7 +102,7 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            passwordFUN = .default_pass(),
+                            passwordFUN = getOption('askpass', default = getPass::getPass),
                             ...)
 {
    ###########################################################################
