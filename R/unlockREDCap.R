@@ -144,16 +144,17 @@ unlockREDCap    <- function(connections,
   if(file.exists(config_file))
   {
     config <- read_yaml(config_file)
-    
+    if(is.null(config$redcapAPI)) stop(paste0("Config file '",config_file,"' does not contain a required 'redcapAPI' section"))
     config <- config$redcapAPI
+    if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain a required 'keys' section under the 'redcapAPI' section"))
     keys   <- config$keys
+    if(is.null(config$args))      stop(paste0("Config file '",config_file,"' does not contain a required 'args' section under the 'redcapAPI' section"))
+    if(is.null(config$args$url))  stop(paste0("Config file '",config_file,"' does not contain a required 'url' parameter under the 'redcapAPI > args' section"))
     args   <- c(config$args, list(...))
-    
     
     for(i in seq_along(connections))
     {
       args$key  <- keys[[connections[i]]]
-      args$form <- NULL
 
       dest[[varnames[i]]] <- do.call(FUN, args)
     }
