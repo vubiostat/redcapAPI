@@ -27,6 +27,21 @@
     !envir[[key]]==''
 }
 
+ #############################################################################
+## Find the best password function
+## If rstudioapi is loaded and rstudio is running, then use that.
+.default_pass <- function()
+{
+  if(requireNamespace("rstudioapi", quietly = TRUE) &&
+     rstudioapi::isAvailable())
+  {
+     rstudioapi::askForPassword
+  } else
+  {
+    getPass::getPass
+  }
+}
+
 #' Create a set of connections to redcap in the current (or specified 
 #' environment) from API_KEYs stored in a crypto locker. On the first
 #' execution it will ask to set the password for this locker. Next it
@@ -101,7 +116,7 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            passwordFUN = getPass::getPass,
+                            passwordFUN = .default_pass(),
                             ...)
 {
    ###########################################################################

@@ -15,7 +15,7 @@ unlockREDCap(
   url,
   keyring,
   envir = NULL,
-  passwordFUN = getPass::getPass,
+  passwordFUN = .default_pass(),
   ...
 )
 }
