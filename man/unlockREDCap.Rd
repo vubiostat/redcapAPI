@@ -2,13 +2,7 @@
 % Please edit documentation in R/unlockREDCap.R
 \name{unlockREDCap}
 \alias{unlockREDCap}
-\title{Create a set of connections to redcap in the current (or specified 
-environment) from API_KEYs stored in a crypto locker. On the first
-execution it will ask to set the password for this locker. Next it
-will ask for the API_KEYs specified. It will request the user enter
-each key using getPass and store it in memory. If an API_KEY doesn't
-work, it will automatically delete it from the
-crypto locker and ask again on next execution.}
+\title{Create REDCap connections from cryptolocker of API_KEYs}
 \usage{
 unlockREDCap(
   connections,
@@ -43,9 +37,18 @@ If \code{envir} is NULL returns a list of opened connections. Otherwise
         returns NULL and connections are assigned into the specified \code{envir}.
 }
 \description{
-If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
+Create a set of connections to redcap in the current (or specified 
+environment) from API_KEYs stored in a crypto locker. On the first
+execution it will ask to set the password for this locker. Next it
+will ask for the API_KEYs specified. It will request the user enter
+each key using getPass and store it in memory. If an API_KEY doesn't
+work, it will automatically delete it from the
+crypto locker and ask again on next execution.
 }
 \details{
+If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
+
+
 For production servers where the password must be stored in a readable
 plain text file, it will search for `../<basename>.yml`. DO NOT USE
 this unless one is a sysadmin, as this defeats the security and purpose of
