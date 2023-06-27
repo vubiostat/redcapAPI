@@ -961,8 +961,8 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
                               names   = "named",
                               add     = coll)
   
-  checkmate::assert_list(     x       = forms,
-                              types   = c("logical", "character"),
+  checkmate::assert_list(     x       = forms,   # First, just verify that it is actually a list that was passed. 
+                              names   = "named",
                               null.ok = TRUE,
                               add     = coll)
   
@@ -980,14 +980,16 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
                               null.ok = TRUE,
                               add     = coll)
   
+  checkmate::reportAssertions(coll)
+  
   if(!is.null(forms))
   {
+    forms[is.na(forms)] <- NA_character_ 
+    
     checkmate::assert_subset( x       = names(forms),
                               choices = names(rcon),
                               add     = coll)
-  
-    forms[is.na(forms)] <- NA_character_
-
+    
     checkmate::assert_list( x       = forms,
                             types   = c("character"),
                             add     = coll)

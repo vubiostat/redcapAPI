@@ -42,7 +42,6 @@ test_that("returns list of records",{
   expect_data_frame(Recs[["test_fieldtovar_datetimes"]])
 })
 
-
 test_that("returns list of records respecting NA override for forms",{
   Recs <- exportBulkRecords(list("test"=rcon), forms=list(test=NA))
   expect_list(Recs)
