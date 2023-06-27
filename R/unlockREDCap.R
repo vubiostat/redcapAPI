@@ -71,7 +71,7 @@
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of the REDCap server's api. 
-#' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
+#' @param passwordFUN function. Function to get the password for the keyring. Defaults to `askpass` option or `getPass::getPass`.
 #' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
 #' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
 #'         returns NULL and connections are assigned into the specified \code{envir}.
@@ -102,7 +102,7 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            passwordFUN = getPass::getPass,
+                            passwordFUN = getOption('askpass', default = getPass::getPass),
                             ...)
 {
    ###########################################################################
