@@ -391,7 +391,8 @@ guessDate <- function(data,
 
 mChoiceCast <- function(data, 
                         rcon, 
-                        style = "labelled")
+                        style = "labelled",
+                        drop_fields = TRUE)
 {
   ###################################################################
   # Check arguments
@@ -431,6 +432,20 @@ mChoiceCast <- function(data,
                   records_raw = Raw, 
                   checkbox_fieldname = i, 
                   style = style)
+  
+  # get the suffixed field names
+  fields_to_drop <- character()
+  for (i in checkbox_fields) {
+    fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% i]
+    fields_to_drop <- c(fields_to_drop, fields)
+  }
+  
+  # if drop_fields is FALSE, keep suffixed field, else if drop_fields is TRUE (default) remove suffixed field
+  if (drop_fields == FALSE) {
+    data
+  } else {
+    data <- data[, !names(data) %in% fields_to_drop]
+  }
   
   data
 }
