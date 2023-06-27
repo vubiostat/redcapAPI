@@ -1,8 +1,9 @@
 ## 2.7.3
 
 * exportBulkRecords: When no forms are specified, it defaults to all instruments for the project. 
+* importRecords: Got rid of warning about dropping fields that were already dropped.
+* mChoiceCast: Added configurable dropping of choice fields that were aggregated. Defaults to drop. 
 * unlockREDCap: Defaults to RStudio password prompt if available. Uses `askpass` option.
-* mChoiceCast: Added configurable dropping of choice fields that were aggregated. Defaults to drop.
 
 ## 2.7.2 
 

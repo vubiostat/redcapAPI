@@ -246,6 +246,7 @@ importRecords.redcapApiConnection <- function(rcon,
   
   # Remove calculated fields
   calc_field <- MetaData$field_name[MetaData$field_type == "calc"]
+  calc_field <- calc_field[calc_field %in% names(data)]
   
   if (length(calc_field) > 0)
   {
