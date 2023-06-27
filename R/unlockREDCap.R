@@ -38,6 +38,7 @@
 #' 
 #' If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
 #' 
+#' MacOS users should set `options(keyring_backend=keyring::backend_file)`. 
 #' 
 #' For production servers where the password must be stored in a readable
 #' plain text file, it will search for `../<basename>.yml`. DO NOT USE
