@@ -1,6 +1,7 @@
 ## 2.7.3
 
 * mChoiceCast: Added configurable dropping of choice fields that were aggregated. Defaults to drop. 
+* exportBulkRecords: When no forms are specified, it defaults to all instruments for the project. 
 
 ## 2.7.2 
 
