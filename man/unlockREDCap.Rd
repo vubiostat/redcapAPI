@@ -15,7 +15,7 @@ unlockREDCap(
   url,
   keyring,
   envir = NULL,
-  passwordFUN = .default_pass(),
+  passwordFUN = getOption("askpass", default = getPass::getPass),
   ...
 )
 }
@@ -34,7 +34,7 @@ name, or if a named vector the name associated.}
 which returns the keys as a list. Use \code{\link{globalenv}} to assign the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{passwordFUN}{function. Function to get the password for the keyring. Defaults to getPass::getPass().}
+\item{passwordFUN}{function. Function to get the password for the keyring. Defaults to `askpass` option or `getPass::getPass`.}
 
 \item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
 }

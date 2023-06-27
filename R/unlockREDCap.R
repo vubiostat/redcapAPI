@@ -55,7 +55,7 @@
 #'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
 #' other-config-stuff2: blah blah
 #' other-config-stuff3: blah blah
-#' 
+#' }
 #' 
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 #' as this *is* writing the API_KEY to a local
