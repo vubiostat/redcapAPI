@@ -149,14 +149,15 @@ unlockREDCap    <- function(connections,
     config <- config$redcapAPI
     if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain a required 'keys' section under the 'redcapAPI' section"))
     keys   <- config$keys
-    if(is.null(config$args))      stop(paste0("Config file '",config_file,"' does not contain a required 'args' section under the 'redcapAPI' section"))
-    if(is.null(config$args$url))  url <- config$args$url # Override from yml if available
-    
+    if(!is.null(config$args$url))  url <- config$args$url # Override from yml if available
+    config$args$url <- NULL
     args   <- c(config$args, url = url, list(...))
     
     for(i in seq_along(connections))
     {
       args$key  <- keys[[connections[i]]]
+      
+      if(is.null(args$key)) stop(paste0("Config file '", config_file, "'does not have a key '",connections[i],"' under keys specified."))
 
       dest[[varnames[i]]] <- do.call(FUN, args)
     }
