@@ -36,7 +36,8 @@ exportRecordsTyped(
   config = list(),
   api_param = list(),
   csv_delimiter = ",",
-  batch_size = NULL
+  batch_size = NULL,
+  error_handling = getOption("redcap_error_handling")
 )
 
 \method{exportRecordsTyped}{redcapOfflineConnection}(
@@ -140,6 +141,9 @@ delimiter for the CSV file received from the API.}
 
 \item{batch_size}{\code{integerish(1)} (or \code{NULL}). If length \code{NULL},
 all records are pulled. Otherwise, the records all pulled in batches of this size.}
+
+\item{error_handling}{An option for how to handle errors returned by the API.
+see \code{\link{redcap_error}}}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

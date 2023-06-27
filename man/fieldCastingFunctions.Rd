@@ -40,7 +40,7 @@ guessDate(
   threshold = 0.8
 )
 
-mChoiceCast(data, rcon, style = "labelled")
+mChoiceCast(data, rcon, style = "labelled", drop_fields = TRUE)
 }
 \arguments{
 \item{data}{\code{data.frame} with the data fields to be recoded.}
@@ -92,6 +92,8 @@ are not identified as NA will be passed to validation functions.}
 \item{threshold}{numeric(1). The threshold of non-NA data to trigger casting.}
 
 \item{style}{character. One of "labelled" or "coded". Default is "labelled"}
+
+\item{drop_fields}{logical(1). Drop fields that were aggregated.}
 }
 \description{
 The functions provided here allow for recasting fields 

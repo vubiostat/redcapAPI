@@ -46,6 +46,7 @@
 #' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param threshold numeric(1). The threshold of non-NA data to trigger casting.
 #' @param style character. One of "labelled" or "coded". Default is "labelled"
+#' @param drop_fields logical(1). Drop fields that were aggregated.
 #'   
 #' @details \code{recastRecords} is a post-processing function motivated 
 #'   initially by the need to switch between codes and labels in multiple 
@@ -405,6 +406,9 @@ mChoiceCast <- function(data,
   checkmate::assert_class(x       = rcon,
                           classes = "redcapApiConnection",
                           add     = coll)
+  
+  checkmate::assert_logical(x     = drop_fields,
+                           len    = 1)
   
   style <- checkmate::matchArg(x = style, 
                                choices = c("coded", "labelled"), 
