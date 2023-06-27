@@ -1,5 +1,4 @@
-# create REDCap connections from cryptolocker of API_KEYs
-#
+
 # Copyright (C) 2021-2023 Vanderbilt University Medical Center,
 # Shawn Garbett, Cole Beck, Hui Wu
 #
@@ -27,6 +26,8 @@
     !envir[[key]]==''
 }
 
+#' Create REDCap connections from cryptolocker of API_KEYs
+#'
 #' Create a set of connections to redcap in the current (or specified 
 #' environment) from API_KEYs stored in a crypto locker. On the first
 #' execution it will ask to set the password for this locker. Next it
@@ -149,8 +150,9 @@ unlockREDCap    <- function(connections,
     if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain a required 'keys' section under the 'redcapAPI' section"))
     keys   <- config$keys
     if(is.null(config$args))      stop(paste0("Config file '",config_file,"' does not contain a required 'args' section under the 'redcapAPI' section"))
-    if(is.null(config$args$url))  stop(paste0("Config file '",config_file,"' does not contain a required 'url' parameter under the 'redcapAPI > args' section"))
-    args   <- c(config$args, list(...))
+    if(is.null(config$args$url))  url <- config$args$url # Override from yml if available
+    
+    args   <- c(config$args, url = url, list(...))
     
     for(i in seq_along(connections))
     {
