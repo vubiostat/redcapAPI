@@ -981,9 +981,17 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
                               add     = coll)
   
   if(!is.null(forms))
+  {
     checkmate::assert_subset( x       = names(forms),
                               choices = names(rcon),
                               add     = coll)
+  
+    forms[is.na(forms)] <- NA_character_
+
+    checkmate::assert_list( x       = forms,
+                            types   = c("character"),
+                            add     = coll)
+  }
   
   checkmate::reportAssertions(coll)
   
@@ -997,16 +1005,11 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
     conn  <- rcon[[i]]
     f     <- forms[[i]]
     
-    # Weird difficult edge case
-    if(is.logical(f))
-    {
-      if(length(f) > 1) stop(paste0("* Variable 'forms': Entry for", conn, "may not be multiple logicals."))
-      if(!is.na(f)) stop(paste0("* Variable 'forms': Entry for", conn, "may only be character or NA."))
-    }
-    
     lform <- if(is.null(f))                 conn$instruments()$instrument_name else
              if(length(f) == 1 && is.na(f)) NULL                               else
                                             forms[[i]]
+    lform <- lform[!is.na(lform)] # Just in case NA's are spread about
+    
     if(is.null(lform))
     {
       dest[[i]] <- exportRecordsTyped(conn, ...)
