@@ -1,5 +1,4 @@
-# create REDCap connections from cryptolocker of API_KEYs
-#
+
 # Copyright (C) 2021-2023 Vanderbilt University Medical Center,
 # Shawn Garbett, Cole Beck, Hui Wu
 #
@@ -27,6 +26,8 @@
     !envir[[key]]==''
 }
 
+#' Create REDCap connections from cryptolocker of API_KEYs
+#'
 #' Create a set of connections to redcap in the current (or specified 
 #' environment) from API_KEYs stored in a crypto locker. On the first
 #' execution it will ask to set the password for this locker. Next it
@@ -37,6 +38,7 @@
 #' 
 #' If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
 #' 
+#' MacOS users should set `options(keyring_backend=keyring::backend_file)`. 
 #' 
 #' For production servers where the password must be stored in a readable
 #' plain text file, it will search for `../<basename>.yml`. DO NOT USE
@@ -47,8 +49,6 @@
 #' \preformatted{
 #' other-config-stuff1: blah blah
 #' redcapAPI:
-#'   args:
-#'     url: https://redcap.vanderbilt.edu/api/
 #'   keys:
 #'     intake: THIS_IS_THE_INTAKE_DATABASE_APIKEY
 #'     details: THIS_IS_THE_DETAILS_DATABASE_APIKEY
@@ -70,7 +70,7 @@
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of the REDCap server's api. 
-#' @param passwordFUN function. Function to get the password for the keyring. Defaults to getPass::getPass().
+#' @param passwordFUN function. Function to get the password for the keyring. Defaults to `askpass` option or `getPass::getPass`.
 #' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
 #' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
 #'         returns NULL and connections are assigned into the specified \code{envir}.
@@ -101,7 +101,7 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            passwordFUN = getPass::getPass,
+                            passwordFUN = getOption('askpass', default = getPass::getPass),
                             ...)
 {
    ###########################################################################
@@ -144,16 +144,19 @@ unlockREDCap    <- function(connections,
   if(file.exists(config_file))
   {
     config <- read_yaml(config_file)
-    
+    if(is.null(config$redcapAPI)) stop(paste0("Config file '",config_file,"' does not contain a required 'redcapAPI' section"))
     config <- config$redcapAPI
+    if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain a required 'keys' section under the 'redcapAPI' section"))
     keys   <- config$keys
-    args   <- c(config$args, list(...))
-    
+    if(!is.null(config$args$url))  url <- config$args$url # Override from yml if available
+    config$args$url <- NULL
+    args   <- c(config$args, url = url, list(...))
     
     for(i in seq_along(connections))
     {
       args$key  <- keys[[connections[i]]]
-      args$form <- NULL
+      
+      if(is.null(args$key)) stop(paste0("Config file '", config_file, "'does not have a key '",connections[i],"' under keys specified."))
 
       dest[[varnames[i]]] <- do.call(FUN, args)
     }

@@ -47,6 +47,37 @@ test_that(
   }
 )
 
+# drop_fields tests
+columns_to_check <- c("prereq_checkbox___1","prereq_checkbox___2","prereq_checkbox___abc","prereq_checkbox___4","no_prereq_checkbox___1","no_prereq_checkbox___2","no_prereq_checkbox___3",
+                      "checkbox_test___x","checkbox_test___y","checkbox_test___z")
+
+# default drop_fields is TRUE
+test_that(
+  "mChoice drop_fields defaults to TRUE works to drop suffixed checkbox fields",
+  {
+    rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="labelled")
+    expect_false(any(columns_to_check %in% colnames(rec)), "Expected column names are present in the data frame.")
+  }
+)
+
+# drop_fields=TRUE
+test_that(
+  "mChoice drop_fields defaults to TRUE works to drop suffixed checkbox fields",
+  {
+    rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="labelled", drop_fields=TRUE)
+    expect_false(any(columns_to_check %in% colnames(rec)), "Expected column names are present in the data frame.")
+  }
+)
+
+# drop_fields = FALSE
+test_that(
+  "mChoice drop_fields defaults to TRUE works to drop suffixed checkbox fields",
+  {
+    rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="labelled", drop_fields=FALSE)
+    expect_true(any(columns_to_check %in% colnames(rec)), "Expected column names are not present in the data frame.")
+  }
+)
+
 # Without Hmisc Tests
 detach("package:Hmisc", unload=TRUE)
 

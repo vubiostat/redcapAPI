@@ -46,6 +46,7 @@
 #' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param threshold numeric(1). The threshold of non-NA data to trigger casting.
 #' @param style character. One of "labelled" or "coded". Default is "labelled"
+#' @param drop_fields logical(1). Drop fields that were aggregated.
 #'   
 #' @details \code{recastRecords} is a post-processing function motivated 
 #'   initially by the need to switch between codes and labels in multiple 
@@ -391,7 +392,8 @@ guessDate <- function(data,
 
 mChoiceCast <- function(data, 
                         rcon, 
-                        style = "labelled")
+                        style = "labelled",
+                        drop_fields = TRUE)
 {
   ###################################################################
   # Check arguments
@@ -404,6 +406,9 @@ mChoiceCast <- function(data,
   checkmate::assert_class(x       = rcon,
                           classes = "redcapApiConnection",
                           add     = coll)
+  
+  checkmate::assert_logical(x     = drop_fields,
+                           len    = 1)
   
   style <- checkmate::matchArg(x = style, 
                                choices = c("coded", "labelled"), 
@@ -431,6 +436,20 @@ mChoiceCast <- function(data,
                   records_raw = Raw, 
                   checkbox_fieldname = i, 
                   style = style)
+  
+  # get the suffixed field names
+  fields_to_drop <- character()
+  for (i in checkbox_fields) {
+    fields <- FieldNames$export_field_name[FieldNames$original_field_name %in% i]
+    fields_to_drop <- c(fields_to_drop, fields)
+  }
+  
+  # if drop_fields is FALSE, keep suffixed field, else if drop_fields is TRUE (default) remove suffixed field
+  if (drop_fields == FALSE) {
+    data
+  } else {
+    data <- data[, !names(data) %in% fields_to_drop]
+  }
   
   data
 }
