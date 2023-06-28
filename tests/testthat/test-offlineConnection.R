@@ -16,7 +16,7 @@ test_that(
 test_that(
   "Meta Data loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "metadata.csv")
+    this_file_name <- tempfile("test_offline_meta_")
     this_data <- rcon$metadata()
     write.csv(this_data, 
               this_file_name, 
@@ -34,6 +34,7 @@ test_that(
       expect_no_error(
         offlineConnection(meta_data = this_file_name))
     
+    unlink(this_file_name) 
     expect_true(roff$has_metadata())
     expect_true(roff$has_fieldnames())
     expect_true(roff$has_instruments())
@@ -43,7 +44,7 @@ test_that(
 test_that(
   "Arms loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "arms.csv")
+    this_file_name <- tempfile("test_offline_arms_")
     this_data <- rcon$arms()
     write.csv(this_data, 
               this_file_name, 
@@ -58,7 +59,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(arms = this_file_name))
-    
+    unlink(this_file_name) 
     expect_true(roff$has_arms())
   }
 )
@@ -66,7 +67,7 @@ test_that(
 test_that(
   "Events loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "events.csv")
+    this_file_name <- tempfile("test_offline_events_")
     this_data <- rcon$events()
     write.csv(this_data, 
               this_file_name, 
@@ -79,7 +80,7 @@ test_that(
     
     # From File
     roff <- suppressWarnings({ offlineConnection(events = this_file_name) })
-    
+    unlink(this_file_name)
     expect_true(roff$has_events())
   }
 )
@@ -87,7 +88,7 @@ test_that(
 test_that(
   "Instruments loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "instruments.csv")
+    this_file_name <- tempfile("test_offline_instruments_")
     this_data <- rcon$instruments()
     write.csv(this_data, 
               this_file_name, 
@@ -102,6 +103,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(instruments = this_file_name))
+    unlink(this_file_name)
     
     expect_true(roff$has_instruments())
   }
@@ -110,7 +112,7 @@ test_that(
 test_that(
   "Field Names loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "fieldnames.csv")
+    this_file_name <- tempfile("test_offline_fieldnames_")
     this_data <- rcon$fieldnames()
     write.csv(this_data, 
               this_file_name, 
@@ -125,15 +127,16 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(field_names = this_file_name))
+    unlink(this_file_name)
     
     expect_true(roff$has_fieldnames())
   }
 )
 
 test_that(
-  "Field Names loads from data frame and file", 
+  "Mapping loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "mapping.csv")
+    this_file_name <- tempfile("test_offline_mapping_")
     this_data <- rcon$mapping()
     write.csv(this_data, 
               this_file_name, 
@@ -149,6 +152,8 @@ test_that(
       expect_no_error(
         offlineConnection(mapping = this_file_name))
     
+    unlink(this_file_name)
+    
     expect_true(roff$has_mapping())
   }
 )
@@ -156,7 +161,7 @@ test_that(
 test_that(
   "Users loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "users.csv")
+    this_file_name <- tempfile("test_offline_users_")
     this_data <- rcon$users()
     write.csv(this_data, 
               this_file_name, 
@@ -171,6 +176,7 @@ test_that(
     roff <- 
       expect_warning(
         offlineConnection(users = this_file_name))
+    unlink(this_file_name)
     
     expect_true(roff$has_users())
   }
@@ -188,7 +194,7 @@ test_that(
 test_that(
   "Project Information loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "project_info.csv")
+    this_file_name <- tempfile("test_offline_project_info_")
     this_data <- rcon$projectInformation()
     write.csv(this_data, 
               this_file_name, 
@@ -203,7 +209,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(project_info = this_file_name))
-    
+    unlink(this_file_name)
     expect_true(roff$has_projectInformation())
   }
 )
@@ -211,7 +217,7 @@ test_that(
 test_that(
   "File Repository loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "file_repo.csv")
+    this_file_name <- tempfile("test_offline_file_repo_")
     this_data <- rcon$fileRepository()
     write.csv(this_data, 
               this_file_name, 
@@ -226,7 +232,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(file_repo = this_file_name))
-    
+    unlink(this_file_name)
     expect_true(roff$has_fileRepository())
   }
 )
@@ -234,7 +240,7 @@ test_that(
 test_that(
   "Repeating Instruments and Events loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "repeatInst.csv")
+    this_file_name <- tempfile("test_offline_repeating_instrument_")
     this_data <- rcon$repeatInstrumentEvent()
     write.csv(this_data, 
               this_file_name, 
@@ -249,7 +255,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(repeat_instrument = this_file_name))
-    
+    unlink(this_file_name)
     expect_true(roff$has_repeatInstrumentEvent())
   }
 )
@@ -257,7 +263,7 @@ test_that(
 test_that(
   "Records loads from data frame and file", 
   {
-    this_file_name <- file.path(tempdir(), "records.csv")
+    this_file_name <- tempfile("test_offline_records_")
     this_data <- exportRecordsTyped(rcon, cast = raw_cast)
     write.csv(this_data, 
               this_file_name, 
@@ -272,6 +278,7 @@ test_that(
     roff <- 
       expect_no_error(
         offlineConnection(records = this_file_name))
+    unlink(this_file_name)
     
     expect_true(roff$has_records())
   }
