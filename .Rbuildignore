@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.gitignore$
+^\.gitlab-ci.yml$
 ^\.travis.yml$
 ^\.travis\.yml$
 ^cran-comments.md
