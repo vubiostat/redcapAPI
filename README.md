@@ -16,6 +16,10 @@ There are 2 basic functions that are key to understanding the major changes with
 Here's a typical call for these two:
 
 ```
+library(redcapAPI)
+
+options(keyring_backend=keyring::backend_file) # Put in .Rprofile
+
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
              envir       = globalenv(),
@@ -32,7 +36,7 @@ The next call to `exportBulkRecords`, says to export by form and leave out recor
 
 These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`
 
-## 2.7.0
+## 2.7.0+
 
     2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
