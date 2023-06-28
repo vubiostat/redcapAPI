@@ -10,16 +10,15 @@
 #'   columns for the form and export access of each of the instruments.
 #' @param rcon \code{redcapConnection}. Used to determine the instruments
 #'   in the project.
-#' @param priority \code{character}, one of \code{c("expanded", "consolidated")}. 
-#'   If \code{"expanded"}, the form and data export access values will be 
-#'   read from the expanded columns. Otherwise, the consolidated values 
-#'   (as provided by the API export) are utilized.
+#' @param consolidate \code{logical(1)} If \code{TRUE}, the form and data 
+#'   export access values will be read from the expanded columns. Otherwise, 
+#'   the consolidated values (as provided by the API export) are utilized.
 #'   
 #' @export
 
 prepUserImportData <- function(data, 
                                rcon, 
-                               priority = c("expanded", "consolidated")){
+                               consolidate = TRUE){
   
   ###################################################################
   # Argument Validation                                          ####
@@ -34,9 +33,9 @@ prepUserImportData <- function(data,
                           classes = "redcapConnection", 
                           add = coll)
   
-  priority <- checkmate::matchArg(x = priority, 
-                                  choices = c("expanded", "consolidated"), 
-                                  add = coll)
+  checkmate::assert_logical(x = consolidate, 
+                            len = 1,
+                            add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -49,6 +48,18 @@ prepUserImportData <- function(data,
   
   checkmate::reportAssertions(coll)
   
+  form_access_field <- names(data)[grepl("_form_access$", names(data))]
+  export_access_field <- names(data)[grepl("_export_access$", names(data))]
+  instrument <- rcon$instruments()$instrument_name
+  
+  prepUserImportData_validateAllFormsPresent(form_access_field = form_access_field, 
+                                             export_access_field = export_access_field, 
+                                             instrument = instrument,
+                                             consolidate = consolidate, 
+                                             coll = coll)
+  
+  checkmate::reportAssertions(coll)
+
   ###################################################################
   # Functional Code                                              ####
   
@@ -67,9 +78,6 @@ prepUserImportData <- function(data,
   
   # Convert values to numeric
   
-  form_access_field <- names(data)[grepl("_form_access$", names(data))]
-  export_access_field <- names(data)[grepl("_export_access$", names(data))]
-  
   for (nm in names(data)){
     data[[nm]] <- 
       if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
@@ -85,7 +93,7 @@ prepUserImportData <- function(data,
   
   # Make Form Access Field
   
-  if (priority == "expanded"){
+  if (consolidate){
     data$forms <- 
       prepUserImportData_consolidateAccess(data[form_access_field], 
                                            "_form_access$")
@@ -147,4 +155,55 @@ prepUserImportData_consolidateAccess <- function(d, suffix){
   }
   
   apply(d, MARGIN = 1, FUN = paste0, collapse = ",")
+}
+
+prepUserImportData_extractFormName <- function(x, instrument){
+  forms <- strsplit(x, ",")
+  forms <- lapply(forms, 
+                  function(f) sub("[:].+$", "", f))
+  
+  instrument_present <- logical(length(instrument))
+  
+  for (i in seq_along(instrument_present)){
+    instrument_present[i] <- 
+      all(vapply(forms, function(f) instrument[i] %in% forms[[i]], logical(1)))
+  }
+  
+  instrument[instrument_present]
+}
+
+prepUserImportData_validateAllFormsPresent <- function(form_access_field, 
+                                                       export_access_field, 
+                                                       instrument,
+                                                       consolidate, 
+                                                       coll){
+  # If consolidating, we need to make sure that all of the forms are present
+  # in both form access and data export access.
+  if (consolidate){
+    form_access_forms <- sub("_form_access$", "", form_access_field)
+    export_access_forms <- sub("_export_access$", "", export_access_field)
+  }
+  
+  # if not consolidating forms, we need to make sure all of the forms are 
+  # represented in the standard format
+  
+  if (!consolidate){
+    form_access_forms <- prepUserImportData_extractFormName(data$forms, instrument)
+    export_access_forms <- prepUserImportData_extractFormName(data$forms_export, instrument)
+  }
+  
+  all_form_access <- all(form_access_forms %in% instrument)
+  all_export_access <- all(export_access_forms %in% instrument)
+  
+  if (!all_form_access){
+    msg <- sprintf("At least one user is missing an entry for the form(s): %s", 
+                   paste0(setdiff(instrument, all_form_access), collapse = ", "))
+    coll$push(msg)
+  }
+  
+  if (!all_export_access){
+    msg <- sprintf("At least one user is missing an export entry for the form(s): %s", 
+                   paste0(setdiff(instrument, all_export_access), collapse = ", "))
+    coll$push(msg)
+  }
 }
