@@ -23,8 +23,7 @@ options(keyring_backend=keyring::backend_file) # Put in .Rprofile
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
              envir       = globalenv(),
-             url         = 'https://<REDCAP_URL>/api/',
-             passwordFUN = rstudioapi::askForPassword)
+             url         = 'https://<REDCAP_URL>/api/')
 exportBulkRecords(list(db = rcon),
   forms = list(db = unique(rcon$metadata()$form_name)),
   envir = globalenv())
