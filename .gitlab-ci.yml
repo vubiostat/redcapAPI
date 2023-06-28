@@ -1,0 +1,14 @@
+test:
+  stage: test
+  image: rocker/r-ver:latest
+  tags:
+    - staging
+  only:
+    - main
+    - master
+  script:
+    - cp $KEYRING tests/testthat.yml
+    - apt-get update
+    - apt-get install -y libsecret-1-dev libsodium-dev
+    - R --no-save -e "install.packages(c('devtools','checkmate','chron','labelVector','lubridate','keyring','getPass','Hmisc'))"
+    - R --no-save -e "devtools::test()"
