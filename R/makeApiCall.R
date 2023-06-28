@@ -171,6 +171,12 @@ makeApiCall <- function(rcon,
                  config = c(rcon$config, 
                             config))
     
+    httr_config <- getOption("httr_config")
+    if(!is.null(httr_config) && httr_config$options$verbose)
+    {
+      message(paste0(">>>\n", as.character(response), "<<<\n"))
+    }
+    
     is_retry_eligible <- .makeApiCall_isRetryEligible(response = response)
     
     if (!is_retry_eligible) 
