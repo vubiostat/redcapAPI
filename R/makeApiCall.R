@@ -172,7 +172,11 @@ makeApiCall <- function(rcon,
                             config))
     
     httr_config <- getOption("httr_config")
-    if(!is.null(httr_config) && httr_config$options$verbose)
+    if(!is.null(httr_config)                   &&
+       !is.null(httr_config$options$verbose)   &&
+       is.logical(httr_config$options$verbose) &&
+       httr_config$options$verbose
+      )
     {
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
