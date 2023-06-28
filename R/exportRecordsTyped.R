@@ -901,6 +901,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @param rcon A named list of REDCap connection object as created by \code{\link{redcapConnection}}.
 #' @param forms A named list that is a subset of rcon's names. A specified \code{rcon}
 #'              will provide a list of forms for repeated calls to \code{exportRecordsType}.
+#'              If a connection reference is missing it will default to all forms. To override
+#'              this default specify a connection's forms with NA to just get all
+#'              data. 
 #' @param envir A environment to write the resulting Records in as variables
 #'   given by their name in rcon or if from a form their rcon named pasted to 
 #'   their form name joined by \code{sep}. If not specified the function
@@ -958,8 +961,8 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
                               names   = "named",
                               add     = coll)
   
-  checkmate::assert_list(     x       = forms,
-                              types   = "character",
+  checkmate::assert_list(     x       = forms,   # First, just verify that it is actually a list that was passed. 
+                              names   = "named",
                               null.ok = TRUE,
                               add     = coll)
   
@@ -977,29 +980,49 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
                               null.ok = TRUE,
                               add     = coll)
   
+  checkmate::reportAssertions(coll)
+  
   if(!is.null(forms))
+  {
+    forms[is.na(forms)] <- NA_character_ 
+    
     checkmate::assert_subset( x       = names(forms),
                               choices = names(rcon),
                               add     = coll)
+    
+    checkmate::assert_list( x       = forms,
+                            types   = c("character"),
+                            add     = coll)
+  }
   
   checkmate::reportAssertions(coll)
   
   dest <- list()
   
+  if(is.null(forms)) forms <- list()
+  
   # For each dataset requested
   for(i in names(rcon))
   {
-    if(is.null(forms))
+    conn  <- rcon[[i]]
+    f     <- forms[[i]]
+    
+    lform <- if(is.null(f))                 conn$instruments()$instrument_name else
+             if(length(f) == 1 && is.na(f)) NULL                               else
+                                            forms[[i]]
+    lform <- lform[!is.na(lform)] # Just in case NA's are spread about
+    
+    if(is.null(lform))
     {
-      dest[[i]] <- exportRecordsTyped(rcon[[i]], ...)
-      if(!is.null(post)) dest[[i]] <- post(dest[[i]], rcon[[i]])
+      dest[[i]] <- exportRecordsTyped(conn, ...)
+      if(!is.null(post)) dest[[i]] <- post(dest[[i]], conn)
     } else
     {
-      for(j in forms[[i]])
+      for(j in lform)
       {
         name <- paste0(i, sep, j)
-        dest[[name]] <- exportRecordsTyped(rcon[[i]], forms=j, ...)
-        if(!is.null(post)) dest[[name]] <- post(dest[[name]], rcon[[i]])
+        dest[[name]] <- exportRecordsTyped(conn, forms=j, ...)
+        if(!is.null(post)) dest[[name]] <- post(dest[[name]], conn)
       }
     }
   }
