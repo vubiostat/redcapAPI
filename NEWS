@@ -1,6 +1,6 @@
 ## 2.7.3
 
-* dags: Added ability to get DAG information from connection object, e.g. `rcon$dag()`
+* dags: Added ability to get DAG information from connection object, e.g. `rcon$dags()`
 * exportBulkRecords: When no forms are specified, it defaults to all instruments for the project. 
 * importRecords: Got rid of warning about dropping fields that were already dropped.
 * mChoiceCast: Added configurable dropping of choice fields that were aggregated. Defaults to drop. 
