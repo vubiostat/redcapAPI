@@ -65,7 +65,7 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = 5:7, 
+                            fields = 6:8, 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -82,7 +82,7 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = c(6, 8, 10), 
+                            fields = c(7, 9, 11), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -99,8 +99,8 @@ test_that(
     
     expect_error(recastRecords(Records, 
                                rcon = rcon, 
-                               fields = c(10:16)), 
-                 "Columns [{]12, 13, 14, 15, 16[}] requested in a data frame with 11 columns")
+                               fields = c(11:17)), 
+                 "Columns [{]13, 14, 15, 16, 17[}] requested in a data frame with 12 columns")
   }
 )
 
@@ -110,7 +110,7 @@ test_that(
     local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = rep(c(FALSE, TRUE, FALSE), c(4,3, 4)), 
+                            fields = rep(c(FALSE, TRUE, FALSE), c(5,3, 4)), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -127,7 +127,7 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = rep(c(FALSE, TRUE), 
+                            fields = rep(c(TRUE, FALSE), 
                                          length.out = ncol(Records)), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
@@ -147,7 +147,7 @@ test_that(
                                rcon = rcon, 
                                fields = rep(c(FALSE, TRUE), 
                                             length.out = 7)), 
-                 "'fields' [(]logical[)] should be of length 11 and is length 7")
+                 "'fields' [(]logical[)] should be of length 12 and is length 7")
   }
 )
 

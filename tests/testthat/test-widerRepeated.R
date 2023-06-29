@@ -31,6 +31,7 @@ test_that("widerRepeated returns an error if the redcap_repeat_instrument column
     redcap_event_name = "event_1_arm_1",
     redcap_repeat_instrument = "randomization",
     redcap_repeat_instance = '3',
+    redcap_data_access_group = NA_character_,
     repeat_question_1 = "Good",
     repeat_datetime = "2023-05-10 09:00:00",
     repeating_instrument_complete = "Incomplete"
@@ -97,6 +98,7 @@ test_that("widerRepeated returns an error if the redcap_repeat_instrument column
     redcap_event_name = "event_1_arm_1",
     redcap_repeat_instrument = "randomization",
     redcap_repeat_instance = '3',
+    redcap_data_access_group = NA_character_,
     repeat_question_1 = "Good",
     repeat_datetime = "2023-05-10 09:00:00",
     repeating_instrument_complete = "Incomplete"
