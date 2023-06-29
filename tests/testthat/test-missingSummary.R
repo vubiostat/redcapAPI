@@ -12,6 +12,8 @@ DesiredOutput <-
                             "event_1_arm_1", "event_1_arm_1", "event_1_arm_1", "event_1_arm_1", 
                             "event_1_arm_1", "event_1_arm_1", "event_1_arm_1", "event_1_arm_1", 
                             "event_1_arm_1", "event_1_arm_1", "event_1_arm_1", "event_1_arm_1"),
+      redcap_data_access_group = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+                                   NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
       redcap_repeat_instrument = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
                                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
       redcap_repeat_instance = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 

@@ -204,6 +204,25 @@ test_that(
 )
 
 test_that(
+  "caching of Data Access Groups", 
+  {
+    local_reproducible_output(width = 200)
+    
+    rcon$flush_all()
+    expect_false(rcon$has_dags())
+    
+    rcon$dags()
+    expect_true(rcon$has_dags())
+    
+    rcon$flush_dags()
+    expect_false(rcon$has_dags())
+    
+    rcon$refresh_dags()
+    expect_true(rcon$has_dags())
+  }
+)
+
+test_that(
   "retrieve and set retries", 
   {
     expect_equal(rcon$retries(), 5)

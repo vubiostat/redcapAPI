@@ -151,7 +151,7 @@ test_that(
       exportRecordsTyped(rcon, 
                          fields = c("left_operand", "right_operand", 
                                     "calc_addition", "calc_squared")), 
-      ncols = 8
+      ncols = 9
     )
   }
 )
@@ -242,7 +242,8 @@ test_that(
     minimum_field <- c("record_id", 
                        "redcap_event_name", 
                        "redcap_repeat_instrument", 
-                       "redcap_repeat_instance")
+                       "redcap_repeat_instance", 
+                       "redcap_data_access_group")
     
     # ID field and system fields when just the ID field is requested
     
