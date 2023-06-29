@@ -35,7 +35,7 @@
 {
   if(grepl('mac', tolower(utils::osVersion)) &&
      requireNamespace("rstudioapi", quietly = TRUE) &&
-     rstudioapi::isAvailable())
+     rstudioapi::isAvailable(child_ok=TRUE))
   {
     function(prompt) rstudioapi::callFun("askForPassword", prompt)
   } else getOption('askpass', default = getPass::getPass)
