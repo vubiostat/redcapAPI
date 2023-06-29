@@ -150,6 +150,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_instrument <- NULL
   this_fileRepository <- NULL
   this_repeat <- NULL
+  this_dag <- NULL
   rtry <- retries
   rtry_int <- rep(retry_interval, 
                   length.out = rtry)
@@ -168,6 +169,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "instrument" = exportInstruments(rc), 
            "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            "repeat" = exportRepeatingInstrumentsEvents(rc),
+           "dags" = exportDags(rc),
            NULL)
   }
   
@@ -232,10 +234,16 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_repeatInstrumentEvent = function() this_repeat <<- NULL,
       refresh_repeatInstrumentEvent = function() this_repeat <<- getter("repeat"),
       
+      dags = function() {if (is.null(this_dag)) this_dag <<- getter("dags"); this_dag },
+      has_dags = function() !is.null(this_dag), 
+      flush_dags = function() this_dag <<- NULL, 
+      refresh_dags = function() this_dag <<- getter("dags"),
+      
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
           this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- this_repeat <<- NULL}, 
+          this_instrument <<- this_fileRepository <<- this_repeat <<- 
+          this_dag <<- NULL}, 
       
       refresh_all = function(){
         this_metadata <<- getter("metadata")
@@ -248,7 +256,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_project <<- getter("project")
         this_instrument <<- getter("instrument")
         this_fileRepository <<- getter("fileRepo")
-        this_repeat <<- getter("this_repeat")
+        this_repeat <<- getter("repeat")
+        this_dag <<- getter("dag")
       },
       
       retries = function() rtry, 
@@ -290,6 +299,7 @@ print.redcapApiConnection <- function(x, ...){
     c("REDCap API Connection Object", 
       sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
       sprintf("Arms        : %s", is_cached(x$has_arms())), 
+      sprintf("DAGs        : %s", is_cached(x$has_dags())),
       sprintf("Events      : %s", is_cached(x$has_events())),
       sprintf("Instruments : %s", is_cached(x$has_instruments())),
       sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
