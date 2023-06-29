@@ -37,7 +37,7 @@
      requireNamespace("rstudioapi", quietly = TRUE) &&
      rstudioapi::isAvailable(child_ok=TRUE))
   {
-    function(prompt) rstudioapi::callFun("askForPassword", prompt)
+    rstudioapi::askForPassword
   } else getOption('askpass', default = getPass::getPass)
 }
 
