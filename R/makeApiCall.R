@@ -172,9 +172,10 @@ makeApiCall <- function(rcon,
                             config))
     
     httr_config <- getOption("httr_config")
-    if(!is.null(httr_config)                   &&
-       !is.null(httr_config$options$verbose)   &&
-       is.logical(httr_config$options$verbose) &&
+    if(!is.null(httr_config)                     &&
+       "options" %in% names(httr_config)         &&
+       "verbose" %in% names(httr_config$options) &&
+       is.logical(httr_config$options$verbose)   &&
        httr_config$options$verbose
       )
     {
