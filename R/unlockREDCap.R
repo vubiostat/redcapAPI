@@ -33,12 +33,12 @@
 ## when knitting from RStudio, ugh.
 .default_pass <- function()
 {
-  if(grepl('mac', tolower(utils::osVersion)) &&
+  if(grepl('mac', tolower(utils::osVersion))        &&
      requireNamespace("rstudioapi", quietly = TRUE) &&
      rstudioapi::isAvailable(child_ok=TRUE))
   {
     rstudioapi::askForPassword
-  } else getOption('askpass', default = getPass::getPass)
+  } else getPass::getPass
 }
 
 
