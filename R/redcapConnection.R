@@ -27,8 +27,9 @@
 #'   
 #' @details
 #' \code{redcapConnection} objects will retrieve and cache various forms of 
-#' project information. This can make metadata, arms, events, instruments, fieldnames, 
-#' arm-event mappings, users, version, project information, and fileRepository available
+#' project information. This can make metadata, arms, dags, events, instruments, fieldnames, 
+#' arm-event mappings, users, version, project information, fileRepository,
+#' and repeating instruments available
 #' directly from the \code{redcapConnection} object. Take note that 
 #' the retrieval of these objects uses the default values of the respective
 #' export functions (excepting the file repository, 
