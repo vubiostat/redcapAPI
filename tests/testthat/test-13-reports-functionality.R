@@ -1,18 +1,19 @@
 context("exportReports functionality")
 
+report_ids = as.numeric(strsplit(Sys.getenv('REPORT_IDS', '357209,362756'), ',')[[1]])
 
 #####################################################################
 # exportReports                                                  ####
 
 test_that("reports can be exported",{
-  expect_silent(rep <- exportReports(rcon, 357209))
+  expect_silent(rep <- exportReports(rcon, report_ids[1]))
 })
 
 test_that(
   "fields in the drop= arg are not returned", 
   {
     fields_to_drop <- c("treatment")
-    Report <- exportReports(rcon, 357209,
+    Report <- exportReports(rcon, report_ids[1],
                             drop = fields_to_drop)
   }
 )
@@ -24,7 +25,7 @@ test_that(
   "exportReportsTyped with default settings", 
   {
     Report <- expect_silent(exportReportsTyped(rcon, 
-                                               report_id = 362756))
+                                               report_id = report_ids[2]))
     
     expect_class(Report$dropdown_test, "factor")
     expect_equal(levels(Report$dropdown_test), 
@@ -49,7 +50,7 @@ test_that(
   "exportReportsTyped responds to drop_fields", 
   {
     Report <- expect_silent(exportReportsTyped(rcon, 
-                                               report_id = 362756, 
+                                               report_id = report_ids[2], 
                                                drop_fields = c("number_test", 
                                                                "radio_test", 
                                                                "checkbox_test___x")))
@@ -63,7 +64,7 @@ test_that(
   "exportReportsTyped with a raw cast", 
   {
     Report <- expect_silent(exportReportsTyped(rcon, 
-                                               report_id = 362756, 
+                                               report_id = report_ids[2], 
                                                cast = raw_cast))
     
     expect_numeric(Report$dropdown_test)
