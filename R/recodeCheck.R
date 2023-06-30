@@ -40,6 +40,8 @@
 recodeCheck <- function(df, vars, 
                         old=c("Unchecked", "Checked"), new=c("No", "Yes"), 
                         reverse=FALSE){
+  
+  message("Please use recastRecords. recodeCheck will be removed in version 3.0.0")
   # If no variable names are provided, check the data frame for all variables in which all values 
   # are either "Checked" or "Unchecked"
   if (missing(vars)){

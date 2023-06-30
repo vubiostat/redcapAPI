@@ -70,6 +70,7 @@ exportBundle.redcapApiConnection <- function(rcon,
                                              version       = TRUE, 
                                              ..., 
                                              return_object = TRUE){
+  message("exportBundle will be removed in version 3.0.0")
   
    ##################################################################
   # Argument Validation

@@ -125,6 +125,8 @@ importRecords.redcapApiConnection <- function(rcon,
                                               error_handling = getOption("redcap_error_handling"), 
                                               config = list(), 
                                               api_param = list()){
+  message("importRecords will change how it validates data in version 3.0.0.\n",
+          "We recommend preparing your data for import using castForImport.")
   
    ##################################################################
   # Argument Validation

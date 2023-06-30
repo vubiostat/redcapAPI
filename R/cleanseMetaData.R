@@ -24,6 +24,7 @@
 cleanseMetaData <- function(meta_data_file, meta_data_clean,
                             overwrite = FALSE)
 {
+  message("cleansMetaData will be removed in version 3.0.0")
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_character(x = meta_data_file,

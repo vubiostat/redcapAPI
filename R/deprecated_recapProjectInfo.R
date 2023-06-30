@@ -52,8 +52,7 @@ redcapProjectInfo.redcapApiConnection <- function(rcon,
                                                   mappings = TRUE,
                                                   version = TRUE, ...,
                                                   v.number = ""){
-  
-  message("'redcapProjectInfo' has been deprected.  Please use 'exportBundle'")
+  message("exportProjectInfo will be removed in version 3.0.0")
   exportBundle.redcapApiConnection(rcon, 
                                    date, 
                                    label, 

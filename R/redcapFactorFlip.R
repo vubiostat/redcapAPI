@@ -19,6 +19,7 @@
 #' 
 
 redcapFactorFlip <- function(v){
+  message("Please use recastRecords. redcapFactorFlip will be removed in version 3.0.0")
   #* extract attributes to be applied later
   redcapLabels <- attributes(v)$redcapLabels
   redcapLevels <- attributes(v)$redcapLevels
