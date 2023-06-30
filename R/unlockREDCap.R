@@ -26,6 +26,22 @@
     !envir[[key]]==''
 }
 
+  #############################################################################
+ ## Find the best password function
+## If rstudioapi is loaded and rstudio is running, then use that.
+## getOption('askpass') returns a function that doesn't work on MAC 
+## when knitting from RStudio, ugh.
+.default_pass <- function()
+{
+  if(grepl('mac', tolower(utils::osVersion))        &&
+     requireNamespace("rstudioapi", quietly = TRUE) &&
+     rstudioapi::isAvailable(child_ok=TRUE))
+  {
+    rstudioapi::askForPassword
+  } else getPass::getPass
+}
+
+
 #' Create REDCap connections from cryptolocker of API_KEYs
 #'
 #' Create a set of connections to redcap in the current (or specified 
@@ -101,7 +117,7 @@ unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
-                            passwordFUN = getOption('askpass', default = getPass::getPass),
+                            passwordFUN = .default_pass(),
                             ...)
 {
    ###########################################################################

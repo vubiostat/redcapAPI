@@ -9,7 +9,7 @@ unlockREDCap(
   url,
   keyring,
   envir = NULL,
-  passwordFUN = getOption("askpass", default = getPass::getPass),
+  passwordFUN = .default_pass(),
   ...
 )
 }
