@@ -37,7 +37,15 @@ test_that("post must be a 2 argument function",{
 test_that("returns list of records",{
   Recs <- exportBulkRecords(list("test"=rcon))
   expect_list(Recs)
-  expect_true(names(Recs) == "test")
+  for(i in rcon$instruments()$instrument_name) 
+    expect_true(paste0("test_", i) %in% names(Recs))
+  expect_data_frame(Recs[["test_fieldtovar_datetimes"]])
+})
+
+test_that("returns list of records respecting NA override for forms",{
+  Recs <- exportBulkRecords(list("test"=rcon), forms=list(test=NA))
+  expect_list(Recs)
+  expect_true("test" == names(Recs))
   expect_data_frame(Recs[["test"]])
 })
 
@@ -53,12 +61,12 @@ test_that("returns list of forms with proper separator",{
 
 test_that("assign to environment records",{
   exportBulkRecords(list("test"=rcon), envir=environment())
-  expect_data_frame(test)
+  expect_data_frame(test_fieldtovar_datetimes)
 })
 
 test_that("assign to environment number records",{
   exportBulkRecords(list("test"=rcon), envir=1)
-  expect_data_frame(test)
+  expect_data_frame(test_fieldtovar_datetimes)
 })
 
 test_that("assigns forms with proper separator",{
@@ -73,7 +81,7 @@ test_that("calls post",{
   Recs <- exportBulkRecords(list(test=rcon),
                             post=function(recs,rcon) {"x"}
                             )
-  expect_true(Recs[["test"]] == "x")
+  expect_true(Recs[["test_fieldtovar_datetimes"]] == "x")
 
   Recs <- exportBulkRecords(list(test=rcon),
                             list(test=c("fieldtovar_datetimes","randomization")),
@@ -81,5 +89,11 @@ test_that("calls post",{
   expect_true(Recs[["test_fieldtovar_datetimes"]] == "y")
   expect_true(Recs[["test_randomization"]] == "y")
   
+})
+
+test_that("Fails for logical forms",{
+  expect_error(exportBulkRecords(list("x"=rcon), list("x"=TRUE)))
+  expect_error(exportBulkRecords(list("x"=rcon), list("x"=FALSE)))
+  expect_error(exportBulkRecords(list("x"=rcon), list("x"=c(NA, NA))))
 })
 

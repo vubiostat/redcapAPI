@@ -18,7 +18,10 @@ exportBulkRecords(
 \item{rcon}{A named list of REDCap connection object as created by \code{\link{redcapConnection}}.}
 
 \item{forms}{A named list that is a subset of rcon's names. A specified \code{rcon}
-will provide a list of forms for repeated calls to \code{exportRecordsType}.}
+will provide a list of forms for repeated calls to \code{exportRecordsType}.
+If a connection reference is missing it will default to all forms. To override
+this default specify a connection's forms with NA to just get all
+data.}
 
 \item{envir}{A environment to write the resulting Records in as variables
 given by their name in rcon or if from a form their rcon named pasted to 
