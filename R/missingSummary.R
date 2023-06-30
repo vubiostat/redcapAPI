@@ -105,19 +105,17 @@ missingSummary.redcapApiConnection <- function(rcon,
   # Import the records ----------------------------------------------
   # records will be used to store the results of tests for missingness
   # records_orig will be used to conduct the tests
-  exportRecordsArgs <- exportRecordsArgs[!names(exportRecordsArgs) %in% c("factors", 
-                                                                          "labels", 
-                                                                          "dates", 
-                                                                          "survey", 
-                                                                          "dag", 
-                                                                          "rcon")]
+  exportRecordsArgs <- exportRecordsArgs[!names(exportRecordsArgs) %in% c("raw_or_label", 
+                                                                          "raw_or_label_headers", 
+                                                                          "export_survey_fields", 
+                                                                          "export_dags")]
+  
   exportRecordsArgs <- c(exportRecordsArgs, 
                          list(rcon = rcon, 
-                              factors = FALSE, 
-                              labels = TRUE, 
-                              dates = FALSE, 
-                              survey = FALSE, 
-                              dag = TRUE))
+                              raw_or_label = "raw", 
+                              raw_of_label_headers = "label", 
+                              export_survey_fields = FALSE, 
+                              export_dags = TRUE))
   
   RecordsOrig <- do.call("exportRecords", 
                          exportRecordsArgs)
