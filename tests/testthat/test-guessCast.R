@@ -1,5 +1,11 @@
 context("guessCast")
 
+load(test_path("testdata", "RedcapProject_RedcapTestApi.Rdata"))
+purgeProject(rcon, purge_all = TRUE)
+rcon$flush_all()
+restoreProject(RedcapProject_RedcapTestApi, 
+               rcon)
+
 x <- data.frame(
   x=c("xyz", "2023-01-01", "", "2003-12-12", "2003-12-12", "2012-10-10")
 )

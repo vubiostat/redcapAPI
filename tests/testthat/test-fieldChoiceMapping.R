@@ -73,21 +73,20 @@ test_that(
   "Returns the correct mapping", 
   {
     field_choice <- rcon$metadata()
-    field_choice <- field_choice$select_choices_or_calculations[field_choice$field_name == "prereq_checkbox"]
+    field_choice <- field_choice$select_choices_or_calculations[field_choice$field_name == "dropdown_test"]
     
     DesiredOutput <- 
-      matrix(c("1", "Checkbox1", 
-               "2", "Checkbox2", 
-               "ABC", "CheckboxABC", 
-               "4", "Do not use in branching logic"), 
-             nrow = 4, 
+      matrix(c("1", "Green", 
+               "2", "Blue", 
+               "3", "Lavender"), 
+             nrow = 3, 
              ncol = 2, 
              byrow = TRUE, 
              dimnames = list(NULL, c("choice_value", "choice_label")))
     
     expect_equal(fieldChoiceMapping(field_choice), 
                  DesiredOutput)
-    expect_equal(fieldChoiceMapping(rcon, "prereq_checkbox"), 
+    expect_equal(fieldChoiceMapping(rcon, "dropdown_test"), 
                  DesiredOutput)
   }
 )

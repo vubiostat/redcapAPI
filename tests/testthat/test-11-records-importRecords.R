@@ -1,6 +1,6 @@
 context("importRecords Functionality")
 
-rec <- exportRecords(rcon, mChoice=FALSE)
+rec <- exportRecordsTyped(rcon, mChoice=FALSE)
 rows <- nrow(rec)
 
 NewRecords <- rbind(rec[1,], rec[1,])
@@ -27,9 +27,9 @@ test_that(
                   overwriteBehavior = "normal")
     
     suppressWarnings({
-      Compare <- exportRecords(rcon, 
-                               records = NewNewRecords$record_id, 
-                               fields = "date_dmy")
+      Compare <- exportRecordsTyped(rcon, 
+                                    records = NewNewRecords$record_id, 
+                                    fields = "date_dmy")
     })
       
     expect_true(all(!is.na(Compare$date_dmy)))
@@ -41,9 +41,9 @@ test_that(
                   overwriteBehavior = "overwrite")
     
     suppressWarnings({
-      Compare <- exportRecords(rcon, 
-                               records = NewNewRecords$record_id, 
-                               fields = "date_dmy")
+      Compare <- exportRecordsTyped(rcon, 
+                                    records = NewNewRecords$record_id, 
+                                    fields = "date_dmy")
     })
     
     expect_true(all(is.na(Compare$date_dmy)))

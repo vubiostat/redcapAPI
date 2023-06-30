@@ -242,9 +242,9 @@ test_that(
     
     time_this_test <- times[index]
     
-    Logs <- exportRecords(rcon, 
+    Logs <- exportLogging(rcon, 
                           beginTime = time_this_test, 
-                          beginTime = BEGIN_TIME)
+                          endTime = BEGIN_TIME)
     
     all_after_begin <- all(Logs$timestamp >= time_this_test)
     expect_true(all_after_begin)
@@ -261,7 +261,7 @@ test_that(
     
     time_this_test <- times[index]
     
-    Logs <- exportRecords(rcon, 
+    Logs <- exportLogging(rcon, 
                           endTime = time_this_test, 
                           beginTime = BEGIN_TIME)
     
