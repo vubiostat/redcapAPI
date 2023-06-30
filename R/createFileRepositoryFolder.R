@@ -103,10 +103,10 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   FileRepo <- rcon$fileRepository()
-  
-  if (length(folder_id) > 0 && isTRUE(!folder_id %in% FileRepo$parent_folder)){
-    coll$push("folder_id '%s' does not exist in the File Repository", 
-              folder_id)
+
+  if (length(folder_id) > 0 && isTRUE(!folder_id %in% FileRepo$folder_id)){
+    coll$push(sprintf("folder_id '%s' does not exist in the File Repository", 
+                      folder_id))
     checkmate::reportAssertions(coll)
   }
   
