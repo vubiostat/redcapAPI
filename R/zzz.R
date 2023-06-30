@@ -1,7 +1,3 @@
-packageStartupMessage(
-  "Welcome to redcapAPI.  Please Note:\n",
-  " - 'exportBundle' has been made redundant. See ?redcapConnection for details about caching project data.")
-
 .onLoad <- function(libname,pkgname)
 {
   options(redcap_api_url = character(0),
