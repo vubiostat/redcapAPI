@@ -13,7 +13,7 @@
 #' @param events Optional \code{character} vector of events to export.
 #' @param raw_or_label One of \code{c("raw", "label")}. export the raw coded 
 #'   values or labels for the options of multiple choice fields
-#' @param raw_or_label_headeres One of \code{c("raw", "label")}. export the 
+#' @param raw_or_label_headers One of \code{c("raw", "label")}. export the 
 #'   variable field names (\code{"raw"}) or the labels (\code{"label"}).
 #' @param export_checkbox_label \code{logical(1)} specifies the format of 
 #'   checkbox field values specifically when exporting the data as labels 
@@ -62,7 +62,7 @@ exportRecords <- function(rcon,
   UseMethod("exportRecords")
 }
 
-#' @rdname exportRecords3
+#' @rdname exportRecords
 #' @export
 
 exportRecords.redcapApiConnection <- function(rcon, 
@@ -111,11 +111,13 @@ exportRecords.redcapApiConnection <- function(rcon,
   
   raw_or_label <- checkmate::matchArg(x = raw_or_label, 
                                       choices = c("raw", "label"), 
-                                      add = coll)
+                                      add = coll, 
+                                      .var.name = "raw_or_label")
   
   raw_or_label_headers <- checkmate::matchArg(x = raw_or_label_headers, 
                                               choices = c("raw", "label"), 
-                                              add = coll)
+                                              add = coll, 
+                                              .var.name = "raw_or_label_headers")
   
   checkmate::assert_logical(x = export_checkbox_label, 
                             len = 1, 
@@ -134,13 +136,15 @@ exportRecords.redcapApiConnection <- function(rcon,
   
   checkmate::assert_integerish(x = batch_size, 
                                len = 1, 
+                               lower = 1,
                                any.missing = FALSE, 
                                null.ok = TRUE, 
                                add = coll)
   
   csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
                                        choices = c(",", "\t", ";", "|", "^"), 
-                                       add = coll)
+                                       add = coll, 
+                                       .var.name = "csv_delimiter")
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
