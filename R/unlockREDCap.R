@@ -41,6 +41,40 @@
   } else getPass::getPass
 }
 
+  #############################################################################
+ ## Algorithm
+##
+## 1. Initialize
+##   a. `dest` is empty list
+##   b. varnames is names from connection parameter
+## 2. Clear envir. For all varnames in envir do a rm
+## 3. YAML Override. If YML config file exists, use that to open connections. EXIT
+## 4. Check Keyring State
+##     a. If it exists and is locked: 
+##        i. Check ENV for password.
+##            Unlock using ENV password.
+##            Success: Goto 5. 
+##            On failure, erase ENV password. Continue.
+##        ii. Prompt for password.
+##        iii. Unlock Keyring
+##        iv. If keyring does not unlock, STOP with error, suggest deleting keyring. 
+##        v. Write password to ENV
+##     b. If it does not exist:
+##        i. Prompt Password
+##        ii. Create with Password
+##        iii. Write Password to ENV 
+## 5. For Each Connection
+##    a. Get from keyring
+##    b. If not found
+##       i. Prompt for API_KEY. 
+##       ii. Store in keyring
+##    c. Open connection and store in dest list
+##       i. Trap error 403 (Bad API KEY)
+##          Remove from envir
+##          Delete from keyring
+##          Prompt for new API_KEY. Store in 'apiKeyStore'. Store in keyring, Loop back to 5c.
+## 6. Return dest (or write to envir specified)
+
 
 #' Create REDCap connections from cryptolocker of API_KEYs
 #'
