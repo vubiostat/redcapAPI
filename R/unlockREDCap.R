@@ -265,17 +265,17 @@ unlockREDCap    <- function(connections,
       {
         key_delete("redcapAPI", connections[i], keyring)
         api_key <- passwordFUN(paste0(
-          "Invalid API_KEY for '", connections[i],"'. '",
-                           keyring,
-                            "' Possible causes include: mistyped, renewed, or revoked.",
-                            " Please enter a new key or cancel to abort."))
+          "Invalid API_KEY for '", connections[i],
+          "' in keyring '", keyring,
+          "'. Possible causes include: mistyped, renewed, or revoked.",
+          " Please enter a new key or cancel to abort."))
         if(is.null(api_key) || api_key == '') stop("unlockREDCap aborted")
-      } else
+      } else if(!stored)
       {
-        if(!stored) key_set_with_value( "redcapAPI",
-                                        username=connections[i],
-                                        password=api_key,
-                                        keyring=keyring)
+        key_set_with_value( "redcapAPI",
+                            username=connections[i],
+                            password=api_key,
+                            keyring=keyring)
       }
     }
     conn
