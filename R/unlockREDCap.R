@@ -245,7 +245,7 @@ unlockREDCap    <- function(connections,
   # Open Connections
   dest <- lapply(seq_along(connections), function(i)
   {
-    stored <- connections[i] %in% keyring::key_list("redcapAPI", keyring)[,2]
+    stored <- connections[i] %in% key_list("redcapAPI", keyring)[,2]
     
     api_key <- if(stored)
     {
@@ -263,7 +263,7 @@ unlockREDCap    <- function(connections,
       conn <- .connectAndCheck(api_key, url, ...)
       if(is.null(conn))
       {
-        keyring::key_delete("redcapAPI", connections[i], keyring)
+        key_delete("redcapAPI", connections[i], keyring)
         api_key <- passwordFUN(paste0(
           "Invalid API_KEY for '", connections[i],"'. '",
                            keyring,
@@ -272,10 +272,10 @@ unlockREDCap    <- function(connections,
         if(is.null(api_key) || api_key == '') stop("unlockREDCap aborted")
       } else
       {
-        if(!stored) keyring::key_set_with_value("redcapAPI",
-                                                username=connections[i],
-                                                password=api_key,
-                                                keyring=keyring)
+        if(!stored) key_set_with_value( "redcapAPI",
+                                        username=connections[i],
+                                        password=api_key,
+                                        keyring=keyring)
       }
     }
     conn

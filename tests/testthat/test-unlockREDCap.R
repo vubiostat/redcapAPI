@@ -1,9 +1,11 @@
 context("unlockREDCap")
 
+library(mockery)
+
 test_that(
   ".connectAndCheck returns result of redcapConnection",
   {
-    mockery::stub(.connectAndCheck, "redcapConnection", list(metadata=function(...) TRUE))
+    stub(.connectAndCheck, "redcapConnection", list(metadata=function(...) TRUE))
   
     expect_true(.connectAndCheck("key", "url")$metadata())
   }
@@ -12,8 +14,8 @@ test_that(
 test_that(
   ".connectAndCheck returns NULL on a 403 (Invalid KEY)",
   {
-    mockery::stub(.connectAndCheck, "redcapConnection",
-                  mockery::mock(stop("403")))
+    stub(.connectAndCheck, "redcapConnection",
+                  mock(stop("403")))
     expect_true(is.null(.connectAndCheck("key", "url")))
   }
 )
@@ -26,7 +28,7 @@ test_that(
 test_that(
   ".unlockYamlOverride return empty list when override yaml doesn't exist",
   {
-    mockery::stub(.unlockYamlOverride, "file.exists", FALSE)
+    stub(.unlockYamlOverride, "file.exists", FALSE)
     
     x <- .unlockYamlOverride("TestRedcapAPI", url)
     expect_class(x, "list")
@@ -37,8 +39,8 @@ test_that(
 test_that(
   ".unlockYamlOverride stops if no redcapAPI entry is found",
   {
-    mockery::stub(.unlockYamlOverride, "file.exists", TRUE)
-    mockery::stub(.unlockYamlOverride, "read_yaml", list())
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml", list())
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
                  "does not contain required 'redcapAPI' entry")
@@ -48,8 +50,8 @@ test_that(
 test_that(
   ".unlockYamlOverride stops if no redcapAPI$keys entry is found",
   {
-    mockery::stub(.unlockYamlOverride, "file.exists", TRUE)
-    mockery::stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list()))
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list()))
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
                  "does not contain required 'keys' entry")
@@ -59,10 +61,10 @@ test_that(
 test_that(
   ".unlockYamlOverride returns an entry for every connection",
   {
-    mockery::stub(.unlockYamlOverride, "file.exists", TRUE)
-    mockery::stub(.unlockYamlOverride, "read_yaml",
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
-    mockery::stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
+    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c("TestRedcapAPI", "Sandbox"), url)
     expect_true(x$TestRedcapAPI)
     expect_true(x$Sandbox)
@@ -72,10 +74,10 @@ test_that(
 test_that(
   ".unlockYamlOverride returns an entry for every connection renamed as requested",
   {
-    mockery::stub(.unlockYamlOverride, "file.exists", TRUE)
-    mockery::stub(.unlockYamlOverride, "read_yaml",
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
-    mockery::stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
+    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
     expect_true(x$rcon)
     expect_true(x$sand)
@@ -85,12 +87,12 @@ test_that(
 test_that(
   ".unlockKeyring pulls password from env and writes back",
   {
-    mockery::stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    mockery::stub(.unlockKeyring, "Sys.getenv", "xyz")
-    mockery::stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "Sys.getenv", "xyz")
+    stub(.unlockKeyring, "keyring_unlock", NULL)
 
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1}
@@ -105,12 +107,12 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password when not in env, unlocks and writes to env",
   {
-    mockery::stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    mockery::stub(.unlockKeyring, "Sys.getenv", "")
-    mockery::stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "Sys.getenv", "")
+    stub(.unlockKeyring, "keyring_unlock", NULL)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -125,12 +127,12 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password and aborts when they cancel",
   {
-    mockery::stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    mockery::stub(.unlockKeyring, "Sys.getenv", "")
-    mockery::stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "Sys.getenv", "")
+    stub(.unlockKeyring, "keyring_unlock", NULL)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
@@ -145,14 +147,14 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password when one in env fails, unlocks and writes to env",
   {
-    mockery::stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    mockery::stub(.unlockKeyring, "Sys.getenv", 
-                  mockery::mock("fail", ""))
-    mockery::stub(.unlockKeyring, "keyring_unlock",
-                  mockery::mock(stop("fail"), "joe"))
+    stub(.unlockKeyring, "Sys.getenv", 
+                  mock("fail", ""))
+    stub(.unlockKeyring, "keyring_unlock",
+                  mock(stop("fail"), "joe"))
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -168,11 +170,11 @@ test_that(
   ".unlockKeyring creates keyring if it doesn't exist",
   {
     Sys.unsetenv("REDCAPAPI_PW")
-    mockery::stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    m <- mockery::mock(TRUE)
+    m <- mock(TRUE)
   
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -180,12 +182,12 @@ test_that(
     with_mocked_bindings(
       {
         .unlockKeyring("MakeMe", passwordFUN)
-        mockery::expect_call(m, 1, keyring_create(keyring,password))
+        expect_call(m, 1, keyring_create(keyring,password))
       },
       keyring_create = m
     )
     
-    expect_equal(mockery::mock_args(m)[[1]], list("MakeMe", "xyz"))
+    expect_equal(mock_args(m)[[1]], list("MakeMe", "xyz"))
     expect_true(calls == 1) # Asks user for password
     expect_true(Sys.getenv("REDCAPAPI_PW") == "xyz") # Stores result
   }
@@ -196,11 +198,11 @@ test_that(
   ".unlockKeyring creates keyring respects user cancel",
   {
     Sys.unsetenv("REDCAPAPI_PW")
-    mockery::stub(.unlockKeyring, "keyring_list", 
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
-    m <- mockery::mock(TRUE)
+    stub(.unlockKeyring, "keyring_list", 
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
+    m <- mock(TRUE)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
@@ -208,12 +210,34 @@ test_that(
     with_mocked_bindings(
       {
         expect_error(.unlockKeyring("MakeMe", passwordFUN), "User cancelled")
-        mockery::expect_called(m, 0)
+        expect_called(m, 0)
       },
       keyring_create = m
     )
     
     expect_true(calls == 1) # Asks user for password
     expect_true(Sys.getenv("REDCAPAPI_PW") == "") # Nothing Stored
+  }
+)
+
+test_that(
+  "unlockREDCap pulls API_KEY and opens connection from keyring returning as list",
+  {
+    stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
+    
+    expect_silent(x <- unlockREDCap(c(rcon="TestRedcapAPI"), url, keyring="API_KEYs"))
+    expect_true("rcon" %in% names(x))
+    expect_class(x$rcon, "redcapApiConnection")
+  }
+)
+
+test_that(
+  "unlockREDCap pulls API_KEY and opens connection from keyring written to env",
+  {
+    stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
+    
+    expect_silent(x <- unlockREDCap(c(rcon="TestRedcapAPI"), url, keyring="API_KEYs", envir=1))
+    expect_true(exists("rcon"))
+    expect_class(rcon, "redcapApiConnection")
   }
 )
