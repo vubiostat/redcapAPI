@@ -74,7 +74,7 @@
 ##
 .unlockKeyring <- function(keyring, passwordFUN)
 {
-  state <- keyring::keyring_list()
+  state <- keyring_list()
   state <- state[state$keyring==keyring,]
   
   # If so, does it exist?
@@ -82,17 +82,17 @@
   {
     locked <- state$locked
     # Is it locked
+    msg      <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
     while(locked)
     {
-      msg      <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
       password <- Sys.getenv("REDCAPAPI_PW")
       stored   <- !is.null(password) && password != ''
       if(!stored) password <- passwordFUN(msg)
-      if(is.null(password) || password == '') stop(paste0("User aborted API keyring unlock '",keyring, "'."))
+      if(is.null(password) || password == '') stop(paste0("User aborted keyring '",keyring, "' unlock."))
       
       tryCatch(
         {
-          keyring::keyring_unlock(keyring, password)
+          keyring_unlock(keyring, password)
           Sys.setenv(REDCAPAPI_PW=password)
           # Hacked work around for RStudio starting new session for everything
           if(requireNamespace("rstudioapi", quietly = TRUE) &&
@@ -108,7 +108,7 @@
             stored <- FALSE
           } else
           {
-            msg <-  paste0("Provided assword failed to unlock. Please enter password to unlock API keyring '",keyring, "'.")
+            msg <-  paste0("Provided password failed. Please enter password to unlock API keyring '",keyring, "'.")
           }
         }
       )
@@ -119,7 +119,7 @@
                                    keyring, "'."))
     if(is.null(password) || password == '') stop(paste0("User cancelled creation of keyring '", keyring, "'."))
 
-    keyring::keyring_create(keyring, password)
+    keyring_create(keyring, password)
     Sys.setenv(REDCAPAPI_PW=password)
     if(requireNamespace("rstudioapi", quietly = TRUE) &&
        rstudioapi::isAvailable(child_ok=TRUE))
