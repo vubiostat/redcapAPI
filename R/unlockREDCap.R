@@ -214,6 +214,7 @@
 #'              keyring      = '<NAME_OF_KEY_RING_HERE>',
 #'              envir        = globalenv(),
 #'              url          = 'https://<INSTITUTIONS_REDCAP_URL>/api/') 
+#' }
 #' @export
 unlockREDCap    <- function(connections,
                             url,
