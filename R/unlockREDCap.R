@@ -27,7 +27,8 @@
     },
     error = function(e)
     {
-      if(grepl("Could not resolve host", e) || grepl("Couldn't connect to server", e))
+      if(grepl("Could not resolve host",     e) ||
+         grepl("Couldn't connect to server", e))
         stop("Unable to connect to url '",url,"'. ", e$message)
         
       if(grepl("403", e)) return(NULL)
@@ -40,31 +41,30 @@
   #############################################################################
  ## unlock via YAML override if it exists
 ##
-.unlockYamlOverride <- function(connections, url, varnames, ...)
+.unlockYamlOverride <- function(connections, url, ...)
 {
   config_file <- file.path("..", paste0(basename(getwd()),".yml"))
   
-  dest <- list()
-  
-  if(!file.exists(config_file)) return(dest)
+  if(!file.exists(config_file)) return(list())
   
   config <- read_yaml(config_file)
-  if(is.null(config$redcapAPI)) stop(paste0("Config file '",config_file,"' does not contain a required 'redcapAPI' section"))
+  if(is.null(config$redcapAPI)) stop(paste0("Config file '",config_file,"' does not contain required 'redcapAPI' entry"))
   config <- config$redcapAPI
-  if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain a required 'keys' section under the 'redcapAPI' section"))
+  if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain required 'keys' entry under the 'redcapAPI' entry"))
   keys   <- config$keys
   if(!is.null(config$args$url))  url <- config$args$url # Override from yml if available
   config$args$url <- NULL
   args   <- c(config$args, url = url, list(...))
     
-  for(i in seq_along(connections))
+  dest <- lapply(seq_along(connections), function(i) 
   {
-    args$key  <- keys[[connections[i]]]
+    args$key  <- keys[connections[i]]
     
     if(is.null(args$key)) stop(paste0("Config file '", config_file, "'does not have API_KEY for '",connections[i],"' under keys specified."))
     
-    dest[varnames[i]] <- do.call(FUN, args)
-  }
+    do.call(.connectAndCheck, args)
+  })
+  names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
   return(dest)
 }
@@ -94,6 +94,10 @@
         {
           keyring::keyring_unlock(keyring, password)
           Sys.setenv(REDCAPAPI_PW=password)
+          # Hacked work around for RStudio starting new session for everything
+          if(requireNamespace("rstudioapi", quietly = TRUE) &&
+            rstudioapi::isAvailable(child_ok=TRUE))
+            rstudioapi::sendToConsole(paste0("Sys.setenv(REDCAPAPI_PW='", password, "')"), execute = TRUE, echo=FALSE)
           locked <- FALSE
         },
         error = function(e)
@@ -117,6 +121,10 @@
 
     keyring::keyring_create(keyring, password)
     Sys.setenv(REDCAPAPI_PW=password)
+    if(requireNamespace("rstudioapi", quietly = TRUE) &&
+       rstudioapi::isAvailable(child_ok=TRUE))
+      rstudioapi::sendToConsole(paste0("Sys.setenv(REDCAPAPI_PW='", password, "')"), execute = TRUE, echo=FALSE)
+    
   }
 }
 
@@ -226,10 +234,7 @@ unlockREDCap    <- function(connections,
   checkmate::assert_function( x = passwordFUN,  null.ok = FALSE, add = coll)
   checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
   checkmate::reportAssertions(coll)
-  
-  # Use the global environment for variable storage unless one was specified
-  varnames <- if(is.null(names(connections))) connections else names(connections)
-  
+
   # Use YAML config if it exists
   dest <- .unlockYamlOverride(connections, url, varnames, ...)
   if(length(dest) > 0) 
@@ -275,7 +280,7 @@ unlockREDCap    <- function(connections,
     }
     conn
   })
-  names(dest) <- varnames
+  names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
   if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
