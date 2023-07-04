@@ -213,7 +213,7 @@
 #'                sandbox_conn = 'SandboxAPI'),
 #'              keyring      = '<NAME_OF_KEY_RING_HERE>',
 #'              envir        = globalenv(),
-#'              url          = 'https://<INSTITUTIONS_REDCAP_URL>/api/') 
+#'              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 #' }
 #' @export
 unlockREDCap    <- function(connections,
@@ -264,7 +264,7 @@ unlockREDCap    <- function(connections,
       conn <- .connectAndCheck(api_key, url, ...)
       if(is.null(conn))
       {
-        key_delete("redcapAPI", connections[i], keyring)
+        key_delete("redcapAPI", unname(connections[i]), keyring)
         api_key <- passwordFUN(paste0(
           "Invalid API_KEY for '", connections[i],
           "' in keyring '", keyring,
@@ -273,8 +273,8 @@ unlockREDCap    <- function(connections,
         if(is.null(api_key) || api_key == '') stop("unlockREDCap aborted")
       } else if(!stored)
       {
-        key_set_with_value( "redcapAPI",
-                            username=connections[i],
+        key_set_with_value( service="redcapAPI",
+                            username=unname(connections[i]),
                             password=api_key,
                             keyring=keyring)
       }

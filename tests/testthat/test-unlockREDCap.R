@@ -236,8 +236,47 @@ test_that(
   {
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
-    expect_silent(x <- unlockREDCap(c(rcon="TestRedcapAPI"), url, keyring="API_KEYs", envir=1))
+    calls <- 0
+    passwordFUN <- function(...) {calls <<- calls + 1; ""}
+    
+    expect_silent(unlockREDCap(
+      c(rcon="TestRedcapAPI"), url, keyring="API_KEYs",
+      envir=1, passwordFUN=passwordFUN))
+    
     expect_true(exists("rcon"))
     expect_class(rcon, "redcapApiConnection")
+    expect_true(calls == 0) # No password requests
+  }
+)
+
+test_that(
+  "unlockREDCap asks for API_KEY if not stored, opens connection and stores",
+  {
+    stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
+    
+    stub(unlockREDCap, "key_list",
+         data.frame(service="recapAPI", username="Nadda"))
+    
+    calls <- 0
+    passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
+    
+    m <- mock(TRUE)
+    n <- mock(TRUE)
+    
+    with_mocked_bindings(
+      x <- unlockREDCap(
+        c(rcon="George"), url, keyring="API_KEYs",
+        envir=1, passwordFUN=passwordFUN),
+      key_set_with_value = m,
+      .connectAndCheck = n
+    )
+
+    expect_true("rcon" %in% names(x))
+    expect_true(x$rcon)
+    expect_true(calls == 1) # Called to ask once
+    expect_called(m, 1) # Called key_set_with_value once
+    #print(mock_args(m)[[1]])
+    expect_equal(mock_args(m)[[1]], list(service="redcapAPI", username="George", password="xyz", keyring="API_KEYs"))
+    expect_called(n, 1) # Called .connectAndCheck
   }
 )
