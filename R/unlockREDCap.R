@@ -60,7 +60,7 @@
   {
     args$key  <- keys[connections[i]]
     
-    if(is.null(args$key)) stop(paste0("Config file '", config_file, "'does not have API_KEY for '",connections[i],"' under keys specified."))
+    if(is.null(args$key)) stop(paste0("Config file '", config_file, "' does not have API_KEY for '",connections[i],"' under redcapAPI: keys: specified."))
     
     do.call(.connectAndCheck, args)
   })
@@ -105,6 +105,9 @@
           if(stored) 
           {
             Sys.unsetenv("REDCAPAPI_PW")
+            if(requireNamespace("rstudioapi", quietly = TRUE) &&
+               rstudioapi::isAvailable(child_ok=TRUE))
+              rstudioapi::sendToConsole('Sys.unsetenv("REDCAPAPI_PW")', execute = TRUE, echo=FALSE)
             stored <- FALSE
           } else
           {
@@ -124,7 +127,6 @@
     if(requireNamespace("rstudioapi", quietly = TRUE) &&
        rstudioapi::isAvailable(child_ok=TRUE))
       rstudioapi::sendToConsole(paste0("Sys.setenv(REDCAPAPI_PW='", password, "')"), execute = TRUE, echo=FALSE)
-    
   }
 }
 
