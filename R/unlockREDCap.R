@@ -38,6 +38,30 @@
   )
 }
 
+.savePWGlobalEnv <- function(password)
+{
+  Sys.setenv(REDCAPAPI_PW=password)
+  
+  # Hacked work around for RStudio starting new session for everything
+  if(requireNamespace("rstudioapi", quietly = TRUE) &&
+     rstudioapi::isAvailable(child_ok=TRUE))
+    rstudioapi::sendToConsole(sprintf("Sys.setenv(REDCAPAPI_PW='%s')", password), execute = TRUE, echo=FALSE)
+}
+
+.clearPWGlobalEnv <- function()
+{
+  Sys.unsetenv("REDCAPAPI_PW")
+  # Hacked work around for RStudio starting new session for everything
+  if(requireNamespace("rstudioapi", quietly = TRUE) &&
+     rstudioapi::isAvailable(child_ok=TRUE))
+    rstudioapi::sendToConsole('Sys.unsetenv("REDCAPAPI_PW")', execute = TRUE, echo=FALSE)
+}
+
+.getPWGlobalEnv <- function()
+{
+  Sys.getenv("REDCAPAPI_PW")
+}
+
   #############################################################################
  ## unlock via YAML override if it exists
 ##
@@ -85,7 +109,7 @@
     msg      <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
     while(locked)
     {
-      password <- Sys.getenv("REDCAPAPI_PW")
+      password <- .getPWGlobalEnv()
       stored   <- !is.null(password) && password != ''
       if(!stored) password <- passwordFUN(msg)
       if(is.null(password) || password == '') stop(paste0("User aborted keyring '",keyring, "' unlock."))
@@ -93,21 +117,14 @@
       tryCatch(
         {
           keyring_unlock(keyring, password)
-          Sys.setenv(REDCAPAPI_PW=password)
-          # Hacked work around for RStudio starting new session for everything
-          if(requireNamespace("rstudioapi", quietly = TRUE) &&
-            rstudioapi::isAvailable(child_ok=TRUE))
-            rstudioapi::sendToConsole(paste0("Sys.setenv(REDCAPAPI_PW='", password, "')"), execute = TRUE, echo=FALSE)
+          .savePWGlobalEnv(password)
           locked <- FALSE
         },
         error = function(e)
         {
           if(stored) 
           {
-            Sys.unsetenv("REDCAPAPI_PW")
-            if(requireNamespace("rstudioapi", quietly = TRUE) &&
-               rstudioapi::isAvailable(child_ok=TRUE))
-              rstudioapi::sendToConsole('Sys.unsetenv("REDCAPAPI_PW")', execute = TRUE, echo=FALSE)
+            .clearPWGlobalEnv()
             stored <- FALSE
           } else
           {
@@ -123,10 +140,7 @@
     if(is.null(password) || password == '') stop(paste0("User cancelled creation of keyring '", keyring, "'."))
 
     keyring_create(keyring, password)
-    Sys.setenv(REDCAPAPI_PW=password)
-    if(requireNamespace("rstudioapi", quietly = TRUE) &&
-       rstudioapi::isAvailable(child_ok=TRUE))
-      rstudioapi::sendToConsole(paste0("Sys.setenv(REDCAPAPI_PW='", password, "')"), execute = TRUE, echo=FALSE)
+    .savePWGlobalEnv(password)
   }
 }
 

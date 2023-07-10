@@ -91,7 +91,7 @@ test_that(
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    stub(.unlockKeyring, "Sys.getenv", "xyz")
+    stub(.unlockKeyring, ".getPWGlobalEnv", "xyz")
     stub(.unlockKeyring, "keyring_unlock", NULL)
 
     calls <- 0
@@ -111,7 +111,7 @@ test_that(
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    stub(.unlockKeyring, "Sys.getenv", "")
+    stub(.unlockKeyring, ".getPWGlobalEnv", "")
     stub(.unlockKeyring, "keyring_unlock", NULL)
     
     calls <- 0
@@ -131,7 +131,7 @@ test_that(
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
-    stub(.unlockKeyring, "Sys.getenv", "")
+    stub(.unlockKeyring, ".getPWGlobalEnv", "")
     stub(.unlockKeyring, "keyring_unlock", NULL)
     
     calls <- 0
