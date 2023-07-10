@@ -100,13 +100,13 @@
 {
   state <- keyring_list()
   state <- state[state$keyring==keyring,]
+  msg   <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
   
   # If so, does it exist?
   if(nrow(state) == 1) # Exists => UNLOCK
   {
     locked <- state$locked
     # Is it locked
-    msg      <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
     while(locked)
     {
       password <- .getPWGlobalEnv()
@@ -126,10 +126,8 @@
           {
             .clearPWGlobalEnv()
             stored <- FALSE
-          } else
-          {
-            msg <-  paste0("Provided password failed. Please enter password to unlock API keyring '",keyring, "'.")
-          }
+          } 
+          msg <<-  paste0("Provided password failed. Please enter password to unlock API keyring '",keyring, "'.")
         }
       )
     }
