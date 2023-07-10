@@ -201,6 +201,7 @@
 #' @importFrom yaml read_yaml
 #' @importFrom keyring key_get
 #' @importFrom keyring key_list
+#' @importFrom keyring key_delete
 #' @importFrom keyring key_set_with_value
 #' @importFrom keyring keyring_create
 #' @importFrom keyring keyring_list
@@ -239,7 +240,7 @@ unlockREDCap    <- function(connections,
   checkmate::reportAssertions(coll)
 
   # Use YAML config if it exists
-  dest <- .unlockYamlOverride(connections, url, varnames, ...)
+  dest <- .unlockYamlOverride(connections, url, ...)
   if(length(dest) > 0) 
     return(if(is.null(envir)) dest else list2env(dest, envir=envir))
   
