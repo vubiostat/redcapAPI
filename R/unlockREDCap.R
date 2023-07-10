@@ -122,11 +122,8 @@
         },
         error = function(e)
         {
-          if(stored) 
-          {
-            .clearPWGlobalEnv()
-            stored <- FALSE
-          } 
+          if(stored) .clearPWGlobalEnv()
+        
           msg <<-  paste0("Provided password failed. Please enter password to unlock API keyring '",keyring, "'.")
         }
       )
