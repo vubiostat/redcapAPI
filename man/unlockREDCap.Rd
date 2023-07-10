@@ -82,6 +82,6 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = '<NAME_OF_KEY_RING_HERE>',
              envir        = globalenv(),
-             url          = 'https://<INSTITUTIONS_REDCAP_URL>/api/') 
+             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 }
 }
