@@ -1,3 +1,7 @@
+## 2.7.4
+
+* unlockREDCap: major refactor / rewrite. Many edges cases handled gracefully with better error messaging. Now with less password requests.
+
 ## 2.7.3
 
 * dags: Added ability to get DAG information from connection object, e.g. `rcon$dags()`
