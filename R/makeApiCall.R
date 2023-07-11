@@ -169,7 +169,8 @@ makeApiCall <- function(rcon,
                  body = c(list(token = rcon$token), 
                           body),
                  config = c(rcon$config, 
-                            config))
+                            config),
+                 httr::timeout(300))
     
     httr_config <- getOption("httr_config")
     if(!is.null(httr_config)                     &&
