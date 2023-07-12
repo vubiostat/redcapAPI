@@ -238,13 +238,14 @@ test_that(
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
+    e <- new.env()
     
     expect_silent(unlockREDCap(
       c(rcon="TestRedcapAPI"), url, keyring="API_KEYs",
-      envir=1, passwordFUN=passwordFUN))
+      envir=e, passwordFUN=passwordFUN))
     
-    expect_true(exists("rcon"))
-    expect_class(rcon, "redcapApiConnection")
+    expect_true(exists("rcon", envir=e))
+    expect_class(e[["rcon"]], "redcapApiConnection")
     expect_true(calls == 0) # No password requests
   }
 )
@@ -262,11 +263,11 @@ test_that(
     
     m <- mock(TRUE)
     n <- mock(TRUE)
-    
+
     with_mocked_bindings(
       x <- unlockREDCap(
         c(rcon="George"), url, keyring="API_KEYs",
-        envir=1, passwordFUN=passwordFUN),
+        passwordFUN=passwordFUN),
       key_set_with_value = m,
       .connectAndCheck = n
     )
