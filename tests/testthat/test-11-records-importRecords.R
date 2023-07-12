@@ -153,3 +153,81 @@ test_that(
     deleteRecords(rcon, records = next_record_id)
   }
 )
+
+#####################################################################
+# Tests for dates with validation                                ####
+# See Issue 176
+
+test_that(
+  "Validations of `today` and `now`",
+  {
+    # Date variable with today in min validation ####
+    OrigMeta <- rcon$metadata()
+    w_var <- which(OrigMeta$field_name == "date_ymd_test")
+
+    OrigMeta$text_validation_min[w_var] <- "today"
+    importMetaData(rcon, OrigMeta)
+    
+    NewData <- exportRecordsTyped(rcon)
+    NewData <- NewData[NewData$record_id == 10, 
+                       c("record_id", "redcap_event_name", 
+                         "redcap_repeat_instrument", "redcap_repeat_instance", 
+                         "redcap_data_access_group", "date_ymd_test")]
+    expect_equal(importRecords(rcon, NewData), "1")
+    
+    OrigMeta$text_validation_min[w_var] <- NA_character_
+    importMetaData(rcon, OrigMeta)
+    
+    # Date variable with today in max validation ####
+    OrigMeta <- rcon$metadata()
+    w_var <- which(OrigMeta$field_name == "date_ymd_test")
+    
+    OrigMeta$text_validation_max[w_var] <- "today"
+    importMetaData(rcon, OrigMeta)
+    
+    NewData <- exportRecordsTyped(rcon)
+    NewData <- NewData[NewData$record_id == 10, 
+                       c("record_id", "redcap_event_name", 
+                         "redcap_repeat_instrument", "redcap_repeat_instance", 
+                         "redcap_data_access_group", "date_ymd_test")]
+    expect_equal(importRecords(rcon, NewData), "1")
+    
+    OrigMeta$text_validation_max[w_var] <- NA_character_
+    importMetaData(rcon, OrigMeta)
+    
+    # Date/time variable with now in min validation ####
+    OrigMeta <- rcon$metadata()
+    w_var <- which(OrigMeta$field_name == "datetime_ymd_hms_test")
+    
+    OrigMeta$text_validation_min[w_var] <- "now"
+    importMetaData(rcon, OrigMeta)
+    
+    NewData <- exportRecordsTyped(rcon)
+    NewData <- NewData[NewData$record_id == 10, 
+                       c("record_id", "redcap_event_name", 
+                         "redcap_repeat_instrument", "redcap_repeat_instance", 
+                         "redcap_data_access_group", "date_ymd_test")]
+    expect_equal(importRecords(rcon, NewData), "1")
+    
+    OrigMeta$text_validation_min[w_var] <- NA_character_
+    importMetaData(rcon, OrigMeta)
+    
+    # Date/time variable with now in max validation ####
+    OrigMeta <- rcon$metadata()
+    w_var <- which(OrigMeta$field_name == "datetime_ymd_hms_test")
+    
+    OrigMeta$text_validation_max[w_var] <- "now"
+    importMetaData(rcon, OrigMeta)
+    
+    NewData <- exportRecordsTyped(rcon)
+    NewData <- NewData[NewData$record_id == 10, 
+                       c("record_id", "redcap_event_name", 
+                         "redcap_repeat_instrument", "redcap_repeat_instance", 
+                         "redcap_data_access_group", "date_ymd_test")]
+    expect_equal(importRecords(rcon, NewData), "1")
+    
+    OrigMeta$text_validation_max[w_var] <- NA_character_
+    importMetaData(rcon, OrigMeta)
+    
+  }
+)

@@ -350,7 +350,7 @@ test_that(
     roff <- 
       expect_warning(
         offlineConnection(users = file), 
-        "as expected. [{]email, firstname, lastname, mobile_app, mobile_app_download_data[}]")
+        "as expected. [{]email, firstname, lastname, alerts, mobile_app, mobile_app_download_data[}]")
     
     expect_true(roff$has_users())
   }
