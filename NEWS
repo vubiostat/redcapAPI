@@ -1,5 +1,6 @@
 ## 2.7.4
 
+* Timeout on connections defaults to 5m. 
 * Clearer error message on connection closed.
 * export/import handles the now and today validation words for dates and date/times.
 * unlockREDCap: major refactor / rewrite. Many edges cases handled gracefully with better error messaging. Now with less password requests.
