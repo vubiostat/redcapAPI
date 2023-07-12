@@ -52,7 +52,8 @@ prepUserImportData <- function(data,
   export_access_field <- names(data)[grepl("_export_access$", names(data))]
   instrument <- rcon$instruments()$instrument_name
   
-  prepUserImportData_validateAllFormsPresent(form_access_field = form_access_field, 
+  prepUserImportData_validateAllFormsPresent(data = data, 
+                                             form_access_field = form_access_field, 
                                              export_access_field = export_access_field, 
                                              instrument = instrument,
                                              consolidate = consolidate, 
@@ -172,7 +173,8 @@ prepUserImportData_extractFormName <- function(x, instrument){
   instrument[instrument_present]
 }
 
-prepUserImportData_validateAllFormsPresent <- function(form_access_field, 
+prepUserImportData_validateAllFormsPresent <- function(data, 
+                                                       form_access_field, 
                                                        export_access_field, 
                                                        instrument,
                                                        consolidate, 
