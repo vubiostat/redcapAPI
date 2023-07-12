@@ -153,6 +153,9 @@ exportUsers.redcapApiConnection <- function(rcon,
                            stringsAsFactors = FALSE,
                            na.strings = "")
   
+  Users$forms_export <- 
+    sub(",registration[:]\\d{1}.+$", "", Users$forms_export)
+  
    ##################################################################
   # convert expiration date to POSIXct class 
   if (dates){
