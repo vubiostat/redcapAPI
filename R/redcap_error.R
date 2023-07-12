@@ -57,7 +57,11 @@ redcap_error <- function(x, error_handling)
     return(NULL)
   } else if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message)){
     return(FILE_REPOSITORY_EMPTY_FRAME)
+  } else if (grepl("Connection reset by peer", error_message)){
+    stop(paste0(.RESET_BY_PEER, ": ", as.character(x)))
   } else{ 
     stop(paste0(x$status_code, ": ", as.character(x)))
   }
 }
+
+.RESET_BY_PEER <- "A network error has occurred. This can happen when too much data is requested causing a timeout (consider batching), or when REDCap is having trouble servicing requests. It may also be a misconfigured proxy or network routing congestion."
