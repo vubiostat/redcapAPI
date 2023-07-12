@@ -246,7 +246,7 @@ importFileRepository.redcapApiConnection <- function(rcon,
                                               folder_id = this_folder_id, 
                                               dag_id = dag_id, 
                                               role_id = role_id, 
-                                              refresh = FALSE)
+                                              refresh = TRUE)
       
       LocalRepo$remote_folder_id[i] <- NewFolder$folder_id
     } else {
@@ -260,7 +260,7 @@ importFileRepository.redcapApiConnection <- function(rcon,
       NewFile <- importToFileRepository(rcon, 
                                         file = this_file, 
                                         folder_id = this_folder_id, 
-                                        refresh = FALSE)
+                                        refresh = TRUE)
     }
   }
   
