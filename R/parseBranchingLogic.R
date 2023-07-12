@@ -25,6 +25,7 @@
 #' 
 
 parseBranchingLogic <- function(l){
+  l <- tolower(l)
   l <- gsub("\\n", " ", l)
   l <- gsub(" or ", " | ", l)
   l <- gsub(" and ", " & ", l)
