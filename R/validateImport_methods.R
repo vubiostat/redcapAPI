@@ -46,6 +46,12 @@ validate_import_form_complete <- function(x, field_name, logfile)
 
 validate_import_date <- function(x, field_name, field_min, field_max, logfile)
 {
+  if (isTRUE(trimws(field_min) == "today")) field_min = format(Sys.Date())
+  if (isTRUE(trimws(field_min) == "now")) field_min = format(Sys.time())
+  
+  if (isTRUE(trimws(field_max) == "today")) field_max = format(Sys.Date())
+  if (isTRUE(trimws(field_max) == "now")) field_max = format(Sys.time())
+  
   x_orig <- x
   if (!inherits(x, "Date") && !inherits(x, "POSIXct"))
   {
@@ -100,6 +106,12 @@ validate_import_date <- function(x, field_name, field_min, field_max, logfile)
 # * When a date is greater than field_max, a message is returned.
 validate_import_datetime <- function(x, field_name, field_min, field_max, logfile)
 {
+  if (isTRUE(trimws(field_min) == "today")) field_min = format(Sys.Date())
+  if (isTRUE(trimws(field_min) == "now")) field_min = format(Sys.time())
+  
+  if (isTRUE(trimws(field_max) == "today")) field_max = format(Sys.Date())
+  if (isTRUE(trimws(field_max) == "now")) field_max = format(Sys.time())
+  
   x_orig <- x
   if (!inherits(x, "Date") && !inherits(x, "POSIXct"))
   {
@@ -153,6 +165,12 @@ validate_import_datetime <- function(x, field_name, field_min, field_max, logfil
 # * When a date is greater than field_max, a message is returned.
 validate_import_datetime_seconds <- function(x, field_name, field_min, field_max, logfile)
 {
+  if (isTRUE(trimws(field_min) == "today")) field_min = format(Sys.Date())
+  if (isTRUE(trimws(field_min) == "now")) field_min = format(Sys.time())
+  
+  if (isTRUE(trimws(field_max) == "today")) field_max = format(Sys.Date())
+  if (isTRUE(trimws(field_max) == "now")) field_max = format(Sys.time())
+  
   x_orig <- x
   if (!inherits(x, "Date") && !inherits(x, "POSIXct"))
   {
