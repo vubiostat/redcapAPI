@@ -28,6 +28,10 @@ For a study, I was asked to identify which subjects had missing
   the branching logic.  Parsing the logic allowed me to determine which 
   values we expected to be missing and narrow the search to just those 
   subjects with legitimately missing values.
+  
+  The utility of this function is limited to simple logic where all of the
+  data exist within the same row. Any complex statements using events 
+  will result in a failure.
 }
 \author{
 Benjamin Nutter
