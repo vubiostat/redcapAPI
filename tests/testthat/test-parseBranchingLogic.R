@@ -46,3 +46,19 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Test use of conjunctions AND/OR", 
+  {
+    logic <- c("[abc] < 1 AND [xyz] > 10", 
+               "[abc] < 1 OR [xyz] > 10", 
+               "[abc] < 1 and [xyz] > 10", 
+               "[abc] < 1 or [xyz] > 10")
+    
+    expect_identical(parseBranchingLogic(logic), 
+                     list(expression(abc < 1 & xyz > 10), 
+                          expression(abc < 1 | xyz > 10), 
+                          expression(abc < 1 & xyz > 10), 
+                          expression(abc < 1 | xyz > 10)))
+  }
+)

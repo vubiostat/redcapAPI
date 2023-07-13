@@ -1,5 +1,6 @@
 ## 2.7.4
 
+* Fixed upper/lower case for AND/OR in parseBranchingLogic
 * Added a `system` field type for mapping with `castLabel` and `castRaw`.
 * Dags are added to connection cache.
 * Timeout on connections defaults to 5m. 
