@@ -355,7 +355,8 @@ offlineConnection <- function(meta_data = NULL,
                               project_info = NULL, 
                               file_repo = NULL, 
                               repeat_instrument = NULL,
-                              records = NULL){
+                              records = NULL, 
+                              dags = NULL){
   ###################################################################
   # Argument Validation 
   coll <- checkmate::makeAssertCollection()
@@ -481,6 +482,16 @@ offlineConnection <- function(meta_data = NULL,
     add = coll
   )
   
+  checkmate::assert(
+    checkmate::check_character(x = dags, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = dags, 
+                                null.ok = TRUE), 
+    .var.name = "dags", 
+    add = coll
+  )
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -541,6 +552,11 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
+  if (is.character(dags)){
+    checkmate::assert_file_exists(x = dags, 
+                                  add = coll)
+  }
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -584,6 +600,11 @@ offlineConnection <- function(meta_data = NULL,
       validateRedcapData(data = .offlineConnection_readFile(instruments), 
                          redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
     }
+  
+  this_dag <- 
+    validateRedcapData(data = .offlineConnection_readFile(dags), 
+                       redcap_data = REDCAP_DAG_STRUCTURE)
+  
   this_record <- .offlineConnection_readFile(records)
   
   rc <- 
@@ -672,6 +693,12 @@ offlineConnection <- function(meta_data = NULL,
       refresh_repeatInstrumentEvent = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                                        redcap_data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE)},
       
+      dags = function(){ this_dag }, 
+      has_dags = function() !is.null(this_dag), 
+      flush_dags = function() this_dag <<- NULL, 
+      refresh_dags = function(x) {this_dag <<- validateRedcapData(data = .offlineConnection_readFile(dags), 
+                                                                  redcap_data = REDCAP_DAG_STRUCTURE)},
+      
       records = function(){ this_record },
       has_records = function() !is.null(this_record),
       flush_records = function() this_record <<- NULL,
@@ -704,7 +731,8 @@ print.redcapOfflineConnection <- function(x, ...){
         sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
         sprintf("Mapping     : %s", is_cached(x$has_mapping())),
         sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
-        sprintf("Users       : %s", is_cached(x$has_users())), 
+        sprintf("Users       : %s", is_cached(x$has_users())),
+        sprintf("DAGs        : %s", is_cached(x$has_dags())),
         sprintf("Version     : %s", is_cached(x$has_version())), 
         sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
         sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))

@@ -54,14 +54,15 @@ test_that(
 test_that(
   "Data returned only for designated event",
   {
-    Records <- exportRecordsTyped(rcon, events = "event_1_arm_1")
+    Records <- exportRecordsTyped(rcon, events = "event_1_arm_1", 
+                                  cast = list(system = castRaw))
     expect_true(all(Records$redcap_event_name %in% "event_1_arm_1"))
   }
 )
 
 
-###################################################################
-# Test attribute assignments versus defaults
+#####################################################################
+# Test attribute assignments versus defaults                     ####
 rec <- exportRecordsTyped(rcon)
 test_that(
   "HTML and Unicode is stripped by default",
@@ -74,8 +75,8 @@ test_that(
 )
 rm(rec)
 
-###################################################################
-# NA Detection
+#####################################################################
+# NA Detection                                                   ####
 test_that(
   "NA can be override for user definitions",
   {
@@ -84,8 +85,8 @@ test_that(
   }
 )
 
-###################################################################
-# Validation
+#####################################################################
+# Validation                                                     ####
 test_that(
   "Custom validation works",
   {
@@ -122,8 +123,8 @@ test_that(
   }
 )
 
-###################################################################
-# Casting
+#####################################################################
+# Casting                                                        ####
 test_that(
   "Dates can be cast using as.Date",
   {
@@ -142,7 +143,7 @@ test_that(
 )
 
 #####################################################################
-# Export calculated fields
+# Export calculated fields                                       ####
 
 test_that(
   "Calculated fields are exported", 
@@ -157,7 +158,7 @@ test_that(
 )
 
 #####################################################################
-# Export for a single record
+# Export for a single record                                     ###f
 
 test_that(
   "Export succeeds for a single record", 
@@ -185,7 +186,7 @@ test_that(
 )
 
 #####################################################################
-# Yes/No fields are cast properly
+# Yes/No fields are cast properly                                ####
 
 test_that(
   "Yes/No fields are labelled correctly", 
@@ -285,5 +286,61 @@ test_that(
     expect_error(exportRecordsTyped(rcon, 
                                     api_param = list(fields = "this_wont_work_abc123")), 
                  "The following values in the parameter \"fields\" are not valid")
+  }
+)
+
+
+#####################################################################
+# Casting System Fields                                          ####
+
+test_that(
+  "System fields cast as labelled", 
+  {
+    Rec <- exportRecordsTyped(rcon)
+    
+    # redcap_event_name
+    Event <- rcon$events()
+    Arm <- rcon$arms()
+    
+    EventArm <- merge(Event, 
+                      Arm, 
+                      by = "arm_num", 
+                      all.x = TRUE)
+    
+    levels <- sprintf("%s (Arm %s: %s)", 
+                      EventArm$event_name, 
+                      EventArm$arm_num, 
+                      EventArm$name)
+    
+    expect_equal(levels(Rec$redcap_event_name), 
+                 levels)
+    
+    # redcap_repeat_instrument
+    Instrument <- rcon$instruments()
+    
+    expect_equal(levels(Rec$redcap_repeat_instrument), 
+                 rcon$instruments()$instrument_label)
+    
+    # redcap_data_access_group
+    # FIXME: Add tests for DAGs
+  }
+)
+
+test_that(
+  "System fields cast as raw", 
+  {
+    Rec <- exportRecordsTyped(rcon, 
+                              cast = list(system = castRaw))
+    
+    # redcap_event_name
+    expect_true(all(Rec$redcap_event_name %in% 
+                      rcon$events()$unique_event_name))
+    
+    # redcap_repeat_instrument
+    expect_true(all(Rec$redcap_repeat_instrument %in%
+                       c(rcon$instruments()$instrument_name, NA_character_)))
+    
+    # redcap_data_access_group
+    # FIXME: Add tests for DAGs
   }
 )

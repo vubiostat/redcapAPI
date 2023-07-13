@@ -579,6 +579,20 @@ mChoiceCast <- function(data,
                                                  "redcap_data_access_group"))
   field_types[which_system_field] <- rep("system", length(which_system_field))
   
+  # Set system fields to text if the data sets needed to make the code books
+  # is not present. (this is more common with offline connections)
+  if (is.null(rcon$events())){
+    field_types[field_names %in% "redcap_event_name"] <- 
+      rep("text", 
+          sum(field_names %in% "redcap_event_name"))
+  }
+  
+  if (is.null(rcon$events())){
+    field_types[field_names %in% "redcap_data_access_group"] <- 
+      rep("text", 
+          sum(field_names %in% "redcap_data_access_group"))
+  }
+  
   field_types
 }
 
@@ -620,28 +634,39 @@ mChoiceCast <- function(data,
   codings
 }
 
+# This function gets the codings for system fields so that they can be
+# cast to raw or label. These apply to 
+# redcap_event_name (requires both rcon$arms and rcon$events)
+# redcap_repeat_instrument (requires rcon$instruments)
+# redcap_data_access_group (requires rcon$dags)
 .castRecords_getSystemCoding <- function(field_name, 
                                          rcon){
   if (field_name == "redcap_event_name"){
     Event <- rcon$events()
     Arm <- rcon$arms()
     
-    EventArm <- merge(Event, 
-                      Arm, 
-                      by = "arm_num", 
-                      all.x = TRUE)
-    
-    EventArm$data_label <- sprintf("%s (Arm %s: %s)", 
-                                   EventArm$event_name, 
-                                   EventArm$arm_num, 
-                                   EventArm$name)
-    
-    Mapping <- data.frame(code = EventArm$unique_event_name, 
-                          label = EventArm$data_label, 
-                          stringsAsFactors = FALSE)
+    if (!is.null(Event) && !is.null(Arm)){
+      EventArm <- merge(Event, 
+                        Arm, 
+                        by = "arm_num", 
+                        all.x = TRUE)
+      
+      EventArm$data_label <- sprintf("%s (Arm %s: %s)", 
+                                     EventArm$event_name, 
+                                     EventArm$arm_num, 
+                                     EventArm$name)
+      
+      Mapping <- data.frame(code = EventArm$unique_event_name, 
+                            label = EventArm$data_label, 
+                            stringsAsFactors = FALSE)
+    } else {
+      return(NA_character_)
+    }
     
   } else if (field_name == "redcap_data_access_group") {
     Dag <- rcon$dags()
+    
+    if (is.null(Dag)) return(NA_character_)
     
     Mapping <- data.frame(code = Dag$unique_group_name, 
                           label = Dag$data_access_group_name, 
