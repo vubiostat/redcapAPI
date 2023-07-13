@@ -573,6 +573,12 @@ mChoiceCast <- function(data,
   field_types <- gsub("_(dmy|mdy|ymd)$", "_", field_types)
   field_types[is.na(field_types)] <- "text"
   
+  # Designate events and DAGs as system fields
+  which_system_field <- which(field_bases %in% c("redcap_event_name", 
+                                                 "redcap_repeat_instrument",
+                                                 "redcap_data_access_group"))
+  field_types[which_system_field] <- rep("system", length(which_system_field))
+  
   field_types
 }
 
@@ -589,6 +595,14 @@ mChoiceCast <- function(data,
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codebook[field_types == "yesno"] <- "0, No | 1, Yes"
   
+  system_field <- which(field_names %in% c("redcap_event_name", 
+                                           "redcap_data_access_group", 
+                                           "redcap_repeat_instrument"))
+  codebook[system_field] <- vapply(field_names[system_field], 
+                                   FUN = .castRecords_getSystemCoding, 
+                                   FUN.VALUE = character(1), 
+                                   rcon = rcon)
+  
   codings <- vector("list", length = length(codebook))
   
   for (i in seq_along(codings)){
@@ -604,6 +618,50 @@ mChoiceCast <- function(data,
       }
   }
   codings
+}
+
+.castRecords_getSystemCoding <- function(field_name, 
+                                         rcon){
+  if (field_name == "redcap_event_name"){
+    Event <- rcon$events()
+    Arm <- rcon$arms()
+    
+    EventArm <- merge(Event, 
+                      Arm, 
+                      by = "arm_num", 
+                      all.x = TRUE)
+    
+    EventArm$data_label <- sprintf("%s (Arm %s: %s)", 
+                                   EventArm$event_name, 
+                                   EventArm$arm_num, 
+                                   EventArm$name)
+    
+    Mapping <- data.frame(code = EventArm$unique_event_name, 
+                          label = EventArm$data_label, 
+                          stringsAsFactors = FALSE)
+    
+  } else if (field_name == "redcap_data_access_group") {
+    Dag <- rcon$dags()
+    
+    Mapping <- data.frame(code = Dag$unique_group_name, 
+                          label = Dag$data_access_group_name, 
+                          stringsAsFactors = FALSE)
+  } else if (field_name == "redcap_repeat_instrument"){
+    Instrument <- rcon$instruments()
+    Mapping <- data.frame(code = Instrument$instrument_name, 
+                          label = Instrument$instrument_label, 
+                          stringsAsFactors = FALSE)
+  } else {
+    return(NA_character_)
+  }
+  
+  
+  coding <- sprintf("%s, %s", 
+                    Mapping$code, 
+                    Mapping$label)
+  coding <- paste0(coding, collapse = " | ")
+  
+  coding
 }
 
 # .exportRecords_getNas ---------------------------------------------
