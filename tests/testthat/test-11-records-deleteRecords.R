@@ -1,7 +1,8 @@
 context("deleteRecords")
 
 test_that("records can be deleted",{
-  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE, 
+                            cast = list(system = castRaw))
   rows <- nrow(rec)
   
   rec <- rbind(rec[1,], rec[1,])
@@ -20,7 +21,8 @@ test_that("error when trying to delete something that doesn't exist",{
 })
 
 test_that("arm restrictions are honored",{
-  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE)
+  rec <- exportRecordsTyped(rcon, forms = "fieldtovar_datetimes", mChoice=FALSE, 
+                            cast = list(system = castRaw))
   rows <- nrow(rec)
   
   rec <- rec[1:2,]

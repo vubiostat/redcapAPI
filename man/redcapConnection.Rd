@@ -30,7 +30,8 @@ offlineConnection(
   project_info = NULL,
   file_repo = NULL,
   repeat_instrument = NULL,
-  records = NULL
+  records = NULL,
+  dags = NULL
 )
 
 \method{print}{redcapOfflineConnection}(x, ...)
@@ -103,6 +104,9 @@ Note: The REDCap GUI doesn't offer a download file of these settings
 Records can be read, or a \code{data.frame}. This should be the raw 
 data as downloaded from the API, for instance. Using labelled or formatted
 data is likely to result in errors when passed to other functions.}
+
+\item{dags}{Either a \code{character} giving the file from which the 
+Data Access Groups can be read, or a \code{data.frame}.}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 

@@ -62,7 +62,9 @@ test_that(
 test_that(
   "Data returned only for designated event",
   {
-    Records <- exportRecordsTyped(rcon_off, events = "event_1_arm_1")
+    Records <- exportRecordsTyped(rcon_off, 
+                                  events = "event_1_arm_1", 
+                                  cast = list(system = castRaw))
     expect_true(all(Records$redcap_event_name %in% "event_1_arm_1"))
   }
 )

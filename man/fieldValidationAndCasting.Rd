@@ -22,7 +22,7 @@
 \alias{na_values}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
-An object of class \code{list} of length 19.
+An object of class \code{list} of length 20.
 }
 \usage{
 isNAorBlank(x, ...)
