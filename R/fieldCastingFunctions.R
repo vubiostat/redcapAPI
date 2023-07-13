@@ -582,15 +582,15 @@ mChoiceCast <- function(data,
   # Set system fields to text if the data sets needed to make the code books
   # is not present. (this is more common with offline connections)
   if (is.null(rcon$events())){
-    field_types[field_names %in% "redcap_event_name"] <- 
+    field_types[field_bases %in% "redcap_event_name"] <- 
       rep("text", 
-          sum(field_names %in% "redcap_event_name"))
+          sum(field_bases %in% "redcap_event_name"))
   }
   
   if (is.null(rcon$events())){
-    field_types[field_names %in% "redcap_data_access_group"] <- 
+    field_types[field_bases %in% "redcap_data_access_group"] <- 
       rep("text", 
-          sum(field_names %in% "redcap_data_access_group"))
+          sum(field_bases %in% "redcap_data_access_group"))
   }
   
   field_types
