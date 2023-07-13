@@ -57,7 +57,8 @@ redcap_error <- function(x, error_handling)
     return(NULL)
   } else if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message)){
     return(FILE_REPOSITORY_EMPTY_FRAME)
-  } else if (grepl("Connection reset by peer", error_message)){
+  } else if (grepl("Connection reset by peer", error_message) | 
+             grepl("Timeout was reached", error_message)){
     stop(paste0(.RESET_BY_PEER, ": ", as.character(x)))
   } else{ 
     stop(paste0(x$status_code, ": ", as.character(x)))
