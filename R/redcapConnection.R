@@ -342,6 +342,8 @@ print.redcapApiConnection <- function(x, ...){
 #'   Records can be read, or a \code{data.frame}. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labelled or formatted
 #'   data is likely to result in errors when passed to other functions. 
+#' @param dags Either a \code{character} giving the file from which the 
+#'   Data Access Groups can be read, or a \code{data.frame}.
 #' @export
 
 offlineConnection <- function(meta_data = NULL, 
