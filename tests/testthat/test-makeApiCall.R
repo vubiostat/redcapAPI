@@ -65,6 +65,13 @@ test_that(
     
     expect_error(redcap_error(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
+  
+    
+    response$content <- charToRaw("Timeout was reached: [redcap.vanderbilt.edu] SSL connection timeout")
+    
+    expect_error(redcap_error(response, "null"), 
+                 "A network error has occurred. This can happen when too much data is")
+    
   }
 )
 

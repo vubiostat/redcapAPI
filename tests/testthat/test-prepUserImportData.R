@@ -27,6 +27,7 @@ test_that(
 test_that(
   "Return an error if data is not a data frame",
   {
+    local_reproducible_output(width = 200)
     expect_error(prepUserImportData("not data", 
                                     rcon = rcon), 
                  "'data': Must be of type 'data.frame'")
@@ -42,6 +43,7 @@ test_that(
 test_that(
   "Return an error if rcon is not a redCapConnection", 
   {
+    local_reproducible_output(width = 200)
     expect_error(prepUserImportData(User, 
                                     rcon = "not a connection"), 
                  "Must inherit from class 'redcapConnection'")
@@ -51,6 +53,7 @@ test_that(
 test_that(
   "Return an error if consolidate is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(prepUserImportData(User, 
                                     rcon = rcon, 
                                     consolidate = "TRUE"), 

@@ -253,7 +253,8 @@ purgeProject.redcapApiConnection <- function(object,
   
   if (records){
     RecordId <- exportRecordsTyped(object, 
-                                   fields = object$metadata()$field_name[1], 
+                                   fields = object$metadata()$field_name[1],
+                                   cast = list(system = castRaw),
                                    error_handling = error_handling, 
                                    config = config)
     

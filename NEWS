@@ -1,5 +1,7 @@
 ## 2.7.4
 
+* Added a `system` field type for mapping with `castLabel` and `castRaw`.
+* Dags are added to connection cache.
 * Timeout on connections defaults to 5m. 
 * Clearer error message on connection closed.
 * export/import handles the now and today validation words for dates and date/times.
