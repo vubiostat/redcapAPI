@@ -76,8 +76,7 @@
   config <- config$redcapAPI
   if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain required 'keys' entry under the 'redcapAPI' entry"))
   keys   <- config$keys
-  if(!is.null(config$args$url))  url <- config$args$url # Override from yml if available
- 
+  
   dest <- lapply(connections, function(conn) 
   {
     key  <- keys[[conn]]
@@ -91,7 +90,11 @@
     if(length(key) > 1)
       stop(paste0("Config file '", config_file, "' has too may key entries for '", conn,"' under 'redcapAPI: keys:' specified."))
     
-    .connectAndCheck(key, url, ...)
+    args     <- list(...)
+    args$key <- key
+    args$url <- url
+    if(!is.null(config$args)) args <- modifyList(args, config$args)
+    do.call(".connectAndCheck", args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
