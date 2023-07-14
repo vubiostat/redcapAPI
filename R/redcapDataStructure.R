@@ -399,6 +399,34 @@ REDCAP_USER_ROLE_STRUCTURE <-
              random_perform = character(0),
              stringsAsFactors = FALSE)
 
+# User Role Table Access Variables
+
+REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- 
+  c("design", 
+    "alerts", 
+    "user_rights", 
+    "data_access_groups", 
+    "reports", 
+    "stats_and_charts", 
+    "manage_survey_participants", 
+    "calendar", 
+    "data_import_tool", 
+    "data_comparison_tool", 
+    "logging", 
+    "file_repository", 
+    "data_quality_create", 
+    "data_quality_execute", 
+    "api_export", 
+    "api_import", 
+    "mobile_app", 
+    "mobile_app_download_data", 
+    "record_create", 
+    "record_rename", 
+    "record_delete", 
+    "lock_records_customization", 
+    "lock_records", 
+    "lock_records_all_forms")
+
 # User Role Assignment Structure 
 
 REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <- 

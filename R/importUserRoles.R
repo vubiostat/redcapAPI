@@ -1,12 +1,12 @@
-#' @name importUsers
-#' @title Import Users Data to REDCap
+#' @name importUserRoles
+#' @title Import User Roles for a REDCap Project
 #'
-#' @description This method allows you to import new users into a project 
-#' while setting their user privileges, or update the privileges of 
-#' existing users in the project.
-#' 
+#' @description This method allows you to import new user roles into a 
+#'   project while setting their privileges, or update the privileges of 
+#'   existing user roles in the project.
+#'   
 #' @param rcon A \code{redcapConnection} object.
-#' @param data A \code{data.frame} with the user data for import.
+#' @param data A \code{data.frame} with the User Roles to import.
 #' @param consolidate \code{logical(1)} If \code{TRUE}, the form and data 
 #'   export access values will be read from the expanded columns. Otherwise, 
 #'   the consolidated values (as provided by the API export) are utilized.
@@ -20,7 +20,7 @@
 #'   body of the API call. This provides users to execute calls with options
 #'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
-#' @details When setting permissions for a user project access fields (those
+#' @details When setting permissions for a user right project access fields (those
 #'   not related to forms or exports) are set as either 0 or 1 (or "No Access"
 #'   and "Access", respectively). The settings may be any of these four values.
 #'   
@@ -37,24 +37,26 @@
 #' 
 #' It is also permissible to use a column for each form individually, as can
 #' be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
-#' settings will be consolidated into the text string expected by the API. 
-#'
+#' settings will be consolidated into the text string expected by the API.
+#' 
 #' @export
 
-importUsers <- function(rcon, data, ...){
-  UseMethod("importUsers")
+importUserRoles <- function(rcon, 
+                            data, 
+                            ...){
+  UseMethod("importUserRoles")
 }
 
-#' @rdname importUsers
+#' @rdname importUserRoles
 #' @export
 
-importUsers.redcapApiConnection <- function(rcon, 
-                                            data,
-                                            consolidate = TRUE, 
-                                            ...,
-                                            error_handling = getOption("redcap_error_handling"), 
-                                            config = list(), 
-                                            api_param = list()){
+importUserRoles.redcapApiConnection <- function(rcon, 
+                                                data,
+                                                consolidate = TRUE,
+                                                ...,
+                                                error_handling = getOption("redcap_error_handling"), 
+                                                config = list(), 
+                                                api_param = list()){
   ###################################################################
   # Argument Validation                                          ####
   
@@ -88,8 +90,10 @@ importUsers.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  
+  
   checkmate::assert_subset(x = names(data), 
-                           choices = names(REDCAP_USER_STRUCTURE), 
+                           choices = names(REDCAP_USER_ROLE_STRUCTURE), 
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -100,7 +104,7 @@ importUsers.redcapApiConnection <- function(rcon,
   ###################################################################
   # Build the body list                                          ####
   
-  body <- list(content = "user", 
+  body <- list(content = "userRole", 
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
@@ -119,6 +123,5 @@ importUsers.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  message(sprintf("Users Added/Modified: %s", as.character(response)))
+  message(sprintf("User Roles Added/Modified: %s", as.character(response)))
 }
-
