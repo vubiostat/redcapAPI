@@ -94,7 +94,7 @@
     args$key <- key
     args$url <- url
     if(!is.null(config$args)) args <- modifyList(args, config$args)
-    do.call(".connectAndCheck", args)
+    do.call(.connectAndCheck, args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
