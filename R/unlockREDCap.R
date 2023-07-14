@@ -21,7 +21,7 @@
 {
   tryCatch(
     { 
-      conn <- redcapConnection(key, url=url, ...)
+      conn <- redcapConnection(token=key, url=url, ...)
       conn$metadata() # Test connection by reading metadata into cache
       conn
     },
@@ -77,16 +77,21 @@
   if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain required 'keys' entry under the 'redcapAPI' entry"))
   keys   <- config$keys
   if(!is.null(config$args$url))  url <- config$args$url # Override from yml if available
-  config$args$url <- NULL
-  args   <- c(config$args, url = url, list(...))
-    
-  dest <- lapply(seq_along(connections), function(i) 
+ 
+  dest <- lapply(connections, function(conn) 
   {
-    args$key  <- keys[connections[i]]
+    key  <- keys[[conn]]
     
-    if(is.null(args$key)) stop(paste0("Config file '", config_file, "' does not have API_KEY for '",connections[i],"' under redcapAPI: keys: specified."))
+    if(is.null(key) || length(key)==0)
+      stop(paste0("Config file '", config_file, "' does not have API_KEY for '", conn,"' under 'redcapAPI: keys:' specified."))
+    if(!is.character(key))
+    {
+      stop(paste0("Config file '", config_file, "' invalid entry for '", conn,"' under 'redcapAPI: keys:'."))
+    }
+    if(length(key) > 1)
+      stop(paste0("Config file '", config_file, "' has too may key entries for '", conn,"' under 'redcapAPI: keys:' specified."))
     
-    do.call(.connectAndCheck, args)
+    .connectAndCheck(key, url, ...)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   

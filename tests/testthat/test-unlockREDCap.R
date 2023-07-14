@@ -52,11 +52,37 @@ test_that(
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
     stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list()))
+    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
                  "does not contain required 'keys' entry")
   }
 )
+
+test_that(
+  ".unlockYamlOverride stops if a list redcapAPI$keys entry is found",
+  {
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=list()))))
+    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
+    
+    expect_error(.unlockYamlOverride("TestRedcapAPI", url),
+                 "does not have API_KEY for")
+  }
+)
+
+test_that(
+  ".unlockYamlOverride stops if a non string redcapAPI$keys entry is found",
+  {
+    stub(.unlockYamlOverride, "file.exists", TRUE)
+    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=TRUE))))
+    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
+    
+    expect_error(.unlockYamlOverride("TestRedcapAPI", url),
+                 "invalid entry")
+  }
+)
+
 
 test_that(
   ".unlockYamlOverride returns an entry for every connection",
