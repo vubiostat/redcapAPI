@@ -122,7 +122,7 @@ deleteRecords.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    return(redcap_error(response, error_handling))
+    return(redcapError(response, error_handling))
   } 
   
   as.character(response)

@@ -123,7 +123,7 @@ importMappings.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != "200"){
-    redcap_error(response, error_handling)
+    redcapError(response, error_handling)
   } 
   
   message("Mappings imported: ", as.character(response))

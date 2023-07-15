@@ -814,7 +814,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   } 
   
@@ -852,7 +852,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                                 "fields")))
     
     if (record_response$status_code != 200){
-      redcap_error(record_response, 
+      redcapError(record_response, 
                    error_handling = error_handling)
     }
     

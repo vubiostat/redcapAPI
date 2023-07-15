@@ -5,7 +5,9 @@
 #' 
 #' @param rcon A \code{redcapConnection} object.
 #' @param users \code{character} vector of unique user names to be deleted.
-#' #' @param ... Arguments to be passed to other methods.
+#' @param refresh \code{logical(1)} If \code{TRUE}, the cached arms data will
+#'   be refreshed after the deletion.
+#' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -28,6 +30,7 @@ deleteUsers <- function(rcon,
 
 deleteUsers.redcapApiConnection <- function(rcon, 
                                             users, 
+                                            refresh = TRUE,
                                             ..., 
                                             error_handling = getOption("redcap_error_handling"), 
                                             config = list(), 
@@ -45,6 +48,11 @@ deleteUsers.redcapApiConnection <- function(rcon,
                               null.ok = FALSE, 
                               any.missing = FALSE,
                               add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
@@ -86,10 +94,13 @@ deleteUsers.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   }
   
-  message(sprintf("Users Deleted: %s", as.character(response)))
+  if (refresh){
+    rcon$refresh_users()
+  }
   
+  message(sprintf("Users Deleted: %s", as.character(response)))
 }

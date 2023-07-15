@@ -482,7 +482,7 @@ unbatched <- function(rcon, body, id, colClasses, error_handling, config)
                           body = body, 
                           config = config)
   
-  if (response$status_code != 200) redcap_error(response, error_handling = error_handling)
+  if (response$status_code != 200) redcapError(response, error_handling = error_handling)
   
   response <- as.character(response)
   # probably not necessary for data.  Useful for meta data though. (See Issue #99)
@@ -519,7 +519,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
                      body = body, 
                      config = config)
   
-  if (IDs$status_code != 200) redcap_error(IDs, error_handling)
+  if (IDs$status_code != 200) redcapError(IDs, error_handling)
   
   IDs <- as.character(IDs)
   # probably not necessary for data.  Useful for meta data though. (See Issue #99)
@@ -560,7 +560,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
                                  body = body, 
                                  config = config)
     
-    if (this_response$status_code != 200) redcap_error(this_response, error_handling = "error")
+    if (this_response$status_code != 200) redcapError(this_response, error_handling = "error")
     
     this_response <- as.character(this_response)
     # probably not necessary for data.  Useful for meta data though. (See Issue #99)

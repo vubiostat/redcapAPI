@@ -85,7 +85,7 @@ deleteDags.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200) return(redcap_error(response, error_handling))
+  if (response$status_code != 200) return(redcapError(response, error_handling))
   
   message(sprintf("DAGs deleted: %s", 
                   as.character(response)))

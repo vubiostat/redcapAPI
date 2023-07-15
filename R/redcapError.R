@@ -1,4 +1,4 @@
-#' @name redcap_error
+#' @name redcapError
 #' @title Handle Errors from the REDCap API
 #' 
 #' @description Determine the proper way to handle errors returned from the API.
@@ -45,7 +45,7 @@
 #' @author Benjamin Nutter
 #' 
 
-redcap_error <- function(x, error_handling)
+redcapError <- function(x, error_handling)
 {
   error_message <- as.character(x)
   

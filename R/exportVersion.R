@@ -95,7 +95,7 @@ exportVersion.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) 
   {
-    handled <- redcap_error(response, error_handling)
+    handled <- redcapError(response, error_handling)
     #* If the export version API method isn't supported by the REDCap instance,
     #* return "5.12.2".  For convenience, we will treat all pre 6.0.0 
     #* versions the same.  The only inefficiency this will generate is 

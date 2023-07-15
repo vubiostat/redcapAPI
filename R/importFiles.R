@@ -192,7 +192,7 @@ importFiles.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != "200") 
-    redcap_error(response, error_handling)
+    redcapError(response, error_handling)
   else 
     message("The file was successfully uploaded")
 }

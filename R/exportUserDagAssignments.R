@@ -25,11 +25,11 @@ exportUserDagAssignments <- function(rcon,
 #' @rdname exportUserDagAssignments
 #' @export
 
-exportUserDagAssignments.redcapApiConnection(rcon, 
-                                             ..., 
-                                             error_handling = getOption("redcap_error_handling"), 
-                                             config = list(), 
-                                             api_param = list()){
+exportUserDagAssignments.redcapApiConnection <- function(rcon, 
+                                                         ..., 
+                                                         error_handling = getOption("redcap_error_handling"), 
+                                                         config = list(), 
+                                                         api_param = list()){
   ###################################################################
   # Argument Validation                                          ####
   
@@ -71,7 +71,7 @@ exportUserDagAssignments.redcapApiConnection(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   }
   

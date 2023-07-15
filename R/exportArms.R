@@ -118,7 +118,7 @@ exportArms.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   }
   

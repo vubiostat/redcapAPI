@@ -436,7 +436,7 @@ import_records_unbatched <- function(rcon,
     }
   }
   else 
-    redcap_error(response, error_handling = "error")
+    redcapError(response, error_handling = "error")
 }
 
 #####################################################################
