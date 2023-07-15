@@ -10,6 +10,8 @@
 #' @param consolidate \code{logical(1)} If \code{TRUE}, the form and data 
 #'   export access values will be read from the expanded columns. Otherwise, 
 #'   the consolidated values (as provided by the API export) are utilized.
+#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached data will
+#'   be refreshed after the import.
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -53,6 +55,7 @@ importUserRoles <- function(rcon,
 importUserRoles.redcapApiConnection <- function(rcon, 
                                                 data,
                                                 consolidate = TRUE,
+                                                refresh = TRUE, 
                                                 ...,
                                                 error_handling = getOption("redcap_error_handling"), 
                                                 config = list(), 
@@ -67,10 +70,15 @@ importUserRoles.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_data_frame(x = data, 
-                               names = "named", 
+                               col.names = "named", 
                                add = coll)
   
   checkmate::assert_logical(x = consolidate, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
                             len = 1, 
                             null.ok = FALSE, 
                             add = coll)
@@ -121,6 +129,10 @@ importUserRoles.redcapApiConnection <- function(rcon,
   if (response$status_code != 200){
     redcapError(response, 
                  error_handling = error_handling)
+  }
+  
+  if (refresh){
+    # FIXME: set up the refresh
   }
   
   message(sprintf("User Roles Added/Modified: %s", as.character(response)))

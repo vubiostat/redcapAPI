@@ -6,6 +6,8 @@
 #' @param rcon A \code{redcapConnection} object.
 #' @param user_roles \code{character} unique role names to be deleted from
 #'   the project. 
+#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached data will
+#'   be refreshed after the import.
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -28,7 +30,8 @@ deleteUserRoles <- function(rcon,
 #' @export
 
 deleteUserRoles.redcapApiConnection <- function(rcon, 
-                                                user_roles, 
+                                                user_roles,
+                                                refresh = TRUE,
                                                 ...,
                                                 error_handling = getOption("redcap_error_handling"), 
                                                 config = list(), 
@@ -46,6 +49,11 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
                               null.ok = FALSE, 
                               any.missing = FALSE, 
                               add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
@@ -89,6 +97,10 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
   if (response$status_code != 200){
     redcapError(response, 
                  error_handling = error_handling)
+  }
+  
+  if (refresh){
+    # FIXME: set up refresh
   }
   
   message(sprintf("User Roles Deleted: %s", as.character(response)))
