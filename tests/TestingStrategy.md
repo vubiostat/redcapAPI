@@ -139,7 +139,6 @@ Files 900 - 999
 Files 100 - 199
 
 * test-101-userMethods-Functionality.R
-* test-102-userRoleMethods-Functionality.R
 * test-103-userRoleAssignmentMethods-ArgumentValidation.R
 * test-103-userRoleAssignmentMethods-Functionality.R
 * test-104-dagMethods-ArgumentValidation.R

@@ -11,6 +11,7 @@ importUserRoles(rcon, data, ...)
   rcon,
   data,
   consolidate = TRUE,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -27,6 +28,9 @@ importUserRoles(rcon, data, ...)
 \item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data 
 export access values will be read from the expanded columns. Otherwise, 
 the consolidated values (as provided by the API export) are utilized.}
+
+\item{refresh}{\code{logical(1)}. If \code{TRUE}, the cached data will
+be refreshed after the import.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}

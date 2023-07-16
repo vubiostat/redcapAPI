@@ -152,7 +152,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_fileRepository <- NULL
   this_repeat <- NULL
   this_dag <- NULL
+  this_dag_assign <- NULL
   this_user_role <- NULL
+  this_user_role_assign <- NULL
   
   rtry <- retries
   rtry_int <- rep(retry_interval, 
@@ -173,7 +175,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            "repeat" = exportRepeatingInstrumentsEvents(rc),
            "dags" = exportDags(rc),
+           "dagAssign" = exportUserDagAssignments(rc),
            "userRole" = exportUserRoles(rc),
+           "userRoleAssign" = exportUserRoleAssignments(rc),
            NULL)
   }
   
@@ -218,6 +222,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_user_roles = function() this_user_role <<- NULL, 
       refresh_user_roles = function() this_user_role <<- getter("userRole"),
       
+      user_role_assignment = function(){ if (is.null(this_user_role_assign)) this_user_role_assign <<- getter("userRoleAssign"); this_user_role },
+      has_user_role_assignment = function() !is.null(this_user_role_assign),
+      flush_user_role_assignment = function() this_user_role_assign <<- NULL, 
+      refresh_user_role_assignment = function() this_user_role_assign <<- getter("userRoleAssign"), 
+      
       version = function(){ if (is.null(this_version)) this_version <<- getter("version"); this_version }, 
       has_version = function() !is.null(this_version), 
       flush_version = function() this_version <<- NULL, 
@@ -247,6 +256,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_dags = function() !is.null(this_dag), 
       flush_dags = function() this_dag <<- NULL, 
       refresh_dags = function() this_dag <<- getter("dags"),
+      
+      dag_assignment = function() {if (is.null(this_dag_assign)) this_dag_assign <<- getter("dagAssign"); this_dag_assign },
+      has_dag_assignment = function() !is.null(this_dag_assign), 
+      flush_dag_assignment = function() this_dag_assign <<- NULL, 
+      refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
       
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
