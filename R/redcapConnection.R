@@ -215,8 +215,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       
       user_roles = function(){ if (is.null(this_user_role)) this_user_role <<- getter("userRole"); this_user_role },
       has_user_roles = function() !is.null(this_user_role),
-      flush_users = function() this_user_role <<- NULL, 
-      refresh_user_roles = function() this_user_Role <<- getter("userRole"),
+      flush_user_roles = function() this_user_role <<- NULL, 
+      refresh_user_roles = function() this_user_role <<- getter("userRole"),
       
       version = function(){ if (is.null(this_version)) this_version <<- getter("version"); this_version }, 
       has_version = function() !is.null(this_version), 

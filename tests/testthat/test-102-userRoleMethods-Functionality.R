@@ -4,6 +4,7 @@ test_that(
   "User Role Methods Functionality", 
   {
     # Import a single user role
+    rcon$flush_all()
     
     NewRole <- data.frame(role_label = "User Role 1", 
                           user_rights = 1)
@@ -48,7 +49,8 @@ test_that(
     expect_equal(as.character(UserRoles$reports), 
                  "Access")
     
-    rcon$flush_user_roles()
+    rcon$refresh_user_roles()
+    rcon$user_roles()
     # Cleanup by deleting the user role
     expect_message(deleteUserRoles(rcon, UserRoles$unique_role_name[1]), 
                    "User Roles Deleted: 1")
