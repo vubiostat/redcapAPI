@@ -152,6 +152,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_fileRepository <- NULL
   this_repeat <- NULL
   this_dag <- NULL
+  this_user_role <- NULL
+  
   rtry <- retries
   rtry_int <- rep(retry_interval, 
                   length.out = rtry)
@@ -171,6 +173,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            "repeat" = exportRepeatingInstrumentsEvents(rc),
            "dags" = exportDags(rc),
+           "userRole" = exportUserRoles(rc),
            NULL)
   }
   
@@ -209,6 +212,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       has_users = function() !is.null(this_user), 
       flush_users = function() this_user <<- NULL, 
       refresh_users = function() this_user <<- getter("user"), 
+      
+      user_roles = function(){ if (is.null(this_user_role)) this_user_role <<- getter("userRole"); this_user_role },
+      has_user_roles = function() !is.null(this_user_role),
+      flush_users = function() this_user_role <<- NULL, 
+      refresh_user_roles = function() this_user_Role <<- getter("userRole"),
       
       version = function(){ if (is.null(this_version)) this_version <<- getter("version"); this_version }, 
       has_version = function() !is.null(this_version), 

@@ -199,6 +199,7 @@ Files 350 - 399
 * test-353-guessDate.R
 * test-354-mChoiceCast.R
 * test-355-splitForms.R
+* test-356-dropRepeatingNA.R
 
 **File Exports**
 

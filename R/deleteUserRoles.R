@@ -73,7 +73,7 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
   
   
   checkmate::assert_subset(x = user_roles, 
-                           choices = rcon$userRoles()$unique_role_name, 
+                           choices = rcon$user_roles()$unique_role_name, 
                            add = coll)
   
   checkmate::reportAssertions(coll)

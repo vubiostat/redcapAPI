@@ -64,11 +64,11 @@ importUserRoles.redcapApiConnection <- function(rcon,
   # Argument Validation                                          ####
   
   coll <- checkmate::makeAssertCollection()
-  
+
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
-  
+
   checkmate::assert_data_frame(x = data, 
                                col.names = "named", 
                                add = coll)
@@ -106,8 +106,10 @@ importUserRoles.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  data <- prepUserImportData(data, 
-                             consolidate = consolidate)
+  data <- prepUserImportData(data,
+                             rcon = rcon,
+                             consolidate = consolidate, 
+                             user_role = TRUE)
   
   ###################################################################
   # Build the body list                                          ####
