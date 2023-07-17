@@ -75,6 +75,34 @@ test_that(
 )
 
 test_that(
+  "Return an error if there are duplicate usernames", 
+  {
+    the_user <- rcon$users()$username[1]
+    NewRole <- data.frame(unique_role_name = NA_character_, 
+                           role_label = "Temporary role", 
+                           stringsAsFactors = FALSE)
+    importUserRoles(rcon, 
+                    NewRole)
+    
+    rcon$refresh_user_roles()
+    the_role <- rcon$user_roles()$unique_role_name
+    
+    ImportAssignmentTest <-
+      data.frame(username = rep(the_user, 2), 
+                 unique_role_name = c(the_role, NA_character_),
+                 stringsAsFactors = FALSE)
+    
+    expect_error(
+      importUserRoleAssignments(rcon, 
+                                data = ImportAssignmentTest), 
+      "Each username may only be listed once"
+    )
+    
+    deleteUserRoles(rcon, the_role)
+  }
+)
+
+test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)

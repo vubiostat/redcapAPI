@@ -97,6 +97,17 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  
+  n_username <- table(data$username)
+  repeated_username <- n_username[which(n_username > 1)]
+  
+  if (length(repeated_username) > 0){
+    coll$push(sprintf("Each username may only be listed once. Check %s", 
+                      paste0(names(repeated_username), collapse = ", ")))
+  }
+  
+  checkmate::reportAssertions(coll)
+  
   ###################################################################
   # API Body List                                                ####
   
