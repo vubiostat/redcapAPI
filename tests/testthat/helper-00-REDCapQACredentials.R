@@ -19,9 +19,9 @@
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
 unlockREDCap(
-  # c(rcon ="TestRedcapAPI", 
-  #   rcon_broke = "DataTypes"),
-  c(rcon = "TestRedcapAPI"), 
+  c(rcon_orig ="TestRedcapAPI",
+    rcon = "DataTypes"),
+  # c(rcon = "TestRedcapAPI"), 
   url=url, keyring='API_KEYs', 
   envir=globalenv())
 

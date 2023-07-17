@@ -222,7 +222,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_user_roles = function() this_user_role <<- NULL, 
       refresh_user_roles = function() this_user_role <<- getter("userRole"),
       
-      user_role_assignment = function(){ if (is.null(this_user_role_assign)) this_user_role_assign <<- getter("userRoleAssign"); this_user_role },
+      user_role_assignment = function(){ if (is.null(this_user_role_assign)) this_user_role_assign <<- getter("userRoleAssign"); this_user_role_assign },
       has_user_role_assignment = function() !is.null(this_user_role_assign),
       flush_user_role_assignment = function() this_user_role_assign <<- NULL, 
       refresh_user_role_assignment = function() this_user_role_assign <<- getter("userRoleAssign"), 
@@ -263,24 +263,32 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
       
       flush_all = function(){ 
-        this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
-          this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- this_repeat <<- 
-          this_dag <<- NULL}, 
+        this_metadata <<- 
+          this_arm <<- this_event <<- 
+          this_instrument <<- this_fieldname <<- this_mapping <<-
+          this_repeat <<- 
+          this_user <<- this_user_role <<- this_user_role_assign <<-
+          this_dag <<- this_dag_assign <<-
+          this_project <<- this_version <<-
+          this_fileRepository <<-  
+          NULL}, 
       
       refresh_all = function(){
         this_metadata <<- getter("metadata")
         this_arm <<- getter("arm")
         this_event <<- getter("event")
+        this_instrument <<- getter("instrument")
         this_fieldname <<- getter("fieldname")
         this_mapping <<- getter("mapping")
-        this_user <<- getter("user")
-        this_version <<- getter("version")
-        this_project <<- getter("project")
-        this_instrument <<- getter("instrument")
-        this_fileRepository <<- getter("fileRepo")
         this_repeat <<- getter("repeat")
+        this_user_role <<- getter("userRole")
+        this_user_role_assign <<- getter("userRoleAssign")
         this_dag <<- getter("dag")
+        this_dag_assign <<- getter("dagAssign")
+        this_project <<- getter("project")
+        this_version <<- getter("version")
+        this_fileRepository <<- getter("fileRepo")
+        
       },
       
       retries = function() rtry, 
