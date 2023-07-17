@@ -320,18 +320,21 @@ print.redcapApiConnection <- function(x, ...){
 
   output <- 
     c("REDCap API Connection Object", 
-      sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
-      sprintf("Arms        : %s", is_cached(x$has_arms())), 
-      sprintf("DAGs        : %s", is_cached(x$has_dags())),
-      sprintf("Events      : %s", is_cached(x$has_events())),
-      sprintf("Instruments : %s", is_cached(x$has_instruments())),
-      sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
-      sprintf("Mapping     : %s", is_cached(x$has_mapping())),
-      sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
-      sprintf("Users       : %s", is_cached(x$has_users())), 
-      sprintf("Version     : %s", is_cached(x$has_version())), 
-      sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
-      sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))
+      sprintf("Meta Data            : %s", is_cached(x$has_metadata())), 
+      sprintf("Arms                 : %s", is_cached(x$has_arms())),
+      sprintf("Events               : %s", is_cached(x$has_events())), 
+      sprintf("Instruments          : %s", is_cached(x$has_instruments())),
+      sprintf("Field Names          : %s", is_cached(x$has_fieldnames())), 
+      sprintf("Mapping              : %s", is_cached(x$has_mapping())),
+      sprintf("Repeat Inst.         : %s", is_cached(x$has_repeatInstrumentEvent())),
+      sprintf("Users                : %s", is_cached(x$has_users())), 
+      sprintf("User Roles           : %s", is_cached(x$has_user_roles())),
+      sprintf("User Role Assignment : %s", is_cached(x$has_user_role_assignment())),
+      sprintf("DAGs                 : %s", is_cached(x$has_dags())),
+      sprintf("DAG ASsignment       : %s", is_cached(x$has_dag_assignment())),
+      sprintf("Project Info         : %s", is_cached(x$has_projectInformation())),
+      sprintf("Version              : %s", is_cached(x$has_version())),  
+      sprintf("File Repo            : %s", is_cached(x$has_fileRepository())))
   cat(output, sep = "\n")
 }
 

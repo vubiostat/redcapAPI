@@ -18,8 +18,12 @@
   
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
-unlockREDCap(c(rcon_official="TestRedcapAPI", 
-               rcon = "DataTypes"), url=url, keyring='API_KEYs', envir=globalenv())
+unlockREDCap(
+  # c(rcon ="TestRedcapAPI", 
+  #   rcon_broke = "DataTypes"),
+  c(rcon = "TestRedcapAPI"), 
+  url=url, keyring='API_KEYs', 
+  envir=globalenv())
 
 library(checkmate) # for additional expect_* functions.
 

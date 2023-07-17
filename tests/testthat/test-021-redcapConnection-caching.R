@@ -57,6 +57,23 @@ test_that(
 )
 
 test_that(
+  "caching of instruments", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_instruments())
+    
+    rcon$instruments()
+    expect_true(rcon$has_instruments())
+    
+    rcon$flush_instruments()
+    expect_false(rcon$has_instruments())
+    
+    rcon$refresh_instruments()
+    expect_true(rcon$has_instruments())
+  }
+)
+
+test_that(
   "caching of fieldnames", 
   {
     rcon$flush_all()
@@ -91,6 +108,25 @@ test_that(
 )
 
 test_that(
+  "caching of repeatInstrumentEvent", 
+  {
+    local_reproducible_output(width = 200)
+    
+    rcon$flush_all()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
+    
+    rcon$flush_repeatInstrumentEvent()
+    expect_false(rcon$has_repeatInstrumentEvent())
+    
+    rcon$refresh_repeatInstrumentEvent()
+    expect_true(rcon$has_repeatInstrumentEvent())
+  }
+)
+
+test_that(
   "caching of users", 
   {
     rcon$flush_all()
@@ -108,89 +144,36 @@ test_that(
 )
 
 test_that(
-  "caching of version", 
+  "caching of user roles", 
   {
     rcon$flush_all()
-    expect_false(rcon$has_version())
+    expect_false(rcon$has_user_roles())
     
-    rcon$version()
-    expect_true(rcon$has_version())
+    rcon$user_roles()
+    expect_true(rcon$has_user_roles())
     
-    rcon$flush_version()
-    expect_false(rcon$has_version())
+    rcon$flush_user_roles()
+    expect_false(rcon$has_user_roles())
     
-    rcon$refresh_version()
-    expect_true(rcon$has_version())
+    rcon$refresh_user_roles()
+    expect_true(rcon$has_user_roles())
   }
 )
 
 test_that(
-  "caching of projectInformation", 
+  "caching of user role assignments", 
   {
     rcon$flush_all()
-    expect_false(rcon$has_projectInformation())
+    expect_false(rcon$has_user_role_assignment())
     
-    rcon$projectInformation()
-    expect_true(rcon$has_projectInformation())
+    rcon$user_role_assignment()
+    expect_true(rcon$has_user_role_assignment())
     
-    rcon$flush_projectInformation()
-    expect_false(rcon$has_projectInformation())
+    rcon$flush_user_role_assignment()
+    expect_false(rcon$has_user_role_assignment())
     
-    rcon$refresh_projectInformation()
-    expect_true(rcon$has_projectInformation())
-  }
-)
-
-test_that(
-  "caching of instruments", 
-  {
-    rcon$flush_all()
-    expect_false(rcon$has_instruments())
-    
-    rcon$instruments()
-    expect_true(rcon$has_instruments())
-    
-    rcon$flush_instruments()
-    expect_false(rcon$has_instruments())
-    
-    rcon$refresh_instruments()
-    expect_true(rcon$has_instruments())
-  }
-)
-
-test_that(
-  "caching of fileRepository", 
-  {
-    rcon$flush_all()
-    expect_false(rcon$has_fileRepository())
-    
-    rcon$fileRepository()
-    expect_true(rcon$has_fileRepository())
-    
-    rcon$flush_fileRepository()
-    expect_false(rcon$has_fileRepository())
-    
-    rcon$refresh_fileRepository()
-    expect_true(rcon$has_fileRepository())
-  }
-)
-
-test_that(
-  "caching of repeatInstrumentEvent", 
-  {
-    local_reproducible_output(width = 200)
-    
-    rcon$flush_all()
-    expect_false(rcon$has_repeatInstrumentEvent())
-    
-    rcon$repeatInstrumentEvent()
-    expect_true(rcon$has_repeatInstrumentEvent())
-    
-    rcon$flush_repeatInstrumentEvent()
-    expect_false(rcon$has_repeatInstrumentEvent())
-    
-    rcon$refresh_repeatInstrumentEvent()
-    expect_true(rcon$has_repeatInstrumentEvent())
+    rcon$refresh_user_role_assignment()
+    expect_true(rcon$has_user_role_assignment())
   }
 )
 
@@ -212,6 +195,82 @@ test_that(
     expect_true(rcon$has_dags())
   }
 )
+
+test_that(
+  "caching of Data Access Group Assignments", 
+  {
+    local_reproducible_output(width = 200)
+    
+    rcon$flush_all()
+    expect_false(rcon$has_dag_assignment())
+    
+    rcon$dag_assignment()
+    expect_true(rcon$has_dag_assignment())
+    
+    rcon$flush_dag_assignment()
+    expect_false(rcon$has_dag_assignment())
+    
+    rcon$refresh_dag_assignment()
+    expect_true(rcon$has_dag_assignment())
+  }
+)
+
+test_that(
+  "caching of projectInformation", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_projectInformation())
+    
+    rcon$projectInformation()
+    expect_true(rcon$has_projectInformation())
+    
+    rcon$flush_projectInformation()
+    expect_false(rcon$has_projectInformation())
+    
+    rcon$refresh_projectInformation()
+    expect_true(rcon$has_projectInformation())
+  }
+)
+
+test_that(
+  "caching of version", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_version())
+    
+    rcon$version()
+    expect_true(rcon$has_version())
+    
+    rcon$flush_version()
+    expect_false(rcon$has_version())
+    
+    rcon$refresh_version()
+    expect_true(rcon$has_version())
+  }
+)
+
+
+
+test_that(
+  "caching of fileRepository", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_fileRepository())
+    
+    rcon$fileRepository()
+    expect_true(rcon$has_fileRepository())
+    
+    rcon$flush_fileRepository()
+    expect_false(rcon$has_fileRepository())
+    
+    rcon$refresh_fileRepository()
+    expect_true(rcon$has_fileRepository())
+  }
+)
+
+
+
+
 
 test_that(
   "retrieve and set retries", 
