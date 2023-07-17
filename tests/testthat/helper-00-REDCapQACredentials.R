@@ -27,7 +27,7 @@ unlockREDCap(
 
 library(checkmate) # for additional expect_* functions.
 
-EXPENDABLE_USER <- "expendable_user"
-EXPORT_REPORTS_ID <- 123
+EXPENDABLE_USER <- character(0)
+EXPORT_REPORTS_ID <- numeric(0)
 
 TEST_START_TIME <- Sys.time()

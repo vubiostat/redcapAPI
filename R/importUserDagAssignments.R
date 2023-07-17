@@ -48,7 +48,7 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_data_frame(x = data, 
-                               names = "named", 
+                               col.names = "named", 
                                add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
@@ -82,7 +82,7 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::assert_subset(x = data$redcap_data_access_group, 
-                           choices = rcon$dags()$unique_group_name, 
+                           choices = c(rcon$dags()$unique_group_name, NA_character_), 
                            add = coll)
   
   checkmate::reportAssertions(coll)

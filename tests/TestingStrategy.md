@@ -139,8 +139,6 @@ Files 900 - 999
 Files 100 - 199
 
 * test-101-userMethods-Functionality.R
-* test-105-dagAssignment-ArgumentValidation.R
-* test-105-dagASsignment-Functionality.R
 * test-106-armsMethods-ArgumentValidation.R
 * test-106-armsMethods-Functionality.R
 * test-107-eventsMethods-ArgumentValidation.R
