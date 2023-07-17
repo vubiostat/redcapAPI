@@ -5,6 +5,8 @@
 #' 
 #' @param rcon A \code{redcapConnection} object.
 #' @param dags \code{character} vector of names matching the \code{unique_group_name}.
+#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
+#'   be refreshed after the import.
 #' @param ... Additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -27,7 +29,8 @@ deleteDags <- function(rcon,
 #' @export
 
 deleteDags.redcapApiConnection <- function(rcon, 
-                                           dags, 
+                                           dags,
+                                           refresh = TRUE,
                                            ..., 
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -41,10 +44,16 @@ deleteDags.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection", 
                           add = coll)
   
-  checkmate::assert_character(x = data, 
+  checkmate::assert_character(x = dags, 
                               min.len = 1,
                               any.missing = FALSE,
                               add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            any.missing = FALSE, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -86,6 +95,10 @@ deleteDags.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
+  
+  if (refresh){
+    rcon$refresh_dags()
+  }
   
   message(sprintf("DAGs deleted: %s", 
                   as.character(response)))

@@ -11,6 +11,8 @@
 #' @param rcon A \code{redcapConnection} object
 #' @param data A \code{data.frame} with two columns: \code{data_access_group_name}
 #'   and \code{unique_group_name}. 
+#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
+#'   be refreshed after the import.
 #' @param ... Additional arguments to pass to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcap_error}}
@@ -41,6 +43,7 @@ importDags <- function(rcon,
 
 importDags.redcapApiConnection <- function(rcon, 
                                            data, 
+                                           refresh = TRUE,
                                            ..., 
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -55,8 +58,14 @@ importDags.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_data_frame(x = data, 
-                               names = "named", 
+                               col.names = "named", 
                                add = coll)
+  
+  checkmate::assert_logical(x = refresh, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            any.missing = FALSE, 
+                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -76,7 +85,9 @@ importDags.redcapApiConnection <- function(rcon,
   
   
   checkmate::assert_subset(names(data), 
-                           choices = c("data_access_group_name", "unique_group_name"), 
+                           choices = c("data_access_group_name", 
+                                       "unique_group_name", 
+                                       "data_access_group_id"), 
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -108,6 +119,10 @@ importDags.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
+  
+  if (refresh){
+    rcon$refresh_dags()
+  }
   
   message(sprintf("DAGs imported: %s", 
                   as.character(response)))
