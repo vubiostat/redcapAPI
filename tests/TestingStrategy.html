@@ -410,6 +410,8 @@ fields to assist in testing.</p>
 <code>exportReports</code> and <code>exportReportsTyped</code> methods
 because they data processing use the same methods implements in the
 <code>exportRecords</code> equivalents.</p>
+<p>Once the report is created, it should be entered as the constant
+<code>EXPORT_REPORTS_ID</code>.</p>
 </div>
 </div>
 <div id="validating-arguments-and-testing-functionality" class="section level2">
@@ -434,10 +436,6 @@ ensures infrastructural components and support functions are tested
 first, prior the to the methods that depend on them.</p>
 <p>The numbering outlined here allows for expansion of the package and
 its features.</p>
-<p>Between each section, a test is performed where if any of the tests
-previously run has failed, further testing is cancelled to allow for the
-support functions to be corrected prior to testing their downstream
-functions.</p>
 <p><strong>Establishing the connection.</strong></p>
 <ul>
 <li>helper-00-REDCapQACredentials.R
@@ -454,19 +452,19 @@ functions.</p>
 <p><strong>Support Functions</strong></p>
 <p>Files 020 - 099</p>
 <p><strong>Project Infrastructure</strong></p>
-<p>Files 100 - 199</p>
+<p>Files 100 - 149</p>
 <p><strong>Basic Records Import / Export / Deletion</strong></p>
-<p>Files 200 - 299</p>
+<p>Files 150 - 199</p>
 <p><strong>Typed Records Export</strong></p>
-<p>Files 300 - 349</p>
+<p>Files 200 - 249</p>
 <p><strong>Record Post Processing</strong></p>
-<p>Files 350 - 399</p>
-<p><strong>File Exports</strong></p>
-<p>Files 400 - 449</p>
+<p>Files 250 - 299</p>
+<p><strong>File Exports and Imports</strong></p>
+<p>Files 300 - 349</p>
 <p><strong>Other Methods</strong></p>
-<p>Files 450 - 499</p>
+<p>Files 350 - 399</p>
 <p><strong>Survey Methods</strong></p>
-<p>Files 500 - 549</p>
+<p>Files 400 - 449</p>
 <p><strong>Logging</strong></p>
 <p>Files 800 - 810</p>
 <p><strong>Deprecated</strong></p>
@@ -474,77 +472,12 @@ functions.</p>
 </div>
 <div id="current-files-for-development" class="section level2">
 <h2>Current Files For Development</h2>
-<p><strong>Establishing the connection.</strong></p>
-<ul>
-<li>helper-00-REDCapQACredentials.R
-<ul>
-<li>REDCap Instance Specific Constants</li>
-</ul></li>
-</ul>
-<p><strong>Set up the File Repository.</strong></p>
-<ul>
-<li>helper-01-setupFileRepository.R</li>
-</ul>
-<p><strong>Package Loading</strong></p>
-<p>Files 001 - 019</p>
-<ul>
-<li>test-001-packageSetup.R</li>
-</ul>
-<p><strong>Support Functions</strong></p>
-<p>Files 020 - 099</p>
-<ul>
-<li>test-020-redcapConnection-ArgumentValidation.R</li>
-<li>test-020-redcapConnection-Functionality.R</li>
-<li>test-021-redcapConnection-caching.R</li>
-<li>test-022-offlineConnection-ArgumentValidation.R</li>
-<li>test-022-offlineConnection-Functionality.R</li>
-<li>test-023-offlineConnection-caching.R</li>
-<li>test-024-unlockREDCap.R</li>
-<li>test-050-makeApiCall.R</li>
-<li>test-051-stripHTMLAndUnicode.R</li>
-<li>test-052-unitsFieldAnnotation.R</li>
-<li>test-053-dropRepeatingNA.R</li>
-<li>test-054-fieldValidationAndCasting.R</li>
-<li>test-055-fieldChoiceMapping.R</li>
-<li>test-056-filterEmptyRow.R</li>
-<li>test-057-redcap_error.R</li>
-<li>test-058-stringCleanup.R</li>
-<li>test-059-vectorToApiBodyList.R</li>
-<li>test-060-writeDataForImport.R</li>
-</ul>
 <p><strong>Project Infrastructure</strong></p>
 <p>Files 100 - 199</p>
 <ul>
-<li>test-100-projectInformationMethods-ArgumentValidation.R</li>
-<li>test-100-projectInformationMethods-Functionality.R</li>
-<li>test-101-userMethods-ArgumentValidation.R</li>
 <li>test-101-userMethods-Functionality.R</li>
-<li>test-102-userRoleMethods-ArgumentValidation.R</li>
-<li>test-102-userRoleMethods-Functionality.R</li>
-<li>test-103-userRoleAssignmentMethods-ArgumentValidation.R</li>
-<li>test-103-userRoleAssignmentMethods-Functionality.R</li>
-<li>test-104-dagMethods-ArgumentValidation.R</li>
-<li>test-104-dagMethods-Functionality</li>
-<li>test-105-dagAssignment-ArgumentValidation.R</li>
-<li>test-105-dagASsignment-Functionality.R</li>
-<li>test-106-armsMethods-ArgumentValidation.R</li>
-<li>test-106-armsMethods-Functionality.R</li>
-<li>test-107-eventsMethods-ArgumentValidation.R</li>
-<li>test-107-eventsMethods-Functionality.R</li>
-<li>test-108-metaDataMethods-ArgumentValidation.R</li>
-<li>test-108-metaDataMethods-Functionality.R</li>
-<li>test-109-instrumentMethods-ArgumentValidation.R
-<ul>
-<li>includes exportPDF argument validation</li>
-</ul></li>
-<li>test-109-instrumentMethods-Functionality.R
-<ul>
-<li>included exportPDF functionality</li>
-</ul></li>
-<li>test-110-eventMappings-ArgumentValidation.R</li>
-<li>test-110-eventMappings-Functionality.R</li>
-<li>test-111-repeatingInstruments-ArgumentValidation.R</li>
-<li>test-111-repeatingInstruments-Functionality.R</li>
+<li>test-110-repeatingInstruments-ArgumentValidation.R</li>
+<li>test-110-repeatingInstruments-Functionality.R</li>
 </ul>
 <p><strong>Basic Records Import / Export / Deletion</strong></p>
 <p>Files 200 - 299</p>
@@ -581,8 +514,9 @@ functions.</p>
 <li>test-353-guessDate.R</li>
 <li>test-354-mChoiceCast.R</li>
 <li>test-355-splitForms.R</li>
+<li>test-356-dropRepeatingNA.R</li>
 </ul>
-<p><strong>File Exports</strong></p>
+<p><strong>File Exports and Imports</strong></p>
 <p>Files 400 - 449</p>
 <ul>
 <li>test-400-reconstituteFileFromExport.R</li>

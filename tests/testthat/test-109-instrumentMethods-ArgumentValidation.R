@@ -1,38 +1,6 @@
 context("Instruments, Mappings, Export PDF Argument Validations")
 
 
-load(file.path(test_path("testdata", 
-                         "test_redcapAPI_MetaData.Rdata")))
-
-Arms <- data.frame(arm_num = 1:2, 
-                   name = c("Arm 1", "Arm 2"), 
-                   stringsAsFactors = FALSE)
-
-Events <- data.frame(event_name = c("event_1", 
-                                    "event_2", 
-                                    "event_1"), 
-                     arm_num = c(1, 1, 2), 
-                     unique_event_name = c("event_1_arm_1", 
-                                           "event_2_arm_2", 
-                                           "event_1_arm_2"), 
-                     stringsAsFactors = FALSE)
-
-  
-importMetaData(rcon, 
-               test_redcapAPI_MetaData)
-
-importArms(rcon, 
-           arms_data = Arms)
-
-importEvents(rcon, 
-             event_data = Events)
-
-importProjectInformation(rcon, 
-                         data = data.frame(is_longitudinal = 1))
-
-rcon$refresh_arms()
-rcon$refresh_events()
-
 #####################################################################
 # exportInstruments                                              ####
 
@@ -118,6 +86,39 @@ test_that(
 #####################################################################
 # importMappings                                                 ####
 
+# Set up arms and events for testing importMappings data
+load(file.path(test_path("testdata", 
+                         "test_redcapAPI_MetaData.Rdata")))
+
+Arms <- data.frame(arm_num = 1:2, 
+                   name = c("Arm 1", "Arm 2"), 
+                   stringsAsFactors = FALSE)
+
+Events <- data.frame(event_name = c("event_1", 
+                                    "event_2", 
+                                    "event_1"), 
+                     arm_num = c(1, 1, 2), 
+                     unique_event_name = c("event_1_arm_1", 
+                                           "event_2_arm_2", 
+                                           "event_1_arm_2"), 
+                     stringsAsFactors = FALSE)
+
+
+importMetaData(rcon, 
+               test_redcapAPI_MetaData)
+
+importArms(rcon, 
+           arms_data = Arms)
+
+importEvents(rcon, 
+             event_data = Events)
+
+importProjectInformation(rcon, 
+                         data = data.frame(is_longitudinal = 1))
+
+rcon$refresh_arms()
+rcon$refresh_events()
+
 test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
@@ -147,29 +148,35 @@ test_that(
     local_reproducible_output(width = 200)
     
     # must have the right names
-    new_map <- rcon$mapping()
-    names(new_map)[1] <- "the_arm_number"
+    NewMap <- data.frame(arm_num = c(1, 1, 2), 
+                         unique_event_name = c("event_1_arm_1", 
+                                               "event_2_arm_1", 
+                                               "event_1_arm_2"), 
+                         form = c("record_id", 
+                                  "text_fields", 
+                                  "record_id"))
+    names(NewMap)[1] <- "the_arm_number"
     
     expect_error(importMappings(rcon = rcon, 
-                                data = new_map), 
+                                data = NewMap), 
                  "'names[(]data[)]': Must be a subset of [{]'arm_num','unique_event_name','form'[}]")
 
-    new_map <- rcon$mapping()
-    new_map$arm_num <- new_map$arm_num + 3
+    names(NewMap)[1] <- "arm_num"
+    NewMap$arm_num <- NewMap$arm_num + 3
     expect_error(importMappings(rcon = rcon,
-                                data = new_map),
+                                data = NewMap),
                  "'data[$]arm_num': Must be a subset of [{]'1','2'[}]")
 
-    new_map <- rcon$mapping()
-    new_map$unique_event_name <- sub("event", "different event", new_map$unique_event_name)
+    NewMap$arm_num <- NewMap$arm_num - 3
+    NewMap$unique_event_name <- sub("event", "different event", NewMap$unique_event_name)
     expect_error(importMappings(rcon = rcon,
-                                data = new_map),
+                                data = NewMap),
                  "'data[$]unique_event_name': Must be a subset of [{]'event_1_arm_1','event_2_arm_1','event_1_arm_2'[}]")
     
-    new_map <- rcon$mapping()
-    new_map$form[1] <- "not_a_real_form"
+    NewMap$unique_event_name <- sub("different event", "event", NewMap$unique_event_name)
+    NewMap$form[1] <- "not_a_real_form"
     expect_error(importMappings(rcon = rcon,
-                                data = new_map),
+                                data = NewMap),
                  "Variable 'data[$]form': Must be a subset of")
   }
 )
@@ -218,6 +225,11 @@ test_that(
                  "'api_param': Must be of type 'list'")
   }
 )
+
+# Remove Arms and Mappings (cleanup)
+
+purgeProject(rcon, 
+             purge_all = TRUE)
 
 #####################################################################
 # exportPDF                                                      ####

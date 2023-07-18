@@ -88,38 +88,38 @@ Files 020 - 099
 
 **Project Infrastructure**
 
-Files 100 - 199
+Files 100 - 149
 
 
 **Basic Records Import / Export / Deletion**
 
-Files 200 - 299
+Files 150 - 199
 
 
 **Typed Records Export**
 
-Files 300 - 349
+Files 200 - 249
 
 
 **Record Post Processing**
 
-Files 350 - 399
+Files 250 - 299
 
 
-**File Exports**
+**File Exports and Imports**
 
-Files 400 - 449
+Files 300 - 349
 
 
 **Other Methods**
 
-Files 450 - 499
+Files 350 - 399
 
 
 
 **Survey Methods**
 
-Files 500 - 549
+Files 400 - 449
 
 
 **Logging**
@@ -134,99 +134,79 @@ Files 900 - 999
 ## Current Files For Development
 
 
-**Project Infrastructure**
-
-Files 100 - 199
-
-* test-101-userMethods-Functionality.R
-* test-109-instrumentMethods-ArgumentValidation.R
-    + includes exportPDF argument validation
-* test-109-instrumentMethods-Functionality.R
-    + included exportPDF functionality
-* test-110-eventMappings-ArgumentValidation.R
-* test-110-eventMappings-Functionality.R
-* test-111-repeatingInstruments-ArgumentValidation.R
-* test-111-repeatingInstruments-Functionality.R
-
 **Basic Records Import / Export / Deletion**
 
-Files 200 - 299
+Files 150-199
 
-* test-200-recordsMethods-ArgumentValidation.R
-* test-200-recordsMethods-Functionality.R
-* test-201-recordsWithDags.R
-* test-202-recordsWithEvents.R
-* test-203-recordsWithSurveys.R
-* test-204-recordsWithRepeatingInstruments.R
-* test-205-exportRecordsOffline-ArgumentValidation.R
-* test-205-exportRecordsOffline-Functionality.R
-* test-250-exportReports-ArgumentValidation.R
-* test-250-exportReports-Functionality.R
+* test-150-importDeleteRecords-ArgumentValidation.R
+* test-150-importDeleteRecords-Functionality.R
 
 **Typed Records Export**
 
-Files 300 - 349
+Files 200 - 249
 
-* test-300-exportRecordsTyped-ArgumentValidation.R
-* test-300-exportRecordsTyped-Functionality.R
-* test-301-typedRecordsWithDags.R
-* test-302-typedRecordsWithEvents.R
-* test-303-typedRecordsWithSurveys.R
-* test-304-typedRecordsWithRepeatingInstruments.R
-* test-305-typedRecordsOffline-ArgumentValidation.R
-* test-305-typedRecordsOffline-Functionality.R
+* test-200-exportRecordsTyped-ArgumentValidation.R
+* test-200-exportRecordsTyped-Functionality.R
+* test-201-typedRecordsWithDags.R
+* test-202-typedRecordsWithEvents.R
+* test-203-typedRecordsWithSurveys.R
+* test-204-typedRecordsWithRepeatingInstruments.R
+* test-205-typedRecordsOffline-ArgumentValidation.R
+* test-205-typedRecordsOffline-Functionality.R
+* test-240-typedReports-ArgumentValidation.R
+* test-240-typedReports-Functionality.R
 
 **Record Post Processing**
 
-Files 350 - 399
+Files 250 - 299
 
-* test-350-recastRecords.R
-* test-351-castForImport.R
-* test-352-guessCast.R
-* test-353-guessDate.R
-* test-354-mChoiceCast.R
-* test-355-splitForms.R
-* test-356-dropRepeatingNA.R
+* test-250-recastRecords.R
+* test-251-castForImport.R
+* test-252-guessCast.R
+* test-253-guessDate.R
+* test-254-mChoiceCast.R
+* test-255-splitForms.R
+* test-256-dropRepeatingNA.R
 
-**File Exports**
+**File Exports and Imports**
 
-Files 400 - 449
+Files 300 - 349
 
-* test-400-reconstituteFileFromExport.R
-* test-401-fileExportMethods-ArgumentValidation.R
-* test-401-fileExportMethods-Functionality.R
-* test-402-createFileRepository-ArgumentValidation.R
-* test-402-createFileRespoitory-Functionality.R
+* test-300-reconstituteFileFromExport.R
+* test-301-fileExportMethods-ArgumentValidation.R
+* test-301-fileExportMethods-Functionality.R
+* test-302-createFileRepository-ArgumentValidation.R
+* test-302-createFileRespoitory-Functionality.R
     + Will be an empty file as there is no way to clean up afterward.
-* test-403-fileRepository-SingleFileMethods-ArgumentValidation.R
-* test-403-fileRepository-SingleFileMethods-Functionality.R
-* test-404-fileRepository-BulkFileMethods-ArgumentValidation.R
-* test-404-fileRepository-BulkFileMethods-Functionality.R
+* test-303-fileRepository-SingleFileMethods-ArgumentValidation.R
+* test-303-fileRepository-SingleFileMethods-Functionality.R
+* test-304-fileRepository-BulkFileMethods-ArgumentValidation.R
+* test-304-fileRepository-BulkFileMethods-Functionality.R
 
 **Other Methods**
 
-Files 450 - 499
+Files 350 - 399
 
-* test-450-exportNextRecordName-ArgumentValidation.R
-* test-450-exportNextRecordName-Functionality.R
-* test-451-exportVersion.R
-* test-452-savePurgeRestoreProject-ArgumentValidation.R
-* test-452-savePurgeRestoreProject-Functionality.R
-* test-453-allocationTable-ArgumentValidation.R
-* test-453-allocationTable-Functionality.R
-* test-454-getProjectIdFields.R
-* test-455-invalid.R
-* test-456-missingSummary.R
-* test-457-prepUserImportData.R
+* test-350-exportNextRecordName-ArgumentValidation.R
+* test-350-exportNextRecordName-Functionality.R
+* test-351-exportVersion.R
+* test-352-savePurgeRestoreProject-ArgumentValidation.R
+* test-352-savePurgeRestoreProject-Functionality.R
+* test-353-allocationTable-ArgumentValidation.R
+* test-353-allocationTable-Functionality.R
+* test-354-getProjectIdFields.R
+* test-355-invalid.R
+* test-356-missingSummary.R
+* test-357-prepUserImportData.R
 
 
 
 **Survey Methods**
 
-Files 500 - 549
+Files 400 - 449
 
-* test-500-exportSurveyParticipants-ArgumentValidation.R
-* test-500-exportSurveyParticipants-Functionality.R
+* test-400-exportSurveyParticipants-ArgumentValidation.R
+* test-400-exportSurveyParticipants-Functionality.R
 
 
 **Logging**
