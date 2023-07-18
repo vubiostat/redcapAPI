@@ -1,4 +1,4 @@
-context("redcapError Functionality.R")
+context("redcapError Functionality")
 
 test_that(
   "Return null for certain errors", 

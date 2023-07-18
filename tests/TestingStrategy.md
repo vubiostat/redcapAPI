@@ -139,12 +139,6 @@ Files 900 - 999
 Files 100 - 199
 
 * test-101-userMethods-Functionality.R
-* test-106-armsMethods-ArgumentValidation.R
-* test-106-armsMethods-Functionality.R
-* test-107-eventsMethods-ArgumentValidation.R
-* test-107-eventsMethods-Functionality.R
-* test-108-metaDataMethods-ArgumentValidation.R
-* test-108-metaDataMethods-Functionality.R
 * test-109-instrumentMethods-ArgumentValidation.R
     + includes exportPDF argument validation
 * test-109-instrumentMethods-Functionality.R

@@ -286,27 +286,24 @@ purgeProject.redcapApiConnection <- function(object,
     }
   }
   
-  if (dags){
-    # FIXME: Uncomment after writing DAG methods
-    # deleteDags(object, 
-    #            dags = object$dags()$unique_group_name, 
-    #            error_handling = error_handling, 
-    #            config = config)
+  if (dags && nrow(rcon$dags()) > 0){
+    deleteDags(object,
+               dags = object$dags()$unique_group_name,
+               error_handling = error_handling,
+               config = config)
   }
 
-  if (user_roles){
-    # FIXME: Uncomment after writing User Role methods
-    # deleteUserRoles(object, 
-    #                 object$user_roles()$unique_role_name, 
-    #                 error_handling = error_handling, 
-    #                 config = config)
+  if (user_roles && nrow(rcon$user_roles()) > 0){
+    deleteUserRoles(object,
+                    object$user_roles()$unique_role_name,
+                    error_handling = error_handling,
+                    config = config)
   }
   
   if (users){
-    # FIXME: Uncomment after writing User methods
-    # deleteUsers(object, 
-    #             object$users()$username, 
-    #             error_handling = error_handling, 
+    # deleteUsers(object,
+    #             object$users()$username,
+    #             error_handling = error_handling,
     #             config = config)
   }
   
