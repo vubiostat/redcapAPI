@@ -247,7 +247,7 @@ importRecords(rcon, ImportData)
 test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
-    export_error(deleteRecords("not rcon", 
+    expect_error(deleteRecords("not rcon", 
                                records = 1),
                  "no applicable method for 'deleteRecords'")
   }
