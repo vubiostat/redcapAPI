@@ -4,6 +4,10 @@ load(file.path(test_path("testdata"),
                "test_redcapAPI_MetaData.Rdata"))
 load(file.path(test_path("testdata"), 
                "test_redcapAPI_Data.Rdata"))
+load(file.path(test_path("testdata"), 
+               "test_redcapAPI_Arms.Rdata"))
+load(file.path(test_path("testdata"), 
+               "test_redcapAPI_Events.Rdata"))
 
 fields <- c("record_id", "letters_only_test", "number_test", "date_dmy_test", 
             "left_operand", "calc_squared", 
@@ -18,13 +22,9 @@ importMetaData(rcon,
                MetaData)
 
 importArms(rcon, 
-           arms_data = data.frame(arm_num = 1:2, 
-                                  name = c("Arm 1", "Arm2")))
+           arms_data = test_redcapAPI_Arms)
 importEvents(rcon, 
-             event_data = data.frame(event_name = c("Event 1", "Event 2"),
-                                     arm_num = 1:2, 
-                                     unique_event_name = c("event_1_arm_1", 
-                                                           "event_1_arm_2")))
+             event_data = test_redcapAPI_Events)
 
 importProjectInformation(rcon, 
                          data.frame(is_longitudinal = 1))
@@ -145,6 +145,9 @@ test_that(
   {
     # Save the import validation to a file
     logfile_path <- file.path(tempdir(), "logfile.txt")
+    
+    # We need to bork the date format to push a logfile message
+    ImportData$date_dmy_test <- "not a date"
     
     importRecords(rcon, 
                   data = ImportData, 

@@ -134,22 +134,10 @@ Files 900 - 999
 ## Current Files For Development
 
 
-**Basic Records Import / Export / Deletion**
-
-Files 150-199
-
-* test-150-importDeleteRecords-ArgumentValidation.R
-* test-150-importDeleteRecords-Functionality.R
-
 **Typed Records Export**
 
 Files 200 - 249
 
-* test-200-exportRecordsTyped-ArgumentValidation.R
-* test-200-exportRecordsTyped-Functionality.R
-* test-201-typedRecordsWithDags.R
-* test-202-typedRecordsWithEvents.R
-* test-203-typedRecordsWithSurveys.R
 * test-204-typedRecordsWithRepeatingInstruments.R
 * test-205-typedRecordsOffline-ArgumentValidation.R
 * test-205-typedRecordsOffline-Functionality.R
