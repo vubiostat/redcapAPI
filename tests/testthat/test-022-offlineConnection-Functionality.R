@@ -149,6 +149,32 @@ test_that(
 )
 
 test_that(
+  "Repeating instruments loads from data frame and file", 
+  {
+    this_file_name <- tempfile("test_offline_repeat_instrument_")
+    this_data <- rcon$repeatInstrumentEvent()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
+    
+    # From data frame
+    roff <- expect_no_error(offlineConnection(repeat_instrument = this_data))
+    
+    expect_true(roff$has_repeatInstrumentEvent())
+    
+    # From File
+    roff <- 
+      expect_no_error(
+        offlineConnection(repeat_instrument = this_file_name))
+    
+    unlink(this_file_name)
+    
+    expect_true(roff$has_repeatInstrumentEvent())
+  }
+)
+
+
+test_that(
   "Users loads from data frame and file", 
   {
     this_file_name <- tempfile("test_offline_users_")
@@ -173,11 +199,95 @@ test_that(
 )
 
 test_that(
-  "Version loads from a string", 
+  "User Roles loads from data frame and file", 
   {
-    roff <- expect_no_error(offlineConnection(version = "13.0.0"))
+    this_file_name <- tempfile("test_offline_user_roles_")
+    this_data <- rcon$user_roles()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
     
-    expect_true(roff$has_version())
+    # From data frame
+    roff <- expect_no_error(offlineConnection(user_roles = this_data))
+    
+    expect_true(roff$has_user_roles())
+    
+    # From File
+    roff <- 
+        offlineConnection(user_roles = this_file_name)
+    unlink(this_file_name)
+    
+    expect_true(roff$has_user_roles())
+  }
+)
+
+test_that(
+  "User Role Assignment loads from data frame and file", 
+  {
+    this_file_name <- tempfile("test_offline_user_roles_assign_")
+    this_data <- rcon$user_role_assignment()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
+    
+    # From data frame
+    roff <- expect_warning(offlineConnection(user_role_assignment = this_data))
+    
+    expect_true(roff$has_user_role_assignment())
+    
+    # From File
+    roff <- 
+      expect_warning(
+        offlineConnection(user_role_assignment = this_file_name))
+    unlink(this_file_name)
+    
+    expect_true(roff$has_user_role_assignment())
+  }
+)
+
+test_that(
+  "DAGs load from data frame and file", 
+  {
+    this_file_name <- tempfile("test_offline_dags_")
+    this_data <- rcon$dags()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
+    
+    # From data frame
+    roff <- expect_no_error(offlineConnection(dags = this_data))
+    
+    expect_true(roff$has_dags())
+    
+    # From File
+    roff <- 
+        offlineConnection(dags = this_file_name)
+    unlink(this_file_name)
+    
+    expect_true(roff$has_dags())
+  }
+)
+
+test_that(
+  "DAG Assigments load from data frame and file", 
+  {
+    this_file_name <- tempfile("test_offline_dag_assign_")
+    this_data <- rcon$dag_assignment()
+    write.csv(this_data, 
+              this_file_name, 
+              row.names = FALSE)
+    
+    # From data frame
+    roff <- expect_no_error(offlineConnection(dag_assignment = this_data))
+    
+    expect_true(roff$has_dag_assignment())
+    
+    # From File
+    roff <- 
+      offlineConnection(dag_assignment = this_file_name)
+    unlink(this_file_name)
+    
+    expect_true(roff$has_dag_assignment())
   }
 )
 
@@ -205,6 +315,15 @@ test_that(
 )
 
 test_that(
+  "Version loads from a string", 
+  {
+    roff <- expect_no_error(offlineConnection(version = "13.0.0"))
+    
+    expect_true(roff$has_version())
+  }
+)
+
+test_that(
   "File Repository loads from data frame and file", 
   {
     this_file_name <- tempfile("test_offline_file_repo_")
@@ -224,29 +343,6 @@ test_that(
         offlineConnection(file_repo = this_file_name))
     unlink(this_file_name)
     expect_true(roff$has_fileRepository())
-  }
-)
-
-test_that(
-  "Repeating Instruments and Events loads from data frame and file", 
-  {
-    this_file_name <- tempfile("test_offline_repeating_instrument_")
-    this_data <- rcon$repeatInstrumentEvent()
-    write.csv(this_data, 
-              this_file_name, 
-              row.names = FALSE)
-    
-    # From data frame
-    roff <- expect_no_error(offlineConnection(repeat_instrument = this_data))
-    
-    expect_true(roff$has_repeatInstrumentEvent())
-    
-    # From File
-    roff <- 
-      expect_no_error(
-        offlineConnection(repeat_instrument = this_file_name))
-    unlink(this_file_name)
-    expect_true(roff$has_repeatInstrumentEvent())
   }
 )
 
@@ -333,6 +429,13 @@ test_that(
   }
 )
 
+# test_that(
+#   "Repeating Instruments Information loads using file from UI", 
+#   {
+#     # There is no file that can be downloaded from the UI
+#   }
+# )
+
 test_that(
   "Users loads using file from UI", 
   {
@@ -347,6 +450,73 @@ test_that(
     expect_true(roff$has_users())
   }
 )
+
+test_that(
+  "User Roles loads using file from UI", 
+  {
+    local_reproducible_output(width = 200)
+    file <- file.path(filedir, "TestRedcapAPI_UserRoles.csv")
+    
+    roff <- 
+      expect_warning(
+        offlineConnection(user_roles = file))
+    
+    expect_true(roff$has_user_roles())
+  }
+)
+
+test_that(
+  "User Roles Assignments loads using file from UI", 
+  {
+    local_reproducible_output(width = 200)
+    file <- file.path(filedir, "TestRedcapAPI_UserRoleAssignments.csv")
+    
+    roff <- 
+        offlineConnection(user_role_assignment = file)
+    
+    expect_true(roff$has_user_role_assignment())
+  }
+)
+
+test_that(
+  "DAGs load using file from UI", 
+  {
+    local_reproducible_output(width = 200)
+    file <- file.path(filedir, "TestRedcapAPI_DAGs.csv")
+    
+    roff <- 
+      expect_warning(offlineConnection(dags = file))
+    
+    expect_true(roff$has_dags())
+  }
+)
+
+test_that(
+  "DAG Assignments load using file from UI", 
+  {
+    local_reproducible_output(width = 200)
+    file <- file.path(filedir, "TestRedcapAPI_UserDAG.csv")
+    
+    roff <- 
+      offlineConnection(dag_assignment = file)
+    
+    expect_true(roff$has_dag_assignment())
+  }
+)
+
+# test_that(
+#   "Project Information loads using file from UI", 
+#   {
+#     # There is no file that can be downloaded from the UI
+#   }
+# )
+# 
+# test_that(
+#   "Version loads using a file from the UI", 
+#   {
+#     # There is no file that can be dowloaded from the UI
+#   }
+# )
 
 test_that(
   "Records loads using file from UI", 
