@@ -231,14 +231,13 @@ test_that(
               row.names = FALSE)
     
     # From data frame
-    roff <- expect_warning(offlineConnection(user_role_assignment = this_data))
+    roff <- offlineConnection(user_role_assignment = this_data)
     
     expect_true(roff$has_user_role_assignment())
     
     # From File
     roff <- 
-      expect_warning(
-        offlineConnection(user_role_assignment = this_file_name))
+        offlineConnection(user_role_assignment = this_file_name)
     unlink(this_file_name)
     
     expect_true(roff$has_user_role_assignment())

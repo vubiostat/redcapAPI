@@ -138,8 +138,6 @@ Files 900 - 999
 
 Files 200 - 249
 
-* test-205-typedRecordsOffline-ArgumentValidation.R
-* test-205-typedRecordsOffline-Functionality.R
 * test-240-typedReports-ArgumentValidation.R
 * test-240-typedReports-Functionality.R
 
