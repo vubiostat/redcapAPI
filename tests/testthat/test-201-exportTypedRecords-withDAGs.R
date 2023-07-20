@@ -3,6 +3,11 @@ context("Export Typed Records with DAGs Functionality")
 # NOTE: Data for these tests was established in 
 #       test-200-exportTypedRecords-Functionality.R
 
+ImportData <- exportRecordsTyped(rcon, 
+                                 cast = raw_cast)
+ImportData <- castForImport(ImportData, 
+                            rcon)
+
 #####################################################################
 # Create DAGs to use in testing                                  ####
 

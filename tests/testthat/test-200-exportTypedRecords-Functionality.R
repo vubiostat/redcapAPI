@@ -105,6 +105,7 @@ test_that(
 #####################################################################
 # Test attribute assignments versus defaults                     ####
 
+w <- which(MetaData$field_name == "date_dmy_test")
 MetaData$field_annotation[w] <- "units={\"time\"}"
 importMetaData(rcon, MetaData)
 rec <- exportRecordsTyped(rcon)
@@ -117,7 +118,6 @@ test_that(
 test_that(
   "Units are assigned from annotations",
   {
-    w <- which(MetaData$field_name == "date_dmy_test")
     expect_equal(attr(rec$date_dmy_test, "units"), "time")
   }
 )

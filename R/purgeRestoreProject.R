@@ -146,10 +146,18 @@ preserveProject.redcapApiConnection <- function(object,
          users                 = exportUsers(object, 
                                              error_handling = error_handling, 
                                              config = config), 
-         user_roles            = NULL, # FIXME: Add this when methods are available 
-         user_role_assignments = NULL, # FIXME: Add this when methods are available
-         dags                  = NULL, # FIXME: Add this when methods are available
-         dag_assignments       = NULL, # FIXME: Add this when methods are available
+         user_roles            = exportUserRoles(rcon,
+                                                 error_handling = error_handling, 
+                                                 config = config), 
+         user_role_assignments = exportUserRoleAssignments(rcon, 
+                                                           error_handling = error_handling, 
+                                                           config = config),
+         dags                  = exportDags(rcon, 
+                                            error_handling = error_handling, 
+                                            config = config),
+         dag_assignments       = exportUserDagAssignments(rcon, 
+                                                          error_handling = error_handling, 
+                                                          config = config),
          records               = exportRecordsTyped(object, 
                                                     cast = raw_cast,
                                                     error_handling = error_handling, 
@@ -479,43 +487,38 @@ restoreProject.redcapApiConnection <- function(object,
   }
   
   if (!is.null(users)){
-    # FIXME: Uncomment after implementing User methods
-    # importUsers(object,
-    #             data = users, 
-    #             error_handling = error_handling, 
-    #             config = config)
+    importUsers(object,
+                data = users,
+                error_handling = error_handling,
+                config = config)
   }
   
   if (!is.null(user_roles)){
-    # FIXME: Uncomment after implementing User Role methods
-    # importUserRoles(object,
-    #                 data = user_roles, 
-    #                 error_handling = error_handling, 
-    #                 config = config)
+    importUserRoles(object,
+                    data = user_roles,
+                    error_handling = error_handling,
+                    config = config)
   }
   
   if (!is.null(user_role_assignments)){
-    # FIXME: Uncomment after implementing User Role methods
-    # importUserRoleAssignments(object,
-    #                           data = user_role_assignments, 
-    #                           error_handling = error_handling, 
-    #                           config = config)
+    importUserRoleAssignments(object,
+                              data = user_role_assignments,
+                              error_handling = error_handling,
+                              config = config)
   }
   
   if (!is.null(dags)){
-    # FIXME: Uncomment after implementing DAG methods
-    # importDags(object,
-    #            data = dags, 
-    #            error_handling = error_handling, 
-    #            config = config)
+    importDags(object,
+               data = dags,
+               error_handling = error_handling,
+               config = config)
   }
   
   if (!is.null(dag_assignments)){
-    # FIXME: Uncomment after implementing DAG methods
-    # importDagAssignments(object,
-    #                      data = dag_assignments, 
-    #                      error_handling = error_handling, 
-    #                      config = config)
+    importDagAssignments(object,
+                         data = dag_assignments,
+                         error_handling = error_handling,
+                         config = config)
   }
   
   if (!is.null(records) && nrow(records) > 0){

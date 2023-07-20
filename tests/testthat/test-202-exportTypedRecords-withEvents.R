@@ -3,6 +3,8 @@ context("Export Typed Records with Events Funtionality")
 # NOTE: Data for these tests was established in 
 #       test-200-exportTypedRecords-Functionality.R
 
+Mappings <- exportMappings(rcon)
+
 #####################################################################
 # Modify data for testing                                        ####
 
