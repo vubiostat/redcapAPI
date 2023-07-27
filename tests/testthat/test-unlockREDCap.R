@@ -196,7 +196,7 @@ test_that(
   ".unlockKeyring creates keyring if it doesn't exist",
   {
     Sys.unsetenv("REDCAPAPI_PW")
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring_list",
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
@@ -205,12 +205,12 @@ test_that(
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
     
-    with_mocked_bindings(
+    with_mock(
+      keyring_create = m,
       {
         .unlockKeyring("MakeMe", passwordFUN)
         expect_call(m, 1, keyring_create(keyring,password))
-      },
-      keyring_create = m
+      }
     )
     
     expect_equal(mock_args(m)[[1]], list("MakeMe", "xyz"))
@@ -233,12 +233,12 @@ test_that(
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
     
-    with_mocked_bindings(
+    with_mock(
+      keyring_create = m,
       {
         expect_error(.unlockKeyring("MakeMe", passwordFUN), "User cancelled")
         expect_called(m, 0)
-      },
-      keyring_create = m
+      }
     )
     
     expect_true(calls == 1) # Asks user for password
@@ -290,12 +290,12 @@ test_that(
     m <- mock(TRUE)
     n <- mock(TRUE)
 
-    with_mocked_bindings(
+    with_mock(
+      key_set_with_value = m,
+      .connectAndCheck = n,
       x <- unlockREDCap(
         c(rcon="George"), url, keyring="API_KEYs",
-        passwordFUN=passwordFUN),
-      key_set_with_value = m,
-      .connectAndCheck = n
+        passwordFUN=passwordFUN)
     )
 
     expect_true("rcon" %in% names(x))
