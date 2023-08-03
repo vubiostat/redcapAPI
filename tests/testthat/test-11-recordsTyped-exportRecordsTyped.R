@@ -344,3 +344,13 @@ test_that(
     # FIXME: Add tests for DAGs
   }
 )
+
+test_that(
+  "filter_empty_rows filters some rows",
+  {
+    expect_true(
+      nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=TRUE)) <
+      nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=FALSE)) 
+    )
+  }
+)
