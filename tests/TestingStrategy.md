@@ -133,17 +133,6 @@ Files 900 - 999
 
 ## Current Files For Development
 
-
-**Typed Records Export**
-
-Files 200 - 249
-
-* test-204-typedRecordsWithRepeatingInstruments.R
-* test-205-typedRecordsOffline-ArgumentValidation.R
-* test-205-typedRecordsOffline-Functionality.R
-* test-240-typedReports-ArgumentValidation.R
-* test-240-typedReports-Functionality.R
-
 **Record Post Processing**
 
 Files 250 - 299

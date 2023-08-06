@@ -19,11 +19,21 @@ test_that(
                  "(Must be of type 'character'|Must be of type 'data.frame')")
     expect_error(offlineConnection(mapping = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")
+    expect_error(offlineConnection(repeat_instrument = 123), 
+                 "(Must be of type 'character'|Must be of type 'data.frame')")
     expect_error(offlineConnection(users = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")
-    expect_error(offlineConnection(version = 123), 
+    expect_error(offlineConnection(user_roles = 123), 
+                 "(Must be of type 'character'|Must be of type 'data.frame')")
+    expect_error(offlineConnection(user_role_assignment = 123), 
+                 "(Must be of type 'character'|Must be of type 'data.frame')")
+    expect_error(offlineConnection(dags = 123), 
+                 "(Must be of type 'character'|Must be of type 'data.frame')")
+    expect_error(offlineConnection(dag_assignment = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")
     expect_error(offlineConnection(project_info = 123), 
+                 "(Must be of type 'character'|Must be of type 'data.frame')")
+    expect_error(offlineConnection(version = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")
     expect_error(offlineConnection(file_repo = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")

@@ -489,7 +489,7 @@ offlineConnection <- function(meta_data = NULL,
     .var.name = "user_roles", 
     add = coll
   )
-  
+
   checkmate::assert(
     checkmate::check_character(x = user_role_assignment, 
                                len = 1, 
@@ -609,7 +609,7 @@ offlineConnection <- function(meta_data = NULL,
     checkmate::assert_file_exists(x = user_roles, 
                                   add = coll)
   }
-  
+
   if (is.character(user_role_assignment)){
     checkmate::assert_file_exists(x = user_role_assignment, 
                                   add = coll)
@@ -667,7 +667,7 @@ offlineConnection <- function(meta_data = NULL,
   this_user_roles <- 
     validateRedcapData(data = .offlineConnection_readFile(user_roles), 
                        redcap_data = REDCAP_USER_ROLE_STRUCTURE)
-  this_user_assigment <- 
+  this_user_role_assignment <- 
     validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
                        redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
   this_dags <- 
@@ -768,22 +768,22 @@ offlineConnection <- function(meta_data = NULL,
       refresh_users = function(x) {this_user <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                     redcap_data = REDCAP_USER_STRUCTURE)}, 
       
-      users_roles = function(){ this_user_roles }, 
-      has_users_roles = function() !is.null(this_user_roles), 
-      flush_users_roles = function() this_user_roles <<- NULL, 
+      user_roles = function(){ this_user_roles }, 
+      has_user_roles = function() !is.null(this_user_roles), 
+      flush_user_roles = function() this_user_roles <<- NULL, 
       refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                                redcap_data = REDCAP_USER_ROLE_STRUCTURE)}, 
       
       users_role_assignment = function(){ this_user_role_assignment }, 
-      has_users_role_assignment = function() !is.null(this_user_role_assignment), 
-      flush_users_role_assignment = function() this_user_role_assignment <<- NULL, 
+      has_user_role_assignment = function() !is.null(this_user_role_assignment), 
+      flush_user_role_assignment = function() this_user_role_assignment <<- NULL, 
       refresh_user_role_assignment = function(x) {this_user_role_assignment <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                                                    redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)}, 
       
-      dags = function(){ this_dag }, 
-      has_dags = function() !is.null(this_dag), 
-      flush_dags = function() this_dag <<- NULL, 
-      refresh_dags = function(x) {this_dag <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+      dags = function(){ this_dags }, 
+      has_dags = function() !is.null(this_dags), 
+      flush_dags = function() this_dags <<- NULL, 
+      refresh_dags = function(x) {this_dags <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                   redcap_data = REDCAP_DAG_STRUCTURE)},
       
       dag_assignment = function(){ this_dag_assignment }, 
@@ -844,7 +844,7 @@ print.redcapOfflineConnection <- function(x, ...){
         sprintf("User Roles            : %s", is_cached(x$has_user_roles())),
         sprintf("Users Role Assignment : %s", is_cached(x$has_user_role_assignment())),
         sprintf("DAGs                  : %s", is_cached(x$has_dags())),
-        sprintf("DAG Assigment         : %s", is_cached(x$has_dag_assigment())),
+        sprintf("DAG Assigment         : %s", is_cached(x$has_dag_assignment())),
         sprintf("Project Info          : %s", is_cached(x$has_projectInformation())), 
         sprintf("Version               : %s", is_cached(x$has_version())), 
         sprintf("File Repo             : %s", is_cached(x$has_fileRepository())))
