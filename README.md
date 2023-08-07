@@ -52,7 +52,7 @@ Please read the documentation on your institutions REDCap installation.
 
 Issues may be reported at [Issues](https://github.com/vubiostat/redcapAPI/issues)
 
-This package was developed under REDCap Version 13.4.3. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
+This package was developed under REDCap Version 13.8.2. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
 
 ### Coding Style Guideline Note
 

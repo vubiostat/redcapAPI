@@ -14,7 +14,10 @@
 # This will create a keyring "API_KEYs"
 # It will name it the service "redcapAPI"
 # It will ask to save an API_KEY in this ring (there can be multiple!)
-#   of the name "TestRedcapAPI", 
+#   of the name "TestRedcapAPI"
+  
+library(checkmate) # for additional expect_* functions.
+library(keyring)
   
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
