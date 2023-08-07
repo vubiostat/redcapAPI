@@ -137,10 +137,6 @@ Files 900 - 999
 
 Files 250 - 299
 
-* test-250-recastRecords.R
-* test-251-castForImport.R
-* test-252-guessCast.R
-* test-253-guessDate.R
 * test-254-mChoiceCast.R
 * test-255-splitForms.R
 * test-256-dropRepeatingNA.R
