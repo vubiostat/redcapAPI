@@ -133,14 +133,6 @@ Files 900 - 999
 
 ## Current Files For Development
 
-**Record Post Processing**
-
-Files 250 - 299
-
-* test-254-mChoiceCast.R
-* test-255-splitForms.R
-* test-256-dropRepeatingNA.R
-
 **File Exports and Imports**
 
 Files 300 - 349
@@ -149,7 +141,7 @@ Files 300 - 349
 * test-301-fileExportMethods-ArgumentValidation.R
 * test-301-fileExportMethods-Functionality.R
 * test-302-createFileRepository-ArgumentValidation.R
-* test-302-createFileRespoitory-Functionality.R
+* test-302-createFileRepository-Functionality.R
     + Will be an empty file as there is no way to clean up afterward.
 * test-303-fileRepository-SingleFileMethods-ArgumentValidation.R
 * test-303-fileRepository-SingleFileMethods-Functionality.R

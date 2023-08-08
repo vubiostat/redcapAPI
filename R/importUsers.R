@@ -102,7 +102,8 @@ importUsers.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  data <- prepUserImportData(data, 
+  data <- prepUserImportData(data,
+                             rcon = rcon,
                              consolidate = consolidate)
   
   ###################################################################

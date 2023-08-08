@@ -75,7 +75,7 @@ deleteUsers.redcapApiConnection <- function(rcon,
                            choices = User$username, 
                            add = coll)
   
-  checkmate::reportAssertions()
+  checkmate::reportAssertions(coll)
   
   ###################################################################
   # Build the body list                                          ####
