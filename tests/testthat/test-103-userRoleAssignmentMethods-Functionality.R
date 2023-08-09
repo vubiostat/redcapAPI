@@ -1,5 +1,8 @@
 context("User Role Assignment Methods Functionality")
 
+importUsers(rcon, 
+            data = data.frame(username = EXPENDABLE_USER))
+
 test_that(
   "Import and Export of User Role Assignments",
   {

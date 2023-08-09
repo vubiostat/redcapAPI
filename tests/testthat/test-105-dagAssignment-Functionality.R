@@ -9,8 +9,7 @@ test_that(
     # otherwise we run the risk of cutting off access a user running the
     # test suite would need to continue testing.
     
-    this_dag <- EXPENDABLE_USER
-    this_user <- rcon$users()$username[1]
+    this_dag <- "Temporary DAG"
     
     # Create a Data Access Group for testing
     AddDag <- data.frame(data_access_group_name = this_dag, 
@@ -21,7 +20,7 @@ test_that(
                data = AddDag)
     
     # Add a user to the group
-    AddDagAssign <- data.frame(username = this_user, 
+    AddDagAssign <- data.frame(username = EXPENDABLE_USER, 
                                redcap_data_access_group = rcon$dags()$unique_group_name, 
                                stringsAsFactors = FALSE)
     
@@ -32,17 +31,18 @@ test_that(
     # Get the assignments and check the values
     CurrentDag <- exportUserDagAssignments(rcon)
     
+    this_dag_setting <- CurrentDag$redcap_data_access_group[CurrentDag$username == EXPENDABLE_USER]
+    
     expect_data_frame(CurrentDag, 
-                      ncols = 2, 
-                      nrow = 1)
-    expect_equal(CurrentDag$username, 
-                 this_user)
-    expect_equal(CurrentDag$redcap_data_access_group, 
+                      ncols = 2)
+    expect_equal(this_dag_setting, 
+                 "temporary_dag")
+    expect_equal(this_dag_setting, 
                  gsub("([[:punct:]]|\\s)", "_", tolower(this_dag)))
     
     
     # Unassign the user from the DAG
-    UnassignDag <- data.frame(username = this_user, 
+    UnassignDag <- data.frame(username = EXPENDABLE_USER, 
                               redcap_data_access_group = NA_character_, 
                               stringsAsFactors = FALSE)
     

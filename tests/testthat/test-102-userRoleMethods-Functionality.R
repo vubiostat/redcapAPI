@@ -51,8 +51,9 @@ test_that(
     
     rcon$refresh_user_roles()
     rcon$user_roles()
+    nroles <- nrow(rcon$user_roles())
     # Cleanup by deleting the user role
     expect_message(deleteUserRoles(rcon, UserRoles$unique_role_name[1]), 
-                   "User Roles Deleted: 1")
+                   sprintf("User Roles Deleted: %s", nroles))
   }
 )

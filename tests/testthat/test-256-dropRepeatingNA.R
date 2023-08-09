@@ -6,6 +6,7 @@ context("dropRepeatingNA.R")
 test_that(
   "Return an error if Records is not a data frame", 
   {
+    local_reproducible_output(width = 200)
     expect_error(dropRepeatingNA("not an error", 
                                  rcon), 
                  "'Records': Must be of type 'data.frame'")
@@ -15,6 +16,7 @@ test_that(
 test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
+    local_reproducible_output(width = 200)
     expect_error(dropRepeatingNA(mtcars, 
                                  "not an rcon"), 
                  "'rcon': Must inherit from class 'redcapConnection'")
@@ -24,6 +26,7 @@ test_that(
 test_that(
   "Return an error if quiet is not logical(1)", 
   {
+    local_reproducible_output(width = 200)
     expect_error(dropRepeatingNA(mtcars, 
                                  rcon, 
                                  quiet = "TRUE"), 

@@ -137,16 +137,10 @@ Files 900 - 999
 
 Files 300 - 349
 
-* test-300-reconstituteFileFromExport.R
-* test-301-fileExportMethods-ArgumentValidation.R
-* test-301-fileExportMethods-Functionality.R
-* test-302-createFileRepository-ArgumentValidation.R
-* test-302-createFileRepository-Functionality.R
-    + Will be an empty file as there is no way to clean up afterward.
-* test-303-fileRepository-SingleFileMethods-ArgumentValidation.R
-* test-303-fileRepository-SingleFileMethods-Functionality.R
 * test-304-fileRepository-BulkFileMethods-ArgumentValidation.R
 * test-304-fileRepository-BulkFileMethods-Functionality.R
+* test-305-exportFileRepositoryListing.R
+* test-306-fileRepositoryPath.R
 
 **Other Methods**
 
