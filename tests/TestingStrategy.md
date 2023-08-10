@@ -133,29 +133,10 @@ Files 900 - 999
 
 ## Current Files For Development
 
-**File Exports and Imports**
-
-Files 300 - 349
-
-* test-304-fileRepository-BulkFileMethods-ArgumentValidation.R
-* test-304-fileRepository-BulkFileMethods-Functionality.R
-* test-305-exportFileRepositoryListing.R
-* test-306-fileRepositoryPath.R
-
 **Other Methods**
 
 Files 350 - 399
 
-* test-350-exportNextRecordName-ArgumentValidation.R
-* test-350-exportNextRecordName-Functionality.R
-* test-351-exportVersion.R
-* test-352-savePurgeRestoreProject-ArgumentValidation.R
-* test-352-savePurgeRestoreProject-Functionality.R
-* test-353-allocationTable-ArgumentValidation.R
-* test-353-allocationTable-Functionality.R
-* test-354-getProjectIdFields.R
-* test-355-invalid.R
-* test-356-missingSummary.R
 * test-357-prepUserImportData.R
 
 
