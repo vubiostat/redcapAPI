@@ -133,22 +133,6 @@ Files 900 - 999
 
 ## Current Files For Development
 
-**Other Methods**
-
-Files 350 - 399
-
-* test-357-prepUserImportData.R
-
-
-
-**Survey Methods**
-
-Files 400 - 449
-
-* test-400-exportSurveyParticipants-ArgumentValidation.R
-* test-400-exportSurveyParticipants-Functionality.R
-
-
 **Logging**
 
 Files 800 - 810
