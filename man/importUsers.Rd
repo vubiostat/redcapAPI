@@ -68,3 +68,13 @@ It is also permissible to use a column for each form individually, as can
 be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
 settings will be consolidated into the text string expected by the API.
 }
+\section{Limitations}{
+ 
+
+When exporting via CSV, (as redcapAPI does by default) it appears that 
+the form access rights are imported but may not always be reflected in 
+the exported values. The form export rights don't appear to be imported
+when using the CSV format. We may be able to resolve this in the future
+using a JSON format.
+}
+

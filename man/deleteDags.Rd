@@ -10,6 +10,7 @@ deleteDags(rcon, dags, ...)
 \method{deleteDags}{redcapApiConnection}(
   rcon,
   dags,
+  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -22,6 +23,9 @@ deleteDags(rcon, dags, ...)
 \item{dags}{\code{character} vector of names matching the \code{unique_group_name}.}
 
 \item{...}{Additional arguments to pass to other methods.}
+
+\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached event data will 
+be refreshed after the import.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcap_error}}}
