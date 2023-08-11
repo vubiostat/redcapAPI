@@ -131,29 +131,6 @@ Files 800 - 810
 Files 900 - 999
 
 
-## Current Files For Development
-
-**Logging**
-
-Files 800 - 810
-
-* test-800-exportLogging-argumentValidation.R
-* test-800-exportLogging-Functionality.R
-
-**Deprecated**
-
-Files 900 - 999
-
-* test-900-checkbox-suffixes.R
-* test-901-cleansMetaData.R
-* test-902-redcapProjectInfo.R
-* test-903-exportBundle.R
-* test-904-fieldToVar.R
-* test-905-makeRedcapFactor.R
-* test-906-massert.R
-* test-907-redcapFactorFlip.R
-* test-908-syncUnderscoreCodings.R
-* test-909-validateImport.R
 
 
 

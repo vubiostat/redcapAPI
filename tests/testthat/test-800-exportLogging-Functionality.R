@@ -212,22 +212,6 @@ test_that(
   }
 )
 
-test_that(
-  "Empty logs are returned for a non-existing data access group", 
-  {
-    skip_if(TRUE, 
-            "At the time of writing, DAGs aren't set up in the test project. This test is skipped")
-    
-    dag_for_test <- "GarfieldLikesLasagna" # I'm going to go out on a limb and hope that we never define such a data access group
-    Logs <- exportLogging(rcon, 
-                          dag = dag_for_test, 
-                          beginTime = BEGIN_TIME)
-    all_dag <- TRUE # write condition for verification here
-    
-    expect_true(nrow(Logs) == 0)
-  }
-)
-
 
 test_that(
   "Logs are returned after a beginTime", 
@@ -266,5 +250,3 @@ test_that(
     expect_true(all_before_end)
   }
 )
-
-

@@ -247,6 +247,7 @@ importRecords(rcon, ImportData)
 test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
+    local_reproducible_output(width = 200)
     expect_error(deleteRecords("not rcon", 
                                records = 1),
                  "no applicable method for 'deleteRecords'")
@@ -256,6 +257,7 @@ test_that(
 test_that(
   "Return an error if records is neither character nor numeric", 
   {
+    local_reproducible_output(width = 200)
     expect_error(deleteRecords(rcon, 
                                records = mtcars), 
                  "'records': Must be of type 'character'")
@@ -265,6 +267,7 @@ test_that(
 test_that(
   "Return an error if arm is not an arm in the project", 
   {
+    local_reproducible_output(width = 200)
     expect_error(deleteRecords(rcon, 
                                records = 1, 
                                arm = 3), 
