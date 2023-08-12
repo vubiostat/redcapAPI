@@ -32,6 +32,7 @@ exportRecordsTyped(
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
+  filter_empty_rows = TRUE,
   ...,
   config = list(),
   api_param = list(),
@@ -131,6 +132,8 @@ label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
+
+\item{filter_empty_rows}{\code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.}
 
 \item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 These are appended to any parameters in \code{rcon$config}}
