@@ -58,7 +58,7 @@
 #'   recommended.
 #' @param ... Arguments to pass to other methods. 
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param config \code{list} Additional configuration parameters to pass to 
 #'   \code{\link[httr]{POST}}. These are appended to any parameters in 
 #'   \code{rcon$config}.
@@ -146,16 +146,16 @@ preserveProject.redcapApiConnection <- function(object,
          users                 = exportUsers(object, 
                                              error_handling = error_handling, 
                                              config = config), 
-         user_roles            = exportUserRoles(rcon,
+         user_roles            = exportUserRoles(object,
                                                  error_handling = error_handling, 
                                                  config = config), 
-         user_role_assignments = exportUserRoleAssignments(rcon, 
+         user_role_assignments = exportUserRoleAssignments(object, 
                                                            error_handling = error_handling, 
                                                            config = config),
-         dags                  = exportDags(rcon, 
+         dags                  = exportDags(object, 
                                             error_handling = error_handling, 
                                             config = config),
-         dag_assignments       = exportUserDagAssignments(rcon, 
+         dag_assignments       = exportUserDagAssignments(object, 
                                                           error_handling = error_handling, 
                                                           config = config),
          records               = exportRecordsTyped(object, 
@@ -294,14 +294,14 @@ purgeProject.redcapApiConnection <- function(object,
     }
   }
   
-  if (dags && nrow(rcon$dags()) > 0){
+  if (dags && nrow(object$dags()) > 0){
     deleteDags(object,
                dags = object$dags()$unique_group_name,
                error_handling = error_handling,
                config = config)
   }
 
-  if (user_roles && nrow(rcon$user_roles()) > 0){
+  if (user_roles && nrow(object$user_roles()) > 0){
     deleteUserRoles(object,
                     object$user_roles()$unique_role_name,
                     error_handling = error_handling,
@@ -515,10 +515,10 @@ restoreProject.redcapApiConnection <- function(object,
   }
   
   if (!is.null(dag_assignments)){
-    importDagAssignments(object,
-                         data = dag_assignments,
-                         error_handling = error_handling,
-                         config = config)
+    importUserDagAssignments(object,
+                             data = dag_assignments,
+                             error_handling = error_handling,
+                             config = config)
   }
   
   if (!is.null(records) && nrow(records) > 0){

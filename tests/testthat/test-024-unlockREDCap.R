@@ -6,7 +6,7 @@ test_that(
   ".connectAndCheck returns result of redcapConnection",
   {
     stub(.connectAndCheck, "redcapConnection", list(metadata=function(...) TRUE))
-  
+    
     expect_true(.connectAndCheck("key", "url")$metadata())
   }
 )
@@ -15,7 +15,7 @@ test_that(
   ".connectAndCheck returns NULL on a 403 (Invalid KEY)",
   {
     stub(.connectAndCheck, "redcapConnection",
-                  mock(stop("403")))
+         mock(stop("403")))
     expect_true(is.null(.connectAndCheck("key", "url")))
   }
 )
@@ -89,7 +89,7 @@ test_that(
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
     stub(.unlockYamlOverride, "read_yaml",
-                  list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
+         list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c("TestRedcapAPI", "Sandbox"), url)
     expect_true(x$TestRedcapAPI)
@@ -102,7 +102,7 @@ test_that(
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
     stub(.unlockYamlOverride, "read_yaml",
-                  list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
+         list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
     expect_true(x$rcon)
@@ -114,12 +114,12 @@ test_that(
   ".unlockKeyring pulls password from env and writes back",
   {
     stub(.unlockKeyring, "keyring_list", 
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "xyz")
     stub(.unlockKeyring, "keyring_unlock", NULL)
-
+    
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1}
     
@@ -134,9 +134,9 @@ test_that(
   ".unlockKeyring asks user for password when not in env, unlocks and writes to env",
   {
     stub(.unlockKeyring, "keyring_list", 
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "")
     stub(.unlockKeyring, "keyring_unlock", NULL)
     
@@ -154,9 +154,9 @@ test_that(
   ".unlockKeyring asks user for password and aborts when they cancel",
   {
     stub(.unlockKeyring, "keyring_list", 
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "")
     stub(.unlockKeyring, "keyring_unlock", NULL)
     
@@ -174,13 +174,13 @@ test_that(
   ".unlockKeyring asks user for password when one in env fails, unlocks and writes to env",
   {
     stub(.unlockKeyring, "keyring_list", 
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
     stub(.unlockKeyring, "Sys.getenv", 
-                  mock("fail", ""))
+         mock("fail", ""))
     stub(.unlockKeyring, "keyring_unlock",
-                  mock(stop("fail"), "joe"))
+         mock(stop("fail"), "joe"))
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -195,25 +195,22 @@ test_that(
 test_that(
   ".unlockKeyring creates keyring if it doesn't exist",
   {
-#    skip_if(TRUE, 
-#            "At the time of writing, testthat mock framework not working in all environments")
-    
     Sys.unsetenv("REDCAPAPI_PW")
     stub(.unlockKeyring, "keyring_list",
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
-                             num_secrets=0:2,
-                             locked=rep(TRUE, 3)))
+         data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+                    num_secrets=0:2,
+                    locked=rep(TRUE, 3)))
     m <- mock(TRUE)
-  
+    
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
     
-    with_mocked_bindings(
+    with_mock(
+      keyring_create = m,
       {
         .unlockKeyring("MakeMe", passwordFUN)
         expect_call(m, 1, keyring_create(keyring,password))
-      },
-      keyring_create = m
+      }
     )
     
     expect_equal(mock_args(m)[[1]], list("MakeMe", "xyz"))
@@ -226,9 +223,6 @@ test_that(
 test_that(
   ".unlockKeyring creates keyring respects user cancel",
   {
-#    skip_if(TRUE, 
-#            "At the time of writing, testthat mock framework not working in all environments")
-    
     Sys.unsetenv("REDCAPAPI_PW")
     stub(.unlockKeyring, "keyring_list", 
          data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
@@ -239,12 +233,12 @@ test_that(
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
     
-    with_mocked_bindings(
+    with_mock(
+      keyring_create = m,
       {
         expect_error(.unlockKeyring("MakeMe", passwordFUN), "User cancelled")
         expect_called(m, 0)
-      },
-      keyring_create = m
+      }
     )
     
     expect_true(calls == 1) # Asks user for password
@@ -255,10 +249,8 @@ test_that(
 test_that(
   "unlockREDCap pulls API_KEY and opens connection from keyring returning as list",
   {
-    skip_if(Sys.getenv("CI") == "1",
-            "CI cannot test user interactions")
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
- 
+    
     expect_silent(x <- unlockREDCap(c(rcon="TestRedcapAPI"), url, keyring="API_KEYs"))
     expect_true("rcon" %in% names(x))
     expect_class(x$rcon, "redcapApiConnection")
@@ -268,9 +260,6 @@ test_that(
 test_that(
   "unlockREDCap pulls API_KEY and opens connection from keyring written to env",
   {
-    skip_if(Sys.getenv("CI") == "1",
-            "CI cannot test user interactions")
-    
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
     calls <- 0
@@ -290,9 +279,6 @@ test_that(
 test_that(
   "unlockREDCap asks for API_KEY if not stored, opens connection and stores",
   {
-    skip_if(Sys.getenv("CI") == "1",
-            "CI cannot test user interactions")
-    
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
     stub(unlockREDCap, "key_list",
@@ -303,7 +289,7 @@ test_that(
     
     m <- mock(TRUE)
     n <- mock(TRUE)
-
+    
     with_mock(
       key_set_with_value = m,
       .connectAndCheck = n,
@@ -311,7 +297,7 @@ test_that(
         c(rcon="George"), url, keyring="API_KEYs",
         passwordFUN=passwordFUN)
     )
-
+    
     expect_true("rcon" %in% names(x))
     expect_true(x$rcon)
     expect_true(calls == 1) # Called to ask once

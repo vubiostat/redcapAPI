@@ -146,7 +146,7 @@ delimiter for the CSV file received from the API.}
 all records are pulled. Otherwise, the records all pulled in batches of this size.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

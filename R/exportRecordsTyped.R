@@ -79,7 +79,7 @@
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #'   
 #' @details
 #' 

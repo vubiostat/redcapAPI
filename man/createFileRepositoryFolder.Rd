@@ -48,7 +48,7 @@ access to the folder will be restricted to users with that role.}
 File Repository data on \code{rcon} will be refreshed.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 

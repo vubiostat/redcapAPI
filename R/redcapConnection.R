@@ -359,24 +359,30 @@ print.redcapApiConnection <- function(x, ...){
 #'   field names can be read, or a \code{data.frame}.
 #' @param mapping Either a \code{character} giving the file from which the 
 #'   Event Instrument mappings can be read, or a \code{data.frame}.
-#' @param users Either a \code{character} giving the file from which the 
-#'   User settings can be read, or a \code{data.frame}.
-#' @param version Either a \code{character} giving the file from which the 
-#'   version can be read, or a \code{data.frame}.
-#' @param project_info Either a \code{character} giving the file from which the 
-#'   Project Information can be read, or a \code{data.frame}.
-#' @param file_repo Either a \code{character} giving the file from which the 
-#'   File Repository Listing can be read, or a \code{data.frame}.
 #' @param repeat_instrument Either a \code{character} giving the file from which the 
 #'   Repeating Instruments and Events settings can be read, or a \code{data.frame}.
 #'   Note: The REDCap GUI doesn't offer a download file of these settings 
 #'   (at the time of this writing).
+#' @param users Either a \code{character} giving the file from which the 
+#'   User settings can be read, or a \code{data.frame}.
+#' @param user_roles Either a \code{character} giving the file from which the
+#'   User Roles can be read, or a \code{data.frame}.
+#' @param user_role_assignment Either a \code{character} giving the file from which the
+#'   User Role Assigments can be read, or a \code{data.frame}. 
+#' @param dags Either a \code{character} giving the file from which the 
+#'   Data Access Groups can be read, or a \code{data.frame}.
+#' @param dag_assignment Either a \code{character} giving the file from which the
+#'   Data Access Group Assigments can be read, or a \code{data.frame}.
+#' @param project_info Either a \code{character} giving the file from which the 
+#'   Project Information can be read, or a \code{data.frame}.
+#' @param version Either a \code{character} giving the file from which the 
+#'   version can be read, or a \code{data.frame}.
+#' @param file_repo Either a \code{character} giving the file from which the 
+#'   File Repository Listing can be read, or a \code{data.frame}.
 #' @param records Either a \code{character} giving the file from which the 
 #'   Records can be read, or a \code{data.frame}. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labelled or formatted
-#'   data is likely to result in errors when passed to other functions. 
-#' @param dags Either a \code{character} giving the file from which the 
-#'   Data Access Groups can be read, or a \code{data.frame}.
+#'   data is likely to result in errors when passed to other functions.
 #' @export
 
 offlineConnection <- function(meta_data = NULL, 

@@ -94,8 +94,17 @@ Note: The REDCap GUI doesn't offer a download file of these settings
 \item{users}{Either a \code{character} giving the file from which the 
 User settings can be read, or a \code{data.frame}.}
 
+\item{user_roles}{Either a \code{character} giving the file from which the
+User Roles can be read, or a \code{data.frame}.}
+
+\item{user_role_assignment}{Either a \code{character} giving the file from which the
+User Role Assigments can be read, or a \code{data.frame}.}
+
 \item{dags}{Either a \code{character} giving the file from which the 
 Data Access Groups can be read, or a \code{data.frame}.}
+
+\item{dag_assignment}{Either a \code{character} giving the file from which the
+Data Access Group Assigments can be read, or a \code{data.frame}.}
 
 \item{project_info}{Either a \code{character} giving the file from which the 
 Project Information can be read, or a \code{data.frame}.}
