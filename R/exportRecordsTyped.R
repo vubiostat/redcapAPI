@@ -77,6 +77,7 @@
 #'   delimiter for the CSV file received from the API.
 #' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
+#' @param filter_empty_rows \code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcapError}}
@@ -245,6 +246,7 @@ exportRecordsTyped.redcapApiConnection <-
     cast           = list(),
     assignment     = list(label=stripHTMLandUnicode,
                           units=unitsFieldAnnotation),
+    filter_empty_rows = TRUE,
     ...,
     config         = list(),
     api_param      = list(),
@@ -314,6 +316,11 @@ exportRecordsTyped.redcapApiConnection <-
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+  
+  checkmate::assert_logical(x = filter_empty_rows, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
 
   checkmate::reportAssertions(coll)
   
@@ -401,7 +408,7 @@ exportRecordsTyped.redcapApiConnection <-
     return(Raw)
   }
   
-  Raw <- filterEmptyRow(Raw, rcon)
+  if(filter_empty_rows) Raw <- filterEmptyRow(Raw, rcon)
   
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){

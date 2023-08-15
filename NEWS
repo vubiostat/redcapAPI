@@ -1,3 +1,7 @@
+## 2.7.5
+
+* added filter_empty_rows flag to exportRecordsTyped.
+
 ## 2.7.4
 
 * Fixed upper/lower case for AND/OR in parseBranchingLogic
