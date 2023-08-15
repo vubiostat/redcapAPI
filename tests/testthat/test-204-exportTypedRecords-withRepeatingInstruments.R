@@ -148,5 +148,15 @@ test_that(
   }
 )
 
+#####################################################################
+# Behavior of filter_empty_rows                                  ####
 
-
+test_that(
+  "filter_empty_rows filters some rows",
+  {
+    expect_true(
+      nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=TRUE)) <
+        nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=FALSE)) 
+    )
+  }
+)

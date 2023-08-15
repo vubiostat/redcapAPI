@@ -273,3 +273,4 @@ test_that(
                  "The following values in the parameter \"fields\" are not valid")
   }
 )
+

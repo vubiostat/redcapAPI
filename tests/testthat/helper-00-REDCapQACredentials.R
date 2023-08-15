@@ -22,9 +22,8 @@ library(keyring)
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
 unlockREDCap(
-  c(rcon_orig ="TestRedcapAPI",
-    rcon = "DataTypes"),
-  # c(rcon = "TestRedcapAPI"), 
+  c(rcon_orig ="TestRedcapAPI", ## Change to rcon when satisfied with testing
+    rcon = "DataTypes"),        ## Delete this to change to primary project
   url=url, keyring='API_KEYs', 
   envir=globalenv())
 

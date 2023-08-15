@@ -216,6 +216,16 @@ test_that(
   }
 )
 
+test_that(
+  "exportRecordsTyped expects single logical for filter_empty_rows", 
+  {
+    expect_error(exportRecordsTyped(rcon, filter_empty_rows=1),
+                 "Variable 'filter_empty_rows': Must be of type 'logical'")
+    expect_error(exportRecordsTyped(rcon, filter_empty_rows=c(TRUE, FALSE)),
+                 "Variable 'filter_empty_rows': Must have length 1")
+  }
+)
+
 # Meta-data validations versus parameters
 test_that(
   "Return an error if fields specified doesn't exist",
