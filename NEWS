@@ -1,6 +1,7 @@
 ## 2.7.5
 
 * added filter_empty_rows flag to exportRecordsTyped.
+* added several functions for manipulating DAGs.
 
 ## 2.7.4
 
