@@ -28,15 +28,22 @@ test_that(
   "DAGs can be labelled or raw", 
   {
     DagLabelled <- exportRecordsTyped(rcon, 
-                                      dags = TRUE)
+                                      dag = TRUE)
     expect_equal(levels(DagLabelled$redcap_data_access_group), 
                  c("Test DAG 1", "Test DAG 2"))
   
     DagRaw <- exportRecordsTyped(rcon, 
-                                 dags = TRUE, 
+                                 dag = TRUE, 
                                  cast = list(system = castRaw))  
     expect_equal(unique(DagRaw$redcap_data_access_group), 
                  c("test_dag_1", "test_dag_2"))
   }
 )
 
+test_that(
+  "DAGs can be excluded", 
+  {
+    Rec <- exportRecordsTyped(rcon, dag = FALSE)
+    expect_false("redcap_data_access_group" %in% names(Rec))
+  }
+)
