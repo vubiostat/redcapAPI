@@ -7,7 +7,7 @@ report_ids <- EXPORT_REPORTS_ID
 test_that(
   "exportReportsTyped with default settings", 
   {
-    skip_if(length(EXPORT_REPORTS_ID) == 0, 
+    skip_if(!RUN_REPORTS_TEST, 
             "No value provided for EXPORT_REPORTS_ID. Tests Skipped")
     Report <- expect_silent(exportReportsTyped(rcon, 
                                                report_id = EXPORT_REPORTS_ID[1]))
@@ -53,7 +53,7 @@ test_that(
 test_that(
   "exportReportsTyped responds to drop_fields", 
   {
-    skip_if(length(EXPORT_REPORTS_ID) == 0, 
+    skip_if(!RUN_REPORTS_TEST, 
             "No value provided for EXPORT_REPORTS_ID. Tests Skipped")
     ReportOrig <- exportReportsTyped(rcon, 
                                      report_id = EXPORT_REPORTS_ID[1])
@@ -71,7 +71,7 @@ test_that(
 test_that(
   "exportReportsTyped with a raw cast", 
   {
-    skip_if(length(EXPORT_REPORTS_ID) == 0, 
+    skip_if(!RUN_REPORTS_TEST, 
             "No value provided for EXPORT_REPORTS_ID. Tests Skipped")
     Report <- expect_silent(exportReportsTyped(rcon, 
                                                report_id = EXPORT_REPORTS_ID[1], 

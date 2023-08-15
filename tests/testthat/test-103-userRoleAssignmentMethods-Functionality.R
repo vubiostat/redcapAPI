@@ -6,7 +6,7 @@ importUsers(rcon,
 test_that(
   "Import and Export of User Role Assignments",
   {
-    skip_if(length(EXPENDABLE_USER) == 0, 
+    skip_if(!RUN_USER_TESTS, 
             "User Assignment tests without an expendable user could have negative consequences and are not run")
     # we don't really want to run these until we have an expendable user. 
     # otherwise we run the risk of cutting off access a user running the

@@ -3,7 +3,7 @@ context("User Methods Functionality")
 test_that(
   "Import / Export Users", 
   {
-    skip_if(length(EXPENDABLE_USER) == 0,
+    skip_if(!RUN_USER_TESTS,
             "User tests without an expendable user could have negative consequences and are not run.")
 
     if (EXPENDABLE_USER %in% rcon$users()$username){
@@ -35,7 +35,7 @@ test_that(
 test_that(
   "Import Users Options", 
   {
-    skip_if(length(EXPENDABLE_USER) == 0,
+    skip_if(!RUN_USER_TESTS,
             "User tests without an expendable user could have negative consequences and are not run.")
     
     if (EXPENDABLE_USER %in% rcon$users()$username){
@@ -115,6 +115,9 @@ test_that(
 test_that(
   "Export User Options", 
   {
+    skip_if(!RUN_USER_TESTS,
+            "User tests without an expendable user could have negative consequences and are not run.")
+    
     importUsers(rcon, 
                 data = data.frame(username = EXPENDABLE_USER, 
                                   expiration = Sys.Date() + 365,
@@ -159,7 +162,7 @@ test_that(
 test_that(
   "Delete User Functionality", 
   {
-    skip_if(length(EXPENDABLE_USER) == 0,
+    skip_if(!RUN_USER_TESTS,
             "User tests without an expendable user could have negative consequences and are not run.")
 
     # Clean Up

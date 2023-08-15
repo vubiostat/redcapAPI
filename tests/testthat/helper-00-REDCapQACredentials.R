@@ -21,15 +21,12 @@ library(keyring)
   
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
-unlockREDCap(
+conns <- unlockREDCap(
   c(rcon_orig ="TestRedcapAPI", ## Change to rcon when satisfied with testing
     rcon = "DataTypes"),        ## Delete this to change to primary project
   url=url, keyring='API_KEYs', 
   envir=globalenv())
 
-library(checkmate) # for additional expect_* functions.
 
-EXPENDABLE_USER <- "bstat_api_user"
-EXPORT_REPORTS_ID <- 375181
 
-TEST_START_TIME <- Sys.time()
+
