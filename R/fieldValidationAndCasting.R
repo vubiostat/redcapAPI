@@ -173,7 +173,7 @@ castCheckLabel <- function(x, field_name, coding){
   # Sets the level and label while accomodating 0 coded check values
   # (0 is not considered a `checked_value` in this case, so must be handled by force)
   
-  is_zero_coded <- sub(REGEX_CHECKBOX_FIELD_NAME,  "\\2", field_name, perl = TRUE) == "0"
+  is_zero_coded <- isZeroCodedCheckField(field_name)
   
   the_level <- if (is_zero_coded) "0"              else checked_value[1]
   the_label <- if (is_zero_coded) checked_value[1] else names(checked_value)[1]
@@ -193,7 +193,7 @@ castCheckCode <- function(x, field_name, coding){
   # Sets the level and label while accomodating 0 coded check values
   # (0 is not considered a `checked_value` in this case, so must be handled by force)
   
-  is_zero_coded <- sub(REGEX_CHECKBOX_FIELD_NAME,  "\\2", field_name, perl = TRUE) == "0"
+  is_zero_coded <- isZeroCodedCheckField(field_name)
   
   the_level <- if (is_zero_coded) "0" else checked_value[1]
   the_label <- if (is_zero_coded) "0" else checked_value[1]
@@ -239,7 +239,9 @@ getCheckedValue <- function(coding, field_name){
                      "Checked", 
                      "yes")
   
-  if (this_code == "0") checked_value <- checked_value[-1]
+  # When casting from raw, we don't want to consider "0" as checked 
+  # for zero coded fields.
+  if (isZeroCodedCheckField(field_name)) checked_value <- checked_value[-1]
   
   checked_value
 }
