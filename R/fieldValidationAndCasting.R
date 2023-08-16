@@ -171,14 +171,12 @@ castCheckLabel <- function(x, field_name, coding){
   x_checked <- x %in% checked_value 
   
   # Sets the level and label while accomodating 0 coded check values
-  if (sub(REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
-          "\\2", field_name, perl = TRUE) == "0"){
-    the_level = "0"
-    the_label = checked_value[1]
-  } else {
-    the_level = checked_value[1]
-    the_label = names(checked_value)[1]
-  }
+  # (0 is not considered a `checked_value` in this case, so must be handled by force)
+  
+  is_zero_coded <- sub(REGEX_CHECKBOX_FIELD_NAME,  "\\2", field_name, perl = TRUE) == "0"
+  
+  the_level <- if (is_zero_coded) "0"              else checked_value[1]
+  the_label <- if (is_zero_coded) checked_value[1] else names(checked_value)[1]
   
   factor(unname(c("", the_level)[(x_checked) + 1]), 
          levels=c("", the_level), 
@@ -193,14 +191,12 @@ castCheckCode <- function(x, field_name, coding){
   x_checked <- x %in% checked_value 
   
   # Sets the level and label while accomodating 0 coded check values
-  if (sub(REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
-          "\\2", field_name, perl = TRUE) == "0"){
-    the_level = "0"
-    the_label = "0"
-  } else {
-    the_level = checked_value[1]
-    the_label = names(checked_value)[1]
-  }
+  # (0 is not considered a `checked_value` in this case, so must be handled by force)
+  
+  is_zero_coded <- sub(REGEX_CHECKBOX_FIELD_NAME,  "\\2", field_name, perl = TRUE) == "0"
+  
+  the_level <- if (is_zero_coded) "0" else checked_value[1]
+  the_label <- if (is_zero_coded) "0" else checked_value[1]
   
   factor(unname(c("", the_level)[(x_checked) + 1]), 
          levels=c("", the_level), 
