@@ -10,6 +10,15 @@
 #' @param field_name \code{character(1)} The name of a field to be tested.
 
 isZeroCodedCheckField <- function(field_name){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = field_name, 
+                              len = 1, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   suffix <- sub(pattern = REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
                 replacement = "\\2", 
                 x = field_name, 

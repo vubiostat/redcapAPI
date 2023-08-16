@@ -1,4 +1,4 @@
-context("Is Field Zero-Coded")
+context("isZeroCodedCheckField Functionality")
 
 test_that(
   "test isZeroCodedCheckField",
@@ -10,5 +10,14 @@ test_that(
     expect_false(isZeroCodedCheckField("checkbox___1"))
     expect_false(isZeroCodedCheckField("checkbox___a"))
     expect_false(isZeroCodedCheckField("checkbox___00"))
+  }
+)
+
+test_that(
+  "Return an error if field_name is not character(1)",
+  {
+    expect_error(isZeroCodedCheckField(0))
+    expect_error(isZeroCodedCheckField(c("checkbox___0", 
+                                         "checkbox___1")))
   }
 )
