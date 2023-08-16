@@ -44,11 +44,12 @@ test_that(
 test_that(
   "Return the error if it isn't one of the handled errors", 
   {
-    response_list <- list(status_code = 701, 
-                          content = charToRaw("my error"))
-    class(response_list) <- "response"
-    
-    expect_error(redcapError(response_list), 
+    response <- makeApiCall(rcon, body = list(content = 'no-content', 
+                                              returnFormat = 'csv'))
+    response$content <- charToRaw("my error")
+    response$status_code <- 701
+
+    expect_error(redcapError(response), 
                  "701: my error")
   }
 )
