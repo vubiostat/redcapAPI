@@ -170,9 +170,19 @@ castCheckLabel <- function(x, field_name, coding){
 
   x_checked <- x %in% checked_value 
   
-  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
-         levels=c("", checked_value[1]), 
-         labels=c("", names(checked_value)[1]))
+  # Sets the level and label while accomodating 0 coded check values
+  if (sub(REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
+          "\\2", field_name, perl = TRUE) == "0"){
+    the_level = "0"
+    the_label = checked_value[1]
+  } else {
+    the_level = checked_value[1]
+    the_label = names(checked_value)[1]
+  }
+  
+  factor(unname(c("", the_level)[(x_checked) + 1]), 
+         levels=c("", the_level), 
+         labels=c("", the_label))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -182,9 +192,19 @@ castCheckCode <- function(x, field_name, coding){
   
   x_checked <- x %in% checked_value 
   
-  factor(unname(c("", checked_value[1])[(x_checked) + 1]), 
-         levels=c("", checked_value[1]), 
-         labels=c("", checked_value[1]))
+  # Sets the level and label while accomodating 0 coded check values
+  if (sub(REGEX_CHECKBOX_FIELD_NAME,  # defined in constants.R
+          "\\2", field_name, perl = TRUE) == "0"){
+    the_level = "0"
+    the_label = "0"
+  } else {
+    the_level = checked_value[1]
+    the_label = names(checked_value)[1]
+  }
+  
+  factor(unname(c("", the_level)[(x_checked) + 1]), 
+         levels=c("", the_level), 
+         labels=c("", the_label))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -222,6 +242,9 @@ getCheckedValue <- function(coding, field_name){
                      "1", 
                      "Checked", 
                      "yes")
+  
+  if (this_code == "0") checked_value <- checked_value[-1]
+  
   checked_value
 }
 
