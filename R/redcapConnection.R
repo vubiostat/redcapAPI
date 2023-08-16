@@ -152,6 +152,10 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_fileRepository <- NULL
   this_repeat <- NULL
   this_dag <- NULL
+  this_dag_assign <- NULL
+  this_user_role <- NULL
+  this_user_role_assign <- NULL
+  
   rtry <- retries
   rtry_int <- rep(retry_interval, 
                   length.out = rtry)
@@ -171,6 +175,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "fileRepo" = exportFileRepositoryListing(rc, recursive = TRUE),
            "repeat" = exportRepeatingInstrumentsEvents(rc),
            "dags" = exportDags(rc),
+           "dagAssign" = exportUserDagAssignments(rc),
+           "userRole" = exportUserRoles(rc),
+           "userRoleAssign" = exportUserRoleAssignments(rc),
            NULL)
   }
   
@@ -210,6 +217,16 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_users = function() this_user <<- NULL, 
       refresh_users = function() this_user <<- getter("user"), 
       
+      user_roles = function(){ if (is.null(this_user_role)) this_user_role <<- getter("userRole"); this_user_role },
+      has_user_roles = function() !is.null(this_user_role),
+      flush_user_roles = function() this_user_role <<- NULL, 
+      refresh_user_roles = function() this_user_role <<- getter("userRole"),
+      
+      user_role_assignment = function(){ if (is.null(this_user_role_assign)) this_user_role_assign <<- getter("userRoleAssign"); this_user_role_assign },
+      has_user_role_assignment = function() !is.null(this_user_role_assign),
+      flush_user_role_assignment = function() this_user_role_assign <<- NULL, 
+      refresh_user_role_assignment = function() this_user_role_assign <<- getter("userRoleAssign"), 
+      
       version = function(){ if (is.null(this_version)) this_version <<- getter("version"); this_version }, 
       has_version = function() !is.null(this_version), 
       flush_version = function() this_version <<- NULL, 
@@ -240,25 +257,38 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_dags = function() this_dag <<- NULL, 
       refresh_dags = function() this_dag <<- getter("dags"),
       
+      dag_assignment = function() {if (is.null(this_dag_assign)) this_dag_assign <<- getter("dagAssign"); this_dag_assign },
+      has_dag_assignment = function() !is.null(this_dag_assign), 
+      flush_dag_assignment = function() this_dag_assign <<- NULL, 
+      refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
+      
       flush_all = function(){ 
-        this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
-          this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- this_repeat <<- 
-          this_dag <<- NULL}, 
+        this_metadata <<- 
+          this_arm <<- this_event <<- 
+          this_instrument <<- this_fieldname <<- this_mapping <<-
+          this_repeat <<- 
+          this_user <<- this_user_role <<- this_user_role_assign <<-
+          this_dag <<- this_dag_assign <<-
+          this_project <<- this_version <<-
+          this_fileRepository <<-  
+          NULL}, 
       
       refresh_all = function(){
         this_metadata <<- getter("metadata")
         this_arm <<- getter("arm")
         this_event <<- getter("event")
+        this_instrument <<- getter("instrument")
         this_fieldname <<- getter("fieldname")
         this_mapping <<- getter("mapping")
-        this_user <<- getter("user")
-        this_version <<- getter("version")
-        this_project <<- getter("project")
-        this_instrument <<- getter("instrument")
-        this_fileRepository <<- getter("fileRepo")
         this_repeat <<- getter("repeat")
+        this_user_role <<- getter("userRole")
+        this_user_role_assign <<- getter("userRoleAssign")
         this_dag <<- getter("dag")
+        this_dag_assign <<- getter("dagAssign")
+        this_project <<- getter("project")
+        this_version <<- getter("version")
+        this_fileRepository <<- getter("fileRepo")
+        
       },
       
       retries = function() rtry, 
@@ -298,18 +328,21 @@ print.redcapApiConnection <- function(x, ...){
 
   output <- 
     c("REDCap API Connection Object", 
-      sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
-      sprintf("Arms        : %s", is_cached(x$has_arms())), 
-      sprintf("DAGs        : %s", is_cached(x$has_dags())),
-      sprintf("Events      : %s", is_cached(x$has_events())),
-      sprintf("Instruments : %s", is_cached(x$has_instruments())),
-      sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
-      sprintf("Mapping     : %s", is_cached(x$has_mapping())),
-      sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
-      sprintf("Users       : %s", is_cached(x$has_users())), 
-      sprintf("Version     : %s", is_cached(x$has_version())), 
-      sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
-      sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))
+      sprintf("Meta Data            : %s", is_cached(x$has_metadata())), 
+      sprintf("Arms                 : %s", is_cached(x$has_arms())),
+      sprintf("Events               : %s", is_cached(x$has_events())), 
+      sprintf("Instruments          : %s", is_cached(x$has_instruments())),
+      sprintf("Field Names          : %s", is_cached(x$has_fieldnames())), 
+      sprintf("Mapping              : %s", is_cached(x$has_mapping())),
+      sprintf("Repeat Inst.         : %s", is_cached(x$has_repeatInstrumentEvent())),
+      sprintf("Users                : %s", is_cached(x$has_users())), 
+      sprintf("User Roles           : %s", is_cached(x$has_user_roles())),
+      sprintf("User Role Assignment : %s", is_cached(x$has_user_role_assignment())),
+      sprintf("DAGs                 : %s", is_cached(x$has_dags())),
+      sprintf("DAG Assignment       : %s", is_cached(x$has_dag_assignment())),
+      sprintf("Project Info         : %s", is_cached(x$has_projectInformation())),
+      sprintf("Version              : %s", is_cached(x$has_version())),  
+      sprintf("File Repo            : %s", is_cached(x$has_fileRepository())))
   cat(output, sep = "\n")
 }
 
@@ -326,24 +359,30 @@ print.redcapApiConnection <- function(x, ...){
 #'   field names can be read, or a \code{data.frame}.
 #' @param mapping Either a \code{character} giving the file from which the 
 #'   Event Instrument mappings can be read, or a \code{data.frame}.
-#' @param users Either a \code{character} giving the file from which the 
-#'   User settings can be read, or a \code{data.frame}.
-#' @param version Either a \code{character} giving the file from which the 
-#'   version can be read, or a \code{data.frame}.
-#' @param project_info Either a \code{character} giving the file from which the 
-#'   Project Information can be read, or a \code{data.frame}.
-#' @param file_repo Either a \code{character} giving the file from which the 
-#'   File Repository Listing can be read, or a \code{data.frame}.
 #' @param repeat_instrument Either a \code{character} giving the file from which the 
 #'   Repeating Instruments and Events settings can be read, or a \code{data.frame}.
 #'   Note: The REDCap GUI doesn't offer a download file of these settings 
 #'   (at the time of this writing).
+#' @param users Either a \code{character} giving the file from which the 
+#'   User settings can be read, or a \code{data.frame}.
+#' @param user_roles Either a \code{character} giving the file from which the
+#'   User Roles can be read, or a \code{data.frame}.
+#' @param user_role_assignment Either a \code{character} giving the file from which the
+#'   User Role Assigments can be read, or a \code{data.frame}. 
+#' @param dags Either a \code{character} giving the file from which the 
+#'   Data Access Groups can be read, or a \code{data.frame}.
+#' @param dag_assignment Either a \code{character} giving the file from which the
+#'   Data Access Group Assigments can be read, or a \code{data.frame}.
+#' @param project_info Either a \code{character} giving the file from which the 
+#'   Project Information can be read, or a \code{data.frame}.
+#' @param version Either a \code{character} giving the file from which the 
+#'   version can be read, or a \code{data.frame}.
+#' @param file_repo Either a \code{character} giving the file from which the 
+#'   File Repository Listing can be read, or a \code{data.frame}.
 #' @param records Either a \code{character} giving the file from which the 
 #'   Records can be read, or a \code{data.frame}. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labelled or formatted
-#'   data is likely to result in errors when passed to other functions. 
-#' @param dags Either a \code{character} giving the file from which the 
-#'   Data Access Groups can be read, or a \code{data.frame}.
+#'   data is likely to result in errors when passed to other functions.
 #' @export
 
 offlineConnection <- function(meta_data = NULL, 
@@ -352,15 +391,18 @@ offlineConnection <- function(meta_data = NULL,
                               instruments = NULL, 
                               field_names = NULL, 
                               mapping = NULL, 
-                              users = NULL, 
-                              version = NULL, 
-                              project_info = NULL, 
-                              file_repo = NULL, 
                               repeat_instrument = NULL,
-                              records = NULL, 
-                              dags = NULL){
+                              users = NULL, 
+                              user_roles = NULL, 
+                              user_role_assignment = NULL,
+                              dags = NULL, 
+                              dag_assignment = NULL,
+                              project_info = NULL, 
+                              version = NULL, 
+                              file_repo = NULL,
+                              records = NULL){
   ###################################################################
-  # Argument Validation 
+  # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert(
@@ -425,6 +467,16 @@ offlineConnection <- function(meta_data = NULL,
   )
   
   checkmate::assert(
+    checkmate::check_character(x = repeat_instrument, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = repeat_instrument, 
+                                null.ok = TRUE), 
+    .var.name = "repeat_instrument", 
+    add = coll
+  )
+  
+  checkmate::assert(
     checkmate::check_character(x = users, 
                                len = 1, 
                                null.ok = TRUE), 
@@ -435,12 +487,42 @@ offlineConnection <- function(meta_data = NULL,
   )
   
   checkmate::assert(
-    checkmate::check_character(x = version, 
+    checkmate::check_character(x = user_roles, 
                                len = 1, 
                                null.ok = TRUE), 
-    checkmate::check_data_frame(x = version, 
+    checkmate::check_data_frame(x = user_roles, 
                                 null.ok = TRUE), 
-    .var.name = "version", 
+    .var.name = "user_roles", 
+    add = coll
+  )
+
+  checkmate::assert(
+    checkmate::check_character(x = user_role_assignment, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = user_role_assignment, 
+                                null.ok = TRUE), 
+    .var.name = "user_role_assignment", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = dags, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = dags, 
+                                null.ok = TRUE), 
+    .var.name = "dags", 
+    add = coll
+  )
+  
+  checkmate::assert(
+    checkmate::check_character(x = dag_assignment, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = dag_assignment, 
+                                null.ok = TRUE), 
+    .var.name = "dag_assignment", 
     add = coll
   )
   
@@ -455,22 +537,22 @@ offlineConnection <- function(meta_data = NULL,
   )
   
   checkmate::assert(
+    checkmate::check_character(x = version, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    checkmate::check_data_frame(x = version, 
+                                null.ok = TRUE), 
+    .var.name = "version", 
+    add = coll
+  )
+  
+  checkmate::assert(
     checkmate::check_character(x = file_repo, 
                                len = 1, 
                                null.ok = TRUE), 
     checkmate::check_data_frame(x = file_repo, 
                                 null.ok = TRUE), 
     .var.name = "file_repo", 
-    add = coll
-  )
-  
-  checkmate::assert(
-    checkmate::check_character(x = repeat_instrument, 
-                               len = 1, 
-                               null.ok = TRUE), 
-    checkmate::check_data_frame(x = repeat_instrument, 
-                                null.ok = TRUE), 
-    .var.name = "repeat_instrument", 
     add = coll
   )
   
@@ -484,20 +566,10 @@ offlineConnection <- function(meta_data = NULL,
     add = coll
   )
   
-  checkmate::assert(
-    checkmate::check_character(x = dags, 
-                               len = 1, 
-                               null.ok = TRUE), 
-    checkmate::check_data_frame(x = dags, 
-                                null.ok = TRUE), 
-    .var.name = "dags", 
-    add = coll
-  )
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
-  # Argument Validation - Part Two
+  # Argument Validation - Part Two                               ####
   
   if (is.character(meta_data)){
     checkmate::assert_file_exists(x = meta_data, 
@@ -529,8 +601,33 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
+  if (is.character(repeat_instrument)){
+    checkmate::assert_file_exists(x = repeat_instrument, 
+                                  add = coll)
+  }
+  
   if (is.character(users)){
     checkmate::assert_file_exists(x = users, 
+                                  add = coll)
+  }
+  
+  if (is.character(user_roles)){
+    checkmate::assert_file_exists(x = user_roles, 
+                                  add = coll)
+  }
+
+  if (is.character(user_role_assignment)){
+    checkmate::assert_file_exists(x = user_role_assignment, 
+                                  add = coll)
+  }
+  
+  if (is.character(dags)){
+    checkmate::assert_file_exists(x = dags, 
+                                  add = coll)
+  }
+  
+  if (is.character(dag_assignment)){
+    checkmate::assert_file_exists(x = dag_assignment, 
                                   add = coll)
   }
   
@@ -544,25 +641,10 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
-  if (is.character(repeat_instrument)){
-    checkmate::assert_file_exists(x = repeat_instrument, 
-                                  add = coll)
-  }
-  
-  if (is.character(records)){
-    checkmate::assert_file_exists(x = records, 
-                                  add = coll)
-  }
-  
-  if (is.character(dags)){
-    checkmate::assert_file_exists(x = dags, 
-                                  add = coll)
-  }
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
-  # Read files
+  # Read files                                                   ####
   this_metadata <- 
     validateRedcapData(data = .offlineConnection_readMetaData(meta_data), 
                        redcap_data = REDCAP_METADATA_STRUCTURE)
@@ -582,16 +664,31 @@ offlineConnection <- function(meta_data = NULL,
   this_mapping <- 
     validateRedcapData(data = .offlineConnection_readFile(mapping), 
                        redcap_data = REDCAP_INSTRUMENT_MAPPING_STRUCTURE)
+
+  this_repeat <- .offlineConnection_readFile(repeat_instrument)
+  
   this_user <- 
     validateRedcapData(data = .offlineConnection_readFile(users), 
                        redcap_data = REDCAP_USER_STRUCTURE)
-  this_version <- version
+  this_user_roles <- 
+    validateRedcapData(data = .offlineConnection_readFile(user_roles), 
+                       redcap_data = REDCAP_USER_ROLE_STRUCTURE)
+  this_user_role_assignment <- 
+    validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
+                       redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
+  this_dags <- 
+    validateRedcapData(data = .offlineConnection_readFile(dags),
+                       redcap_data = REDCAP_DAG_STRUCTURE)
+  this_dag_assignment <- 
+    validateRedcapData(data = .offlineConnection_readFile(dag_assignment), 
+                       redcap_data = REDCAP_DAG_ASSIGNMENT_STRUCTURE)
   this_project <- 
     validateRedcapData(data = .offlineConnection_readFile(project_info), 
                        redcap_data = REDCAP_PROJECT_INFORMATION_STRUCTURE)
+  this_version <- version
+
   this_fileRepository <- .offlineConnection_readFile(file_repo)
-  
-  this_repeat <- .offlineConnection_readFile(repeat_instrument)
+
   
   this_instrument <- 
     if (is.null(instruments) & !is.null(this_metadata)){
@@ -603,12 +700,10 @@ offlineConnection <- function(meta_data = NULL,
                          redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
     }
   
-  this_dag <- 
-    validateRedcapData(data = .offlineConnection_readFile(dags), 
-                       redcap_data = REDCAP_DAG_STRUCTURE)
-  
   this_record <- .offlineConnection_readFile(records)
   
+  ###################################################################
+  # Redcap Connection object                                     ####
   rc <- 
     list(
       url = NULL, 
@@ -633,6 +728,21 @@ offlineConnection <- function(meta_data = NULL,
       refresh_events = function(x) {this_event <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                       redcap_data = REDCAP_EVENT_STRUCTURE)}, 
       
+      instruments = function(){ this_instrument },
+      has_instruments = function() !is.null(this_instrument), 
+      flush_instruments = function() this_instrument <<- NULL, 
+      refresh_instruments = function(x) {
+        this_instrument <<- 
+          if (is.null(x) & !is.null(this_metadata)){
+            data.frame(instrument_name = unique(this_metadata$form_name), 
+                       instrument_label = unique(this_metadata$form_name), 
+                       stringsAsFactors = FALSE)
+          } else {
+            validateRedcapData(data = .offlineConnection_readFile(x), 
+                               redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
+          }
+      }, 
+      
       fieldnames = function(){ this_fieldname }, 
       has_fieldnames = function() !is.null(this_fieldname), 
       flush_fieldnames = function() this_fieldname <<- NULL, 
@@ -652,16 +762,41 @@ offlineConnection <- function(meta_data = NULL,
       refresh_mapping = function(x) { this_mapping <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                           redcap_data = REDCAP_INSTRUMENT_MAPPING_STRUCTURE)}, 
       
+      repeatInstrumentEvent = function(){ this_repeat }, 
+      has_repeatInstrumentEvent = function() !is.null(this_repeat), 
+      flush_repeatInstrumentEvent = function() this_project <<- NULL, 
+      refresh_repeatInstrumentEvent = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                                       redcap_data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE)},
+                                                                                       
       users = function(){ this_user }, 
       has_users = function() !is.null(this_user), 
       flush_users = function() this_user <<- NULL, 
       refresh_users = function(x) {this_user <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                     redcap_data = REDCAP_USER_STRUCTURE)}, 
       
-      version = function(){ this_version }, 
-      has_version = function() !is.null(this_version), 
-      flush_version = function() this_version <<- NULL, 
-      refresh_version = function(x) {this_version <<- x}, 
+      user_roles = function(){ this_user_roles }, 
+      has_user_roles = function() !is.null(this_user_roles), 
+      flush_user_roles = function() this_user_roles <<- NULL, 
+      refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                               redcap_data = REDCAP_USER_ROLE_STRUCTURE)}, 
+      
+      users_role_assignment = function(){ this_user_role_assignment }, 
+      has_user_role_assignment = function() !is.null(this_user_role_assignment), 
+      flush_user_role_assignment = function() this_user_role_assignment <<- NULL, 
+      refresh_user_role_assignment = function(x) {this_user_role_assignment <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                                                   redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)}, 
+      
+      dags = function(){ this_dags }, 
+      has_dags = function() !is.null(this_dags), 
+      flush_dags = function() this_dags <<- NULL, 
+      refresh_dags = function(x) {this_dags <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                  redcap_data = REDCAP_DAG_STRUCTURE)},
+      
+      dag_assignment = function(){ this_dag_assignment }, 
+      has_dag_assignment = function() !is.null(this_dag_assignment), 
+      flush_dag_assignment = function() this_dag_assignment <<- NULL, 
+      refresh_dag_assignment = function(x) {this_dag_assignment <<- validateRedcapData(data = .offlineConnection_readFile(x), 
+                                                                                       redcap_data = REDCAP_DAG_ASSIGNMENT_STRUCTURE)},
       
       projectInformation = function(){ this_project }, 
       has_projectInformation = function() !is.null(this_project), 
@@ -669,37 +804,15 @@ offlineConnection <- function(meta_data = NULL,
       refresh_projectInformation = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
                                                                                     redcap_data = REDCAP_PROJECT_INFORMATION_STRUCTURE)}, 
       
-      instruments = function(){ this_instrument },
-      has_instruments = function() !is.null(this_instrument), 
-      flush_instruments = function() this_instrument <<- NULL, 
-      refresh_instruments = function(x) {
-        this_instrument <<- 
-          if (is.null(x) & !is.null(this_metadata)){
-            data.frame(instrument_name = unique(this_metadata$form_name), 
-                       instrument_label = unique(this_metadata$form_name), 
-                       stringsAsFactors = FALSE)
-          } else {
-            validateRedcapData(data = .offlineConnection_readFile(x), 
-                               redcap_data = REDCAP_INSTRUMENT_STRUCTURE)
-          }
-      }, 
+      version = function(){ this_version }, 
+      has_version = function() !is.null(this_version), 
+      flush_version = function() this_version <<- NULL, 
+      refresh_version = function(x) {this_version <<- x}, 
       
       fileRepository = function(){ this_fileRepository },
       has_fileRepository = function() !is.null(this_fileRepository),
       flush_fileRepository = function() this_fileRepository <<- NULL,
       refresh_fileRepository = function(x) {this_fileRepository <<- .offlineConnection_readFile(x)},
-      
-      repeatInstrumentEvent = function(){ this_repeat }, 
-      has_repeatInstrumentEvent = function() !is.null(this_repeat), 
-      flush_repeatInstrumentEvent = function() this_project <<- NULL, 
-      refresh_repeatInstrumentEvent = function(x) {this_project <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                                       redcap_data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE)},
-      
-      dags = function(){ this_dag }, 
-      has_dags = function() !is.null(this_dag), 
-      flush_dags = function() this_dag <<- NULL, 
-      refresh_dags = function(x) {this_dag <<- validateRedcapData(data = .offlineConnection_readFile(dags), 
-                                                                  redcap_data = REDCAP_DAG_STRUCTURE)},
       
       records = function(){ this_record },
       has_records = function() !is.null(this_record),
@@ -725,19 +838,22 @@ print.redcapOfflineConnection <- function(x, ...){
     
     output <- 
       c("REDCap Offline Connection Object", 
-        sprintf("Records     : %s", is_cached(x$has_records())),
-        sprintf("Meta Data   : %s", is_cached(x$has_metadata())), 
-        sprintf("Arms        : %s", is_cached(x$has_arms())), 
-        sprintf("Events      : %s", is_cached(x$has_events())),
-        sprintf("Instruments : %s", is_cached(x$has_instruments())),
-        sprintf("Field Names : %s", is_cached(x$has_fieldnames())), 
-        sprintf("Mapping     : %s", is_cached(x$has_mapping())),
-        sprintf("Repeat Inst.: %s", is_cached(x$has_repeatInstrumentEvent())),
-        sprintf("Users       : %s", is_cached(x$has_users())),
-        sprintf("DAGs        : %s", is_cached(x$has_dags())),
-        sprintf("Version     : %s", is_cached(x$has_version())), 
-        sprintf("Project Info: %s", is_cached(x$has_projectInformation())), 
-        sprintf("File Repo   : %s", is_cached(x$has_fileRepository())))
+        sprintf("Records               : %s", is_cached(x$has_records())),
+        sprintf("Meta Data             : %s", is_cached(x$has_metadata())), 
+        sprintf("Arms                  : %s", is_cached(x$has_arms())), 
+        sprintf("Events                : %s", is_cached(x$has_events())),
+        sprintf("Instruments           : %s", is_cached(x$has_instruments())),
+        sprintf("Field Names           : %s", is_cached(x$has_fieldnames())), 
+        sprintf("Mapping               : %s", is_cached(x$has_mapping())),
+        sprintf("Repeat Inst.          : %s", is_cached(x$has_repeatInstrumentEvent())),
+        sprintf("Users                 : %s", is_cached(x$has_users())),
+        sprintf("User Roles            : %s", is_cached(x$has_user_roles())),
+        sprintf("Users Role Assignment : %s", is_cached(x$has_user_role_assignment())),
+        sprintf("DAGs                  : %s", is_cached(x$has_dags())),
+        sprintf("DAG Assigment         : %s", is_cached(x$has_dag_assignment())),
+        sprintf("Project Info          : %s", is_cached(x$has_projectInformation())), 
+        sprintf("Version               : %s", is_cached(x$has_version())), 
+        sprintf("File Repo             : %s", is_cached(x$has_fileRepository())))
     cat(output, sep = "\n")
 }
 

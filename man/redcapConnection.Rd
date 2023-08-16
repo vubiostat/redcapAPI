@@ -25,13 +25,16 @@ offlineConnection(
   instruments = NULL,
   field_names = NULL,
   mapping = NULL,
-  users = NULL,
-  version = NULL,
-  project_info = NULL,
-  file_repo = NULL,
   repeat_instrument = NULL,
-  records = NULL,
-  dags = NULL
+  users = NULL,
+  user_roles = NULL,
+  user_role_assignment = NULL,
+  dags = NULL,
+  dag_assignment = NULL,
+  project_info = NULL,
+  version = NULL,
+  file_repo = NULL,
+  records = NULL
 )
 
 \method{print}{redcapOfflineConnection}(x, ...)
@@ -83,30 +86,39 @@ field names can be read, or a \code{data.frame}.}
 \item{mapping}{Either a \code{character} giving the file from which the 
 Event Instrument mappings can be read, or a \code{data.frame}.}
 
-\item{users}{Either a \code{character} giving the file from which the 
-User settings can be read, or a \code{data.frame}.}
-
-\item{version}{Either a \code{character} giving the file from which the 
-version can be read, or a \code{data.frame}.}
-
-\item{project_info}{Either a \code{character} giving the file from which the 
-Project Information can be read, or a \code{data.frame}.}
-
-\item{file_repo}{Either a \code{character} giving the file from which the 
-File Repository Listing can be read, or a \code{data.frame}.}
-
 \item{repeat_instrument}{Either a \code{character} giving the file from which the 
 Repeating Instruments and Events settings can be read, or a \code{data.frame}.
 Note: The REDCap GUI doesn't offer a download file of these settings 
 (at the time of this writing).}
 
+\item{users}{Either a \code{character} giving the file from which the 
+User settings can be read, or a \code{data.frame}.}
+
+\item{user_roles}{Either a \code{character} giving the file from which the
+User Roles can be read, or a \code{data.frame}.}
+
+\item{user_role_assignment}{Either a \code{character} giving the file from which the
+User Role Assigments can be read, or a \code{data.frame}.}
+
+\item{dags}{Either a \code{character} giving the file from which the 
+Data Access Groups can be read, or a \code{data.frame}.}
+
+\item{dag_assignment}{Either a \code{character} giving the file from which the
+Data Access Group Assigments can be read, or a \code{data.frame}.}
+
+\item{project_info}{Either a \code{character} giving the file from which the 
+Project Information can be read, or a \code{data.frame}.}
+
+\item{version}{Either a \code{character} giving the file from which the 
+version can be read, or a \code{data.frame}.}
+
+\item{file_repo}{Either a \code{character} giving the file from which the 
+File Repository Listing can be read, or a \code{data.frame}.}
+
 \item{records}{Either a \code{character} giving the file from which the 
 Records can be read, or a \code{data.frame}. This should be the raw 
 data as downloaded from the API, for instance. Using labelled or formatted
 data is likely to result in errors when passed to other functions.}
-
-\item{dags}{Either a \code{character} giving the file from which the 
-Data Access Groups can be read, or a \code{data.frame}.}
 }
 \description{
 Creates an object of class \code{redcapApiConnection} for 

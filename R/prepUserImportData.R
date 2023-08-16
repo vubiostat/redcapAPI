@@ -13,12 +13,15 @@
 #' @param consolidate \code{logical(1)} If \code{TRUE}, the form and data 
 #'   export access values will be read from the expanded columns. Otherwise, 
 #'   the consolidated values (as provided by the API export) are utilized.
+#' @param user_role \code{logical(1)} If \code{TRUE}, the code will 
+#'   treat the data as if it is being prepared for importing User Roles.
 #'   
 #' @export
 
 prepUserImportData <- function(data, 
                                rcon, 
-                               consolidate = TRUE){
+                               consolidate = TRUE, 
+                               user_role = FALSE){
   
   ###################################################################
   # Argument Validation                                          ####
@@ -37,13 +40,19 @@ prepUserImportData <- function(data,
                             len = 1,
                             add = coll)
   
+  checkmate::assert_logical(x = user_role, 
+                            len = 1, 
+                            add = coll)
+  
   checkmate::reportAssertions(coll)
   
   primary_fields <- names(data)
   primary_fields <- primary_fields[!grepl("(_export_access|_form_access)$", 
                                           primary_fields)]
+  
   checkmate::assert_subset(x = primary_fields, 
-                           choices = names(REDCAP_USER_STRUCTURE), 
+                           choices = c(if (user_role) names(REDCAP_USER_ROLE_STRUCTURE) else names(REDCAP_USER_STRUCTURE), 
+                                       "data_export"), 
                            add = coll)
   
   checkmate::reportAssertions(coll)

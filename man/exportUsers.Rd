@@ -35,7 +35,7 @@ is always returned with the format [form_name]:[access_code] and a comma separat
 each form.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 

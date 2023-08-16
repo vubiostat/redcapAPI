@@ -4,7 +4,7 @@
 \alias{prepUserImportData}
 \title{Prepare User Data for Import}
 \usage{
-prepUserImportData(data, rcon, consolidate = TRUE)
+prepUserImportData(data, rcon, consolidate = TRUE, user_role = FALSE)
 }
 \arguments{
 \item{data}{\code{data.frame} that has the structure of 
@@ -17,6 +17,9 @@ in the project.}
 \item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data 
 export access values will be read from the expanded columns. Otherwise, 
 the consolidated values (as provided by the API export) are utilized.}
+
+\item{user_role}{\code{logical(1)} If \code{TRUE}, the code will 
+treat the data as if it is being prepared for importing User Roles.}
 }
 \description{
 Prepares a data frame for import via the API. Allows for 

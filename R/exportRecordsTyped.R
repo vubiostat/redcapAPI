@@ -80,7 +80,7 @@
 #' @param filter_empty_rows \code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #'   
 #' @details
 #' 
@@ -821,7 +821,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   } 
   
@@ -859,7 +859,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                                 "fields")))
     
     if (record_response$status_code != 200){
-      redcap_error(record_response, 
+      redcapError(record_response, 
                    error_handling = error_handling)
     }
     
