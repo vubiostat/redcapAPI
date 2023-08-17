@@ -13,6 +13,8 @@ exportRecords_offline <- function(dataFile,
                                   ..., 
                                   meta_data)
 {
+  message("Please use exportRecordsTyped instead. exportRecords_offline will be removed in version 3.0.0.")
+  
   if (!missing(meta_data)){
     warning("Argument `meta_data` has been deprecated. Please use `metaDataFile` instead.")
     if (missing(metaDataFile)){
