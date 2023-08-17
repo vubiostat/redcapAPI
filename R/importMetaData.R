@@ -15,7 +15,7 @@
 #' @param validation_types \code{character} giving the acceptable values 
 #'   for the \code{text_validation_or_show_slider_number} column. 
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 #'   These are appended to any parameters in \code{rcon$config}
 #' @param api_param named \code{list}. Additional API parameters to pass into the body of the

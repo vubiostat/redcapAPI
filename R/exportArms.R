@@ -9,7 +9,7 @@
 #'   May also be \code{integerish}.
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param config \code{list} Additional configuration parameters to pass to 
 #'   \code{\link[httr]{POST}}. These are appended to any parameters in 
 #'   \code{rcon$config}.
@@ -118,7 +118,7 @@ exportArms.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   }
   

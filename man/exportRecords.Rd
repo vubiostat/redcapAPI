@@ -126,7 +126,7 @@ entire project in a single batch. Batching the export may be beneficial
 to prevent tying up smaller servers.  See details for more explanation.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 

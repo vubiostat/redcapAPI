@@ -58,7 +58,7 @@
 #'   recommended.
 #' @param ... Arguments to pass to other methods. 
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param config \code{list} Additional configuration parameters to pass to 
 #'   \code{\link[httr]{POST}}. These are appended to any parameters in 
 #'   \code{rcon$config}.
@@ -146,10 +146,18 @@ preserveProject.redcapApiConnection <- function(object,
          users                 = exportUsers(object, 
                                              error_handling = error_handling, 
                                              config = config), 
-         user_roles            = NULL, # FIXME: Add this when methods are available 
-         user_role_assignments = NULL, # FIXME: Add this when methods are available
-         dags                  = NULL, # FIXME: Add this when methods are available
-         dag_assignments       = NULL, # FIXME: Add this when methods are available
+         user_roles            = exportUserRoles(object,
+                                                 error_handling = error_handling, 
+                                                 config = config), 
+         user_role_assignments = exportUserRoleAssignments(object, 
+                                                           error_handling = error_handling, 
+                                                           config = config),
+         dags                  = exportDags(object, 
+                                            error_handling = error_handling, 
+                                            config = config),
+         dag_assignments       = exportUserDagAssignments(object, 
+                                                          error_handling = error_handling, 
+                                                          config = config),
          records               = exportRecordsTyped(object, 
                                                     cast = raw_cast,
                                                     error_handling = error_handling, 
@@ -253,7 +261,8 @@ purgeProject.redcapApiConnection <- function(object,
   
   if (records){
     RecordId <- exportRecordsTyped(object, 
-                                   fields = object$metadata()$field_name[1], 
+                                   fields = object$metadata()$field_name[1],
+                                   cast = list(system = castRaw),
                                    error_handling = error_handling, 
                                    config = config)
     
@@ -285,27 +294,24 @@ purgeProject.redcapApiConnection <- function(object,
     }
   }
   
-  if (dags){
-    # FIXME: Uncomment after writing DAG methods
-    # deleteDags(object, 
-    #            dags = object$dags()$unique_group_name, 
-    #            error_handling = error_handling, 
-    #            config = config)
+  if (dags && nrow(object$dags()) > 0){
+    deleteDags(object,
+               dags = object$dags()$unique_group_name,
+               error_handling = error_handling,
+               config = config)
   }
 
-  if (user_roles){
-    # FIXME: Uncomment after writing User Role methods
-    # deleteUserRoles(object, 
-    #                 object$user_roles()$unique_role_name, 
-    #                 error_handling = error_handling, 
-    #                 config = config)
+  if (user_roles && nrow(object$user_roles()) > 0){
+    deleteUserRoles(object,
+                    object$user_roles()$unique_role_name,
+                    error_handling = error_handling,
+                    config = config)
   }
   
   if (users){
-    # FIXME: Uncomment after writing User methods
-    # deleteUsers(object, 
-    #             object$users()$username, 
-    #             error_handling = error_handling, 
+    # deleteUsers(object,
+    #             object$users()$username,
+    #             error_handling = error_handling,
     #             config = config)
   }
   
@@ -481,43 +487,38 @@ restoreProject.redcapApiConnection <- function(object,
   }
   
   if (!is.null(users)){
-    # FIXME: Uncomment after implementing User methods
-    # importUsers(object,
-    #             data = users, 
-    #             error_handling = error_handling, 
-    #             config = config)
+    importUsers(object,
+                data = users,
+                error_handling = error_handling,
+                config = config)
   }
   
   if (!is.null(user_roles)){
-    # FIXME: Uncomment after implementing User Role methods
-    # importUserRoles(object,
-    #                 data = user_roles, 
-    #                 error_handling = error_handling, 
-    #                 config = config)
+    importUserRoles(object,
+                    data = user_roles,
+                    error_handling = error_handling,
+                    config = config)
   }
   
   if (!is.null(user_role_assignments)){
-    # FIXME: Uncomment after implementing User Role methods
-    # importUserRoleAssignments(object,
-    #                           data = user_role_assignments, 
-    #                           error_handling = error_handling, 
-    #                           config = config)
+    importUserRoleAssignments(object,
+                              data = user_role_assignments,
+                              error_handling = error_handling,
+                              config = config)
   }
   
   if (!is.null(dags)){
-    # FIXME: Uncomment after implementing DAG methods
-    # importDags(object,
-    #            data = dags, 
-    #            error_handling = error_handling, 
-    #            config = config)
+    importDags(object,
+               data = dags,
+               error_handling = error_handling,
+               config = config)
   }
   
   if (!is.null(dag_assignments)){
-    # FIXME: Uncomment after implementing DAG methods
-    # importDagAssignments(object,
-    #                      data = dag_assignments, 
-    #                      error_handling = error_handling, 
-    #                      config = config)
+    importUserDagAssignments(object,
+                             data = dag_assignments,
+                             error_handling = error_handling,
+                             config = config)
   }
   
   if (!is.null(records) && nrow(records) > 0){

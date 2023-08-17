@@ -300,6 +300,7 @@ REDCAP_USER_STRUCTURE <-
              data_access_group = character(0),
              data_access_group_id = character(0),
              design = character(0),
+             alerts = character(0),
              user_rights = character(0),
              data_access_groups = character(0),
              reports = character(0),
@@ -333,8 +334,9 @@ REDCAP_USER_STRUCTURE <-
 # These are variables in the Users table coded as 0 = No Access, 1 = Access
 REDCAP_USER_TABLE_ACCESS_VARIABLES <- 
   c("design", 
+    "alerts",
     "user_rights", 
-    "data_access_groups", 
+    "data_access_group", 
     "reports", 
     "stats_and_charts", 
     "manage_survey_participants", 
@@ -369,6 +371,7 @@ REDCAP_USER_ROLE_STRUCTURE <-
              design = character(0),	
              user_rights = character(0),	
              data_access_groups = character(0),
+             # data_export = character(0),
              reports = character(0),
              stats_and_charts = character(0),
              manage_survey_participants = character(0),
@@ -396,6 +399,35 @@ REDCAP_USER_ROLE_STRUCTURE <-
              random_dashboard = character(0),
              random_perform = character(0),
              stringsAsFactors = FALSE)
+
+# User Role Table Access Variables
+
+REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- 
+  c("design", 
+    "alerts", 
+    "user_rights", 
+    "data_access_groups", 
+    # "data_export",
+    "reports", 
+    "stats_and_charts", 
+    "manage_survey_participants", 
+    "calendar", 
+    "data_import_tool", 
+    "data_comparison_tool", 
+    "logging", 
+    "file_repository", 
+    "data_quality_create", 
+    "data_quality_execute", 
+    "api_export", 
+    "api_import", 
+    "mobile_app", 
+    "mobile_app_download_data", 
+    "record_create", 
+    "record_rename", 
+    "record_delete", 
+    "lock_records_customization", 
+    "lock_records", 
+    "lock_records_all_forms")
 
 # User Role Assignment Structure 
 

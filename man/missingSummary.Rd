@@ -53,7 +53,7 @@ setting you make for \code{factors, labels, dates, survey}, or \code{dag}
 arguments will be ignored.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 
 \item{config}{\code{list} Additional configuration parameters to pass to 
 \code{\link[httr]{POST}}. These are appended to any parameters in 
@@ -79,7 +79,10 @@ The intention of this function is to generate a list of subject
   and R expression.  When a field with branching logic passes the logical
   statement, it is evaluated with \code{is.na}, otherwise, it is set to 
   \code{FALSE} (non-missing, because there was never an opportunity to 
-  provide a value).
+  provide a value).  The utility of this function is limited to simple 
+  logic where all of the
+  data exist within the same row. Any complex statements using events 
+  will result in a failure. 
   
   Optionally, forms that are entirely missing can be determined to be 
   non-missing.  This is applicable when, for instance, a patient did not 
