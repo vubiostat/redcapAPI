@@ -6,6 +6,7 @@ context("Export Typed Records Functionality")
 # yet, and functionality around events will be tested later.
 #
 # Subsequent files will deal with each of those specifics
+purgeProject(rcon, purge_all = TRUE)
 
 load(file.path(test_path("testdata"),
                "test_redcapAPI_MetaData.Rdata"))
