@@ -241,7 +241,7 @@ test_that(
     expect_data_frame(
       exportRecordsTyped(rcon, 
                          records = "1", 
-                         fields = "record_id", "date_dmy_test"), 
+                         fields = c("record_id", "date_dmy_test")), 
       nrows = 1
     )
   }
