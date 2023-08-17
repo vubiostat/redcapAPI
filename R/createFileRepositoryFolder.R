@@ -18,7 +18,7 @@
 #' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
 #'   File Repository data on \code{rcon} will be refreshed. 
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param config \code{list} Additional configuration parameters to pass to 
 #'   \code{\link[httr]{POST}}. These are appended to any parameters in 
 #'   \code{rcon$config}.
@@ -103,10 +103,10 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   FileRepo <- rcon$fileRepository()
-  
-  if (length(folder_id) > 0 && isTRUE(!folder_id %in% FileRepo$parent_folder)){
-    coll$push("folder_id '%s' does not exist in the File Repository", 
-              folder_id)
+
+  if (length(folder_id) > 0 && isTRUE(!folder_id %in% FileRepo$folder_id)){
+    coll$push(sprintf("folder_id '%s' does not exist in the File Repository", 
+                      folder_id))
     checkmate::reportAssertions(coll)
   }
   
@@ -151,7 +151,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                           config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   } 
   

@@ -308,7 +308,8 @@ raw_cast <- list(
   select             = NA,
   radio              = NA,
   dropdown           = NA,
-  sql                = NA
+  sql                = NA, 
+  system             = NA
 )
 
 #####################################################################
@@ -360,7 +361,8 @@ raw_cast <- list(
   select                   = castLabel,
   radio                    = castLabel,
   dropdown                 = castLabel,
-  sql                      = NA
+  sql                      = NA, 
+  system                   = castLabel
 )
 
 #####################################################################
@@ -425,7 +427,8 @@ raw_cast <- list(
   phone                    = as.character,
   zipcode                  = as.character, 
   slider                   = as.numeric,
-  sql                      = NA
+  sql                      = NA, 
+  system                   = castRaw
 )
 
 FIELD_TYPES <- c(

@@ -72,7 +72,7 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 file received from the API.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options

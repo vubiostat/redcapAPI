@@ -19,6 +19,10 @@
 #'   values we expected to be missing and narrow the search to just those 
 #'   subjects with legitimately missing values.
 #'   
+#'   The utility of this function is limited to simple logic where all of the
+#'   data exist within the same row. Any complex statements using events 
+#'   will result in a failure. 
+#'   
 #' @return Returns a list of unevaluated expressions.
 #' 
 #' @author Benjamin Nutter
@@ -26,8 +30,8 @@
 
 parseBranchingLogic <- function(l){
   l <- gsub("\\n", " ", l)
-  l <- gsub(" or ", " | ", l)
-  l <- gsub(" and ", " & ", l)
+  l <- gsub(" or ", " | ", l, ignore.case = TRUE)
+  l <- gsub(" and ", " & ", l, ignore.case = TRUE)
   l <- gsub("([a-z,0-9,_])\\((?<=\\()(.*?)(?=\\))\\)", 
             "\\1___\\L\\2", 
             l, 

@@ -59,7 +59,10 @@
 #' @param cast A named \code{list} of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}
+#'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}.
+#'   The field type \code{system} may also be used to determine how the fields
+#'   \code{redcap_event_name}, \code{redcap_repeat_instrument}, and 
+#'   \code{redcap_data_access_group} are cast.
 #' @param assignment A named \code{list} of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped
@@ -74,9 +77,10 @@
 #'   delimiter for the CSV file received from the API.
 #' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
+#' @param filter_empty_rows \code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.
 #' @param ... Consumes any additional parameters passed. Not used.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #'   
 #' @details
 #' 
@@ -242,6 +246,7 @@ exportRecordsTyped.redcapApiConnection <-
     cast           = list(),
     assignment     = list(label=stripHTMLandUnicode,
                           units=unitsFieldAnnotation),
+    filter_empty_rows = TRUE,
     ...,
     config         = list(),
     api_param      = list(),
@@ -311,6 +316,11 @@ exportRecordsTyped.redcapApiConnection <-
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+  
+  checkmate::assert_logical(x = filter_empty_rows, 
+                            len = 1, 
+                            any.missing = FALSE,
+                            add = coll)
 
   checkmate::reportAssertions(coll)
   
@@ -398,7 +408,7 @@ exportRecordsTyped.redcapApiConnection <-
     return(Raw)
   }
   
-  Raw <- filterEmptyRow(Raw, rcon)
+  if(filter_empty_rows) Raw <- filterEmptyRow(Raw, rcon)
   
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
@@ -811,7 +821,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   } 
   
@@ -849,7 +859,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                                 "fields")))
     
     if (record_response$status_code != 200){
-      redcap_error(record_response, 
+      redcapError(record_response, 
                    error_handling = error_handling)
     }
     

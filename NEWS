@@ -1,3 +1,21 @@
+## 2.8.0
+
+* added several functions for manipulating DAGs.
+
+## 2.7.5
+
+* added filter_empty_rows flag to exportRecordsTyped.
+
+## 2.7.4
+
+* Fixed upper/lower case for AND/OR in parseBranchingLogic
+* Added a `system` field type for mapping with `castLabel` and `castRaw`.
+* DAGs are added to connection cache.
+* Timeout on connections defaults to 5m. 
+* Clearer error message on connection closed.
+* export/import handles the 'now' and 'today' validation words for dates and date/times.
+* unlockREDCap: major refactor / rewrite. Many edges cases handled gracefully with better error messaging. Now with less password requests.
+
 ## 2.7.3
 
 * dags: Added ability to get DAG information from connection object, e.g. `rcon$dags()`

@@ -10,8 +10,28 @@
 #'   indicating how many rows were in \code{Records} at the start and 
 #'   completion of the subset.
 
-dropRepeatingNA <- function(Records, rcon, quiet=FALSE)
+dropRepeatingNA <- function(Records, 
+                            rcon, 
+                            quiet = FALSE)
 {
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_data_frame(x = Records, 
+                               add = coll)
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapConnection", 
+                          add = coll)
+  
+  checkmate::assert_logical(x = quiet, 
+                            len = 1, 
+                            null.ok = FALSE, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   if('redcap_repeat_instrument' %in% names(Records))
   {
     x <- Records$redcap_repeat_instrument

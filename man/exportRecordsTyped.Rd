@@ -32,6 +32,7 @@ exportRecordsTyped(
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
+  filter_empty_rows = TRUE,
   ...,
   config = list(),
   api_param = list(),
@@ -121,13 +122,18 @@ are not identified as NA will be passed to validation functions.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be 
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}}
+vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}.
+The field type \code{system} may also be used to determine how the fields
+\code{redcap_event_name}, \code{redcap_repeat_instrument}, and 
+\code{redcap_data_access_group} are cast.}
 
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
 HTML and UNICODE raw label and scanning for units={"UNITS"} in description
 to use as a units attribute.}
+
+\item{filter_empty_rows}{\code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.}
 
 \item{config}{named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
 These are appended to any parameters in \code{rcon$config}}
@@ -143,7 +149,7 @@ delimiter for the CSV file received from the API.}
 all records are pulled. Otherwise, the records all pulled in batches of this size.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcap_error}}}
+see \code{\link{redcapError}}}
 }
 \description{
 Exports records from a REDCap Database, allowing for 

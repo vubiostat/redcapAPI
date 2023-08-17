@@ -2,7 +2,7 @@
 % Please edit documentation in R/unlockREDCap.R
 \name{unlockREDCap}
 \alias{unlockREDCap}
-\title{Create REDCap connections from cryptolocker of API_KEYs}
+\title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
 unlockREDCap(
   connections,
@@ -17,38 +17,41 @@ unlockREDCap(
 \item{connections}{character vector. A list of strings that define the
 connections with associated API_KEYs to load into environment. Each
 name should correspond to a REDCap project for traceability, but 
-it can be anything. The variable name in the environment is this
-name, or if a named vector the name associated.}
+it can be named anything one desires.
+The name in the returned list is this name.}
 
-\item{url}{character. The url of the REDCap server's api.}
+\item{url}{character. The url of one's institutional REDCap server api.}
 
 \item{keyring}{character. Potential keyring, not used by default.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
-which returns the keys as a list. Use \code{\link{globalenv}} to assign the
+which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{passwordFUN}{function. Function to get the password for the keyring. Defaults to `askpass` option or `getPass::getPass`.}
+\item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
+On MacOS it will use rstudioapi::askForPassword if available.}
 
 \item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise
-        returns NULL and connections are assigned into the specified \code{envir}.
+        connections are assigned into the specified \code{envir}.
 }
 \description{
-Create a set of connections to redcap in the current (or specified 
-environment) from API_KEYs stored in a crypto locker. On the first
-execution it will ask to set the password for this locker. Next it
-will ask for the API_KEYs specified. It will request the user enter
-each key using getPass and store it in memory. If an API_KEY doesn't
-work, it will automatically delete it from the
-crypto locker and ask again on next execution.
+Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
+If the keyring does not exist, it will ask for password to this keyring to use on
+later requests. Next it
+will ask for the API_KEYs specified in `connections`. If an API_KEY doesn't
+work, it will request again. On later executions it will use an open keyring
+to retrieve all API_KEYs or for a password if the keyring is currently
+locked.
 }
 \details{
-If one forgets the password, or wishes to start over: `keyring::keyring_delete("keyring")`
+If one forgets the password to this keyring, or wishes to start over:
+`keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")`
 
-MacOS users should set `options(keyring_backend=keyring::backend_file)`. 
+Consistent behavior requires `options(keyring_backend=keyring::backend_file)` to
+be set. It is recommended to place this in `~/.Rprofile`.
 
 For production servers where the password must be stored in a readable
 plain text file, it will search for `../<basename>.yml`. DO NOT USE
@@ -67,19 +70,18 @@ other-config-stuff3: blah blah
 }
 
 IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
-as this *is* writing the API_KEY to a local
-file in clear text.
+as this *is* writing the API_KEY to a local file in clear text because
+connection objects contain the unlocked key in memory. Tips
+are provided in `vignette("redcapAPI-best-practices")`.
 }
 \examples{
 \dontrun{
-  # Cuts down on password requests on MAC
-options(keyring_backend=keyring::backend_file)
+options(keyring_backend=keyring::backend_file) # Put in .Rprofile
 
 unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
-             keyring      = 'MyKeyring',
+             keyring      = '<NAME_OF_KEY_RING_HERE>',
              envir        = globalenv(),
-             url          = 'https://<REDCAP_URL>/api/') 
+             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 }
-
 }

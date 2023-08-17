@@ -16,7 +16,7 @@
 #'   dictionary, and not the display names shown on the webpage.
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcap_error}}
+#'   see \code{\link{redcapError}}
 #' @param drop_utf8 \code{logical(1)}. In some cases, UTF-8 characters can 
 #'   pose problems for exporting the data dictionary.  Set this to \code{TRUE}
 #'   to replace any UTF-8 characters with empty characters.
@@ -105,7 +105,7 @@ exportMetaData.redcapApiConnection <- function(rcon,
                           config = config)
   
   if (response$status_code != 200){
-    redcap_error(response, 
+    redcapError(response, 
                  error_handling = error_handling)
   }
   
