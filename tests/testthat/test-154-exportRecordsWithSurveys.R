@@ -1,8 +1,10 @@
 context("Export Records Functionality with Surveys")
 
 test_that(
-  "Functionality", 
+  "Export Records with Surveys", 
   {
-    skip("Tests to be developed for 3.0.0 release")
+    skip("Methods for working with surveys have yet to be developed")
+    
+    # FIXME: Add some tests here
   }
 )
