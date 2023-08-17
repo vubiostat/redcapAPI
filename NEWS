@@ -8,7 +8,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
 * The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
-* The `cleansMetaData` function is being discontinued.
+* The `cleanseMetaData` function is being discontinued.
 
 ## 2.8.0
 
