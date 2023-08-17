@@ -143,6 +143,8 @@ castCode <- function(x, field_name, coding){
 #' @rdname fieldValidationAndCasting
 #' @export
 castRaw <- function(x, field_name, coding){
+  warnOfZeroCodedCheckCasting(field_name, x)
+  
   raw <- 
     if (grepl(".*___(.*)", field_name)){
       as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
@@ -157,6 +159,8 @@ castRaw <- function(x, field_name, coding){
 #' @export
 castChecked <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
+
+  warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
   
@@ -168,6 +172,8 @@ castChecked <- function(x, field_name, coding){
 castCheckLabel <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
 
+  warnOfZeroCodedCheckCasting(field_name, x)
+  
   x_checked <- x %in% checked_value 
   
   # Sets the level and label while accomodating 0 coded check values
@@ -187,6 +193,8 @@ castCheckLabel <- function(x, field_name, coding){
 #' @export
 castCheckCode <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
+  
+  warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
   
@@ -241,8 +249,10 @@ getCheckedValue <- function(coding, field_name){
   
   # When casting from raw, we don't want to consider "0" as checked 
   # for zero coded fields.
-  if (isZeroCodedCheckField(field_name)) checked_value <- checked_value[-1]
-  
+  if (isZeroCodedCheckField(field_name)){
+    checked_value <- checked_value[-1]
+  } 
+ 
   checked_value
 }
 

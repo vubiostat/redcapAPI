@@ -25,3 +25,23 @@ isZeroCodedCheckField <- function(field_name){
                 perl = TRUE)
   suffix == "0"
 }
+
+warnOfZeroCodedCheckCasting <- function(field_name, x){
+  if (isZeroCodedCheckField(field_name) &&
+      is.factor(x) &&
+      any(levels(x) %in% "0")){
+    warning(sprintf("Zero-coded check field `%s` may not have been cast correctly.", 
+                    field_name))
+  }
+}
+
+warnZeroCodedFieldPresent <- function(field_names){
+  lgl_zero_coded <- vapply(field_names, 
+                               isZeroCodedCheckField, 
+                               logical(1))
+  if (any(lgl_zero_coded)){
+    zero_coded <- field_names[lgl_zero_coded]
+    warning(sprintf("Zero-coded check fields found. Verify that casting is correct for %s", 
+                    paste0(zero_coded, collapse = ", ")))
+  }
+}
