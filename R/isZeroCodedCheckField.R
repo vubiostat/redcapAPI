@@ -8,6 +8,8 @@
 #'   correctly.
 #'
 #' @param field_name \code{character(1)} The name of a field to be tested.
+#' @param field_names \code{character} vector of field names.
+#' @param x \code{atomic} object.
 
 isZeroCodedCheckField <- function(field_name){
   coll <- checkmate::makeAssertCollection()
@@ -27,6 +29,17 @@ isZeroCodedCheckField <- function(field_name){
 }
 
 warnOfZeroCodedCheckCasting <- function(field_name, x){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = field_name, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::assert_atomic(x = x, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   if (isZeroCodedCheckField(field_name) &&
       is.factor(x) &&
       any(levels(x) %in% "0")){
@@ -36,6 +49,14 @@ warnOfZeroCodedCheckCasting <- function(field_name, x){
 }
 
 warnZeroCodedFieldPresent <- function(field_names){
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_character(x = field_names,
+                              any.missing = FALSE,
+                              add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
   lgl_zero_coded <- vapply(field_names, 
                                isZeroCodedCheckField, 
                                logical(1))
