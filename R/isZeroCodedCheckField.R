@@ -28,6 +28,8 @@ isZeroCodedCheckField <- function(field_name){
   suffix == "0"
 }
 
+#' @rdname isZeroCodedCheckField
+
 warnOfZeroCodedCheckCasting <- function(field_name, x){
   coll <- checkmate::makeAssertCollection()
   
@@ -47,6 +49,8 @@ warnOfZeroCodedCheckCasting <- function(field_name, x){
                     field_name))
   }
 }
+
+#' @rdname isZeroCodedCheckField
 
 warnZeroCodedFieldPresent <- function(field_names){
   coll <- checkmate::makeAssertCollection()
