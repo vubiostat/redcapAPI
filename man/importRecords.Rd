@@ -18,13 +18,12 @@ importRecords(
 \method{importRecords}{redcapApiConnection}(
   rcon,
   data,
-  overwriteBehavior = c("normal", "overwrite"),
-  returnContent = c("count", "ids", "nothing", "auto_ids"),
-  returnData = FALSE,
+  overwrite_behavior = c("normal", "overwrite"),
+  return_content = c("count", "ids", "nothing", "auto_ids"),
   logfile = "",
   force_auto_number = FALSE,
   ...,
-  batch.size = -1,
+  batch_size = -1,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -73,9 +72,6 @@ NOTE: To see how the provided record names get translated into new auto
  the new record name followed by the provided record name in the request, 
  in which the two are comma-delimited.}
 
-\item{batch.size}{Specifies size of batches.  A negative value
-indicates no batching.}
-
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
@@ -86,6 +82,9 @@ see \code{\link{redcapError}}}
 \item{api_param}{\code{list} Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
+
+\item{batch.size}{Specifies size of batches.  A negative value
+indicates no batching.}
 }
 \description{
 Imports records from a \code{data.frame} to a REDCap Database

@@ -27,9 +27,6 @@ RepeatInst <- data.frame(event_name = "event_1_arm_1",
 importRepeatingInstrumentsEvents(rcon, 
                                  data = RepeatInst)
 
-ImportData <- castForImport(test_redcapAPI_Data, 
-                            rcon)
-
 importRecords(rcon, ImportData)
 
 #######################################################################

@@ -5,24 +5,16 @@
 #'
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
 #' @param data A \code{data.frame} to be imported to the REDCap project.
-#' @param overwriteBehavior Character string.  'normal' prevents blank
+#' @param overwrite_behavior \code{character}.  'normal' prevents blank
 #'   fields from overwriting populated fields.  'overwrite' causes blanks to
-#'   overwrite data in the REDCap database.
-#' @param returnContent Character string.  'count' returns the number of
+#'   overwrite data in the REDCap database. For backward compatibility, 
+#'   also accepts \code{overwriteBehavior}.
+#' @param return_content \code{character}.  'count' returns the number of
 #'   records imported; 'ids' returns the record ids that are imported;
 #'   'nothing' returns no message; 'auto_ids' returns a list of pairs of all 
 #'   record IDs that were imported. If used when \code{force_auto_number = FALSE}, 
 #'   the value will be changed to \code{'ids'}.
-#' @param returnData Logical.  Prevents the REDCap import and instead
-#'   returns the data frame that would have been given
-#'   for import. This is sometimes helpful if the API import fails without
-#'   providing an informative message. The data frame can be written to a csv
-#'   and uploaded using the interactive tools to troubleshoot the
-#'   problem. Please send us an e-mail if you find errors I haven't
-#'   accounted for.
-#' @param logfile An optional filepath (preferably .txt) in which to print the
-#'   log of errors and warnings about the data.
-#'   If \code{""}, the log is printed to the console.
+#'   For backward compatibility, also accespt \code{returnContent}.
 #' @param force_auto_number \code{logical(1)} If record auto-numbering has been
 #'   enabled in the project, it may be desirable to import records where each 
 #'   record's record name is automatically determined by REDCap (just as it 
@@ -36,9 +28,36 @@
 #'    which will return a record list similar to 'ids' value, but it will have
 #'    the new record name followed by the provided record name in the request, 
 #'    in which the two are comma-delimited.
-#' @param batch.size Specifies size of batches.  A negative value
-#'   indicates no batching.
+#' @param batch_size Specifies size of batches.  A negative value
+#'   indicates no batching. For backward compatibility, will also accept
+#'   \code{batch.size}.
 #' @param ... Arguments to be passed to other methods.
+#' @param na  A named \code{list} of user specified functions to determine if the
+#'   data is NA. This is useful when data is loaded that has coding for NA, e.g.
+#'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
+#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+#'   checkbox, form_complete, sql}. The function will be provided the variables
+#'   (x, field_name, coding). The function must return a vector of logicals
+#'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
+#'   entries.
+#' @param validation A named \code{list} of user specified validation functions. The 
+#'   same named keys are supported as the na argument. The function will be 
+#'   provided the variables (x, field_name, coding). The function must return a
+#'   vector of logical matching the input length. Helper functions to construct
+#'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
+#'   are not identified as NA will be passed to validation functions. 
+#' @param cast A named \code{list} of user specified class casting functions. 
+#'   Keys must correspond to a truncated REDCap field type, i.e.
+#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+#'   checkbox, form_complete, sql}. The function will be 
+#'   provided the variables (x, field_name, coding). 
+#'   See \code{\link{fieldValidationAndCasting}}
+#' @param skip_import \code{logical(1)}. When \code{TRUE}, the data validation
+#'   steps and casting will be performed, but the import will be skipped. 
+#'   This allows for evaluating what the validation and casting results are
+#'   for verification before the data on the server are impacted.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcapError}}
 #' @param config \code{list} Additional configuration parameters to pass to 
@@ -102,10 +121,9 @@
 
 importRecords <- function(rcon, 
                           data,
-                          overwriteBehavior = c('normal', 'overwrite'),
-                          returnContent     = c('count', 'ids', 'nothing', 'auto_ids'),
-                          returnData        = FALSE, 
-                          logfile           = "", 
+                          overwrite_behavior = c('normal', 'overwrite'),
+                          return_content     = c('count', 'ids', 'nothing', 'auto_ids'),
+                          return_data        = FALSE, 
                           ...){
   UseMethod("importRecords")
 }
@@ -117,10 +135,13 @@ importRecords.redcapApiConnection <- function(rcon,
                                               data,
                                               overwrite_behavior = c('normal', 'overwrite'),
                                               return_content     = c('count', 'ids', 'nothing', 'auto_ids'),
-                                              logfile            = "", 
                                               force_auto_number  = FALSE,
                                               ...,
-                                              batch_size         = -1,
+                                              na                 = list(), 
+                                              validation         = list(), 
+                                              cast               = list(),
+                                              skip_import        = FALSE,
+                                              batch_size         = NULL,
                                               error_handling     = getOption("redcap_error_handling"), 
                                               config             = list(), 
                                               api_param          = list()){
@@ -143,28 +164,30 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data, 
                                add = coll)
   
-  overwriteBehavior <- 
+  overwrite_behavior <- 
     checkmate::matchArg(x = overwrite_behavior, 
                         choices = c('normal', 'overwrite'),
-                        .var.name = "overwriteBehavior",
+                        .var.name = "overwrite_behavior",
                         add = coll)
   
-  returnContent <- 
+  return_content <- 
     checkmate::matchArg(x = return_content, 
                         choices = c('count', 'ids', 'nothing', 'auto_ids'),
-                        .var.name = "returnContent",
+                        .var.name = "return_content",
                         add = coll)
-  
-  checkmate::assert_character(x = logfile,
-                              len = 1,
-                              add = coll)
   
   checkmate::assert_logical(x = force_auto_number, 
                             len = 1, 
                             add = coll)
   
+  checkmate::assert_logical(x = skip_import, 
+                            len = 1, 
+                            add = coll)
+  
   checkmate::assert_integerish(x = batch_size,
+                               lower = 1,
                                len = 1,
+                               null.ok = TRUE,
                                add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
@@ -195,38 +218,45 @@ importRecords.redcapApiConnection <- function(rcon,
   data <- .importRecords_removeCalculatedFields(data, rcon)
   
   checkmate::reportAssertions(coll)
-
-  
-  if (!force_auto_number && return_content == 'auto_ids'){
-    return_content = 'ids'
-  }
   
   ###################################################################
   # Cast for Import and Import Records                           ####
   
-  data <- castForImport(data, rcon, fields = names(data))
-  
-  body <- list(content = "record", 
-               format = "csv", 
-               type = "flat", 
-               overwriteBehavior = overwrite_behavior, 
-               forceAutoNumber = force_auto_number, 
-               returnContent = return_content, 
-               returnFormat = "csv")
-  
-  responses <- .importRecords_makeImportCall(body = body, 
-                                             rcon = rcon, 
-                                             batch_size = batch_size, 
-                                             api_param = api_param, 
-                                             config = config)
+  if (!force_auto_number && return_content == 'auto_ids'){
+    return_content = 'ids'
+  }
 
-  ###################################################################
-  # Wrap up                                                      ####
+  data <- castForImport(data, 
+                        rcon, 
+                        fields = names(data), 
+                        na = na, 
+                        validation = validation, 
+                        cast = cast)
   
-  switch(return_content, 
-         "count" = message(sprintf("Records imported: %s", responses)), 
-         message(sprintf("IDs imported: %s", responses)))
-  
+  if (!skip_import){
+    body <- list(content = "record", 
+                 format = "csv", 
+                 type = "flat", 
+                 overwriteBehavior = overwrite_behavior, 
+                 forceAutoNumber = force_auto_number, 
+                 returnContent = return_content, 
+                 returnFormat = "csv")
+
+    responses <- .importRecords_makeImportCall(body = body, 
+                                               rcon = rcon, 
+                                               data = data,
+                                               return_content = return_content,
+                                               batch_size = batch_size, 
+                                               api_param = api_param, 
+                                               config = config)
+    
+    switch(return_content, 
+           "count" = message(sprintf("Records imported: %s", responses)), 
+           "nothing" = NULL,
+           message(sprintf("Records imported: %s", nrow(responses))))
+    
+    attr(data, "return_content") <- responses
+  }
   invisible(data)
 }
 
@@ -252,8 +282,10 @@ importRecords.redcapApiConnection <- function(rcon,
     message("The variable(s) ", 
             paste0(names(data)[unrecognized_names], collapse=", "), 
             " are not found in the project and/or cannot be imported. They have been removed from the imported data frame.")
-    data[!unrecognized_names]
+    data <- data[!unrecognized_names]
   }
+  
+  data
 }
 
 .importRecords_positionRecordIdentifier <- function(data, rcon, coll){
@@ -301,22 +333,26 @@ importRecords.redcapApiConnection <- function(rcon,
 
 .importRecords_makeImportCall <- function(body, 
                                           rcon, 
+                                          data, 
+                                          return_content,
                                           batch_size, 
                                           api_param, 
                                           config){
+  # Batch the data 
   if (length(batch_size) == 0){
     data_list <- list(data)
   } else {
     data_list <- split(data, (seq(nrow(data))-1) %/% batch_size) 
   }
   
+  # Collect responses
   responses <- vector("list", length(data_list))
   
   for (i in seq_along(data_list)){
     this_body <- c(body, 
                    list(data = writeDataForImport(data_list[[i]])))
     this_body <- this_body[lengths(this_body) > 0]
-    
+ 
     responses[[i]] <- makeApiCall(rcon, 
                                   body = c(this_body, api_param), 
                                   config = config)
@@ -326,9 +362,15 @@ importRecords.redcapApiConnection <- function(rcon,
     } 
   }
   
-  x <- vapply(responses,
-              function(x) as.character(x), 
-              character(1))
+  # Consolidate Responses
+  response_char <- vapply(responses,
+                          function(x) as.character(x), 
+                          character(1))
   
-  paste0(x, collapse = ", ")
+  switch(return_content, 
+         "count" = sum(vapply(response_char, as.numeric, numeric(1))), 
+         "nothing" = NULL,
+         do.call("rbind", lapply(response_char, 
+                                 function(rc) read.csv(text = rc, 
+                                                       stringsAsFactors = FALSE))))
 }

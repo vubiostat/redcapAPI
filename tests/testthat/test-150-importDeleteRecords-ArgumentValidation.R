@@ -43,8 +43,9 @@ test_that(
   "Return an error if rcon is not a redcapConnection", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importRecords("not an rcon", 
-                               data = ImportData), 
+    expect_error(importRecords("not an rcon",
+                               data = ImportData, 
+                               skip_import = TRUE), 
                  "no applicable method for 'importRecords'")
   }
 )
@@ -54,7 +55,8 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
-                               data = "not data"), 
+                               data = "not data", 
+                               skip_import = TRUE), 
                  "'data': Must be of type 'data.frame'")
   }
 )
@@ -66,7 +68,7 @@ test_that(
     expect_message(importRecords(rcon, 
                                  data = data.frame(record_id = 1, 
                                                    not_a_field = "xyz"), 
-                                 returnData = TRUE), 
+                                 skip_import = TRUE), 
                    "variable[(]s[)] not_a_field are not found in the project")
   }
 )
@@ -76,7 +78,8 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
-                               data = ImportData[-1]), 
+                               data = ImportData[-1], 
+                               skip_import = TRUE), 
                  "The variable 'record_id' cannot be found in 'data'")
   }
 )
@@ -87,24 +90,8 @@ test_that(
     local_reproducible_output(width = 200)
     expect_message(importRecords(rcon, 
                                  data = ImportData[c(2, 1, 3)], 
-                                 returnData = TRUE),
+                                 skip_import = TRUE),
                    "The variable'record_id' was not in the first column.")
-  }
-)
-
-test_that(
-  "Print an error if a date field is not a Date, POSIXct, or character", 
-  {
-    local_reproducible_output(width = 200)
-    orig_value <- ImportData$date_dmy_test
-    
-    ImportData$date_dmy_test <- 1234
-    expect_error(importRecords(rcon, 
-                               data = ImportData, 
-                               returnData = TRUE), 
-                 "The variables 'date_dmy_test' must have class Date, POSIXct, or character")
-    
-    ImportData$date_dmy_test <- orig_value
   }
 )
 
@@ -114,7 +101,7 @@ test_that(
     local_reproducible_output(width = 200)
     expect_message(importRecords(rcon, 
                                  data = ImportData, 
-                                 returnData = TRUE), 
+                                 skip_import = TRUE), 
                    "calculated fields and cannot be imported")
   }
 )
@@ -125,8 +112,15 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               overwriteBehavior = "something different"), 
-                 "'overwriteBehavior': Must be element of set [{]'normal','overwrite'[}]")
+                               overwrite_behavior = "something different", 
+                               skip_import = TRUE), 
+                 "'overwrite_behavior': Must be element of set [{]'normal','overwrite'[}]")
+    
+    expect_error(importRecords(rcon, 
+                               ImportData, 
+                               overwriteBehavior = "something different", 
+                               skip_import = TRUE), 
+                 "'overwrite_behavior': Must be element of set [{]'normal','overwrite'[}]")
   }
 )
 
@@ -136,40 +130,31 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               returnContent = "something different"), 
-                 "'returnContent': Must be element of set")
+                               return_content = "something different", 
+                               skip_import = TRUE), 
+                 "'return_content': Must be element of set")
+    
+    expect_error(importRecords(rcon, 
+                               ImportData, 
+                               returnContent = "something different", 
+                               skip_import = TRUE), 
+                 "'return_content': Must be element of set")
   }
 )
 
 test_that(
-  "Return an error if returnData is not logical(1)", 
+  "Return an error if skip_import is not logical(1)", 
   {
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               returnData = "TRUE"), 
-                 " Variable 'returnData': Must be of type 'logical'")
+                               skip_import = "TRUE"), 
+                 " Variable 'skip_import': Must be of type 'logical'")
     
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               returnData = c(TRUE, FALSE)), 
-                 "Variable 'returnData': Must have length 1")
-  }
-)
-
-test_that(
-  "Return an error if logfile is not a character(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importRecords(rcon, 
-                               ImportData, 
-                               logfile = 123), 
-                 "'logfile': Must be of type 'character'")
-    
-    expect_error(importRecords(rcon, 
-                               ImportData, 
-                               logfile = c("a", "b")), 
-                 "'logfile': Must have length 1")
+                               skip_import = c(TRUE, FALSE)), 
+                 "Variable 'skip_import': Must have length 1")
   }
 )
 
@@ -179,34 +164,54 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               force_auto_number = "TRUE"), 
+                               force_auto_number = "TRUE", 
+                               skip_import = TRUE), 
                  " Variable 'force_auto_number': Must be of type 'logical'")
     
     expect_error(importRecords(rcon, 
                                ImportData, 
-                               force_auto_number = c(TRUE, FALSE)), 
+                               force_auto_number = c(TRUE, FALSE), 
+                               skip_import = TRUE), 
                  "Variable 'force_auto_number': Must have length 1")
   }
 )
 
 test_that(
-  "Return an error if batch.size is not integerish(1)", 
+  "Return an error if batch_size is not integerish(1)", 
   {
     local_reproducible_output(width = 200)
     expect_error(importRecords(rcon, 
                                ImportData, 
+                               batch_size = "1"), 
+                 "'batch_size': Must be of type 'integerish'")
+    
+    expect_error(importRecords(rcon, 
+                               ImportData, 
+                               batch_size = 1:2), 
+                 "'batch_size': Must have length 1")
+    
+    expect_error(importRecords(rcon, 
+                               ImportData, 
+                               batch_size = pi), 
+                 "'batch_size': Must be of type 'integerish'")
+    
+    
+    
+    
+    expect_error(importRecords(rcon, 
+                               ImportData, 
                                batch.size = "1"), 
-                 "'batch.size': Must be of type 'integerish'")
+                 "'batch_size': Must be of type 'integerish'")
     
     expect_error(importRecords(rcon, 
                                ImportData, 
                                batch.size = 1:2), 
-                 "'batch.size': Must have length 1")
+                 "'batch_size': Must have length 1")
     
     expect_error(importRecords(rcon, 
                                ImportData, 
                                batch.size = pi), 
-                 "'batch.size': Must be of type 'integerish'")
+                 "'batch_size': Must be of type 'integerish'")
   }
 )
 

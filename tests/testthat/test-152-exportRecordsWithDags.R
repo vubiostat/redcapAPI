@@ -5,8 +5,6 @@ context("Export Records Functionality with Data Access Groups")
 
 ImportData <- exportRecordsTyped(rcon, 
                                  cast = raw_cast)
-ImportData <- castForImport(ImportData, 
-                            rcon)
 
 #####################################################################
 # Create DAGs to use in testing                                  ####

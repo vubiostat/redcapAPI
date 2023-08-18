@@ -125,5 +125,8 @@ deleteRecords.redcapApiConnection <- function(rcon,
     return(redcapError(response, error_handling))
   } 
   
-  as.character(response)
+  message(sprintf("Records deleted: %s", 
+                  as.character(response)))
+  
+  invisible(as.character(response))
 }

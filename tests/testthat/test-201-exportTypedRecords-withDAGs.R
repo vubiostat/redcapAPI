@@ -5,8 +5,6 @@ context("Export Typed Records with DAGs Functionality")
 
 ImportData <- exportRecordsTyped(rcon, 
                                  cast = raw_cast)
-ImportData <- castForImport(ImportData, 
-                            rcon)
 
 #####################################################################
 # Create DAGs to use in testing                                  ####

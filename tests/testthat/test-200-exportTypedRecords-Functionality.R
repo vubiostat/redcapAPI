@@ -44,8 +44,6 @@ importMappings(rcon,
 
 ImportData <- test_redcapAPI_Data[names(test_redcapAPI_Data) %in% MetaData$field_name]
 ImportData <- ImportData[!is.na(ImportData$email_test), ]
-ImportData <- castForImport(ImportData, rcon)
-
 
 importRecords(rcon, 
               ImportData)
