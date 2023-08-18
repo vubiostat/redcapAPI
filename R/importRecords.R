@@ -206,17 +206,26 @@ importRecords.redcapApiConnection <- function(rcon,
   
   data <- castForImport(data, rcon, fields = names(data))
   
-  batched_data <- split(data, (seq(nrow(data))-1) %/% 10) 
+  body <- list(content = "record", 
+               format = "csv", 
+               type = "flat", 
+               overwriteBehavior = overwrite_behavior, 
+               forceAutoNumber = force_auto_number, 
+               returnContent = return_content, 
+               returnFormat = "csv")
   
-  
+  responses <- .importRecords_makeImportCall(body = body, 
+                                             rcon = rcon, 
+                                             batch_size = batch_size, 
+                                             api_param = api_param, 
+                                             config = config)
+
   ###################################################################
   # Wrap up                                                      ####
   
   switch(return_content, 
-         "count"    = message(), 
-         "ids"      = message(), 
-         "auto_ids" = message(), 
-         NULL)
+         "count" = message(sprintf("Records imported: %s", responses)), 
+         message(sprintf("IDs imported: %s", responses)))
   
   invisible(data)
 }
@@ -290,4 +299,36 @@ importRecords.redcapApiConnection <- function(rcon,
   data
 }
 
-
+.importRecords_makeImportCall <- function(body, 
+                                          rcon, 
+                                          batch_size, 
+                                          api_param, 
+                                          config){
+  if (length(batch_size) == 0){
+    data_list <- list(data)
+  } else {
+    data_list <- split(data, (seq(nrow(data))-1) %/% batch_size) 
+  }
+  
+  responses <- vector("list", length(data_list))
+  
+  for (i in seq_along(data_list)){
+    this_body <- c(body, 
+                   list(data = writeDataForImport(data_list[[i]])))
+    this_body <- this_body[lengths(this_body) > 0]
+    
+    responses[[i]] <- makeApiCall(rcon, 
+                                  body = c(this_body, api_param), 
+                                  config = config)
+    
+    if (responses[[i]]$status_code != 200){
+      return(redcapError(responses[[i]], error_handling))
+    } 
+  }
+  
+  x <- vapply(responses,
+              function(x) as.character(x), 
+              character(1))
+  
+  paste0(x, collapse = ", ")
+}
