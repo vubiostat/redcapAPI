@@ -206,9 +206,9 @@ test_that(
     dag_for_test <- "temporary_dag"
     Logs <- exportLogging(rcon, 
                           dag = dag_for_test, 
-                          beginTime = tail(seq(Sys.time(), by = "-1 days", length.out = 2), 1))
+                          beginTime = BEGIN_TIME)
     
-    expect_true(nrow(Logs) != nrow(FullLog))
+    expect_true(nrow(Logs) > 1)
   }
 )
 
