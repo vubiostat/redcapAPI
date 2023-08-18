@@ -8,23 +8,20 @@
 exportReports(
   rcon,
   report_id,
-  factors = TRUE,
-  labels = TRUE,
-  dates = TRUE,
-  drop = NULL,
-  checkboxLabels = FALSE,
+  raw_or_label = c("raw", "label"),
+  raw_or_label_headers = c("raw", "label"),
+  export_checkbox_label = FALSE,
   ...
 )
 
 \method{exportReports}{redcapApiConnection}(
   rcon,
   report_id,
-  factors = TRUE,
-  labels = TRUE,
-  dates = TRUE,
-  drop = NULL,
-  checkboxLabels = FALSE,
+  raw_or_label = c("raw", "label"),
+  raw_or_label_headers = c("raw", "label"),
+  export_checkbox_label = FALSE,
   ...,
+  csv_delimiter = c(",", "\\t", ";", "|", "^"),
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -36,24 +33,26 @@ exportReports(
 \item{report_id}{Integer.  Gives the report id of the desired report. 
 This is located on the Report Builder page of the user interface on REDCap.}
 
-\item{factors}{Logical.  Determines if categorical data from the database 
-is returned as numeric codes or labelled factors.}
+\item{raw_or_label}{One of \code{c("raw", "label")}. export the raw coded 
+values or labels for the options of multiple choice fields}
 
-\item{labels}{Logical.  Determines if the variable labels are applied to the data frame.}
+\item{raw_or_label_headers}{One of \code{c("raw", "label")}. export the 
+variable field names (\code{"raw"}) or the labels (\code{"label"}).}
 
-\item{dates}{Logical. Determines if date variables are converted to POSIXct format during the download.}
-
-\item{drop}{An optional character vector of REDCap variable names to remove from the 
-dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
-It is OK for drop to contain variables not present; these names are ignored.}
-
-\item{checkboxLabels}{Logical. Determines the format of labels in checkbox 
-variables.  If \code{FALSE} labels are applies as "Unchecked"/"Checked".  
-If \code{TRUE}, they are applied as ""/"[field_labe]" where [field_label] 
-is the label assigned to the level in the data dictionary. This option 
-is only available after REDCap version 6.0.}
+\item{export_checkbox_label}{\code{logical(1)} specifies the format of 
+checkbox field values specifically when exporting the data as labels 
+(i.e., when \code{rawOrLabel = "label"}). When exporting labels, by 
+default (\code{FALSE}), all checkboxes will either have a value 
+'Checked' if they are checked or 'Unchecked' if not checked. 
+But if \code{TRUE}, it will instead export the checkbox value as the 
+checkbox option's label (e.g., 'Choice 1') if checked or it will be 
+blank/empty (no value) if not checked.}
 
 \item{...}{Additional arguments to be passed between methods.}
+
+\item{csv_delimiter}{\code{character}. One of 
+\code{c(",", "\t", ";", "|", "^")}. Designates the delimiter for the CSV
+file received from the API.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
@@ -88,16 +87,6 @@ have "De-Identified" or "Remove all tagged Identifier fields" data export rights
 then some data fields *might* be removed and filtered out of the data set returned 
 from the API. To make sure that no data is unnecessarily filtered out of your API 
 request, you should have "Full Data Set" export rights in the project.
-}
-
-\section{REDCap Version}{
-
-6.0.0+
-}
-
-\section{Known REDCap Limitations}{
-
-None
 }
 
 \author{

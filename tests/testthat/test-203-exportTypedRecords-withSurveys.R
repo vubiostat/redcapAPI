@@ -1,4 +1,4 @@
-context("Export Records Typed with Surveys Functionality")
+context("Export Typed Records with Surveys Functionality")
 
 test_that(
   "Export Records with Surveys", 

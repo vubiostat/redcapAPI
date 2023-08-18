@@ -6,18 +6,21 @@
 #' @param rcon A REDCap connection object as created by \code{redcapConnection}.
 #' @param report_id Integer.  Gives the report id of the desired report. 
 #' This is located on the Report Builder page of the user interface on REDCap.
-#' @param factors Logical.  Determines if categorical data from the database 
-#' is returned as numeric codes or labelled factors.
-#' @param labels Logical.  Determines if the variable labels are applied to the data frame.
-#' @param dates Logical. Determines if date variables are converted to POSIXct format during the download.
-#' @param checkboxLabels Logical. Determines the format of labels in checkbox 
-#'   variables.  If \code{FALSE} labels are applies as "Unchecked"/"Checked".  
-#'   If \code{TRUE}, they are applied as ""/"[field_labe]" where [field_label] 
-#'   is the label assigned to the level in the data dictionary. This option 
-#'   is only available after REDCap version 6.0.
-#' @param drop An optional character vector of REDCap variable names to remove from the 
-#'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
-#'   It is OK for drop to contain variables not present; these names are ignored.
+#' @param raw_or_label One of \code{c("raw", "label")}. export the raw coded 
+#'   values or labels for the options of multiple choice fields
+#' @param raw_or_label_headers One of \code{c("raw", "label")}. export the 
+#'   variable field names (\code{"raw"}) or the labels (\code{"label"}).
+#' @param export_checkbox_label \code{logical(1)} specifies the format of 
+#'   checkbox field values specifically when exporting the data as labels 
+#'   (i.e., when \code{rawOrLabel = "label"}). When exporting labels, by 
+#'   default (\code{FALSE}), all checkboxes will either have a value 
+#'   'Checked' if they are checked or 'Unchecked' if not checked. 
+#'   But if \code{TRUE}, it will instead export the checkbox value as the 
+#'   checkbox option's label (e.g., 'Choice 1') if checked or it will be 
+#'   blank/empty (no value) if not checked.
+#' @param csv_delimiter \code{character}. One of 
+#'   \code{c(",", "\t", ";", "|", "^")}. Designates the delimiter for the CSV
+#'   file received from the API.
 #' @param ... Additional arguments to be passed between methods.
 #' @param error_handling An option for how to handle errors returned by the API.
 #'   see \code{\link{redcapError}}
@@ -47,23 +50,15 @@
 #' from the API. To make sure that no data is unnecessarily filtered out of your API 
 #' request, you should have "Full Data Set" export rights in the project.
 #' 
-#' @section REDCap Version:
-#' 6.0.0+
-#' 
-#' @section Known REDCap Limitations:
-#' None
-#' 
 #' @author Benjamin Nutter
 #' 
 #' @export
 
 exportReports <- function(rcon, 
                           report_id, 
-                          factors        = TRUE, 
-                          labels         = TRUE, 
-                          dates          = TRUE, 
-                          drop           = NULL,
-                          checkboxLabels = FALSE, 
+                          raw_or_label          = c("raw", "label"),
+                          raw_or_label_headers  = c("raw", "label"),
+                          export_checkbox_label = FALSE,  
                           ...){
   UseMethod("exportReports")
 }
@@ -73,19 +68,18 @@ exportReports <- function(rcon,
 
 exportReports.redcapApiConnection <- function(rcon, 
                                               report_id, 
-                                              factors        = TRUE, 
-                                              labels         = TRUE, 
-                                              dates          = TRUE, 
-                                              drop           = NULL, 
-                                              checkboxLabels = FALSE, 
+                                              raw_or_label          = c("raw", "label"),
+                                              raw_or_label_headers  = c("raw", "label"),
+                                              export_checkbox_label = FALSE,  
                                               ...,
+                                              csv_delimiter         = c(",", "\t", ";", "|", "^"), 
                                               error_handling = getOption("redcap_error_handling"),
                                               config         = list(), 
                                               api_param      = list()){
   
-  if (!is.numeric(report_id)) report_id <- as.numeric(report_id)
+  if (is.character(report_id)) report_id <- as.numeric(report_id)
   
-   ##################################################################
+  ###################################################################
   # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
@@ -98,30 +92,25 @@ exportReports.redcapApiConnection <- function(rcon,
                                len = 1,
                                add = coll)
   
-  checkmate::assert_logical(x = factors, 
+  raw_or_label <- checkmate::matchArg(x = raw_or_label, 
+                                      choices = c("raw", "label"), 
+                                      add = coll, 
+                                      .var.name = "raw_or_label")
+  
+  raw_or_label_headers <- checkmate::matchArg(x = raw_or_label_headers, 
+                                              choices = c("raw", "label"), 
+                                              add = coll, 
+                                              .var.name = "raw_or_label_headers")
+  
+  checkmate::assert_logical(x = export_checkbox_label, 
                             len = 1, 
                             any.missing = FALSE, 
                             add = coll)
   
-  checkmate::assert_logical(x = labels, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = dates, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = checkboxLabels, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_character(x = drop, 
-                              any.missing = FALSE,
-                              null.ok = TRUE, 
-                              add = coll)
+  csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
+                                       choices = c(",", "\t", ";", "|", "^"), 
+                                       add = coll, 
+                                       .var.name = "csv_delimiter")
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
@@ -138,95 +127,34 @@ exportReports.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-   ##################################################################
-  # Get required information
+  ###################################################################
+  # Make the Body List                                           ####
   
-  MetaData <- rcon$metadata()
-
-  #* for purposes of the export, we don't need the descriptive fields. 
-  #* Including them makes the process more error prone, so we'll ignore them.
-  MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]  
-  
-  version <- rcon$version()
-
-   ##################################################################
-  # Make API Body List
-  
-  body <- list(token = rcon$token, 
-               content = 'report',
-               format = 'csv', 
-               returnFormat = 'csv',
-               report_id = report_id)
+  body <- list(content = "report", 
+               format = "csv", 
+               returnFormat = "csv",
+               report_id = report_id,
+               rawOrLabel = raw_or_label, 
+               rawOrLabelHeaders = raw_or_label_headers,
+               exportCheckboxLabel = tolower(export_checkbox_label), 
+               csvDelimiter = csv_delimiter)
   
   body <- body[lengths(body) > 0]
   
-   ##################################################################
-  # Call the API
+  ###################################################################
+  # Make the API Call
   
   response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
+                          body = c(body, 
+                                   api_param), 
                           config = config)
   
-  if (response$status_code != 200) redcapError(response, error_handling)
-  
-  Report <- utils::read.csv(text = as.character(response), 
-                            stringsAsFactors = FALSE, 
-                            na.strings = "")
-  
-   ##################################################################
-  # Process the data
-
-  #* synchronize underscore codings between records and meta data
-  #* Only affects calls in REDCap versions earlier than 5.5.21
-  if (utils::compareVersion(version, "6.0.0") == -1) 
-    MetaData <- syncUnderscoreCodings(Report, MetaData)
-  
-
-  Report <- fieldToVar(records = Report, 
-                       meta_data = MetaData, 
-                       factors = factors, 
-                       dates = dates, 
-                       labels=labels,
-                       checkboxLabels = checkboxLabels,
-                       ...)
-  
-  
-  if (labels) 
-  {
-    field_names <- names(Report)
-    field_names <- unique(sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                              "\\1", field_names, perl = TRUE))
-    
-    # For reports, there is not check on the field names, since 
-    # the user may only select fields using the interface.
-    # However, [form]_complete fields do not appear in the 
-    # meta data and need to be removed to avoid an error.
-    # See #108
-    field_names <- field_names[field_names %in% MetaData$field_name]
-
-    suffixed <- checkbox_suffixes(fields = field_names,
-                                  meta_data = MetaData)
-
-    Report[suffixed$name_suffix] <-
-      mapply(nm = suffixed$name_suffix,
-             lab = suffixed$label_suffix,
-             FUN = function(nm, lab){
-               if(is.null(Report[[nm]])){
-                 warning("Missing field for suffix ", nm)
-               } else {
-                 labelVector::set_label(Report[[nm]], lab)
-               }
-             },
-             SIMPLIFY = FALSE)
+  if (response$status_code != 200){
+    redcapError(response, 
+                error_handling = error_handling)
   }
   
-   ##################################################################
-  # Drop fields from Report
-  
-  if(length(drop)) {
-    Report <- Report[!names(Report) %in% drop]
-  } # end drop
-  
-  Report
+  read.csv(text = as.character(response), 
+           stringsAsFactors = FALSE, 
+           na.strings = "")
 }
-

@@ -78,20 +78,21 @@ test_that(
     importMetaData(rcon, Meta)
     
     field_choice <- rcon$metadata()
-    field_choice <- field_choice$select_choices_or_calculations[field_choice$field_name == "dropdown_test"]
+    field_choice <- field_choice$select_choices_or_calculations[field_choice$field_name == "prereq_checkbox"]
     
     DesiredOutput <- 
-      matrix(c("1", "Green", 
-               "2", "Blue", 
-               "3", "Lavender"), 
-             nrow = 3, 
+      matrix(c("1", "Checkbox1", 
+               "2", "Checkbox2", 
+               "ABC", "CheckboxABC", 
+               "4", "Do not use in branching logic"), 
+             nrow = 4, 
              ncol = 2, 
              byrow = TRUE, 
              dimnames = list(NULL, c("choice_value", "choice_label")))
     
     expect_equal(fieldChoiceMapping(field_choice), 
                  DesiredOutput)
-    expect_equal(fieldChoiceMapping(rcon, "dropdown_test"), 
+    expect_equal(fieldChoiceMapping(rcon, "prereq_checkbox"), 
                  DesiredOutput)
     
     importMetaData(rcon, Meta[1, ])

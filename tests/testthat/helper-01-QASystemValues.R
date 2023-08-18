@@ -1,7 +1,7 @@
 # These things are definable via system variables
 
 EXPENDABLE_USER   <- Sys.getenv('EXPENDABLE_USER', "bstat_api_user")
-EXPORT_REPORTS_ID <- as.numeric(strsplit(Sys.getenv('REPORT_IDS', '357209'), ',')[[1]])
+EXPORT_REPORTS_ID <- as.numeric(strsplit(Sys.getenv('REPORT_IDS', '362756'), ',')[[1]])
 
 
 # Determine if tests can be run based on the system variables
