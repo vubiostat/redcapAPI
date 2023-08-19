@@ -9,26 +9,12 @@
   }
   
   options(redcap_api_url = character(0),
-          redcap_error_handling = "null",
-          redcap_bundle = 
-            structure(
-              list(
-                version = NULL,
-                meta_data = NULL,
-                users = NULL,
-                instruments = NULL,
-                events = NULL,
-                arms = NULL,
-                mappings = NULL
-              ),
-              class = c("redcapBundle", "redcapProject", "list")
-            )
+          redcap_error_handling = "null"
   )
 }
 
 .onUnload <- function(libPath)
 {
   options(redcap_api_url = NULL,
-          redcap_error_handling = NULL,
-          redcap_bundle = NULL)
+          redcap_error_handling = NULL)
 }

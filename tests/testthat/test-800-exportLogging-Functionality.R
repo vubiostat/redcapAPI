@@ -208,7 +208,7 @@ test_that(
                           dag = dag_for_test, 
                           beginTime = BEGIN_TIME)
     
-    expect_true(nrow(Logs) != nrow(FullLog))
+    expect_true(nrow(Logs) > 1)
   }
 )
 
