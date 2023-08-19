@@ -121,6 +121,14 @@ importUsers.redcapApiConnection <- function(rcon,
                              rcon = rcon,
                              consolidate = consolidate)
   
+  
+  ###################################################################
+  # Check for Users Assigned to User Role                        ####
+  
+  OrigUserRoleAssign <- rcon$user_role_assignment()
+
+  user_conflict_exists <- .importUsers_detectUserRoleConflict(rcon, data)
+  
   ###################################################################
   # Build the body list                                          ####
   
@@ -143,6 +151,14 @@ importUsers.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
+  ###################################################################
+  # Restore and refresh                                          ####
+  
+  if (user_conflict_exists){
+    importUserRoleAssignments(rcon, 
+                              data = OrigUserRoleAssign)
+  }
+  
   if (refresh){
     rcon$refresh_users()
   }
@@ -150,3 +166,26 @@ importUsers.redcapApiConnection <- function(rcon,
   message(sprintf("Users Added/Modified: %s", as.character(response)))
 }
 
+
+#####################################################################
+# Unexported                                                     ####
+
+.importUsers_detectUserRoleConflict <- function(rcon, data){
+  UsersAssignedRoles <- rcon$user_role_assignment()
+  UsersAssignedRoles <- 
+    UsersAssignedRoles[!is.na(UsersAssignedRoles$unique_role_name), ]
+  UsersWithConflict <- 
+    UsersAssignedRoles[UsersAssignedRoles$username %in% data$username, ]
+  
+  user_conflict_exists <- nrow(UsersWithConflict) > 0
+  
+  if (user_conflict_exists){
+    UsersWithConflict$unique_role_name <- rep(NA_character_, 
+                                              nrow(UsersWithConflict))
+    
+    importUserRoleAssignments(rcon, 
+                              data = UsersWithConflict)
+  }
+  
+  user_conflict_exists
+}
