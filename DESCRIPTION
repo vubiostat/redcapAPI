@@ -34,7 +34,6 @@ Imports:
     checkmate,
     chron,
     httr,
-    labelVector,
     lubridate,
     keyring,
     getPass,

@@ -8,10 +8,9 @@
 importRecords(
   rcon,
   data,
-  overwriteBehavior = c("normal", "overwrite"),
-  returnContent = c("count", "ids", "nothing", "auto_ids"),
-  returnData = FALSE,
-  logfile = "",
+  overwrite_behavior = c("normal", "overwrite"),
+  return_content = c("count", "ids", "nothing", "auto_ids"),
+  force_auto_number = FALSE,
   ...
 )
 
@@ -20,10 +19,13 @@ importRecords(
   data,
   overwrite_behavior = c("normal", "overwrite"),
   return_content = c("count", "ids", "nothing", "auto_ids"),
-  logfile = "",
   force_auto_number = FALSE,
   ...,
-  batch_size = -1,
+  na = list(),
+  validation = list(),
+  cast = list(),
+  skip_import = FALSE,
+  batch_size = NULL,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -34,29 +36,17 @@ importRecords(
 
 \item{data}{A \code{data.frame} to be imported to the REDCap project.}
 
-\item{overwriteBehavior}{Character string.  'normal' prevents blank
+\item{overwrite_behavior}{\code{character}.  'normal' prevents blank
 fields from overwriting populated fields.  'overwrite' causes blanks to
-overwrite data in the REDCap database.}
+overwrite data in the REDCap database. For backward compatibility, 
+also accepts \code{overwriteBehavior}.}
 
-\item{returnContent}{Character string.  'count' returns the number of
+\item{return_content}{\code{character}.  'count' returns the number of
 records imported; 'ids' returns the record ids that are imported;
 'nothing' returns no message; 'auto_ids' returns a list of pairs of all 
 record IDs that were imported. If used when \code{force_auto_number = FALSE}, 
-the value will be changed to \code{'ids'}.}
-
-\item{returnData}{Logical.  Prevents the REDCap import and instead
-returns the data frame that would have been given
-for import. This is sometimes helpful if the API import fails without
-providing an informative message. The data frame can be written to a csv
-and uploaded using the interactive tools to troubleshoot the
-problem. Please send us an e-mail if you find errors I haven't
-accounted for.}
-
-\item{logfile}{An optional filepath (preferably .txt) in which to print the
-log of errors and warnings about the data.
-If \code{""}, the log is printed to the console.}
-
-\item{...}{Arguments to be passed to other methods.}
+the value will be changed to \code{'ids'}.
+For backward compatibility, also accespt \code{returnContent}.}
 
 \item{force_auto_number}{\code{logical(1)} If record auto-numbering has been
 enabled in the project, it may be desirable to import records where each 
@@ -72,6 +62,45 @@ NOTE: To see how the provided record names get translated into new auto
  the new record name followed by the provided record name in the request, 
  in which the two are comma-delimited.}
 
+\item{...}{Arguments to be passed to other methods.}
+
+\item{na}{A named \code{list} of user specified functions to determine if the
+data is NA. Passed to \code{castForImport}. This is useful when data is 
+loaded that has coding for NA, e.g.
+-5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
+{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+checkbox, form_complete, sql}. The function will be provided the variables
+(x, field_name, coding). The function must return a vector of logicals
+matching the input. It defaults to \code{\link{isNAorBlank}} for all
+entries.}
+
+\item{validation}{A named \code{list} of user specified validation functions. 
+Passed to \code{castForImport}. The 
+same named keys are supported as the na argument. The function will be 
+provided the variables (x, field_name, coding). The function must return a
+vector of logical matching the input length. Helper functions to construct
+these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
+are not identified as NA will be passed to validation functions.}
+
+\item{cast}{A named \code{list} of user specified class casting functions.
+Passed to \code{castForImport}.  
+Keys must correspond to a truncated REDCap field type, i.e.
+{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+checkbox, form_complete, sql}. The function will be 
+provided the variables (x, field_name, coding). 
+See \code{\link{fieldValidationAndCasting}}}
+
+\item{skip_import}{\code{logical(1)}. When \code{TRUE}, the data validation
+steps and casting will be performed, but the import will be skipped. 
+This allows for evaluating what the validation and casting results are
+for verification before the data on the server are impacted.}
+
+\item{batch_size}{Specifies size of batches.  A negative value
+indicates no batching. For backward compatibility, will also accept
+\code{batch.size}.}
+
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
@@ -82,9 +111,6 @@ see \code{\link{redcapError}}}
 \item{api_param}{\code{list} Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
-
-\item{batch.size}{Specifies size of batches.  A negative value
-indicates no batching.}
 }
 \description{
 Imports records from a \code{data.frame} to a REDCap Database

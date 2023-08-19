@@ -33,7 +33,8 @@
 #'   \code{batch.size}.
 #' @param ... Arguments to be passed to other methods.
 #' @param na  A named \code{list} of user specified functions to determine if the
-#'   data is NA. This is useful when data is loaded that has coding for NA, e.g.
+#'   data is NA. Passed to \code{castForImport}. This is useful when data is 
+#'   loaded that has coding for NA, e.g.
 #'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 #'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
@@ -41,13 +42,15 @@
 #'   (x, field_name, coding). The function must return a vector of logicals
 #'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
 #'   entries.
-#' @param validation A named \code{list} of user specified validation functions. The 
+#' @param validation A named \code{list} of user specified validation functions. 
+#'   Passed to \code{castForImport}. The 
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
 #'   vector of logical matching the input length. Helper functions to construct
 #'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 #'   are not identified as NA will be passed to validation functions. 
-#' @param cast A named \code{list} of user specified class casting functions. 
+#' @param cast A named \code{list} of user specified class casting functions.
+#'   Passed to \code{castForImport}.  
 #'   Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 #'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
@@ -123,7 +126,7 @@ importRecords <- function(rcon,
                           data,
                           overwrite_behavior = c('normal', 'overwrite'),
                           return_content     = c('count', 'ids', 'nothing', 'auto_ids'),
-                          return_data        = FALSE, 
+                          force_auto_number  = FALSE,
                           ...){
   UseMethod("importRecords")
 }
@@ -246,7 +249,8 @@ importRecords.redcapApiConnection <- function(rcon,
                                                rcon = rcon, 
                                                data = data,
                                                return_content = return_content,
-                                               batch_size = batch_size, 
+                                               batch_size = batch_size,
+                                               error_handling = error_handling, 
                                                api_param = api_param, 
                                                config = config)
     
@@ -336,6 +340,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                           data, 
                                           return_content,
                                           batch_size, 
+                                          error_handling, 
                                           api_param, 
                                           config){
   # Batch the data 
