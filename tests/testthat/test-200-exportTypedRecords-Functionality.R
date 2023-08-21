@@ -274,3 +274,167 @@ test_that(
   }
 )
 
+#####################################################################
+# Handle Zero Coded Check Values - Issue 199                     ####
+
+test_that(
+  "Casting Zero-coded check values works correctly", 
+  {
+    local_reproducible_output(width = 200)
+    # Create a zero coded check field
+    NewMetaData <- test_redcapAPI_MetaData
+    NewMetaData <- NewMetaData[NewMetaData$field_name %in% c("record_id", 
+                                                             "checkbox_test"), ]
+    NewMetaData$field_name[2] <- "checkbox_zero"
+    NewMetaData$field_label[2] <- "Zero Coded Checkbox Example"
+    NewMetaData$select_choices_or_calculations[2] <- "0, Zero | 1, One | 2, Two"
+    
+    importMetaData(rcon, NewMetaData)
+    rcon$refresh_fieldnames()
+    
+    importRecords(rcon, 
+                  data = data.frame(record_id = 1:4,
+                                    checkbox_zero___0 = c(0, 1, 0, 1)))
+    
+    # Under default casting -----------------------------------------
+    expect_warning(DefaultRecord <- exportRecordsTyped(rcon, 
+                                                       fields = "checkbox_zero___0", 
+                                                       records = 1:4, 
+                                                       assignment = list()), 
+                   "Zero-coded check fields found")
+    
+    expect_equal(DefaultRecord$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("Unchecked", "Checked")))
+    
+    # Recast to Coded
+    expect_warning(
+      Recast1 <- recastRecords(DefaultRecord, 
+                               rcon, 
+                               fields = "checkbox_zero___0",
+                               cast = list(checkbox = castCheckCode)), 
+      "Zero-coded check fields found")
+    expect_equal(Recast1$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("", "0")))
+    
+    # Recast to Label
+    expect_warning(
+      Recast2 <- recastRecords(DefaultRecord, 
+                               rcon, 
+                               fields = "checkbox_zero___0",
+                               cast = list(checkbox = castCheckLabel)))
+    expect_equal(Recast2$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("", "Zero")))
+    # Recast to Raw
+    expect_warning(
+      Recast3 <- recastRecords(DefaultRecord, 
+                               rcon, 
+                               fields = "checkbox_zero___0",
+                               cast = list(checkbox = castRaw)))
+    expect_equal(Recast3$checkbox_zero___0, 
+                 c(0, 1, 0, 1))
+    
+    
+    
+    # Under Cast to coding ------------------------------------------
+    expect_warning(
+      CodeRecord <- exportRecordsTyped(rcon, 
+                                       fields = "checkbox_zero___0", 
+                                       records = 1:4, 
+                                       assignment = list(), 
+                                       cast = list(checkbox = castCheckCode)))
+    
+    expect_equal(CodeRecord$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("", "0")))
+    
+    # Recast to Checked - This scenario doesn't cast correctly
+    expect_warning(Recast1 <- recastRecords(CodeRecord, 
+                                            rcon, 
+                                            fields = "checkbox_zero___0",
+                                            cast = list(checkbox = castChecked)), 
+                   "Zero-coded check field .+ may not have been cast correctly")
+    expect_equal(Recast1$checkbox_zero___0, 
+                 factor(c(0, 0, 0, 0), 
+                        levels = 0:1, 
+                        labels = c("Unchecked", "Checked")))
+    
+    # Recast to Label - This scenario doesn't cast correctly
+    expect_warning(
+      Recast2 <- recastRecords(CodeRecord, 
+                             rcon, 
+                             fields = "checkbox_zero___0",
+                             cast = list(checkbox = castCheckLabel)))
+    expect_equal(Recast2$checkbox_zero___0, 
+                 factor(c(0, 0, 0, 0), 
+                        levels = 0:1, 
+                        labels = c("", "Zero")))
+    # Recast to Raw - This scenario doesn't cast correctly
+    expect_warning(
+      Recast3 <- recastRecords(CodeRecord, 
+                             rcon, 
+                             fields = "checkbox_zero___0",
+                             cast = list(checkbox = castRaw)))
+    expect_equal(Recast3$checkbox_zero___0, 
+                 c(0, 0, 0, 0)) 
+    
+    
+    
+    
+    # Under Cast to label -------------------------------------------
+    expect_warning(
+      LabelRecord <- exportRecordsTyped(rcon, 
+                                     fields = "checkbox_zero___0", 
+                                     records = 1:4, 
+                                     assignment = list(), 
+                                     cast = list(checkbox = castCheckLabel)))
+    
+    expect_equal(LabelRecord$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("", "Zero")))
+    
+    # Recast to Checked
+    expect_warning(
+      Recast1 <- recastRecords(LabelRecord, 
+                             rcon, 
+                             fields = "checkbox_zero___0",
+                             cast = list(checkbox = castChecked)))
+    expect_equal(Recast1$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("Unchecked", "Checked")))
+    
+    # Recast to Coded
+    expect_warning(
+      Recast2 <- recastRecords(LabelRecord, 
+                             rcon, 
+                             fields = "checkbox_zero___0",
+                             cast = list(checkbox = castCheckCode)))
+    expect_equal(Recast2$checkbox_zero___0, 
+                 factor(c(0, 1, 0, 1), 
+                        levels = 0:1, 
+                        labels = c("", "0")))
+    # Recast to Raw
+    expect_warning(
+      Recast3 <- recastRecords(LabelRecord, 
+                             rcon, 
+                             fields = "checkbox_zero___0",
+                             cast = list(checkbox = castRaw)))
+    expect_equal(Recast3$checkbox_zero___0, 
+                 c(0, 1, 0, 1))
+    
+    
+    
+    # Restore the meta data for further testing ---------------------
+    importMetaData(rcon, MetaData)
+    rcon$refresh_fieldnames()
+  }
+)
+

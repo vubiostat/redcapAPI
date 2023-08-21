@@ -165,6 +165,9 @@ recastRecords <- function(data,
   
   ###################################################################
   # Derive field information
+  # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
+  warnZeroCodedFieldPresent(fields)
+  
   MetaData <- rcon$metadata()
   
   field_names <- fields
@@ -467,6 +470,9 @@ mChoiceCast <- function(data,
                          default_cast     = .default_cast, 
                          default_validate = .default_validate){
   
+  # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
+  warnZeroCodedFieldPresent(names(Raw))
+  
   ###################################################################
   # Process meta data for useful information                     ####
   
@@ -475,6 +481,7 @@ mChoiceCast <- function(data,
   MetaData <- rcon$metadata()
   
   field_names <- names(Raw) 
+  
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
                      "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
