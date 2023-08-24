@@ -66,7 +66,14 @@ converted to the numeric equivalent.
 
 It is also permissible to use a column for each form individually, as can
 be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
-settings will be consolidated into the text string expected by the API.
+settings will be consolidated into the text string expected by the API. 
+
+The REDCap API does not natively allow for modifying the rights of a user
+that is part of a User Role. When an attempt to modify the rights of a 
+user in a User Role is made with this package, the user will be removed
+from the User Role, the rights modified, and then the User Role restored. 
+This is done silently: be aware that modifications to a user's rights 
+may not have an impact while the User Role is assigned.
 }
 \section{Limitations}{
  
