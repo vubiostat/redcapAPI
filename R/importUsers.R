@@ -41,6 +41,13 @@
 #' be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
 #' settings will be consolidated into the text string expected by the API. 
 #' 
+#' The REDCap API does not natively allow for modifying the rights of a user
+#' that is part of a User Role. When an attempt to modify the rights of a 
+#' user in a User Role is made with this package, the user will be removed
+#' from the User Role, the rights modified, and then the User Role restored. 
+#' This is done silently: be aware that modifications to a user's rights 
+#' may not have an impact while the User Role is assigned.
+#' 
 #' @section Limitations: 
 #' 
 #' When exporting via CSV, (as redcapAPI does by default) it appears that 
@@ -121,6 +128,14 @@ importUsers.redcapApiConnection <- function(rcon,
                              rcon = rcon,
                              consolidate = consolidate)
   
+  
+  ###################################################################
+  # Check for Users Assigned to User Role                        ####
+  
+  OrigUserRoleAssign <- rcon$user_role_assignment()
+
+  user_conflict_exists <- .importUsers_detectUserRoleConflict(rcon, data)
+  
   ###################################################################
   # Build the body list                                          ####
   
@@ -143,6 +158,14 @@ importUsers.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
+  ###################################################################
+  # Restore and refresh                                          ####
+  
+  if (user_conflict_exists){
+    importUserRoleAssignments(rcon, 
+                              data = OrigUserRoleAssign[1:2])
+  }
+  
   if (refresh){
     rcon$refresh_users()
   }
@@ -150,3 +173,26 @@ importUsers.redcapApiConnection <- function(rcon,
   message(sprintf("Users Added/Modified: %s", as.character(response)))
 }
 
+
+#####################################################################
+# Unexported                                                     ####
+
+.importUsers_detectUserRoleConflict <- function(rcon, data){
+  UsersAssignedRoles <- rcon$user_role_assignment()
+  UsersAssignedRoles <- 
+    UsersAssignedRoles[!is.na(UsersAssignedRoles$unique_role_name), ]
+  UsersWithConflict <- 
+    UsersAssignedRoles[UsersAssignedRoles$username %in% data$username, ]
+  
+  user_conflict_exists <- nrow(UsersWithConflict) > 0
+  
+  if (user_conflict_exists){
+    UsersWithConflict$unique_role_name <- rep(NA_character_, 
+                                              nrow(UsersWithConflict))
+    
+    importUserRoleAssignments(rcon, 
+                              data = UsersWithConflict[1:2])
+  }
+  
+  user_conflict_exists
+}
