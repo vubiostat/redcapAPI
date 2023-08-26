@@ -85,16 +85,16 @@ createRedcapProject <- function(rcon,
 
 createRedcapProject.redcapApiConnection <- function(rcon, 
                                                     project_title, 
-                                                    purpose = REDCAP_PROJECT_PURPOSE, 
-                                                    purpose_other = NULL, 
+                                                    purpose         = REDCAP_PROJECT_PURPOSE, 
+                                                    purpose_other   = NULL, 
                                                     is_longitudinal = FALSE,
                                                     surveys_enabled = FALSE, 
                                                     record_autonumbering_enabled = FALSE, 
-                                                    xml = NULL, 
+                                                    xml             = NULL, 
                                                     ...,
-                                                    error_handling = getOption("redcap_error_handling"),
-                                                    config         = list(), 
-                                                    api_param      = list()){
+                                                    error_handling  = getOption("redcap_error_handling"),
+                                                    config          = list(), 
+                                                    api_param       = list()){
 
   ###################################################################
   # Argument Validation                                          ####
