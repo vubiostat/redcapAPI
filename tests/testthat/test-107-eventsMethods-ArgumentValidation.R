@@ -78,13 +78,13 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importEvents("not an rcon", 
-                              event_data = Events), 
+                              data = Events), 
                  "'rcon': Must inherit from class 'redcapApiConnection'")
   }
 )
 
 test_that(
-  "Return an error when event_data is not a data.frame", 
+  "Return an error when data is not a data.frame", 
   {
     local_reproducible_output(width = 500)
     
@@ -93,12 +93,12 @@ test_that(
     
     expect_error(importEvents(rcon, 
                               "not a data frame"), 
-                 "Variable 'event_data': Must be of type 'data.frame'")
+                 "Variable 'data': Must be of type 'data.frame'")
     
     # Has the correct column names
     expect_error(importEvents(rcon, 
-                              event_data = EventsImproper), 
-                 "Variable 'names[(]event_data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','custom_event_label','event_id','days_offset','offset_min','offset_max'[}]")
+                              data = EventsImproper), 
+                 "Variable 'names[(]data[)]': Must be a subset of [{]'event_name','arm_num','unique_event_name','custom_event_label','event_id','days_offset','offset_min','offset_max'[}]")
   }
 )
 
@@ -139,25 +139,25 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importEvents(rcon, 
-                            event_data = Events,
+                            data = Events,
                             error_handling = "not an option"), 
                  "'error[_]handling': Must be element of set [{]'null','error'[}]")
     
     expect_error(importEvents(rcon,
-                            event_data = Events,
+                            data = Events,
                             config = list(1)),
                  "'config': Must have names")
     expect_error(importEvents(rcon,
-                            event_data = Events,
+                            data = Events,
                             config = "not a list"),
                  "'config': Must be of type 'list'")
     
     expect_error(importEvents(rcon,
-                            event_data = Events,
+                            data = Events,
                             api_param = list(1)),
                  "'api_param': Must have names")
     expect_error(importEvents(rcon,
-                            event_data = Events,
+                            data = Events,
                             api_param = "not a list"),
                  "'api_param': Must be of type 'list'")
   }
