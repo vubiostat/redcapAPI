@@ -21,16 +21,16 @@
 #'   'Import Arms' or 'Import Events' method, respectively, so that the 
 #'   default arm and event are removed when you add your own. Also, the user 
 #'   creating the project will automatically be added to the project as a
-#'    user with full user privileges and a project-level API token, 
-#'    which could then be used for subsequent project-level API requests.
+#'   user with full user privileges and a project-level API token, 
+#'   which could then be used for subsequent project-level API requests.
 #'    
-#'    NOTE: Only users with Super API Tokens can utilize this method. 
-#'    Users can only be granted a super token by a REDCap administrator 
-#'    (using the API Tokens page in the REDCap Control Center). Please be 
-#'    advised that users with a Super API Token can create new REDCap projects 
-#'    via the API without any approval needed by a REDCap administrator.
-#'    If you are interested in obtaining a super token, please contact your 
-#'    local REDCap administrator.
+#'   NOTE: Only users with Super API Tokens can utilize this method. 
+#'   Users can only be granted a super token by a REDCap administrator 
+#'   (using the API Tokens page in the REDCap Control Center). Please be 
+#'   advised that users with a Super API Token can create new REDCap projects 
+#'   via the API without any approval needed by a REDCap administrator.
+#'   If you are interested in obtaining a super token, please contact your 
+#'   local REDCap administrator.
 #'    
 #' @param rcon A \code{redcapConnection} object.
 #' @param project_title \code{character(1)} Title for the new project. 
