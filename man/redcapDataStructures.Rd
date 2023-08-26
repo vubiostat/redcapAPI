@@ -5,12 +5,15 @@
 \alias{redcapDataStructures}
 \alias{validateRedcapData}
 \alias{REDCAP_SYSTEM_FIELDS}
+\alias{REDCAP_PROJECT_PURPOSE}
 \alias{REDCAP_METADATA_FIELDTYPE}
 \alias{REDCAP_METADATA_VALIDATION_TYPE}
 \alias{REDCAP_REPEAT_INSTRUMENT_STRUCTURE}
 \title{REDCap Data Structures}
 \format{
 An object of class \code{character} of length 4.
+
+An object of class \code{character} of length 5.
 
 An object of class \code{character} of length 11.
 
@@ -22,6 +25,8 @@ An object of class \code{data.frame} with 0 rows and 3 columns.
 validateRedcapData(data, redcap_data)
 
 REDCAP_SYSTEM_FIELDS
+
+REDCAP_PROJECT_PURPOSE
 
 REDCAP_METADATA_FIELDTYPE
 

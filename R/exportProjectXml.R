@@ -1,0 +1,211 @@
+#' @name exportProjectXml
+#' @title Export Entire Project as REDCap XML File
+#' 
+#' @description The entire project (all records, events, arms, instruments, 
+#'   fields, and project attributes) can be downloaded as a single XML 
+#'   file, which is in CDISC ODM format (ODM version 1.3.1). This XML 
+#'   file can be used to create a clone of the project (including its data, 
+#'   optionally) on this REDCap server or on another REDCap server 
+#'   (it can be uploaded on the Create New Project page). Because it is in 
+#'   CDISC ODM format, it can also be used to import the project into 
+#'   another ODM-compatible system. NOTE: All the option paramters listed 
+#'   below ONLY apply to data returned if the 'return_metadata_only' 
+#'   parameter is set to FALSE (default). For this API method, ALL metadata 
+#'   (all fields, forms, events, and arms) will always be exported. 
+#'   Only the data returned can be filtered using the optional parameters.
+#'   
+#'   Note about export rights: If the 'return_metadata_only' parameter is set 
+#'   to FALSE, then please be aware that Data Export user rights will be 
+#'   applied to any data returned from this API request. For example, 
+#'   if you have 'De-Identified' or 'Remove All Identifier Fields' 
+#'   data export rights, then some data fields might be removed and 
+#'   filtered out of the data set returned from the API. To make sure that 
+#'   no data is unnecessarily filtered out of your API request, 
+#'   you should have 'Full Data Set' export rights in the project.
+#'   
+#' @param rcon A \code{redcapConnection} object.
+#' @param file \code{character(1)} The file to which the XML export will be
+#'   saved. 
+#' @param return_metadata_only \code{logical(1)}. When \code{TRUE} (default)
+#'   only meta data values are returned. When \code{FALSE}, project records
+#'   data are also exported.
+#' @param records \code{character} or \code{integerish}. A vector of study id's 
+#'   to be returned.  If \code{NULL}, all subjects are returned.
+#' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
+#'   all fields are returned (unless \code{forms} is specified).
+#' @param events A \code{character} vector of events to be returned from a 
+#'   longitudinal database.  If \code{NULL}, all events are returned. When 
+#'   using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
+#'   and only rows that match one of the values given are returned; be advised
+#'   that misspellings may result in unexpected results.
+#' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
+#'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
+#'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
+#'   If you do not pass in this flag, it will default to "true". If set to 
+#'   "true", it will return the redcap_survey_identifier field and also the 
+#'   survey timestamp field for a particular survey when at least 
+#'   one field from that survey is being exported. NOTE: If the survey 
+#'   identifier field or survey timestamp fields are imported via API data 
+#'   import, they will simply be ignored since they are not real fields in 
+#'   the project but rather are pseudo-fields.
+#' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
+#'   field when data access groups are utilized in the project. If you do not 
+#'   pass in this flag, it will default to "false". NOTE: This flag is only 
+#'   viable if the user whose token is being used to make the API request is 
+#'   *not* in a data access group. If the user is in a group, then this 
+#'   flag will revert to its default value.
+#' @param export_files \code{logical(1)} \code{TRUE} will cause the XML returned 
+#'   to include all files uploaded for File Upload and Signature fields 
+#'   for all records in the project, whereas FALSE will cause all such 
+#'   fields not to be included. NOTE: Setting this option to \code{TRUE} can 
+#'   make the export very large and may prevent it from completing if the 
+#'   project contains many files or very large files.
+#' @param ... Additional arguments to be passed between methods.
+#' @param error_handling An option for how to handle errors returned by the API.
+#'   see \code{\link{redcapError}}
+#' @param config \code{list} Additional configuration parameters to pass to 
+#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
+#'   \code{rcon$config}.
+#' @param api_param \code{list} Additional API parameters to pass into the
+#'   body of the API call. This provides users to execute calls with options
+#'   that may not otherwise be supported by \code{redcapAPI}.
+#'   
+#' @export
+
+exportProjectXml <- function(rcon,
+                             file, 
+                             return_metadata_only = TRUE, 
+                             records = NULL, 
+                             fields = NULL, 
+                             events = NULL, 
+                             survey = FALSE, 
+                             dag = FALSE, 
+                             export_files = FALSE, 
+                             ...){
+  UseMethod("exportProjectXml")
+}
+
+#' @rdname exportProjectXml
+#' @export
+
+exportProjectXml.redcapApiConnection <- function(rcon, 
+                                                 file,
+                                                 return_metadata_only = TRUE, 
+                                                 records = NULL, 
+                                                 fields = NULL, 
+                                                 events = NULL, 
+                                                 survey = FALSE, 
+                                                 dag = FALSE, 
+                                                 export_files = FALSE, 
+                                                 ...,
+                                                 error_handling = getOption("redcap_error_handling"),
+                                                 config         = list(), 
+                                                 api_param      = list()){
+  if (is.numeric(records)) records <- as.character(records)
+  
+  ###################################################################
+  # Argument Validation                                          ####
+  
+  coll <- checkmate::makeAssertCollection()
+  
+  checkmate::assert_class(x = rcon, 
+                          classes = "redcapConnection", 
+                          add = coll)
+  
+  checkmate::assert_character(x = file, 
+                              len = 1, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = return_metadata_only, 
+                            len = 1, 
+                            add = coll)
+  
+  checkmate::assert_character(x = records, 
+                              null.ok = TRUE, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = fields, 
+                              null.ok = TRUE, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_character(x = events, 
+                              null.ok = TRUE, 
+                              any.missing = FALSE, 
+                              add = coll)
+  
+  checkmate::assert_logical(x = survey, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = dag, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  checkmate::assert_logical(x = export_files, 
+                            len = 1, 
+                            any.missing = FALSE, 
+                            add = coll)
+  
+  error_handling <- checkmate::matchArg(x = error_handling, 
+                                        choices = c("null", "error"),
+                                        .var.name = "error_handling",
+                                        add = coll)
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  
+  .exportRecordsTyped_validateFieldForm(rcon = rcon, 
+                                        fields = fields, 
+                                        drop_fields = NULL, 
+                                        forms = NULL, 
+                                        coll = coll)
+  
+  checkmate::assert_subset(x = events, 
+                           choices = rcon$events()$unique_event_name, 
+                           add = coll)
+  
+  checkmate::reportAssertions(coll)
+  
+  ###################################################################
+  # API Body List                                                ####
+  
+  body <- list(content = "project_xml", 
+               returnMetaDataOnly = tolower(return_metadata_only), 
+               returnFormat = "csv", 
+               exportSurveyFields = tolower(survey), 
+               exportDataAccessGroups = tolower(dag), 
+               exportFiles = tolower(export_files))
+  body <- c(body, 
+            vectorToApiBodyList(records, "records"), 
+            vectorToApiBodyList(fields, "fields"), 
+            vectorToApiBodyList(events, "events"))
+  
+  body <- body[lengths(body) > 0]
+  
+  ###################################################################
+  # Call the API                                                 ####
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code != 200) redcapError(response, error_handling)
+  
+  WriteFile <- reconstituteFileFromExport(response, 
+                                          dir = dirname(file),
+                                          filename = basename(file))
+  
+  nrow(WriteFile) > 0
+}
