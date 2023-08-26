@@ -46,12 +46,12 @@ exportSurveyReturnCode <- function(rcon,
 exportSurveyReturnCode.redcapApiConnection <- function(rcon, 
                                                        record, 
                                                        instrument, 
-                                                       event = NULL, 
+                                                       event           = NULL, 
                                                        repeat_instance = 1, 
                                                        ..., 
-                                                       error_handling = getOption("redcap_error_handling"), 
-                                                       config         = list(), 
-                                                       api_param      = list()){
+                                                       error_handling  = getOption("redcap_error_handling"), 
+                                                       config          = list(), 
+                                                       api_param       = list()){
   
   if (is.numeric(record)) record <- as.character(record)
   
