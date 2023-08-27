@@ -7,11 +7,16 @@
 \alias{valRx}
 \alias{valChoice}
 \alias{valPhone}
+\alias{castLabelCharacter}
 \alias{castLabel}
+\alias{castCodeCharacter}
 \alias{castCode}
 \alias{castRaw}
+\alias{castCheckedCharacter}
 \alias{castChecked}
+\alias{castCheckLabelCharacter}
 \alias{castCheckLabel}
+\alias{castCheckCodeCharacter}
 \alias{castCheckCode}
 \alias{castCheckForImport}
 \alias{castDpNumeric}
@@ -19,10 +24,13 @@
 \alias{castTimeHHMM}
 \alias{castTimeMMSS}
 \alias{raw_cast}
+\alias{default_cast_no_factor}
 \alias{na_values}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
 An object of class \code{list} of length 20.
+
+An object of class \code{list} of length 24.
 }
 \usage{
 isNAorBlank(x, ...)
@@ -33,15 +41,25 @@ valChoice(x, field_name, coding)
 
 valPhone(x, field_name, coding)
 
+castLabelCharacter(x, field_name, coding)
+
 castLabel(x, field_name, coding)
+
+castCodeCharacter(x, field_name, coding)
 
 castCode(x, field_name, coding)
 
 castRaw(x, field_name, coding)
 
+castCheckedCharacter(x, field_name, coding)
+
 castChecked(x, field_name, coding)
 
+castCheckLabelCharacter(x, field_name, coding)
+
 castCheckLabel(x, field_name, coding)
+
+castCheckCodeCharacter(x, field_name, coding)
 
 castCheckCode(x, field_name, coding)
 
@@ -56,6 +74,8 @@ castTimeHHMM(x, field_name, coding)
 castTimeMMSS(x, field_name, coding)
 
 raw_cast
+
+default_cast_no_factor
 
 na_values(FUN)
 }

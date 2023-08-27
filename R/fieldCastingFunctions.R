@@ -792,6 +792,7 @@ mChoiceCast <- function(data,
   # Edits to this for loop may necessitate edits to the for loop in recastData
   for(i in seq_along(Raw))
   {
+    print(i)
     if(field_types[i] %in% names(cast))
     {
       x <- Raw[[i]]
