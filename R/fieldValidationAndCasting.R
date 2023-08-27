@@ -126,43 +126,34 @@ valPhone <- function(x, field_name, coding){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-
-castLabelCharacter <- function(x, field_name, coding){
-  code_match <- getCodingIndex(x, coding)
-  
-  unname(names(coding)[code_match])
-}
-
-#' @rdname fieldValidationAndCasting
-#' @export
-
 castLabel <- function(x, field_name, coding){
-  factor(castLabelCharacter(x, field_name, coding), 
-         levels = names(coding), 
-         labels = names(coding))
-}
-
-#' @rdname fieldValidationAndCasting
-#' @export
-
-castCodeCharacter <- function(x, field_name, coding){
   code_match <- getCodingIndex(x, coding)
   
-  unname(coding[code_match])
+  factor(unname(coding[code_match]), levels = coding, labels = names(coding))
 }
 
 #' @rdname fieldValidationAndCasting
 #' @export
+castLabelCharacter <- function(x, field_name, coding){
+  as.character(castLabel(x, field_name, coding))
+}
 
+#' @rdname fieldValidationAndCasting
+#' @export
 castCode <- function(x, field_name, coding){
-  factor(castCodeCharacter(x, field_name, coding), 
-         levels = coding, 
-         labels = coding)
+  code_match <- getCodingIndex(x, coding)
+  
+  factor(unname(coding[code_match]), levels = coding, labels = coding)
 }
 
 #' @rdname fieldValidationAndCasting
 #' @export
+castCodeCharacter <- function(x, field_name, coding){
+  as.character(castCode(x, field_name, coding))
+}
 
+#' @rdname fieldValidationAndCasting
+#' @export
 castRaw <- function(x, field_name, coding){
   warnOfZeroCodedCheckCasting(field_name, x)
   
@@ -178,52 +169,27 @@ castRaw <- function(x, field_name, coding){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-
-castCheckedCharacter <- function(x, field_name, coding){
-  checked_value <- getCheckedValue(coding, field_name)
-  
-  warnOfZeroCodedCheckCasting(field_name, x)
-  
-  x_checked <- x %in% checked_value 
-  
-  c("Unchecked", "Checked")[(x_checked)+1]
-}
-
-#' @rdname fieldValidationAndCasting
-#' @export
-
 castChecked <- function(x, field_name, coding){
-  factor(castCheckedCharacter(x, field_name, coding), 
-         levels=c("Unchecked", "Checked"))
-}
-
-#' @rdname fieldValidationAndCasting
-#' @export
-
-castCheckLabelCharacter <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
   
   warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
   
-  # Sets the level and label while accomodating 0 coded check values
-  # (0 is not considered a `checked_value` in this case, so must be handled by force)
-  
-  is_zero_coded <- isZeroCodedCheckField(field_name)
-  
-  the_level <- if (is_zero_coded) "0"              else checked_value[1]
-  the_label <- if (is_zero_coded) checked_value[1] else names(checked_value)[1]
-  
-  unname(c("", the_label)[(x_checked) + 1])
+  factor(c("Unchecked", "Checked")[(x_checked)+1], levels=c("Unchecked", "Checked"))
 }
 
 #' @rdname fieldValidationAndCasting
 #' @export
+castCheckedCharacter <- function(x, field_name, coding){
+  as.character(castChecked(x, field_name, coding))
+}
 
+#' @rdname fieldValidationAndCasting
+#' @export
 castCheckLabel <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
-
+  
   warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
@@ -243,28 +209,12 @@ castCheckLabel <- function(x, field_name, coding){
 
 #' @rdname fieldValidationAndCasting
 #' @export
-
-castCheckCodeCharacter <- function(x, field_name, coding){
-  checked_value <- getCheckedValue(coding, field_name)
-  
-  warnOfZeroCodedCheckCasting(field_name, x)
-  
-  x_checked <- x %in% checked_value 
-  
-  # Sets the level and label while accomodating 0 coded check values
-  # (0 is not considered a `checked_value` in this case, so must be handled by force)
-  
-  is_zero_coded <- isZeroCodedCheckField(field_name)
-  
-  the_level <- if (is_zero_coded) "0" else checked_value[1]
-  the_label <- if (is_zero_coded) "0" else checked_value[1]
-  
-  unname(c("", the_level)[(x_checked) + 1]) 
+castCheckLabelCharacter <- function(x, field_name, coding){
+  as.character(castCheckLabel(x, field_name, coding))
 }
 
 #' @rdname fieldValidationAndCasting
 #' @export
-
 castCheckCode <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
   
@@ -283,6 +233,12 @@ castCheckCode <- function(x, field_name, coding){
   factor(unname(c("", the_level)[(x_checked) + 1]), 
          levels=c("", the_level), 
          labels=c("", the_label))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+castCheckCodeCharacter <- function(x, field_name, coding){
+  as.character(castCheckCode(x, field_name, coding))
 }
 
 #' @rdname fieldValidationAndCasting

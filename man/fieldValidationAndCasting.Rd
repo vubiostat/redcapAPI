@@ -7,17 +7,17 @@
 \alias{valRx}
 \alias{valChoice}
 \alias{valPhone}
-\alias{castLabelCharacter}
 \alias{castLabel}
-\alias{castCodeCharacter}
+\alias{castLabelCharacter}
 \alias{castCode}
+\alias{castCodeCharacter}
 \alias{castRaw}
-\alias{castCheckedCharacter}
 \alias{castChecked}
-\alias{castCheckLabelCharacter}
+\alias{castCheckedCharacter}
 \alias{castCheckLabel}
-\alias{castCheckCodeCharacter}
+\alias{castCheckLabelCharacter}
 \alias{castCheckCode}
+\alias{castCheckCodeCharacter}
 \alias{castCheckForImport}
 \alias{castDpNumeric}
 \alias{castDpCharacter}
@@ -41,27 +41,27 @@ valChoice(x, field_name, coding)
 
 valPhone(x, field_name, coding)
 
-castLabelCharacter(x, field_name, coding)
-
 castLabel(x, field_name, coding)
 
-castCodeCharacter(x, field_name, coding)
+castLabelCharacter(x, field_name, coding)
 
 castCode(x, field_name, coding)
 
-castRaw(x, field_name, coding)
+castCodeCharacter(x, field_name, coding)
 
-castCheckedCharacter(x, field_name, coding)
+castRaw(x, field_name, coding)
 
 castChecked(x, field_name, coding)
 
-castCheckLabelCharacter(x, field_name, coding)
+castCheckedCharacter(x, field_name, coding)
 
 castCheckLabel(x, field_name, coding)
 
-castCheckCodeCharacter(x, field_name, coding)
+castCheckLabelCharacter(x, field_name, coding)
 
 castCheckCode(x, field_name, coding)
+
+castCheckCodeCharacter(x, field_name, coding)
 
 castCheckForImport(checked = c("Checked", "1"))
 
