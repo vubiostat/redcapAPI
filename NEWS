@@ -12,9 +12,11 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.8.0
 
-* added several functions for manipulating DAGs.
+* Added several functions for manipulating DAGs.
 * Fixed bug in zero coded fields. NOTE: It is impossible to handle every possible case as the definition of zero coded fields in REDCap can be inconsistent.
 * Fixed issue in importUsers where existing roles might get dropped on an update. Now handles the multiple API calls seemlessly to properly handle user roles.
+* Fixed issue with decimal validation.
+* Added renameRecord function.
 
 ## 2.7.5
 

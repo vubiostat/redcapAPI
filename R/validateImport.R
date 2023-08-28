@@ -130,7 +130,7 @@ validateImport <- function(data, meta_data, logfile = "")
       }
     }
     
-    if (field_type %in% c("float", "integer", "number", "number_1dp"))
+    if (field_type %in% c("float", "integer", "number"))
       field_type <- "numeric"
   
     data[[field_name]] <- 
@@ -253,6 +253,36 @@ validateImport <- function(data, meta_data, logfile = "")
           validate_import_phone(x = data[[field_name]],
                                 field_name = field_name,
                                 logfile = logfile),
+        "number_1dp" = 
+          validate_import_ndp(x = data[[field_name]],
+                              field_name = field_name,
+                              field_min = field_min,
+                              field_max = field_max,
+                              logfile = logfile, 
+                              ndp = 1), 
+        "number_2dp" = 
+          validate_import_ndp(x = data[[field_name]],
+                              field_name = field_name,
+                              field_min = field_min,
+                              field_max = field_max,
+                              logfile = logfile, 
+                              ndp = 2), 
+        "number_1dp_comma_decimal" = 
+          validate_import_ndp(x = data[[field_name]],
+                              field_name = field_name,
+                              field_min = field_min,
+                              field_max = field_max,
+                              logfile = logfile, 
+                              ndp = 1, 
+                              comma = TRUE), 
+        "number_2dp_comma_decimal" = 
+          validate_import_ndp(x = data[[field_name]],
+                              field_name = field_name,
+                              field_min = field_min,
+                              field_max = field_max,
+                              logfile = logfile, 
+                              ndp = 2,
+                              comma = TRUE), 
         data[[field_name]]
       )
   }
