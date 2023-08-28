@@ -43,7 +43,12 @@ importMappings(rcon,
 
 ImportData <- test_redcapAPI_Data[names(test_redcapAPI_Data) %in% MetaData$field_name]
 ImportData <- ImportData[!is.na(ImportData$email_test), ]
-ImportData <- castForImport(ImportData, rcon)
+# castForImport only needed until 3.0.0
+ImportData <- castForImport(ImportData, rcon, 
+                            cast = list(number_1dp = as.numeric, 
+                                        number_2dp = as.numeric, 
+                                        number_1dp_comma_decimal = as.numeric, 
+                                        number_2dp_comma_decimal = as.numeric))
 
 
 importRecords(rcon, 

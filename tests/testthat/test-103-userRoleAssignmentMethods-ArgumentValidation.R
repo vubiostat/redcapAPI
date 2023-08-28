@@ -77,6 +77,7 @@ test_that(
 test_that(
   "Return an error if there are duplicate usernames", 
   {
+    local_reproducible_output(width = 200)
     the_user <- rcon$users()$username[1]
     NewRole <- data.frame(unique_role_name = NA_character_, 
                            role_label = "Temporary role", 
