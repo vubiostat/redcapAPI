@@ -43,6 +43,6 @@
 #' the likelihood of servers timing out.   
 #' 
 #' @name redcapAPI
-#' @docType package
+#' @keywords internal
 
-NULL
+"_PACKAGE"

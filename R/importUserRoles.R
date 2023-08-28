@@ -134,7 +134,7 @@ importUserRoles.redcapApiConnection <- function(rcon,
   }
   
   if (refresh){
-    # FIXME: set up the refresh
+    rcon$refresh_user_roles()
   }
   
   message(sprintf("User Roles Added/Modified: %s", as.character(response)))
