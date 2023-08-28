@@ -5,6 +5,7 @@ local_file <- test_path("testdata", "FileForImportExportTesting.txt")
 test_that(
   "import, export, and delete a file in a longitudinal project",
   {
+    local_reproducible_output(width = 200)
     expect_message(
       importFiles(rcon,
                   file = local_file,
@@ -86,6 +87,7 @@ importRecords(rcon,
 test_that(
   "import, export, and delete a file in a longitudinal project",
   {
+    local_reproducible_output(width = 200)
     expect_message(
       importFiles(rcon,
                   file = local_file,

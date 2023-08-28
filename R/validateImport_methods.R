@@ -368,6 +368,56 @@ validate_import_numeric <- function(x, field_name, field_min, field_max, logfile
   x
 }
 
+# validate_import_number_dp -------------------------------------------
+# Tests to perform
+# * values that can be coerced to numeric pass.
+# * NA passes
+# * Values that cannot be coerced to numeric produce a message
+# * values less than field_min produce a message
+# * values greater than field_max produce a message
+validate_import_ndp <- function(x, field_name, field_min, field_max, logfile, 
+                                    ndp, comma = FALSE)
+{
+  suppressWarnings(num_check <- as.numeric(x))
+  w <- which(is.na(num_check) & !x %in% c('', NA))
+  
+  suppressWarnings({
+    if (!is.numeric(x)) x <- as.numeric(x)
+    field_min <- as.numeric(field_min)
+    field_max <- as.numeric(field_max)
+  })
+  
+  print_validation_message(
+    field_name,
+    indices = which(x < field_min),
+    message = paste0("Value(s) are less than the stated minimum: ",
+                     field_min),
+    logfile = logfile
+  )
+  
+  print_validation_message(
+    field_name,
+    indices = which(x > field_max),
+    message = paste0("Value(s) are greater than the stated maximum: ",
+                     field_max),
+    logfile = logfile
+  )
+  
+  print_validation_message(
+    field_name,
+    indices = w,
+    message = paste0("Value(s) must be numeric or coercible to numeric.\n",
+                     "Values not imported"),
+    logfile = logfile
+  )
+  
+  x[!is.na(x)] <- trimws(format(round(x[!is.na(x)], ndp), 
+                                nsmall = ndp, 
+                                decimal.mark = if (comma) "," else "."))
+  
+  x
+}
+
 # validate_import_zipcode -------------------------------------------
 # Tests to run
 # * values in 12345 and 12345-1234 format pass
