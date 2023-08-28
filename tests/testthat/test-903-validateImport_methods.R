@@ -1240,3 +1240,48 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Validate number with fixed decimal places (number_1dp, etc)", 
+  {
+    # number_1dp
+    expect_equal(validate_import_ndp(c(23, pi), 
+                                     field_name = "number_1dp", 
+                                     field_min = 0, 
+                                     field_max = 100, 
+                                     logfile = "", 
+                                     ndp = 1, 
+                                     comma = FALSE), 
+                 c("23.0", "3.1"))
+    
+    # number_2dp
+    expect_equal(validate_import_ndp(c(23, pi), 
+                                     field_name = "number_1dp", 
+                                     field_min = 0, 
+                                     field_max = 100, 
+                                     logfile = "", 
+                                     ndp = 2, 
+                                     comma = FALSE), 
+                 c("23.00", "3.14"))
+    
+    # number_1dp_comma
+    expect_equal(validate_import_ndp(c(23, pi), 
+                                     field_name = "number_1dp", 
+                                     field_min = 0, 
+                                     field_max = 100, 
+                                     logfile = "", 
+                                     ndp = 1, 
+                                     comma = TRUE), 
+                 c("23,0", "3,1"))
+    
+    # number_2dp_comma
+    expect_equal(validate_import_ndp(c(23, pi), 
+                                     field_name = "number_1dp", 
+                                     field_min = 0, 
+                                     field_max = 100, 
+                                     logfile = "", 
+                                     ndp = 2, 
+                                     comma = TRUE), 
+                 c("23,00", "3,14"))
+  }
+)

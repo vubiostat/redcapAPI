@@ -219,6 +219,7 @@ test_that(
 test_that(
   "exportRecordsTyped expects single logical for filter_empty_rows", 
   {
+    local_reproducible_output(width = 200)
     expect_error(exportRecordsTyped(rcon, filter_empty_rows=1),
                  "Variable 'filter_empty_rows': Must be of type 'logical'")
     expect_error(exportRecordsTyped(rcon, filter_empty_rows=c(TRUE, FALSE)),
@@ -260,16 +261,5 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(exportRecordsTyped(rcon,events='doesntexist'),
                  "'events'[:] Must be a subset of")
-  }
-)
-
-
-test_that(
-  "exportRecordsTyped expects single logical for filter_empty_rows", 
-  {
-    expect_error(exportRecordsTyped(rcon, filter_empty_rows=1),
-      "Variable 'filter_empty_rows': Must be of type 'logical'")
-    expect_error(exportRecordsTyped(rcon, filter_empty_rows=c(TRUE, FALSE)),
-      "Variable 'filter_empty_rows': Must have length 1")
   }
 )

@@ -53,7 +53,12 @@ Mapping <- data.frame(arm_num = c(1, 1, 1, 2, 2, 2),
 RecordToImport <- test_redcapAPI_Data[test_redcapAPI_Data$record_id %in% 1:3, ]
 RecordToImport <- RecordToImport[is.na(RecordToImport$repeat_question_1), ]
 RecordToImport <- RecordToImport[names(RecordToImport) %in% rcon$metadata()$field_name]
-RecordToImport <- castForImport(RecordToImport, rcon)
+# castForImport only needed until 3.0.0
+RecordToImport <- castForImport(RecordToImport, rcon, 
+                                cast = list(number_1dp = as.numeric, 
+                                            number_2dp = as.numeric, 
+                                            number_1dp_comma_decimal = as.numeric, 
+                                            number_2dp_comma_decimal = as.numeric))
 importRecords(rcon, 
               data = RecordToImport)
 

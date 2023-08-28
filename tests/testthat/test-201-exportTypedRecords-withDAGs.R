@@ -6,7 +6,11 @@ context("Export Typed Records with DAGs Functionality")
 ImportData <- exportRecordsTyped(rcon, 
                                  cast = raw_cast)
 ImportData <- castForImport(ImportData, 
-                            rcon)
+                            rcon, 
+                            cast = list(number_1dp = as.numeric, 
+                                        number_2dp = as.numeric, 
+                                        number_1dp_comma_decimal = as.numeric, 
+                                        number_2dp_comma_decimal = as.numeric))
 
 #####################################################################
 # Create DAGs to use in testing                                  ####
