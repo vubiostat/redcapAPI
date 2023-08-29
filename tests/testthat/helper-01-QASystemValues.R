@@ -1,5 +1,7 @@
 # These things are definable via system variables
 
+options(width = 200)
+
 EXPENDABLE_USER   <- Sys.getenv('EXPENDABLE_USER', "bstat_api_user")
 EXPORT_REPORTS_ID <- as.numeric(strsplit(Sys.getenv('REPORT_IDS', '357209'), ',')[[1]])
 
