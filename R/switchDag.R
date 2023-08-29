@@ -22,6 +22,13 @@
 #'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @return Returns \code{TRUE} when the call is completed successfully.
+#' 
+#' @seealso 
+#' \code{\link{exportDags}},
+#' \code{\link{importDags}},
+#' \code{\link{deleteDags}}, 
+#' \code{\link{exportUserDagAssignments}},
+#' \code{\link{importUserDagAssignments}}
 #'   
 #' @export
 

@@ -39,10 +39,19 @@ see \code{\link{redcapError}}}
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
+\value{
+Returns \code{TRUE} when the call is completed successfully.
+}
 \description{
 This method allows the current API user to switch 
   (assign/reassign/unassign) their current Data Access Group assignment 
   if they have been assigned to multiple DAGs via the DAG Switcher page 
-  in the project. Returns \code{TRUE} when the call is completed
-  successfully.
+  in the project.
+}
+\seealso{
+\code{\link{exportDags}},
+\code{\link{importDags}},
+\code{\link{deleteDags}}, 
+\code{\link{exportUserDagAssignments}},
+\code{\link{importUserDagAssignments}}
 }
