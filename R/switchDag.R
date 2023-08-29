@@ -4,8 +4,7 @@
 #' @description This method allows the current API user to switch 
 #'   (assign/reassign/unassign) their current Data Access Group assignment 
 #'   if they have been assigned to multiple DAGs via the DAG Switcher page 
-#'   in the project. Returns \code{TRUE} when the call is completed
-#'   successfully.
+#'   in the project. 
 #'   
 #' @param rcon \code{redcapConnection} object.
 #' @param dag \code{character(1)} A unique data access group to which to 
@@ -21,6 +20,8 @@
 #' @param api_param \code{list} Additional API parameters to pass into the
 #'   body of the API call. This provides users to execute calls with options
 #'   that may not otherwise be supported by \code{redcapAPI}.
+#'   
+#' @return Returns \code{TRUE} when the call is completed successfully.
 #'   
 #' @export
 
