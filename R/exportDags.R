@@ -1,11 +1,11 @@
-#' @rdname deleteDags
+#' @rdname dagsMethods
 #' @export
 
 exportDags <- function(rcon, ...){
   UseMethod("exportDags")
 }
 
-#' @rdname deleteDags
+#' @rdname dagsMethods
 #' @export
 
 exportDags.redcapApiConnection <- function(rcon, 

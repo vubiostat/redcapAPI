@@ -1,4 +1,4 @@
-#' @rdname deleteDags
+#' @rdname dagsMethods
 #' @export
 
 importDags <- function(rcon, 
@@ -7,7 +7,7 @@ importDags <- function(rcon,
   UseMethod("importDags")
 }
 
-#' @rdname deleteDags
+#' @rdname dagsMethods
 #' @export
 
 importDags.redcapApiConnection <- function(rcon, 

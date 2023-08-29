@@ -1,5 +1,6 @@
-#' @name deleteDags
-#' @aliases exportDags, deleteDags
+#' @name dagsMethods
+#' @aliases deleteDags, exportDags, importDags
+#' 
 #' @title Export, Import, Delete Data Access Groups from a Project
 #' 
 #' @description These methods allow you to export existing Data Access Groups, 
@@ -30,7 +31,9 @@
 #'   is provided, it must match a value currently in the project.
 #'
 #' @seealso
-#' \code{\link{exportUserDagAssignments}}, \code{\link{importUserDagAssignments}}
+#' \code{\link{switchDag}},
+#' \code{\link{exportUserDagAssignments}}, 
+#' \code{\link{importUserDagAssignments}}
 #' 
 #' @return 
 #' \code{exportDags} with the columns
@@ -54,7 +57,7 @@ deleteDags <- function(rcon,
   UseMethod("deleteDags")
 }
 
-#' @rdname deleteDags
+#' @rdname dagsMethods
 #' @export
 
 deleteDags.redcapApiConnection <- function(rcon, 
