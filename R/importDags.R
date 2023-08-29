@@ -1,35 +1,4 @@
-#' @name importDags
-#' @title Import Data Access Groups to a REDCap Project
-#' 
-#' @description This method allows you to import new DAGs (Data Access Groups) 
-#'   into a project or update the group name of any existing DAGs.
-#'   
-#'   NOTE: DAGs can be renamed by simply changing the group name 
-#'   (data_access_group_name). DAG can be created by providing group name 
-#'   value while unique group name should be set to blank.
-#'   
-#' @param rcon A \code{redcapConnection} object
-#' @param data A \code{data.frame} with two columns: \code{data_access_group_name}
-#'   and \code{unique_group_name}. 
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
-#'   be refreshed after the import.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @details To add a DAG, provide a value for \code{data_access_group_name} 
-#'   with value for \code{unique_group_name}. 
-#'   
-#'   To modify a group name, provide a new value for \code{data_access_group_name}
-#'   with the associated \code{unique_group_name}. If \code{unique_group_name}
-#'   is provided, it must match a value currently in the project.
-#'   
+#' @rdname deleteDags
 #' @export
 
 importDags <- function(rcon, 
@@ -38,7 +7,7 @@ importDags <- function(rcon,
   UseMethod("importDags")
 }
 
-#' @rdname importDags
+#' @rdname deleteDags
 #' @export
 
 importDags.redcapApiConnection <- function(rcon, 
