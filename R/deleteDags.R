@@ -1,54 +1,6 @@
-#' @name dagsMethods
-#' @aliases deleteDags, exportDags, importDags
-#' 
-#' @title Export, Import, Delete Data Access Groups from a Project
-#' 
-#' @description These methods allow you to export existing Data Access Groups, 
-#'   import new Data Access Groups, or delete Data Access Groups from a 
-#'   project.
-#' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param data A \code{data.frame} with two columns: \code{data_access_group_name}
-#'   and \code{unique_group_name}. 
-#' @param dags \code{character} vector of names matching the \code{unique_group_name}.
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
-#'   be refreshed after the import.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'
-#' @details When importing data access groups, provide a value for \code{data_access_group_name} 
-#'   with no value for \code{unique_group_name}. 
-#'   
-#'   To modify a group name, provide a new value for \code{data_access_group_name}
-#'   with the associated \code{unique_group_name}. If \code{unique_group_name}
-#'   is provided, it must match a value currently in the project.
-#'
-#' @seealso
-#' \code{\link{switchDag}},
-#' \code{\link{exportUserDagAssignments}}, 
-#' \code{\link{importUserDagAssignments}}
-#' 
-#' @return 
-#' \code{exportDags} with the columns
-#' \itemize{
-#'   \item{\code{data_access_group_name}}{The human readable name for the data access group.}
-#'   \item{\code{unique_group_name}}{The internal unique group name}
-#'   \item{\code{data_access_group_id}}{The internal numeric identifier.}
-#' }
-#' 
-#' \code{importDags} has no return, but will print a message indicating the
-#' number of Data Access Groups imported. 
-#' 
-#' \code{deleteDags} has no return, but will print a message indicating the
-#' number of Data Access Groups deleted.
-#'   
+# Complete documentation in documentation.R
+#' @describeIn dagMethods Delete Data Access Groups from a project.
+#' @order 3
 #' @export
 
 deleteDags <- function(rcon, 
@@ -57,7 +9,7 @@ deleteDags <- function(rcon,
   UseMethod("deleteDags")
 }
 
-#' @rdname dagsMethods
+#' @rdname dagMethods
 #' @export
 
 deleteDags.redcapApiConnection <- function(rcon, 

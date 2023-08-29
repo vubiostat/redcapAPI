@@ -1,11 +1,13 @@
-#' @rdname dagsMethods
+# Complete documentation in documentation.R
+#' @describeIn dagMethods Export Data Access Groups from a REDCap Project
+#' @order 1
 #' @export
 
 exportDags <- function(rcon, ...){
   UseMethod("exportDags")
 }
 
-#' @rdname dagsMethods
+#' @rdname dagMethods
 #' @export
 
 exportDags.redcapApiConnection <- function(rcon, 

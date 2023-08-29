@@ -1,35 +1,5 @@
-#' @name switchDag
-#' @title Switch Data Access Group Assignment for the Current User
-#' 
-#' @description This method allows the current API user to switch 
-#'   (assign/reassign/unassign) their current Data Access Group assignment 
-#'   if they have been assigned to multiple DAGs via the DAG Switcher page 
-#'   in the project. 
-#'   
-#' @param rcon \code{redcapConnection} object.
-#' @param dag \code{character(1)} A unique data access group to which to 
-#'   assign the current user. Use \code{NA} to leave the user unassigned.
-#' @param refresh \code{logical(1)} If \code{TRUE}, the cached data access
-#'   group assignments will be refreshed.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @return Returns \code{TRUE} when the call is completed successfully.
-#' 
-#' @seealso 
-#' \code{\link{exportDags}},
-#' \code{\link{importDags}},
-#' \code{\link{deleteDags}}, 
-#' \code{\link{exportUserDagAssignments}},
-#' \code{\link{importUserDagAssignments}}
-#'   
+# Complete documentation in documentation.R
+#' @rdname switchDag
 #' @export
 
 switchDag <- function(rcon, 

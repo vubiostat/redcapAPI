@@ -1,20 +1,6 @@
-#' @name exportUserDagAssignments
-#' @title Export User-Data Access Group Mappings for a Project
-#' 
-#' @description This method allows you to export existing User-DAG 
-#'   assignments for a project
-#'   
-#' @param rcon A \code{redcapConnection} object. 
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+# Complete documentation in documentation.R
+#' @describeIn dagAssignmentMethods Export current User-DAG Assignments
+#' @order 1
 #' @export
 
 exportUserDagAssignments <- function(rcon, 
@@ -22,7 +8,7 @@ exportUserDagAssignments <- function(rcon,
   UseMethod("exportUserDagAssignments")
 }
 
-#' @rdname exportUserDagAssignments
+#' @rdname dagAssignmentMethods
 #' @export
 
 exportUserDagAssignments.redcapApiConnection <- function(rcon, 

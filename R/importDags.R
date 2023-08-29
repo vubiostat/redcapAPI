@@ -1,4 +1,5 @@
-#' @rdname dagsMethods
+#' @describeIn dagMethods Import Data Access Groups to a project.
+#' @order 2
 #' @export
 
 importDags <- function(rcon, 
@@ -7,7 +8,7 @@ importDags <- function(rcon,
   UseMethod("importDags")
 }
 
-#' @rdname dagsMethods
+#' @rdname dagMethods
 #' @export
 
 importDags.redcapApiConnection <- function(rcon, 
