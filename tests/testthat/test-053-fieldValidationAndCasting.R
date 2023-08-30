@@ -317,6 +317,29 @@ test_that(
   }
 )
 
+test_that(
+  "Cast a field to labels (character output)", 
+  {
+    coding <- c("Peanut" = 1, 
+                "Walnut" = "b", 
+                "Cashew" = "xyz", 
+                "Almond" = -4, 
+                "Pecan"  = "ABC")
+    x <- c("Peanut", "1", 
+           "Walnut", "b", 
+           "Cashew", "xyz", 
+           "Almond", "-4",
+           "Pecan",  "ABC",
+           "something else")
+    
+    expect_equal(castLabelCharacter(x, "field_name", coding), 
+                 c("Peanut", "Peanut", "Walnut", "Walnut", 
+                   "Cashew", "Cashew", "Almond", "Almond",
+                   "Pecan", "Pecan",
+                   NA))
+  }
+)
+
 #####################################################################
 # castCode                                                     ####
 
@@ -339,6 +362,27 @@ test_that(
                  factor(c("1", "1", "b", "b", "xyz", "xyz", "-4", "-4", "ABC", "ABC", 
                           NA), 
                         levels = c("1", "b", "xyz", "-4", "ABC")))
+  }
+)
+
+test_that(
+  "Cast a field to codes (character output)", 
+  {
+    coding <- c("Peanut" = 1, 
+                "Walnut" = "b", 
+                "Cashew" = "xyz", 
+                "Almond" = -4, 
+                "Pecan"  = "ABC")
+    x <- c("Peanut", "1", 
+           "Walnut", "b", 
+           "Cashew", "xyz", 
+           "Almond", "-4",
+           "Pecan",  "ABC",
+           "something else")
+    
+    expect_equal(castCodeCharacter(x, "field_name", coding), 
+                 c("1", "1", "b", "b", "xyz", "xyz", "-4", "-4", "ABC", "ABC", 
+                          NA))
   }
 )
 
@@ -429,6 +473,54 @@ test_that(
   }
 )
 
+test_that(
+  "Cast a checkbox to Checked/Unchecked (character output)", 
+  {
+    coding <- c("Peanut" = 1, 
+                "Walnut" = "b", 
+                "Cashew" = "xyz", 
+                "Almond" = -4, 
+                "Pecan"  = "ABC")
+    x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
+    
+    expect_equal(castCheckedCharacter(x, "checkbox___1", coding), 
+                 c("Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
+    expect_equal(castCheckedCharacter(x, "checkbox___b", coding), 
+                 c("Unchecked", "Checked", 
+                   "Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
+    expect_equal(castCheckedCharacter(x, "checkbox___xyz", coding), 
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Checked",   "Checked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
+    expect_equal(castCheckedCharacter(x, "checkbox____4", coding), 
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked",
+                   "Unchecked", "Unchecked", 
+                   "Checked",   "Checked",  
+                   "Unchecked", "Unchecked", 
+                   "Unchecked"))
+    expect_equal(castCheckedCharacter(x, "checkbox___abc", coding), 
+                 c("Unchecked", "Checked", 
+                   "Unchecked", "Unchecked",
+                   "Unchecked", "Unchecked",  
+                   "Unchecked", "Unchecked",
+                   "Checked",   "Checked",  
+                   "Unchecked"))
+  }
+)
+
 #####################################################################
 # castCheckLabel                                               ####
 
@@ -480,6 +572,54 @@ test_that(
   }
 )
 
+test_that(
+  "cast to labelled checkbox as character (character otuput)", 
+  {
+    coding <- c("Peanut" = 1, 
+                "Walnut" = "b", 
+                "Cashew" = "xyz", 
+                "Almond" = -4, 
+                "Pecan"  = "ABC")
+    x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
+    
+    expect_equal(castCheckLabelCharacter(x, "checkbox___1", coding), 
+                 c("Peanut",   "Peanut", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckLabelCharacter(x, "checkbox___b", coding), 
+                 c("", "Walnut", 
+                   "Walnut",   "Walnut", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckLabelCharacter(x, "checkbox___xyz", coding), 
+                 c("", "Cashew", 
+                   "", "", 
+                   "Cashew",   "Cashew", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckLabelCharacter(x, "checkbox____4", coding), 
+                 c("", "Almond", 
+                   "", "",
+                   "", "", 
+                   "Almond",   "Almond",  
+                   "", "", 
+                   ""))
+    expect_equal(castCheckLabelCharacter(x, "checkbox___abc", coding), 
+                 c("", "Pecan", 
+                   "", "",
+                   "", "",  
+                   "", "",
+                   "Pecan",   "Pecan",  
+                   ""))
+  }
+)
+
 #####################################################################
 # castCheckCode                                                ####
 
@@ -522,6 +662,54 @@ test_that(
                    "", "", 
                    ""))
     expect_equal(as.character(castCheckCode(x, "checkbox___abc", coding)), 
+                 c("", "ABC", 
+                   "", "",
+                   "", "",  
+                   "", "",
+                   "ABC",   "ABC",  
+                   ""))
+  }
+)
+
+test_that(
+  "cast to coded checkbox (character output)", 
+  {
+    coding <- c("Peanut" = 1, 
+                "Walnut" = "b", 
+                "Cashew" = "xyz", 
+                "Almond" = -4, 
+                "Pecan"  = "ABC")
+    x <- c("Peanut", "1", "Walnut", "b", "Cashew", "xyz", "Almond", "-4", "Pecan", "ABC", "something else")
+    
+    expect_equal(castCheckCodeCharacter(x, "checkbox___1", coding), 
+                 c("1",   "1", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckCodeCharacter(x, "checkbox___b", coding), 
+                 c("", "b", 
+                   "b",   "b", 
+                   "", "", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckCodeCharacter(x, "checkbox___xyz", coding), 
+                 c("", "xyz", 
+                   "", "", 
+                   "xyz",   "xyz", 
+                   "", "", 
+                   "", "", 
+                   ""))
+    expect_equal(castCheckCodeCharacter(x, "checkbox____4", coding), 
+                 c("", "-4", 
+                   "", "",
+                   "", "", 
+                   "-4",   "-4",  
+                   "", "", 
+                   ""))
+    expect_equal(castCheckCodeCharacter(x, "checkbox___abc", coding), 
                  c("", "ABC", 
                    "", "",
                    "", "",  
