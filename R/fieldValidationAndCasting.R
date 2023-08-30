@@ -167,7 +167,9 @@ castRaw <- function(x, field_name, coding){
   
   raw <- 
     if (grepl(".*___(.*)", field_name)){
-      as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
+      ifelse(!is.na(x), 
+             as.character((x %in% getCheckedValue(coding, field_name)) + 0L), 
+             NA)
     } else {
       code_match <- getCodingIndex(x, coding)
       unname(coding[code_match])
@@ -254,7 +256,11 @@ castCheckCodeCharacter <- function(x, field_name, coding){
 
 castCheckForImport <- function(checked = c("Checked", "1")){
   function(x, coding, field_name){
-    (x %in% checked) + 0L
+    is_na <- is.na(x)
+    
+    out <- (x %in% checked) + 0L
+    out[is_na] <- NA
+    out
   }
 }
 
