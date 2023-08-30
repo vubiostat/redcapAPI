@@ -91,6 +91,14 @@
 #' \code{raw_cast} overrides all casting if passed as the \code{cast}
 #' parameter.
 #' 
+#' \code{default_cast_no_factor} is a list of casting functions that matches
+#' all of the default casts but with the exception that any fields that would
+#' have been cast to factors will instead be cast to characters. It is 
+#' provided for the user that prefers to work absent factors. The list
+#' \code{default_cast_character} is equivalent and is provided for those that
+#' prefer to describe their casting in terms of what the result is (and not
+#' what it isn't).
+#' 
 #' \code{na_values} A helper function to create a list of functions
 #' to test for NA based on field type. Useful for bulk override of
 #' NA detection for a project. The output can be directly passed to the \code{na}
@@ -134,10 +142,22 @@ castLabel <- function(x, field_name, coding){
 
 #' @rdname fieldValidationAndCasting
 #' @export
+castLabelCharacter <- function(x, field_name, coding){
+  as.character(castLabel(x, field_name, coding))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
 castCode <- function(x, field_name, coding){
   code_match <- getCodingIndex(x, coding)
   
   factor(unname(coding[code_match]), levels = coding, labels = coding)
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+castCodeCharacter <- function(x, field_name, coding){
+  as.character(castCode(x, field_name, coding))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -161,7 +181,7 @@ castRaw <- function(x, field_name, coding){
 #' @export
 castChecked <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
-
+  
   warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
@@ -171,9 +191,15 @@ castChecked <- function(x, field_name, coding){
 
 #' @rdname fieldValidationAndCasting
 #' @export
+castCheckedCharacter <- function(x, field_name, coding){
+  as.character(castChecked(x, field_name, coding))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
 castCheckLabel <- function(x, field_name, coding){
   checked_value <- getCheckedValue(coding, field_name)
-
+  
   warnOfZeroCodedCheckCasting(field_name, x)
   
   x_checked <- x %in% checked_value 
@@ -189,6 +215,12 @@ castCheckLabel <- function(x, field_name, coding){
   factor(unname(c("", the_level)[(x_checked) + 1]), 
          levels=c("", the_level), 
          labels=c("", the_label))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+castCheckLabelCharacter <- function(x, field_name, coding){
+  as.character(castCheckLabel(x, field_name, coding))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -211,6 +243,12 @@ castCheckCode <- function(x, field_name, coding){
   factor(unname(c("", the_level)[(x_checked) + 1]), 
          levels=c("", the_level), 
          labels=c("", the_label))
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+castCheckCodeCharacter <- function(x, field_name, coding){
+  as.character(castCheckCode(x, field_name, coding))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -348,6 +386,42 @@ raw_cast <- list(
   sql                = NA, 
   system             = NA
 )
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+default_cast_no_factor <- list(
+  date_                    = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
+  datetime_                = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
+  datetime_seconds_        = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
+  time_mm_ss               = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
+  time_hh_mm_ss            = function(x, ...) chron::times(x, format=c(times="h:m:s")),
+  time                     = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
+                                                           format=c(times="h:m:s")),
+  float                    = as.numeric,
+  number                   = as.numeric,
+  number_1dp               = as.numeric, 
+  number_1dp_comma_decimal = castDpNumeric(),
+  number_2dp               = as.numeric, 
+  number_2dp_comma_decimal = castDpNumeric(),
+  calc                     = as.numeric,
+  int                      = as.integer,
+  integer                  = as.numeric,
+  yesno                    = castLabelCharacter,
+  truefalse                = function(x, ...) x=='1' | tolower(x) =='true',
+  checkbox                 = castCheckedCharacter,
+  form_complete            = castLabelCharacter,
+  select                   = castLabelCharacter,
+  radio                    = castLabelCharacter,
+  dropdown                 = castLabelCharacter,
+  sql                      = NA, 
+  system                   = castLabelCharacter
+)
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+default_cast_character <- default_cast_no_factor
 
 #####################################################################
 # Unexported - default lists for exportRecordsTyped

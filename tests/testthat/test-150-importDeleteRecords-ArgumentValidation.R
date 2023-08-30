@@ -16,10 +16,10 @@ importMetaData(rcon,
                MetaData)
 
 importArms(rcon, 
-           arms_data = data.frame(arm_num = 1:2, 
+           data = data.frame(arm_num = 1:2, 
                                   name = c("Arm 1", "Arm2")))
 importEvents(rcon, 
-             event_data = data.frame(event_name = c("Event 1", "Event 2"),
+             data = data.frame(event_name = c("Event 1", "Event 2"),
                                      arm_num = 1:2, 
                                      unique_event_name = c("event_1_arm_1", 
                                                            "event_1_arm_2")))
