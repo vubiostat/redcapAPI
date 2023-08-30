@@ -108,6 +108,35 @@ To import new data access groups, the user must provide a value for
 \item \code{deleteDags()}: Delete Data Access Groups from a project.
 
 }}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your redcap url", 
+             keyring = 'API_KEYs', 
+             envir = globalenv())
+
+exportDags(rcon)
+
+
+# Import a new Data Access Group
+NewData <- data.frame(data_access_group_name = "New DAG Name", 
+                      unique_group_name = NA_character_)
+importDags(rcon, 
+           data = NewData)
+           
+# Modify an existing Data Access Group Name
+# The user will need to match the unique_group_name to the existing DAGs
+ChangeData <- data.frame(data_access_group_name = "Altered DAG Name", 
+                         unique_group_name = "new_dag_name")
+importDags(rcon, 
+           data = ChangeData)
+           
+# Delete a Data Access Group
+deleteDags(rcon, 
+           dags = c("new_dag_name"))
+}
+
+}
 \seealso{
 \code{\link{switchDag}},\cr
 \code{\link{exportUserDagAssignments}}, \cr
