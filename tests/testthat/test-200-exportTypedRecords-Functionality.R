@@ -26,9 +26,9 @@ MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$form_name %in% forms
 importMetaData(rcon, 
                MetaData)
 importArms(rcon, 
-           arms_data = test_redcapAPI_Arms)
+           data = test_redcapAPI_Arms)
 importEvents(rcon, 
-             event_data = test_redcapAPI_Events)
+             data = test_redcapAPI_Events)
 
 importProjectInformation(rcon, 
                          data.frame(is_longitudinal = 1, 
@@ -440,6 +440,20 @@ test_that(
     # Restore the meta data for further testing ---------------------
     importMetaData(rcon, MetaData)
     rcon$refresh_fieldnames()
+  }
+)
+
+#####################################################################
+# Casting to Characters (no factors)                             ####
+
+test_that(
+  "Casting to character with no factors", 
+  {
+    Rec <- exportRecordsTyped(rcon, 
+                              cast = default_cast_no_factor)
+    expect_data_frame(Rec)
+    
+    expect_false(any(vapply(Rec, is.factor, logical(1))))
   }
 )
 
