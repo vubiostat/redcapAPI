@@ -457,3 +457,14 @@ test_that(
   }
 )
 
+test_that(
+  "Casting to character with no factors (using alternate list)", 
+  {
+    Rec <- exportRecordsTyped(rcon, 
+                              cast = default_cast_character)
+    expect_data_frame(Rec)
+    
+    expect_false(any(vapply(Rec, is.factor, logical(1))))
+  }
+)
+
