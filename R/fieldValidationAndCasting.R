@@ -147,7 +147,9 @@ castRaw <- function(x, field_name, coding){
   
   raw <- 
     if (grepl(".*___(.*)", field_name)){
-      as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
+      ifelse(!is.na(x), 
+             as.character((x %in% getCheckedValue(coding, field_name)) + 0L), 
+             NA)
     } else {
       code_match <- getCodingIndex(x, coding)
       unname(coding[code_match])

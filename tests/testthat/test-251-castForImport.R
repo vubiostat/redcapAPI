@@ -561,6 +561,14 @@ test_that(
                      "Some records failed validation")
     
     expect_true(attr(ImportData, "invalid")$value == invalid_value)
+    
+    
+    # Preserve missing values with checkboxes
+    TheData[[test_field]][2] <- NA
+    ImportData <- 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
+                                  rcon = rcon))
+    expect_true(is.na(ImportData[[test_field]][2]))
   }
 )
 
