@@ -547,6 +547,13 @@ test_that(
     
     expect_equal(castCheckForImport("0")(x), 
                  c(0, 0, 0, 0, 0, 0, 1))
+    
+    # preserve NA values
+    
+    x[c(2, 4)] <- rep(NA, 2)
+    
+    expect_equal(castCheckForImport()(x), 
+                 c(0, NA, 0, NA, 1, 1, 0))
   }
 )
 

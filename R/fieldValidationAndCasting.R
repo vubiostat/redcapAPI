@@ -216,7 +216,11 @@ castCheckCode <- function(x, field_name, coding){
 
 castCheckForImport <- function(checked = c("Checked", "1")){
   function(x, coding, field_name){
-    (x %in% checked) + 0L
+    is_na <- is.na(x)
+    
+    out <- (x %in% checked) + 0L
+    out[is_na] <- NA
+    out
   }
 }
 
