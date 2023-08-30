@@ -111,8 +111,8 @@ To import new data access groups, the user must provide a value for
 \examples{
 \dontrun{
 unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your redcap url", 
-             keyring = 'API_KEYs', 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
              envir = globalenv())
 
 exportDags(rcon)

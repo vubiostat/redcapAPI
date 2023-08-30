@@ -49,6 +49,18 @@ This method enables the current API user to switch
   if they have been assigned to multiple DAGs via the DAG Switcher page 
   in the project.
 }
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+# Switch the current user to the DAG "Facility Two"
+switchDag(rcon, 
+          dag = "facility_two")
+}
+}
 \seealso{
 \code{\link{exportDags}},\cr
 \code{\link{importDags}},\cr

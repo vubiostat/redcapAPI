@@ -148,6 +148,37 @@ All of the values between brackets in the branching logic must be either a
 \item \code{importMetaData()}: Import New Meta Data (Data Dictionary) Definitions
 
 }}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+# Export the MetaData from REDCap
+exportMetaData(rcon)
+
+# Export MetaData for select fields only (returns two rows)
+exportMetaData(rcon, 
+               fields = c("dropdown_test", "radio_test"))
+
+# Export MetaData for select forms
+exportMetaData(rcon, 
+               forms = c("first_form", "second_form"))
+               
+# MetaData my be exported for a combination of fields and forms
+exportMetaData(rcon, 
+               fields = c("dropdown_test", "radio_test"), 
+               forms = c("first_form", "second_form"))
+               
+# Alter and import new MetaData (change the record ID label)
+Meta <- exportMetaData(rcon)
+
+Meta$field_label[1] <- "A better description of the Record ID"
+importMetaData(rcon, 
+               data = Meta)
+}
+}
 \seealso{
 \code{\link{exportFieldNames}},\cr
 \code{\link{exportInstruments}},\cr

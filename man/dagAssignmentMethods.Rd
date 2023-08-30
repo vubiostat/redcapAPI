@@ -80,6 +80,37 @@ When modifying existing assignments using the import method,
 \item \code{importUserDagAssignments()}: Import new or modified User-DAG Assignments.
 
 }}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+# Export the current assignments
+exportUserDagAssignments(rcon)
+
+# Assign a user to a Data Access Group
+ForImport <- data.frame(username = "user1", 
+                        redcap_data_access_group = "facility_one")
+importUserDagAssigments(rcon, 
+                        data = ForImport)
+                                          
+# Assign a multiple users to a Data Access Group
+ForImport <- data.frame(username = c("user1", "user2", "user3"), 
+                        redcap_data_access_group = c("facility_one", 
+                                                     "facility_one", 
+                                                      "facility_two"))
+importUserDagAssigments(rcon, 
+                        data = ForImport)
+                        
+# Remove a user from all Data Access Groups
+ForImport <- data.frame(username = "user1", 
+                        redcap_data_access_group = NA_character_)
+importUserDagAssigments(rcon, 
+                        data = ForImport)
+}
+}
 \seealso{
 \code{\link{exportDags}},\cr
 \code{\link{importDags}},\cr

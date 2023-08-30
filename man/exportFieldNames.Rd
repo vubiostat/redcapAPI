@@ -66,6 +66,21 @@ coded value).
 Fields of types "calc", "file", and "descriptive" are not included in the
 export. (Signature fields also have the "file" type and are not included)
 }
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+# Export all of the field names
+exportFieldNames(rcon)
+
+# Export MetaData for a specific field
+exportFieldNames(rcon, 
+                 fields = "checkbox_test")
+}
+}
 \seealso{
 \code{\link{exportMetaData}},\cr
 \code{\link{importMetaData}}, \cr

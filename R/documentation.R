@@ -46,7 +46,7 @@
 #' @examples
 #' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
-#'              url = "your redcap url", 
+#'              url = "your_redcap_url", 
 #'              keyring = "API_KEYs", 
 #'              envir = globalenv())
 #'
@@ -100,6 +100,18 @@ NULL
 #' \code{\link{deleteDags}}, \cr
 #' \code{\link{exportUserDagAssignments}}, \cr
 #' \code{\link{importUserDagAssignments}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Switch the current user to the DAG "Facility Two"
+#' switchDag(rcon, 
+#'           dag = "facility_two")
+#' }
 
 NULL
 
@@ -139,6 +151,37 @@ NULL
 #' \code{\link{importDags}},\cr
 #' \code{\link{deleteDags}},\cr
 #' \code{\link{switchDag}}
+#' 
+#'@examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Export the current assignments
+#' exportUserDagAssignments(rcon)
+#' 
+#' # Assign a user to a Data Access Group
+#' ForImport <- data.frame(username = "user1", 
+#'                         redcap_data_access_group = "facility_one")
+#' importUserDagAssigments(rcon, 
+#'                         data = ForImport)
+#'                                           
+#' # Assign a multiple users to a Data Access Group
+#' ForImport <- data.frame(username = c("user1", "user2", "user3"), 
+#'                         redcap_data_access_group = c("facility_one", 
+#'                                                      "facility_one", 
+#'                                                       "facility_two"))
+#' importUserDagAssigments(rcon, 
+#'                         data = ForImport)
+#'                         
+#' # Remove a user from all Data Access Groups
+#' ForImport <- data.frame(username = "user1", 
+#'                         redcap_data_access_group = NA_character_)
+#' importUserDagAssigments(rcon, 
+#'                         data = ForImport)
+#' }
 
 NULL
 
@@ -236,6 +279,37 @@ NULL
 #' \code{\link{exportInstruments}},\cr
 #' \code{\link{exportMappings}},\cr
 #' \code{\link{importMappings}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Export the MetaData from REDCap
+#' exportMetaData(rcon)
+#' 
+#' # Export MetaData for select fields only (returns two rows)
+#' exportMetaData(rcon, 
+#'                fields = c("dropdown_test", "radio_test"))
+#' 
+#' # Export MetaData for select forms
+#' exportMetaData(rcon, 
+#'                forms = c("first_form", "second_form"))
+#'                
+#' # MetaData my be exported for a combination of fields and forms
+#' exportMetaData(rcon, 
+#'                fields = c("dropdown_test", "radio_test"), 
+#'                forms = c("first_form", "second_form"))
+#'                
+#' # Alter and import new MetaData (change the record ID label)
+#' Meta <- exportMetaData(rcon)
+#' 
+#' Meta$field_label[1] <- "A better description of the Record ID"
+#' importMetaData(rcon, 
+#'                data = Meta)
+#' }
 
 NULL
 
@@ -285,5 +359,20 @@ NULL
 #' \code{\link{exportInstruments}},\cr
 #' \code{\link{exportMappings}},\cr
 #' \code{\link{importMappings}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Export all of the field names
+#' exportFieldNames(rcon)
+#' 
+#' # Export MetaData for a specific field
+#' exportFieldNames(rcon, 
+#'                  fields = "checkbox_test")
+#' }
 
 NULL
