@@ -81,19 +81,19 @@ for the \code{text_validation_or_show_slider_number} column.}
 \code{exportMetaData} returns a data frame. Not all 18 (or more) columns are
 documented here, but the most commonly used within \code{redcapAPI} are 
 (these may appear in a different order in the data frame):
-\itemize{
- \item{\code{field_name} }{The name of a field in the project.}
- \item{\code{filed_label} }{The human-readable form of the field name.}
- \item{\code{form_name} }{The name of the form on which the field is found.}
- \item{\code{field_type} }{One of two fields used to determine how a field
-       is transformed into an R object.}
- \item{\code{select_choices_or_calculations} }{The second field used to 
-       determine how a field is translated into an R object.}
- \item{\code{text_validation_type_or_show_slider_number} }{Describes how 
+\tabular{ll}{
+ \code{field_name} \tab The name of a field in the project.\cr
+ \code{filed_label} \tab The human-readable form of the field name.\cr
+ \code{form_name} \tab The name of the form on which the field is found.\cr
+ \code{field_type} \tab One of two fields used to determine how a field
+       is transformed into an R object.\cr
+ \code{select_choices_or_calculations} \tab The second field used to 
+       determine how a field is translated into an R object.\cr
+ \code{text_validation_type_or_show_slider_number} \tab Describes how 
        fields are validated. For slider fields, it gives the limits and
-       center point to display.}
- \item{\code{field_annotation} }{Contains annotations such as units of
-      measures. Also contains action tags.}    
+       center point to display.\cr
+ \code{field_annotation} \tab Contains annotations such as units of
+      measures. Also contains action tags.
 }
 
 \code{importMetaData} has no return and displays a message indicating 

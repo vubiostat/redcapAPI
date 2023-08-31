@@ -54,9 +54,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportUserDagAssignments} method returns a data frame with two columns:
-\itemize{
- \item{username}{The unique user name for each user in the project.}
- \item{redcap_data_access_grou}{The unique Data Access Group name to which the user is assigned.}
+\tabular{ll}{
+ username \tab The unique user name for each user in the project.\cr
+ redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
 }
 
 \code{importUserDagAssignments} has no return and prints a message indicating the number 

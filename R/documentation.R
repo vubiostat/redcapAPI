@@ -8,6 +8,8 @@
 #'   from a project, import new arms, and modify or delete existing arms.
 #'   
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param data A \code{data.frame} with two columns.  The first column 
 #'   (\code{arm_num}) is an integerish value . The second (\code{name}) is
 #'   a character value. For backward compatibility, 
@@ -19,8 +21,6 @@
 #'   be refreshed after the API action is complete.
 #' @param arms \code{character} or \code{integerish} identifying the arm 
 #'   numbers to export or delete.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #' 
 #' @details 
 #'   Exporting arms is not supported for classical REDCap projects. If 
@@ -41,9 +41,9 @@
 #'   
 #' @return
 #' \code{exportArms} returns a \code{data.frame} with columns:
-#' \itemize{
-#'  \item{\code{arm_num} }{The ID number for the arm in the project.}
-#'  \item{\code{name} }{The display name of the arm.}
+#' \tabular{ll}{
+#'  \code{arm_num} \tab The ID number for the arm in the project.\cr
+#'  \code{name} \tab The display name of the arm.
 #' }
 #' 
 #' \code{importArms} has no return and prints a message indicating the 
@@ -109,13 +109,13 @@ NULL
 #'   project.
 #'   
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param data A \code{data.frame} with two columns: \code{data_access_group_name}
 #'   and \code{unique_group_name}. 
 #' @param dags \code{character} vector of names matching the \code{unique_group_name}.
 #' @param refresh \code{logical(1)}. When \code{TRUE}, cached data access
 #'   group data will be refreshed after the import.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #'   
 #' @details To import new data access groups, the user must provide a value for 
 #'   \code{data_access_group_name} with no value (\code{NA}) for \code{unique_group_name}. 
@@ -131,10 +131,10 @@ NULL
 #' 
 #' @return 
 #' \code{exportDags} with the columns
-#' \itemize{
-#'   \item{\code{data_access_group_name}}{The human readable name for the data access group.}
-#'   \item{\code{unique_group_name}}{The internal unique group name}
-#'   \item{\code{data_access_group_id}}{The internal numeric identifier.}
+#' \tabular{ll}{
+#'   \code{data_access_group_name} \tab The human readable name for the data access group.\cr
+#'   \code{unique_group_name} \tab The internal unique group name.\cr
+#'   \code{data_access_group_id} \tab The internal numeric identifier.
 #' }
 #' 
 #' \code{importDags} has no return, but will print a message indicating the
@@ -185,12 +185,12 @@ NULL
 #'   in the project. 
 #'   
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param dag \code{character(1)} A unique data access group to which to 
 #'   assign the current user. Use \code{NA} to leave the user unassigned.
 #' @param refresh \code{logical(1)} If \code{TRUE}, the cached data access
 #'   group assignments will be refreshed.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #'   
 #' @return Returns \code{TRUE} when the call is completed successfully.
 #' 
@@ -225,11 +225,11 @@ NULL
 #'   to the project. 
 #'   
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param data \code{data.frame} with the columns \code{username} and 
 #'   \code{redcap_data_access_group}. The should only be one row per 
 #'   user name.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #' 
 #' @details When modifying existing assignments using the import method, 
 #'   the user must provide the
@@ -238,9 +238,9 @@ NULL
 #' 
 #' @return 
 #' \code{exportUserDagAssignments} method returns a data frame with two columns:
-#' \itemize{
-#'  \item{username}{The unique user name for each user in the project.}
-#'  \item{redcap_data_access_grou}{The unique Data Access Group name to which the user is assigned.}
+#' \tabular{ll}{
+#'  username \tab The unique user name for each user in the project.\cr
+#'  redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
 #' }
 #' 
 #' \code{importUserDagAssignments} has no return and prints a message indicating the number 
@@ -295,6 +295,8 @@ NULL
 #'   delete events. 
 #'   
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param arms \code{character} or \code{integerish} identifying the arm 
 #'   numbers for which event data will be exported.
 #' @param events \code{character} giving the unique event names
@@ -309,8 +311,6 @@ NULL
 #'   deleted and replaced with the contents of \code{data}.
 #' @param refresh \code{logical(1)} If \code{TRUE}, the cached arms data will
 #'   be refreshed after the API action is complete.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #' 
 #' @details
 #' Exporting events is not supported for classical REDCap projects. If 
@@ -338,22 +338,22 @@ NULL
 #' 
 #' @returns 
 #' \code{exportEvents} returns a data frame with the columns:
-#' \itemize{
-#'  \item{\code{event_name }}{The user provided name for the event.}
-#'  \item{\code{arm_num }}{The arm number the event is associated with.}
-#'  \item{\code{unique_event_name }}{The REDCap generated event name.}
-#'  \item{\code{custom_event_label }}{An optional user provided label that 
-#'    may be used in place of the event name.}
-#'  \item{\code{event_id }}{REDCap's internal event identifier.}
-#'  \item{\code{days_offset }}{The number of days since time zero (start of 
+#' \tabular{ll}{ 
+#'  \code{event_name } \tab The user provided name for the event.\cr
+#'  \code{arm_num } \tab The arm number the event is associated with.\cr
+#'  \code{unique_event_name } \tab The REDCap generated event name.\cr
+#'  \code{custom_event_label } \tab An optional user provided label that 
+#'    may be used in place of the event name.\cr
+#'  \code{event_id } \tab REDCap's internal event identifier.\cr
+#'  \code{days_offset } \tab The number of days since time zero (start of 
 #'    the study or project period) an event is scheduled to occur. This
-#'    field is only provided when the scheduling module is enabled.}
-#'  \item{\code{offset_min }}{The number of days before the \code{days_offset}
+#'    field is only provided when the scheduling module is enabled.\cr
+#'  \code{offset_min } \tab The number of days before the \code{days_offset}
 #'    during which the event may occur. This field is only provied when 
-#'    the scheduling module is enabled.}
-#'  \item{\code{offset_max }}{The number of days before the \code{days_offset}
-#'    during which the event may occur. This field is only provied when 
-#'    the scheduling module is enabled.}
+#'    the scheduling module is enabled.\cr
+#'  \code{offset_max } \tab The number of days before the \code{days_offset}
+#'    during which the event may occur. This field is only provided when 
+#'    the scheduling module is enabled.
 #' }
 #' 
 #' \code{importEvents} has no return and prints a message indicating how many
@@ -425,6 +425,8 @@ NULL
 #'   the full names for checkbox values.
 #'
 #' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param fields \code{character} vector of field names for which the metadata is to 
 #'   be retrieved. 
 #' @param forms \code{character} vector of forms for which the metadata is to be
@@ -441,8 +443,6 @@ NULL
 #'   for the \code{text_validation_or_show_slider_number} column.
 #' @param drop_utf8 \code{logical(1)}. When \code{TRUE}, non-ASCII characters 
 #'   will be replaced with empty characters.
-#' @inheritParams common-dot-args
-#' @inheritParams common-api-args
 #'   
 #' @details
 #' When importing meta data, the following conditions apply:
@@ -483,19 +483,19 @@ NULL
 #' \code{exportMetaData} returns a data frame. Not all 18 (or more) columns are
 #' documented here, but the most commonly used within \code{redcapAPI} are 
 #' (these may appear in a different order in the data frame):
-#' \itemize{
-#'  \item{\code{field_name} }{The name of a field in the project.}
-#'  \item{\code{filed_label} }{The human-readable form of the field name.}
-#'  \item{\code{form_name} }{The name of the form on which the field is found.}
-#'  \item{\code{field_type} }{One of two fields used to determine how a field
-#'        is transformed into an R object.}
-#'  \item{\code{select_choices_or_calculations} }{The second field used to 
-#'        determine how a field is translated into an R object.}
-#'  \item{\code{text_validation_type_or_show_slider_number} }{Describes how 
+#' \tabular{ll}{
+#'  \code{field_name} \tab The name of a field in the project.\cr
+#'  \code{filed_label} \tab The human-readable form of the field name.\cr
+#'  \code{form_name} \tab The name of the form on which the field is found.\cr
+#'  \code{field_type} \tab One of two fields used to determine how a field
+#'        is transformed into an R object.\cr
+#'  \code{select_choices_or_calculations} \tab The second field used to 
+#'        determine how a field is translated into an R object.\cr
+#'  \code{text_validation_type_or_show_slider_number} \tab Describes how 
 #'        fields are validated. For slider fields, it gives the limits and
-#'        center point to display.}
-#'  \item{\code{field_annotation} }{Contains annotations such as units of
-#'       measures. Also contains action tags.}    
+#'        center point to display.\cr
+#'  \code{field_annotation} \tab Contains annotations such as units of
+#'       measures. Also contains action tags.
 #' }
 #' 
 #' \code{importMetaData} has no return and displays a message indicating 
@@ -550,10 +550,10 @@ NULL
 #'   relevant when working with checkbox fields.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param fields \code{NULL} or \code{character(1)}. Field name to be returned.  By 
-#'   default, all fields are returned.
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
+#' @param fields \code{NULL} or \code{character(1)}. Field name to be returned.  By 
+#'   default, all fields are returned.
 #' 
 #' @details
 #' \code{exportFieldNames} returns a data frame of the field names the user
@@ -568,16 +568,16 @@ NULL
 #' export. (Signature fields also have the "file" type and are not included)
 #' 
 #' @return 
-#' #' \code{exportFieldNames} returns a data frame with the columns: 
-#' \itemize{
-#'   \item{\code{original_field_name} }{The field name as recorded in the 
-#'        data dictionary}
-#'   \item{\code{choice_value} }{represents the raw coded value for a checkbox 
-#'        choice. For non-checkbox fields, this will always be \code{NA}.}
-#'   \item{\code{export_field_name} }{The field name specific to the field.
+#' \code{exportFieldNames} returns a data frame with the columns: 
+#' \tabular{ll}{
+#'   \code{original_field_name} \tab The field name as recorded in the 
+#'        data dictionary\cr
+#'   \code{choice_value} \tab represents the raw coded value for a checkbox 
+#'        choice. For non-checkbox fields, this will always be \code{NA}.\cr
+#'   \code{export_field_name} \tab The field name specific to the field.
 #'        For non-checkbox fields, this is the same as \code{original_field_name}.
 #'        For checkbox fields, it is the field name appended with 
-#'        \code{___[choice_value]}.}
+#'        \code{___[choice_value]}.
 #' }
 #' 
 #' @seealso 

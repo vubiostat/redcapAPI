@@ -83,9 +83,9 @@ be refreshed after the API action is complete.}
 }
 \value{
 \code{exportArms} returns a \code{data.frame} with columns:
-\itemize{
- \item{\code{arm_num} }{The ID number for the arm in the project.}
- \item{\code{name} }{The display name of the arm.}
+\tabular{ll}{
+ \code{arm_num} \tab The ID number for the arm in the project.\cr
+ \code{name} \tab The display name of the arm.
 }
 
 \code{importArms} has no return and prints a message indicating the 

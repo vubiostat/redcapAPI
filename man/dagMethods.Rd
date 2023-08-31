@@ -74,10 +74,10 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportDags} with the columns
-\itemize{
-  \item{\code{data_access_group_name}}{The human readable name for the data access group.}
-  \item{\code{unique_group_name}}{The internal unique group name}
-  \item{\code{data_access_group_id}}{The internal numeric identifier.}
+\tabular{ll}{
+  \code{data_access_group_name} \tab The human readable name for the data access group.\cr
+  \code{unique_group_name} \tab The internal unique group name.\cr
+  \code{data_access_group_id} \tab The internal numeric identifier.
 }
 
 \code{importDags} has no return, but will print a message indicating the

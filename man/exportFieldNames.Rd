@@ -37,16 +37,16 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-#' \code{exportFieldNames} returns a data frame with the columns: 
-\itemize{
-  \item{\code{original_field_name} }{The field name as recorded in the 
-       data dictionary}
-  \item{\code{choice_value} }{represents the raw coded value for a checkbox 
-       choice. For non-checkbox fields, this will always be \code{NA}.}
-  \item{\code{export_field_name} }{The field name specific to the field.
+\code{exportFieldNames} returns a data frame with the columns: 
+\tabular{ll}{
+  \code{original_field_name} \tab The field name as recorded in the 
+       data dictionary\cr
+  \code{choice_value} \tab represents the raw coded value for a checkbox 
+       choice. For non-checkbox fields, this will always be \code{NA}.\cr
+  \code{export_field_name} \tab The field name specific to the field.
        For non-checkbox fields, this is the same as \code{original_field_name}.
        For checkbox fields, it is the field name appended with 
-       \code{___[choice_value]}.}
+       \code{___[choice_value]}.
 }
 }
 \description{

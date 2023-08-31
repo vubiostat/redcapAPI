@@ -102,22 +102,22 @@ numbers for which event data will be exported.}
 }
 \value{
 \code{exportEvents} returns a data frame with the columns:
-\itemize{
- \item{\code{event_name }}{The user provided name for the event.}
- \item{\code{arm_num }}{The arm number the event is associated with.}
- \item{\code{unique_event_name }}{The REDCap generated event name.}
- \item{\code{custom_event_label }}{An optional user provided label that 
-   may be used in place of the event name.}
- \item{\code{event_id }}{REDCap's internal event identifier.}
- \item{\code{days_offset }}{The number of days since time zero (start of 
+\tabular{ll}{ 
+ \code{event_name } \tab The user provided name for the event.\cr
+ \code{arm_num } \tab The arm number the event is associated with.\cr
+ \code{unique_event_name } \tab The REDCap generated event name.\cr
+ \code{custom_event_label } \tab An optional user provided label that 
+   may be used in place of the event name.\cr
+ \code{event_id } \tab REDCap's internal event identifier.\cr
+ \code{days_offset } \tab The number of days since time zero (start of 
    the study or project period) an event is scheduled to occur. This
-   field is only provided when the scheduling module is enabled.}
- \item{\code{offset_min }}{The number of days before the \code{days_offset}
+   field is only provided when the scheduling module is enabled.\cr
+ \code{offset_min } \tab The number of days before the \code{days_offset}
    during which the event may occur. This field is only provied when 
-   the scheduling module is enabled.}
- \item{\code{offset_max }}{The number of days before the \code{days_offset}
-   during which the event may occur. This field is only provied when 
-   the scheduling module is enabled.}
+   the scheduling module is enabled.\cr
+ \code{offset_max } \tab The number of days before the \code{days_offset}
+   during which the event may occur. This field is only provided when 
+   the scheduling module is enabled.
 }
 
 \code{importEvents} has no return and prints a message indicating how many
