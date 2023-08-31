@@ -64,7 +64,7 @@ existing arms data. When \code{TRUE}, all the existing arms data is
 deleted and replaced with the contents of \code{data}.}
 
 \item{arms}{\code{character} or \code{integerish} identifying the arm 
-numbers to retrieve to export or delete.}
+numbers to export or delete.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.

@@ -1,28 +1,5 @@
-#' @name deleteEvents
-#' @title Delete Events from a Project
-#' 
-#' @description This method allows you to delete Events from a project.
-#'   Notice: Because of this method's destructive nature, it is only 
-#'   available for use for projects in Development status. Additionally, 
-#'   please be aware that deleting an event will automatically delete 
-#'   any records/data that have been collected under that event 
-#'   (this is non-reversible data loss).
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param events \code{character} vector giving the unique event names
-#'   of the events to be deleted.
-#' @param refresh \code{logical(1)} If \code{TRUE}, cached event data will be 
-#'   refreshed after the deletion.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn eventsMethods Delete events from a project.
+#' @order 3
 #' @export
 
 deleteEvents <- function(rcon, 
@@ -31,7 +8,8 @@ deleteEvents <- function(rcon,
   UseMethod("deleteEvents")
 }
 
-#' @rdname deleteEvents
+#' @rdname eventsMethods
+#' @order 6
 #' @export
 
 deleteEvents <- function(rcon, 
