@@ -1,30 +1,5 @@
-#' @name deleteFromFileRepository
-#' @title Delete a Single File from the File Repository
-#' 
-#' @description Deletes a single file from the File Repository based on 
-#'   its document ID.
-#'
-#' @param rcon A \code{redcapConnection} object. 
-#' @param doc_id \code{integerish(1)} The document ID of the file to be 
-#'   deleted. 
-#' @param ... Arguments to pass to other methods.
-#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
-#'   File Repository data on \code{rcon} will be refreshed. 
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @details This method allows you to delete a single file in a project's 
-#' File Repository. Once deleted, the file will remain in the Recycle Bin 
-#' folder for up to 30 days.
-#' 
-#' @author Benjamin Nutter
-#'
+#' @describeIn fromFileRepositoryMethods Delete a file from the file repository.
+#' @order 3
 #' @export
 
 deleteFromFileRepository <- function(rcon, 
@@ -33,7 +8,8 @@ deleteFromFileRepository <- function(rcon,
   UseMethod("deleteFromFileRepository")
 }
 
-#' @rdname deleteFromFileRepository
+#' @rdname fromFileRepositoryMethods
+#' @order 6
 #' @export
 
 deleteFromFileRepository.redcapApiConnection <- function(rcon, 

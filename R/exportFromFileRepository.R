@@ -1,32 +1,5 @@
-#' @name exportFromFileRepository
-#' @title Export a File from the File Repository
-#' 
-#' @description This method allows you to download a single file stored in the 
-#'   File Repository by providing the file's \code{doc_id} number. For options
-#'   to export multiple files, see \code{exportFileRepository}.
-#'   
-#' @param rcon \code{redcapApiConnection} object. 
-#' @param doc_id \code{integerish(1)}. The document ID to be downloaded
-#' @param dir \code{character(1)}. A directory on the local system to which 
-#'   the file is to be saved. Defaults to the working directory.
-#' @param dir_create \code{logical(1)}. Create the directory \code{dir} 
-#'   if it does not already exist. Defaults to FALSE. 
-#'   If dir does not exist and create = FALSE, an error is thrown.
-#' @param ... Additional arguments to be passed between methods
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @author Benjamin Nutter
-#' 
-#' @return Returns a \code{data.frame} with the directory and 
-#'   filename of the saved file.
-#' 
+#' @describeIn fromFileRepositoryMethods Export a file from the file repository.
+#' @order 1
 #' @export
 
 exportFromFileRepository <- function(rcon, 
@@ -37,7 +10,8 @@ exportFromFileRepository <- function(rcon,
   UseMethod("exportFromFileRepository")
 }
 
-#' @rdname exportFromFileRepository
+#' @rdname fromFileRepositoryMethods
+#' @order 4
 #' @export
 
 exportFromFileRepository.redcapApiConnection <- function(rcon, 
