@@ -4,10 +4,8 @@
 \name{armsMethods}
 \alias{armsMethods}
 \alias{armsMethodsArgs}
-\alias{deleteArms,}
-\alias{exportArms,}
-\alias{importArms}
 \alias{exportArms}
+\alias{importArms}
 \alias{deleteArms}
 \alias{exportArms.redcapApiConnection}
 \alias{importArms.redcapApiConnection}

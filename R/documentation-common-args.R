@@ -8,7 +8,7 @@ NULL
 
 #' @name common-api-args
 #' @keywords internal
-#' @description Common Dots arguments
+#' @description Common API arguments
 #' 
 #' @param error_handling \code{character(1)}. One of \code{c("error", "null")}.
 #'   An option for how to handle errors returned by the API.

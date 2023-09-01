@@ -4,10 +4,8 @@
 \name{dagMethods}
 \alias{dagMethods}
 \alias{dagsMethodsArgs}
-\alias{deleteDags,}
-\alias{exportDags,}
-\alias{importDags}
 \alias{exportDags}
+\alias{importDags}
 \alias{deleteDags}
 \alias{exportDags.redcapApiConnection}
 \alias{importDags.redcapApiConnection}

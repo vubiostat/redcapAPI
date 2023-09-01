@@ -1,7 +1,5 @@
 # Arms Methods ######################################################
 #' @name armsMethods
-#' @aliases deleteArms, exportArms, importArms
-#' 
 #' @title Export, Import, and Delete Arms from a Project
 #' 
 #' @description These methods enable the user to export the current arms
@@ -106,8 +104,6 @@ armsMethodsArgs <- function(rcon, arms, data, override, refresh,
 
 # DAG Methods #######################################################
 #' @name dagMethods
-#' @aliases deleteDags, exportDags, importDags
-#' 
 #' @title Export, Import, Delete Data Access Groups from a Project
 #' 
 #' @description These methods enable the user to export existing Data Access Groups, 
@@ -233,7 +229,6 @@ switchDagsArgs <- function(rcon, dag, refresh,
 
 # DAG Assignment Methods ############################################
 #' @name dagAssignmentMethods
-#' @aliases exportUserDagAssignments, importUserDagAssignments
 #' @title Export and Import Users Assigned to Data Access Groups
 #' 
 #' @description These methods enable the user to export existing assignments 
@@ -308,7 +303,6 @@ dagAssignmentMethodsArgs <- function(rcon, data,
 
 # Events Methods ####################################################
 #' @name eventsMethods
-#' @aliases deleteEvents, exportEvents, importEvents
 #' @title Export, Import, and Delete Event Settings
 #' 
 #' @description These methods enable the user to export event settings, 
@@ -440,7 +434,6 @@ eventsMethodsArgs <- function(rcon, arms, events, data, override, refresh,
 
 # Meta Data Methods (Data Dictionary) ###############################
 #' @name metaDataMethods
-#' @aliases exportMetaData, importMetaData
 #' @title Export and Import the Project Meta Data (Data Dictionary)
 #' 
 #' @description These methods provide the user access to a REDCap project's
@@ -573,7 +566,6 @@ metaDataMethodsArgs <- function(rcon, fields, forms, data, refresh,
 
 # Export Field Names ################################################
 #' @name exportFieldNames
-#' @aliases exportFieldNames
 #' @title Export the Complete Field Names for a REDCap Project
 #' 
 #' @description This method enables the user to access the complete field 

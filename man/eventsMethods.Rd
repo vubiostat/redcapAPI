@@ -4,10 +4,8 @@
 \name{eventsMethods}
 \alias{eventsMethods}
 \alias{eventsMethodsArgs}
-\alias{deleteEvents,}
-\alias{exportEvents,}
-\alias{importEvents}
 \alias{exportEvents}
+\alias{importEvents}
 \alias{deleteEvents}
 \alias{exportEvents.redcapApiConnection}
 \alias{importEvents.redcapApiConnection}

@@ -4,9 +4,8 @@
 \name{metaDataMethods}
 \alias{metaDataMethods}
 \alias{metaDataMethodsArgs}
-\alias{exportMetaData,}
-\alias{importMetaData}
 \alias{exportMetaData}
+\alias{importMetaData}
 \alias{exportMetaData.redcapApiConnection}
 \alias{importMetaData.redcapApiConnection}
 \title{Export and Import the Project Meta Data (Data Dictionary)}

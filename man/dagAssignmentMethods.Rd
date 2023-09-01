@@ -4,9 +4,8 @@
 \name{dagAssignmentMethods}
 \alias{dagAssignmentMethods}
 \alias{dagAssignmentMethodsArgs}
-\alias{exportUserDagAssignments,}
-\alias{importUserDagAssignments}
 \alias{exportUserDagAssignments}
+\alias{importUserDagAssignments}
 \alias{exportUserDagAssignments.redcapApiConnection}
 \alias{importUserDagAssignments.redcapApiConnection}
 \title{Export and Import Users Assigned to Data Access Groups}
