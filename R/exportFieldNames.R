@@ -1,3 +1,74 @@
+#' @name exportFieldNames
+#' @title Export the Complete Field Names for a REDCap Project
+#' 
+#' @description This method enables the user to access the complete field 
+#'   names utilized during export and import methods. These are expecially
+#'   relevant when working with checkbox fields.
+#'   
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param fields \code{NULL} or \code{character(1)}. Field name to be returned.  By 
+#'   default, all fields are returned.
+#' 
+#' @details
+#' \code{exportFieldNames} returns a data frame of the field names the user
+#' may use when performing export and import functions. This is most useful 
+#' when working with checkbox fields, which have a different field name than 
+#' the one used in the Meta Data. The exported/imported field names for 
+#' checkbox fields have the pattern \code{[field_name]___[coded_checkbox_value]}
+#' (there are exactly three underscores separating the field name and the
+#' coded value).
+#' 
+#' Fields of types "calc", "file", and "descriptive" are not included in the
+#' export. (Signature fields also have the "file" type and are not included)
+#' 
+#' @return 
+#' \code{exportFieldNames} returns a data frame with the columns: 
+#' \tabular{ll}{
+#'   \code{original_field_name} \tab The field name as recorded in the 
+#'        data dictionary\cr
+#'   \code{choice_value} \tab represents the raw coded value for a checkbox 
+#'        choice. For non-checkbox fields, this will always be \code{NA}.\cr
+#'   \code{export_field_name} \tab The field name specific to the field.
+#'        For non-checkbox fields, this is the same as \code{original_field_name}.
+#'        For checkbox fields, it is the field name appended with 
+#'        \code{___[choice_value]}.
+#' }
+#' 
+#' @seealso 
+#' \code{\link{exportMetaData}},\cr
+#' \code{\link{importMetaData}}, \cr
+#' \code{\link{exportInstruments}},\cr
+#' \code{\link{exportMappings}},\cr
+#' \code{\link{importMappings}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Export all of the field names
+#' exportFieldNames(rcon)
+#' 
+#' # Export MetaData for a specific field
+#' exportFieldNames(rcon, 
+#'                  fields = "checkbox_test")
+#' }
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+exportFieldNamesArgs <- function(rcon, 
+                                 fields, 
+                                 ..., 
+                                 error_handling, 
+                                 config, 
+                                 api_param){
+  NULL
+}
+
 # Complete documentation in documentation.R
 #' @rdname exportFieldNames 
 #' @export

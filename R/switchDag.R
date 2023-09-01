@@ -1,4 +1,52 @@
-# Complete documentation in documentation.R
+#' @name switchDag
+#' @title Switch Data Access Group Assignment for the Current User
+#' 
+#' @description This method enables the current API user to switch 
+#'   (assign/reassign/unassign) their current Data Access Group assignment 
+#'   if they have been assigned to multiple DAGs via the DAG Switcher page 
+#'   in the project. 
+#'   
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param dag \code{character(1)} A unique data access group to which to 
+#'   assign the current user. Use \code{NA} to leave the user unassigned.
+#' @param refresh \code{logical(1)} If \code{TRUE}, the cached data access
+#'   group assignments will be refreshed.
+#'   
+#' @return Returns \code{TRUE} when the call is completed successfully.
+#' 
+#' @seealso 
+#' \code{\link{exportDags}},\cr
+#' \code{\link{importDags}},\cr
+#' \code{\link{deleteDags}}, \cr
+#' \code{\link{exportUserDagAssignments}}, \cr
+#' \code{\link{importUserDagAssignments}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Switch the current user to the DAG "Facility Two"
+#' switchDag(rcon, 
+#'           dag = "facility_two")
+#' }
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+switchDagArgs <- function(rcon, 
+                          dag, 
+                          refresh, 
+                          ..., 
+                          error_handling, 
+                          config, 
+                          api_param){
+  NULL
+}
+
 #' @rdname switchDag
 #' @export
 
