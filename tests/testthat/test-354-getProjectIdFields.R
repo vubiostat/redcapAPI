@@ -19,7 +19,7 @@ test_that(
     rcon2 <- rcon
     NewInfo <- data.frame(secondary_unique_field = "text_test")
     importProjectInformation(rcon2, NewInfo)
-    rcon$refresh_projectInformation()
+    rcon2$refresh_projectInformation()
     
     expect_equal(getProjectIdFields(rcon2), 
                  c("record_id", "text_test"))
