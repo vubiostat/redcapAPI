@@ -24,8 +24,13 @@ getProjectIdFields <- function(rcon){
   has_secondary_field <- 
     length(secondary_unique_field) > 0 && 
     isTRUE(!is.na(secondary_unique_field)) &&
-    isTRUE(!trimws(secondary_unique_field) %in% "") &&
-    isTRUE(secondary_unique_field %in% rcon$metadata()$field_name)
+    isTRUE(!trimws(secondary_unique_field) %in% "")
+  
+  if(isFALSE(secondary_unique_field %in% rcon$metadata()$field_name))
+  {
+    has_secondary_field <- FALSE
+    warning("Project information specifies a secondary unique field that does not exist.")
+  }
   
   if (has_secondary_field){
     c(primary_unique_field, secondary_unique_field)

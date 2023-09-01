@@ -38,6 +38,7 @@ test_that("Does not return secondary field that is not in current fields",
     rcon2 <- rcon
     rcon2$projectInformation <- function() pi
     
-    expect_equal(getProjectIdFields(rcon2), "record_id")
+    expect_warning(ids <- getProjectIdFields(rcon2), "secondary unique field that does not exist")
+    expect_equal(ids, "record_id")
   }
 )
