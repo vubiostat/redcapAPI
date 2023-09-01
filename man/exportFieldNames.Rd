@@ -2,6 +2,7 @@
 % Please edit documentation in R/documentation.R, R/exportFieldNames.R
 \name{exportFieldNames}
 \alias{exportFieldNames}
+\alias{exportFieldNamesArgs}
 \alias{exportFieldNames.redcapApiConnection}
 \title{Export the Complete Field Names for a REDCap Project}
 \usage{
@@ -19,10 +20,10 @@ exportFieldNames(rcon, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{...}{Arguments to pass to other methods}
-
 \item{fields}{\code{NULL} or \code{character(1)}. Field name to be returned.  By 
 default, all fields are returned.}
+
+\item{...}{Arguments to pass to other methods}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.

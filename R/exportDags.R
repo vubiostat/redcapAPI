@@ -8,6 +8,7 @@ exportDags <- function(rcon, ...){
 }
 
 #' @rdname dagMethods
+#' @order 4
 #' @export
 
 exportDags.redcapApiConnection <- function(rcon, 

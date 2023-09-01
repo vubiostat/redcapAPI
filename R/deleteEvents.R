@@ -12,13 +12,13 @@ deleteEvents <- function(rcon,
 #' @order 6
 #' @export
 
-deleteEvents <- function(rcon, 
-                         events         = NULL, 
-                         refresh        = TRUE,
-                         ..., 
-                         error_handling = getOption("redcap_error_handling"), 
-                         config         = list(), 
-                         api_param      = list()){
+deleteEvents.redcapApiConnection <- function(rcon, 
+                                             events         = NULL, 
+                                             refresh        = TRUE,
+                                             ..., 
+                                             error_handling = getOption("redcap_error_handling"), 
+                                             config         = list(), 
+                                             api_param      = list()){
   ###################################################################
   # Argument validation
   

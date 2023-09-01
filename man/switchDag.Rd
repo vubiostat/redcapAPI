@@ -2,6 +2,7 @@
 % Please edit documentation in R/documentation.R, R/switchDag.R
 \name{switchDag}
 \alias{switchDag}
+\alias{switchDagsArgs}
 \alias{switchDag.redcapApiConnection}
 \title{Switch Data Access Group Assignment for the Current User}
 \usage{
@@ -23,10 +24,10 @@ switchDag(rcon, dag, ...)
 \item{dag}{\code{character(1)} A unique data access group to which to 
 assign the current user. Use \code{NA} to leave the user unassigned.}
 
-\item{...}{Arguments to pass to other methods}
-
 \item{refresh}{\code{logical(1)} If \code{TRUE}, the cached data access
 group assignments will be refreshed.}
+
+\item{...}{Arguments to pass to other methods}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.

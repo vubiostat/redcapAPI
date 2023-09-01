@@ -10,6 +10,7 @@ deleteDags <- function(rcon,
 }
 
 #' @rdname dagMethods
+#' @order 6
 #' @export
 
 deleteDags.redcapApiConnection <- function(rcon, 

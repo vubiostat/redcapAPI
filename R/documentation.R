@@ -96,7 +96,13 @@
 #'            arms = c(2, 3))
 #' }
 
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+armsMethodsArgs <- function(rcon, arms, data, override, refresh, 
+                        ..., error_handling, config, api_param){
+  NULL
+}
 
 # DAG Methods #######################################################
 #' @name dagMethods
@@ -104,7 +110,7 @@ NULL
 #' 
 #' @title Export, Import, Delete Data Access Groups from a Project
 #' 
-#' @description These methods enables the user to export existing Data Access Groups, 
+#' @description These methods enable the user to export existing Data Access Groups, 
 #'   import new Data Access Groups, or delete Data Access Groups from a 
 #'   project.
 #'   
@@ -171,8 +177,13 @@ NULL
 #'            dags = c("new_dag_name"))
 #' }
 #' 
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+dagsMethodsArgs <- function(rcon, dags, data, refresh, 
+                            ..., error_handling, config, api_param){
+  NULL
+}
 
 # switchDag #########################################################
 
@@ -212,8 +223,13 @@ NULL
 #' switchDag(rcon, 
 #'           dag = "facility_two")
 #' }
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+switchDagsArgs <- function(rcon, dag, refresh, 
+                            ..., error_handling, config, api_param){
+  NULL
+}
 
 # DAG Assignment Methods ############################################
 #' @name dagAssignmentMethods
@@ -282,8 +298,13 @@ NULL
 #' importUserDagAssigments(rcon, 
 #'                         data = ForImport)
 #' }
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+dagAssignmentMethodsArgs <- function(rcon, data,
+                            ..., error_handling, config, api_param){
+  NULL
+}
 
 # Events Methods ####################################################
 #' @name eventsMethods
@@ -336,7 +357,7 @@ NULL
 #'   data loss. REDCap will only permit these actions to occur in projects
 #'   in Development status.
 #' 
-#' @returns 
+#' @return
 #' \code{exportEvents} returns a data frame with the columns:
 #' \tabular{ll}{ 
 #'  \code{event_name } \tab The user provided name for the event.\cr
@@ -349,7 +370,7 @@ NULL
 #'    the study or project period) an event is scheduled to occur. This
 #'    field is only provided when the scheduling module is enabled.\cr
 #'  \code{offset_min } \tab The number of days before the \code{days_offset}
-#'    during which the event may occur. This field is only provied when 
+#'    during which the event may occur. This field is only provided when 
 #'    the scheduling module is enabled.\cr
 #'  \code{offset_max } \tab The number of days before the \code{days_offset}
 #'    during which the event may occur. This field is only provided when 
@@ -367,7 +388,7 @@ NULL
 #' \code{\link{importMappings}}
 #' 
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
 #'              url = "your_redcap_url", 
 #'              keyring = "API_KEYs", 
@@ -409,8 +430,13 @@ NULL
 #'              events = c("event_1_arm_1", "event_1_arm_2"))
 #' }
 #' 
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+eventsMethodsArgs <- function(rcon, arms, events, data, override, refresh, 
+                            ..., error_handling, config, api_param){
+  NULL
+}
 
 # Meta Data Methods (Data Dictionary) ###############################
 #' @name metaDataMethods
@@ -420,9 +446,6 @@ NULL
 #' @description These methods provide the user access to a REDCap project's
 #'   data dictionary. The data dictionary may be exported or altered via
 #'   the import.
-#'   
-#'   The user may also access the field names in the project, including 
-#'   the full names for checkbox values.
 #'
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
@@ -459,10 +482,10 @@ NULL
 #'   
 #' Field types may be one of \code{REDCAP_METADATA_FIELDTYPE}. In the event that a 
 #'   new field type is added to REDCap and \code{redcapAPI} isn't yet updated, 
-#'   you may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
+#'   the user may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
 #'   
 #' Validation types may be one of \code{REDCAP_METADATA_VALIDATION_TYPE} or 
-#'  \code{NA}. AS with field types, additional values can be appended if
+#'  \code{NA}. As with field types, additional values can be appended if
 #'  necessary. Only fields that have a field type of "text" or "slider" 
 #'  should have a validation type. "slider" fields should be either \code{NA}
 #'  (do not display the selected number) or \code{"number"}.
@@ -537,8 +560,16 @@ NULL
 #' importMetaData(rcon, 
 #'                data = Meta)
 #' }
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+metaDataMethodsArgs <- function(rcon, fields, forms, data, refresh, 
+                                drop_utf8,
+                                ...,
+                                field_types, validation_types, 
+                                error_handling, config, api_param){
+  NULL
+}
 
 # Export Field Names ################################################
 #' @name exportFieldNames
@@ -601,5 +632,10 @@ NULL
 #' exportFieldNames(rcon, 
 #'                  fields = "checkbox_test")
 #' }
-
-NULL
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+exportFieldNamesArgs <- function(rcon, fields, 
+                                 ..., error_handling, config, api_param){
+  NULL
+}

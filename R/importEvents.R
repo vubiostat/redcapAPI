@@ -13,14 +13,14 @@ importEvents <- function(rcon,
 #' @order 5
 #' @export
 
-importEvents <- function(rcon, 
-                         data, 
-                         override       = FALSE, 
-                         refresh        = TRUE,
-                         ..., 
-                         error_handling = getOption("redcap_error_handling"), 
-                         config         = list(), 
-                         api_param      = list()){
+importEvents.redcapApiConnection <- function(rcon, 
+                                             data, 
+                                             override       = FALSE, 
+                                             refresh        = TRUE,
+                                             ..., 
+                                             error_handling = getOption("redcap_error_handling"), 
+                                             config         = list(), 
+                                             api_param      = list()){
   
   dots <- list(...)
   if ("event_data" %in% names(dots)) data <- dots$event_data
