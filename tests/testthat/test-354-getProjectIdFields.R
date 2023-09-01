@@ -16,25 +16,35 @@ test_that(
                  "record_id")
     
     # Force a secondary unique field
-    rcon2 <- rcon
     NewInfo <- data.frame(secondary_unique_field = "text_test")
-    importProjectInformation(rcon2, NewInfo)
-    rcon2$refresh_projectInformation()
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
     
-    expect_equal(getProjectIdFields(rcon2), 
+    expect_equal(getProjectIdFields(rcon), 
                  c("record_id", "text_test"))
+    
+    # Cleanup
+    NewInfo <- data.frame(secondary_unique_field = "", 
+                          surveys_enabled = 0)
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
   }
 )
 
 test_that("Does not return secondary field that is not in current fields",
   {
     # Force a secondary unique field
-    rcon2 <- rcon
     NewInfo <- data.frame(secondary_unique_field = "does_not_exist")
-    importProjectInformation(rcon2, NewInfo)
-    rcon2$refresh_projectInformation()
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
     
-    expect_warning(ids <- getProjectIdFields(rcon2), "secondary unique field that does not exist")
+    expect_warning(ids <- getProjectIdFields(rcon), "secondary unique field that does not exist")
     expect_equal(ids, "record_id")
+    
+    # Cleanup
+    NewInfo <- data.frame(secondary_unique_field = "", 
+                          surveys_enabled = 0)
+    importProjectInformation(rcon, NewInfo)
+    rcon$refresh_projectInformation()
   }
 )
