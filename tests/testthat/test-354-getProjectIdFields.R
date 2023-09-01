@@ -29,3 +29,15 @@ test_that(
     rcon$refresh_projectInformation()
   }
 )
+
+test_that("Does not return secondary field that is not in current fields",
+  {
+    pi <- rcon$projectInformation()
+    pi$secondary_unique_field <- "does_not_exist"
+    
+    rcon2 <- rcon
+    rcon2$projectInformation <- function() pi
+    
+    expect_equal(getProjectIdFields(rcon2), "record_id")
+  }
+)

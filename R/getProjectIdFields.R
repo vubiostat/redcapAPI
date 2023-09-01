@@ -24,7 +24,8 @@ getProjectIdFields <- function(rcon){
   has_secondary_field <- 
     length(secondary_unique_field) > 0 && 
     isTRUE(!is.na(secondary_unique_field)) &&
-    isTRUE(!trimws(secondary_unique_field) %in% "")
+    isTRUE(!trimws(secondary_unique_field) %in% "") &&
+    isTRUE(secondary_unique_field %in% rcon$metadata()$field_name)
   
   if (has_secondary_field){
     c(primary_unique_field, secondary_unique_field)
