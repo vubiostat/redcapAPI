@@ -1,33 +1,58 @@
-#' @export exportFileRepositoryListing
+#' @name exportFileRepositoryListing
 #' @title Export a Listing of Folders and Files in the File Repository 
 #' 
-#' @description Exports a list of folders and files saved to the file 
-#'   repository. Includes an option to explore folders recursively.
+#' @description This method enables the user to export a list of folders
+#'   and files saved to the File Repository. The listing may optionally 
+#'   include contents of subfolders.
 #'   
-#' @param rcon a \code{redcapConnection} object. 
-#' @param folder_id \code{integerish} with maximum length 1. the 
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args 
+#' @param folder_id \code{integerish(0/1)}. The 
 #'   folder ID of a specific folder in the File Repository for which you 
 #'   wish to export a list of its files and sub-folders. 
 #'   By default, the top-level directory of the File Repository will be used.
 #' @param recursive \code{logical(1)}. When \code{TRUE}, content of subfolders
 #'   will be retrieved until a full listing is produced. If \code{FALSE}, 
 #'   only the contents of the requested folder will be returned.
-#' @param ... Additional arguments to be passed between methods
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
 #' 
-#' @details This method allows you to export a list of all files and 
-#'   sub-folders from a specific folder in a project's File Repository. 
-#'   Each sub-folder will have an associated folder_id number, and each 
-#'   file will have an associated doc_id number.
+#' @return 
+#' Returns a data frame with the columns
 #' 
-#' @author Cole Beck
+#' \tabular{ll}{
+#'  \code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
+#'  \code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
+#'  \code{name} \tab The name of the folder of file. \cr
+#'  \code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0.
+#' }
+#' 
+#' @seealso
+#' \code{\link{exportFromFileRepository}}, \cr
+#' \code{\link{importToFileRepository}}, \cr
+#' \code{\link{deleteFromFileRepository}}, \cr
+#' \code{\link{exportFileRepository}}, \cr
+#' \code{\link{importFileRepository}}, \cr
+#' \code{\link{deleteFileRepository}}, \cr
+#' \code{\link{createFileRepositoryFolder}}
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' # Export the top-level listing of the File Repository
+#' exportFileRepositoryListing(rcon)
+#' 
+#' # Export the complete listing of the File Repository
+#' exportFileRepositoryListing(rcon, 
+#'                             recursive = TRUE)
+#'                             
+#' # Export the listing of a sub-folder in the File Repository
+#' exportFileRepositoryListing(rcon, 
+#'                             folder_id = 12345)
+#' }
 #' 
 #' @export
 

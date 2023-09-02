@@ -158,5 +158,6 @@ deleteFileFromRepository(rcon,
 \code{\link{exportFileRepository}}, \cr
 \code{\link{importFileRepository}}, \cr
 \code{\link{deleteFileRepository}}, \cr
-\code{\link{exportFileRepositoryListing}}
+\code{\link{exportFileRepositoryListing}}, \cr
+\code{\link{createFileRepositoryFolder}}
 }

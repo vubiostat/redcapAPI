@@ -1,37 +1,5 @@
-#' @name exportFileRepository
-#' @title Export All Files From a Directory in the File Repository
-#' 
-#' @description Exports all of the files in a directory in the File 
-#'   Repository. This is an extension of \code{exportFromFileRepository}, 
-#'   which downloads a single file and may be applied recursively to download
-#'   files in subdirectories as well.
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param folder_id \code{integerish(0/1)} The folder ID with the files to 
-#'   download. If length 0, defaults to the top-level directory.
-#' @param dir \code{character(1)}. A directory on the local system to which 
-#'   the file is to be saved. Defaults to the working directory.
-#' @param dir_create \code{logical(1)}. Create the directory \code{dir} if it 
-#'   does not already exist. Defaults to \code{FALSE}. If \code{dir} does 
-#'   not exist and \code{dir_create = FALSE}, an error is thrown.
-#' @param recursive \code{logical(1)}. If \code{TRUE}, export all subfolders 
-#'   and their files as well
-#' @param ... Additional arguments to be passed between methods
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @return 
-#' Returns a data frame listing the files that were downloaded and the 
-#'   directories in which they are saved.
-#'   
-#' @author Benjamin Nutter
-#' 
+#' @describeIn fileRepositoryMethods Export multiple files from the File Repository.
+#' @order 1
 #' @export
 
 exportFileRepository <- function(rcon, 
@@ -43,7 +11,8 @@ exportFileRepository <- function(rcon,
   UseMethod("exportFileRepository")
 }
 
-#' @rdname exportFileRepository
+#' @rdname fileRepositoryMethods
+#' @order 4
 #' @export
 
 exportFileRepository.redcapApiConnection <- function(rcon, 
