@@ -419,6 +419,13 @@ test_that(
     expect_equal(castRaw(x, "field_name", coding), 
                  c(1, 1, 2, 2, 3, 3, -4, -4, 0, 0, 
                    NA))
+    
+    
+    # A checkbox with missing values preserves the missing values (See Issue 228)
+    x <- c("0", NA, "1")
+    coding <- c(Guitar = "x", Ukulele = "y", Mandolin = "z")
+    expect_equal(castRaw(x, "field___x", coding), 
+                 c(0, NA, 1))
   }
 )
 
@@ -735,6 +742,13 @@ test_that(
     
     expect_equal(castCheckForImport("0")(x), 
                  c(0, 0, 0, 0, 0, 0, 1))
+    
+    # preserve NA values
+    
+    x[c(2, 4)] <- rep(NA, 2)
+    
+    expect_equal(castCheckForImport()(x), 
+                 c(0, NA, 0, NA, 1, 1, 0))
   }
 )
 

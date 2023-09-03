@@ -18,6 +18,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Fixed issue in importUsers where existing roles might get dropped on an update. Now handles the multiple API calls seemlessly to properly handle user roles.
 * Fixed issue with decimal validation.
 * Added renameRecord function.
+* Fixed issue with preserving missing values in preparing checkbox fields for import
+* Added `default_cast_no_factor`, a list of casting functions that may be used to cast fields without casting any fields to factors.  It comes with an equivalent alias `default_cast_character`.
 
 ## 2.7.5
 

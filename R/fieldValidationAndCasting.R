@@ -91,6 +91,14 @@
 #' \code{raw_cast} overrides all casting if passed as the \code{cast}
 #' parameter.
 #' 
+#' \code{default_cast_no_factor} is a list of casting functions that matches
+#' all of the default casts but with the exception that any fields that would
+#' have been cast to factors will instead be cast to characters. It is 
+#' provided for the user that prefers to work absent factors. The list
+#' \code{default_cast_character} is equivalent and is provided for those that
+#' prefer to describe their casting in terms of what the result is (and not
+#' what it isn't).
+#' 
 #' \code{na_values} A helper function to create a list of functions
 #' to test for NA based on field type. Useful for bulk override of
 #' NA detection for a project. The output can be directly passed to the \code{na}
@@ -159,7 +167,9 @@ castRaw <- function(x, field_name, coding){
   
   raw <- 
     if (grepl(".*___(.*)", field_name)){
-      as.character((x %in% getCheckedValue(coding, field_name)) + 0L)
+      ifelse(!is.na(x), 
+             as.character((x %in% getCheckedValue(coding, field_name)) + 0L), 
+             NA)
     } else {
       code_match <- getCodingIndex(x, coding)
       unname(coding[code_match])
@@ -246,7 +256,11 @@ castCheckCodeCharacter <- function(x, field_name, coding){
 
 castCheckForImport <- function(checked = c("Checked", "1")){
   function(x, coding, field_name){
-    (x %in% checked) + 0L
+    is_na <- is.na(x)
+    
+    out <- (x %in% checked) + 0L
+    out[is_na] <- NA
+    out
   }
 }
 
@@ -403,6 +417,11 @@ default_cast_no_factor <- list(
   sql                      = NA, 
   system                   = castLabelCharacter
 )
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+default_cast_character <- default_cast_no_factor
 
 #####################################################################
 # Unexported - default lists for exportRecordsTyped
