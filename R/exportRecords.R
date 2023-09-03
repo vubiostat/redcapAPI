@@ -21,7 +21,7 @@ exportRecords <-
     UseMethod("exportRecords")
 
 #' @rdname recordsMethods
-#' @order 6
+#' @order 4
 #' @export
 
 exportRecords.redcapApiConnection <- 

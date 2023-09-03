@@ -1,5 +1,41 @@
-#' @describeIn recordsMethods Delete records from a project.
-#' @order 5
+#' @name deleteRecords
+#' @title Delete Records from a Project
+#' 
+#' @description These methods enable the user to delete records from a project.
+#' 
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param records \code{character} or \code{integerish}. Record ID's to be 
+#'   returned.
+#' @param arm \code{integerish}. the arm number of the arm in which the 
+#'   record(s) should be deleted. This can only be used if the project is 
+#'   longitudinal with more than one arm. If the arm parameter is not 
+#'   provided, the specified records will be deleted from all arms in which 
+#'   they exist. Whereas, if \code{arm} is provided, they will only be deleted from 
+#'   the specified arm.  
+#' 
+#' @return
+#' `deleteRecords` returns a character value giving the number of records deleted.
+#' 
+#' @seealso 
+#' [exportRecords()], \cr
+#' [importRecords()], \cr
+#' [exportRecordsTyped()]
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' # Delete records
+#' deleteRecords(rcon, 
+#'               records = c("1", "2"))
+#' 
+#' }
+#' 
 #' @export
 
 deleteRecords <- function(rcon, 
@@ -9,8 +45,7 @@ deleteRecords <- function(rcon,
   UseMethod("deleteRecords")
 }
 
-#' @rdname recordsMethods
-#' @order 9
+#' @rdname deleteRecords
 #' @export
 
 deleteRecords.redcapApiConnection <- function(rcon, 

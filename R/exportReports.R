@@ -14,7 +14,7 @@ exportReports <- function(rcon,
 }
 
 #' @rdname recordsMethods
-#' @order 7
+#' @order 5
 #' @export
 
 exportReports.redcapApiConnection <- function(rcon, 

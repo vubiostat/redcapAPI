@@ -1,5 +1,106 @@
-#' @describeIn recordsMethods Import records to a project.
-#' @order 4
+#' @name importRecords
+#' @title Import Records to a Project
+#'
+#' @description These methods enable the user to import new records or update
+#'   existing records to a project. 
+#'   
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param data A \code{data.frame} to be imported to the project.
+#' @param overwriteBehavior \code{character(1)}. One of \code{c("normal", "overwrite")}. 
+#'   \code{"normal"} prevents blank fields from overwriting populated fields.  
+#'   \code{"overwrite"} causes blanks to overwrite data in the database.
+#' @param force_auto_number \code{logical(1)}. If record auto-numbering has been
+#'   enabled in the project, it may be desirable to import records where each 
+#'   record's record name is automatically determined by REDCap (just as it 
+#'   does in the user interface). When \code{TRUE}, the 
+#'   record names provided in the request will not be used (although they 
+#'   are still required in order to associate multiple rows of data to an 
+#'   individual record in the request); instead those records in the 
+#'   request will receive new record names during the import process. 
+#'   It is recommended that the user use `returnContent = "auto_ids"`
+#'   when `force_auto_number = TRUE`
+#' @param returnContent \code{character(1)}.  
+#'   One of \code{c("count", "ids", "nothing", "auto_ids")}.
+#'   'count' returns the number of records imported; 
+#'   'ids' returns the record ids that are imported;
+#'   'nothing' returns no message; 
+#'   'auto_ids' returns a list of pairs of all record IDs that were imported. 
+#'   If used when \code{force_auto_number = FALSE}, the value will be changed to \code{'ids'}.
+#' @param returnData \code{logical(1)}. When \code{TRUE}, prevents the REDCap 
+#'   import and instead returns the data frame that would have been given
+#'   for import. This is sometimes helpful if the API import fails without
+#'   providing an informative message. The data frame can be written to a csv
+#'   and uploaded using the interactive tools to troubleshoot the
+#'   problem. 
+#' @param logfile \code{character(1)}. An optional filepath (preferably .txt) 
+#'   in which to print the log of errors and warnings about the data.
+#'   When \code{""}, the log is printed to the console. 
+#' @param batch.size \code{integerish(1)}.  Specifies the number of subjects to be included 
+#'   in each batch of a batched export or import.  Non-positive numbers 
+#'   export/import the entire operation in a single batch. 
+#'   Batching may be beneficial to prevent tying up smaller servers.  
+#'   See Details.
+#'
+#' @details
+#' `importRecords` prevents the most common import errors by testing the
+#' data before attempting the import.  Namely
+#' 
+#' 1. Check that all variables in `data` exist in the REDCap data dictionary.
+#' 2. Check that the record id variable exists
+#' 3. Force the record id variable to the first position in the data frame (with a warning)
+#' 4. Remove calculated fields (with a warning)
+#' 5. Verify that REDCap date fields are represented in the data frame as either `character`, `POSIXct`, or `Date` class objects.
+#' 6. Determine if values are within their specified validation limits.
+#'
+#' See the documentation for [validateImport()] for detailed
+#' explanations of the validation. 
+#'  
+#' A 'batched' import is one where the export is performed over a series of 
+#' API calls rather than one large call.  For large projects on small servers, 
+#' this may prevent a single user from tying up the server and forcing others 
+#' to wait on a larger job.  
+#' 
+#' @return
+#' `importRecords`, when `returnData = FALSE`, returns the content from the
+#'   API response designated by the `returnContent` argument. 
+#'   
+#' `importRecords`, when `returnData = TRUE`, returns the 
+#'   data frame that was internally prepared for import. This data frame has
+#'   values transformed from R objects to character values the API will 
+#'   accept. 
+#'
+#' @seealso 
+#' [exportRecords()], \cr
+#' [deleteRecords()], \cr
+#' [exportRecordsTyped()]
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#' 
+#' # Import records
+#' NewData <- data.frame(record_id = c(1, 2, 3), 
+#'                       age = c(27, 43, 32), 
+#'                       date_of_visit = rep(Sys.Date(), 3))
+#' importRecords(rcon, 
+#'               data = NewData)
+#'               
+#'               
+#' # Import records and save validation info to a file
+#' NewData <- data.frame(record_id = c(1, 2, 3), 
+#'                       age = c(27, 43, 32), 
+#'                       date_of_visit = rep(Sys.Date(), 3))
+#' importRecords(rcon, 
+#'               data = NewData, 
+#'               logfile = "import-validation-notes.txt")      
+#' 
+#' } 
+#' 
 #' @export
 
 importRecords <- function(rcon, 
@@ -12,8 +113,7 @@ importRecords <- function(rcon,
   UseMethod("importRecords")
 }
 
-#' @rdname recordsMethods
-#' @order 8
+#' @rdname importRecords
 #' @export
 
 importRecords.redcapApiConnection <- function(rcon, 

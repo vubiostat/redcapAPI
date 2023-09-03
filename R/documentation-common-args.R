@@ -1,3 +1,14 @@
+# NOTES TO DEVELOPERS
+# The documentation elements in this file are those that are commonly used
+# across multiple functions. They are deliberately set up in a way that
+# will prevent them from having a .Rd file written AND from being included
+# in the package help index. 
+#
+# This also means devtools::document() will produce a warning
+# "File lacks name and/or title"
+# This warning should be ignored for these entries. Do not try to 
+# add a name or title these documentations.
+
 #' @name common-rcon-arg
 #' @keywords internal
 #' @description Common redcapConnection documentation (for rcon)
