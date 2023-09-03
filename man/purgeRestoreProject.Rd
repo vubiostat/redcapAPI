@@ -68,7 +68,7 @@ restoreProject(object, ...)
 )
 }
 \arguments{
-\item{object, rcon}{A \code{redcapConnection} object. Except in 
+\item{object, rcon}{A \code{redcapConnection} object. Except in
 \code{restoreProject.list}, where \code{object} is a list of data frames
 to use in restoring the project.}
 
@@ -77,20 +77,20 @@ to use in restoring the project.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
-purged from the project; or a \code{data.frame} for restoring arms 
+purged from the project; or a \code{data.frame} for restoring arms
 data via \code{importArms}.}
 
 \item{events}{Either \code{logical(1)} indicating if events data should be
-purged from the project; or a \code{data.frame} for restoring events 
+purged from the project; or a \code{data.frame} for restoring events
 data via \code{importEvents}}
 
 \item{users}{Either \code{logical(1)} indicating if users data should be
-purged from the project; or a \code{data.frame} for restoring users 
+purged from the project; or a \code{data.frame} for restoring users
 data via \code{importUsers}. NOT YET IMPLEMENTED}
 
 \item{user_roles}{Either \code{logical(1)} indicating if user roles data should be
@@ -98,73 +98,73 @@ purged from the project; or a \code{data.frame} for restoring user roles
 data via \code{importUserRoles}. NOT YET IMPLEMENTED}
 
 \item{dags}{Either \code{logical(1)} indicating if DAG data should be
-purged from the project; or a \code{data.frame} for restoring DAGs 
+purged from the project; or a \code{data.frame} for restoring DAGs
 data via \code{importDags}. NOT YET IMPLEMENTED}
 
 \item{records}{Either \code{logical(1)} indicating if user roles data should be
 purged from the project; or a \code{data.frame} for restoring user roles
 data via \code{importRecords}}
 
-\item{purge_all}{\code{logical(1)}. A shortcut option to purge all 
+\item{purge_all}{\code{logical(1)}. A shortcut option to purge all
 data elements from a project.}
 
 \item{flush}{\code{logical(1)}. If \code{TRUE}, the all caches in the connection
-object will be flushed after completing the operation. This is highly 
+object will be flushed after completing the operation. This is highly
 recommended.}
 
-\item{project_information}{\code{data.frame} for restoring data. Provides the 
+\item{project_information}{\code{data.frame} for restoring data. Provides the
 project settings to load via \code{importProjectInformation}.}
 
 \item{meta_data}{A \code{data.frame} for restoring metadata
-data via \code{importMetaData}. The API doesn't support deleting 
+data via \code{importMetaData}. The API doesn't support deleting
 metadata, but an import replaces the existing metadata.}
 
 \item{mappings}{A \code{data.frame} for restoring instrument-event mappings
-via \code{importMappings}. The API doesn't support deleting 
+via \code{importMappings}. The API doesn't support deleting
 mappings, but an import replaces the existing mappings.}
 
 \item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting 
+configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting
 repeating instruments, but an import replaces the existing instruments.
 NOT YET IMPLEMENTED}
 
-\item{user_role_assignments}{A \code{data.frame} for restoring user role 
-assignments via \code{importUserRoleAssignments}. The API doesn't support deleting 
+\item{user_role_assignments}{A \code{data.frame} for restoring user role
+assignments via \code{importUserRoleAssignments}. The API doesn't support deleting
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 
-\item{dag_assignments}{A \code{data.frame} for restoring DAG 
-assignments via \code{importDagAssignments}. The API doesn't support deleting 
+\item{dag_assignments}{A \code{data.frame} for restoring DAG
+assignments via \code{importDagAssignments}. The API doesn't support deleting
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 }
 \description{
 These functions are primarily intended to assist with testing
-  features of \code{redcapAPI}. Purging and restoring project data permits 
-  us to perform tests on different project structures without having to 
-  manage multiple projects or API tokens. 
-  
-  When purging project data, many of these actions may 
-  only be performed with a project in development status, as they are 
-  potentially destructive and may result in data loss. It is a good 
-  practice to back up your data and project structure before purging
-  a project.
+features of \code{redcapAPI}. Purging and restoring project data permits
+us to perform tests on different project structures without having to
+manage multiple projects or API tokens.
+
+When purging project data, many of these actions may
+only be performed with a project in development status, as they are
+potentially destructive and may result in data loss. It is a good
+practice to back up your data and project structure before purging
+a project.
 }
 \details{
-When restoring a project, all arguments are optional. Any argument 
-that is \code{NULL} will result in no import being made. The order of 
+When restoring a project, all arguments are optional. Any argument
+that is \code{NULL} will result in no import being made. The order of
 reconstructing the project is (purging data occurs in the reverse order):
 
 \itemize{
- \item{1. }{Update project information}
- \item{2. }{Import Arms Data}
- \item{3. }{Import Events Data}
- \item{4. }{Import Meta Data}
- \item{5. }{Import Mappings}
- \item{6. }{Import Repeating Instruments}
- \item{7. }{Import Users}
- \item{8. }{Import User Roles}
- \item{9. }{Import User Role Assignments}
- \item{10. }{Import Data Access Groups}
- \item{11. }{Import Data Access Group Assignments}
- \item{12. }{Import Records}
+\item{1. }{Update project information}
+\item{2. }{Import Arms Data}
+\item{3. }{Import Events Data}
+\item{4. }{Import Meta Data}
+\item{5. }{Import Mappings}
+\item{6. }{Import Repeating Instruments}
+\item{7. }{Import Users}
+\item{8. }{Import User Roles}
+\item{9. }{Import User Role Assignments}
+\item{10. }{Import Data Access Groups}
+\item{11. }{Import Data Access Group Assignments}
+\item{12. }{Import Records}
 }
 }

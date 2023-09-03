@@ -21,7 +21,7 @@ switchDag(rcon, dag, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{dag}{\code{character(1)} A unique data access group to which to 
+\item{dag}{\code{character(1)} A unique data access group to which to
 assign the current user. Use \code{NA} to leave the user unassigned.}
 
 \item{refresh}{\code{logical(1)} If \code{TRUE}, the cached data access
@@ -45,10 +45,10 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Returns \code{TRUE} when the call is completed successfully.
 }
 \description{
-This method enables the current API user to switch 
-  (assign/reassign/unassign) their current Data Access Group assignment 
-  if they have been assigned to multiple DAGs via the DAG Switcher page 
-  in the project.
+This method enables the current API user to switch
+(assign/reassign/unassign) their current Data Access Group assignment
+if they have been assigned to multiple DAGs via the DAG Switcher page
+in the project.
 }
 \examples{
 \dontrun{

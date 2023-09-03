@@ -33,8 +33,8 @@ importUserDagAssignments(rcon, data, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{data}{\code{data.frame} with the columns \code{username} and 
-\code{redcap_data_access_group}. The should only be one row per 
+\item{data}{\code{data.frame} with the columns \code{username} and
+\code{redcap_data_access_group}. The should only be one row per
 user name.}
 
 \item{...}{Arguments to pass to other methods}
@@ -54,23 +54,23 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \value{
 \code{exportUserDagAssignments} method returns a data frame with two columns:
 \tabular{ll}{
- username \tab The unique user name for each user in the project.\cr
- redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
+username \tab The unique user name for each user in the project.\cr
+redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
 }
 
-\code{importUserDagAssignments} has no return and prints a message indicating the number 
-  of assignments imported.
+\code{importUserDagAssignments} has no return and prints a message indicating the number
+of assignments imported.
 }
 \description{
-These methods enable the user to export existing assignments 
-  of users to Data Access Groups, or import new or updated assignments 
-  to the project.
+These methods enable the user to export existing assignments
+of users to Data Access Groups, or import new or updated assignments
+to the project.
 }
 \details{
-When modifying existing assignments using the import method, 
-  the user must provide the
-  unique user name and the group name. If the \code{redcap_data_access_group}
-  column is not provided, the REDCap user will not be assigned to any group.
+When modifying existing assignments using the import method,
+the user must provide the
+unique user name and the group name. If the \code{redcap_data_access_group}
+column is not provided, the REDCap user will not be assigned to any group.
 }
 \section{Functions}{
 \itemize{

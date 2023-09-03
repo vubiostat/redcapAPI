@@ -69,7 +69,7 @@ deleteFiles(rcon, record, field, event, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{record}{\code{character(1)} or \code{integerish(1)}. The record ID in 
+\item{record}{\code{character(1)} or \code{integerish(1)}. The record ID in
 which the desired file is stored.}
 
 \item{field}{\code{character(1)}. The field name in which the file is stored.}
@@ -78,24 +78,24 @@ which the desired file is stored.}
 This applies only to longitudinal projects.  If the event is not
 supplied for a longitudinal project, the API will return an error message}
 
-\item{repeat_instance}{\code{integerish(1)} or \code{NULL}. 
-The repeat instance number of 
-the repeating event or the repeating instrument. When available in your 
+\item{repeat_instance}{\code{integerish(1)} or \code{NULL}.
+The repeat instance number of
+the repeating event or the repeating instrument. When available in your
 instance of REDCap, and passed as \code{NULL}, the API will assume a value of 1.}
 
 \item{file}{\code{character(1)}. The file path to the file to be imported.}
 
-\item{overwrite}{\code{logical(1)}.  When \code{FALSE}, the function checks 
-if a file already exists for that record.  If a file exists, the function 
-terminates to prevent overwriting.  When \code{TRUE}, no additional 
+\item{overwrite}{\code{logical(1)}.  When \code{FALSE}, the function checks
+if a file already exists for that record.  If a file exists, the function
+terminates to prevent overwriting.  When \code{TRUE}, no additional
 check is performed.}
 
-\item{dir}{\code{character(1)}. A directory/folder to which the file 
+\item{dir}{\code{character(1)}. A directory/folder to which the file
 will be saved. By default, the working directory is used.}
 
-\item{file_prefix}{\code{logical(1)}.  Determines if a prefix is appended 
-to the file name.  The prefix takes the form 
-[record_id]-[event_name]-[file_name].  
+\item{file_prefix}{\code{logical(1)}.  Determines if a prefix is appended
+to the file name.  The prefix takes the form
+\link{record_id}-\link{event_name}-\link{file_name}.
 The file name is always the same name of the file as it exists in REDCap.}
 
 \item{...}{Arguments to pass to other methods}
@@ -114,23 +114,23 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportFiles} has no return and displays a message with file path to
-  which the exported file was saved.
-  
+which the exported file was saved.
+
 \code{importFiles} has no return and displays a message indicating whether
-  the import was successful.
+the import was successful.
 
 \code{deleteFiles} has no return and displays a message indicating whether
-  the file was successfully deleted from the project.
+the file was successfully deleted from the project.
 }
 \description{
 These methods enable to the user to export a file stored
-  in a project field, import a file, or delete an existing file.
+in a project field, import a file, or delete an existing file.
 }
 \details{
 These functions only export, import, or delete a single file.
 
-When exporting, the file can not be changed; whatever name exists in 
-REDCap is the name that will be used. The record ID and event name 
+When exporting, the file can not be changed; whatever name exists in
+REDCap is the name that will be used. The record ID and event name
 may be appended as a prefix.
 }
 \section{Functions}{

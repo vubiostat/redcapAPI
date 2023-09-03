@@ -1,4 +1,5 @@
-#' @rdname exportRecords
+#' @describeIn recordsMethods Format records from REDCap data file exports.
+#' @order 2
 #' @export
 
 exportRecords_offline <- function(dataFile, 

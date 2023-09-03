@@ -30,9 +30,9 @@ exportUserRoles(
 \item{labels}{\code{logical(1)} Indicates if the data export and form access rights are
 converted to factor objects.}
 
-\item{form_rights}{\code{logical(1)} Indicates if the form rights should be 
+\item{form_rights}{\code{logical(1)} Indicates if the form rights should be
 transformed to one column per form. The API-provided character string
-is always returned with the format [form_name]:[access_code] and a comma separating
+is always returned with the format \link{form_name}:\link{access_code} and a comma separating
 each form.}
 
 \item{...}{Arguments to be passed to other methods.}
@@ -40,8 +40,8 @@ each form.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -49,6 +49,6 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to export the list of user roles for a 
-  project, including their user privileges.
+This method allows you to export the list of user roles for a
+project, including their user privileges.
 }

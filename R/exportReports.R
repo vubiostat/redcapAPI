@@ -1,60 +1,5 @@
-#' @name exportReports 
-#' @title Export Reports from a REDCap Database
-#' 
-#' @description Exports reports from a REDCap Database and formats data if requested
-#' 
-#' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#' @param report_id Integer.  Gives the report id of the desired report. 
-#' This is located on the Report Builder page of the user interface on REDCap.
-#' @param factors Logical.  Determines if categorical data from the database 
-#' is returned as numeric codes or labelled factors.
-#' @param labels Logical.  Determines if the variable labels are applied to the data frame.
-#' @param dates Logical. Determines if date variables are converted to POSIXct format during the download.
-#' @param checkboxLabels Logical. Determines the format of labels in checkbox 
-#'   variables.  If \code{FALSE} labels are applies as "Unchecked"/"Checked".  
-#'   If \code{TRUE}, they are applied as ""/"[field_labe]" where [field_label] 
-#'   is the label assigned to the level in the data dictionary. This option 
-#'   is only available after REDCap version 6.0.
-#' @param drop An optional character vector of REDCap variable names to remove from the 
-#'   dataset; defaults to NULL. E.g., \code{drop=c("date_dmy", "treatment")} 
-#'   It is OK for drop to contain variables not present; these names are ignored.
-#' @param ... Additional arguments to be passed between methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#' 
-#' @details
-#' A record of exports through the API is recorded in the Logging section of 
-#' the project.
-#' 
-#' Reports are exported based on their id number, which can be looked up in 
-#' the Reports page of a project
-#' 
-#' @section REDCap API Documentation (6.5.0):
-#' This function allows you to export the data set of a report created on a project's 
-#' "Data Exports, Reports, and Stats" page.
-#' 
-#' Note about export rights (6.0.0+): Please be aware that Data Export user rights will be 
-#' applied to this API request. For example, if you have "No Access" data export rights 
-#' in the project, then the API report export will fail and return an error. And if you 
-#' have "De-Identified" or "Remove all tagged Identifier fields" data export rights, 
-#' then some data fields *might* be removed and filtered out of the data set returned 
-#' from the API. To make sure that no data is unnecessarily filtered out of your API 
-#' request, you should have "Full Data Set" export rights in the project.
-#' 
-#' @section REDCap Version:
-#' 6.0.0+
-#' 
-#' @section Known REDCap Limitations:
-#' None
-#' 
-#' @author Benjamin Nutter
-#' 
+#' @describeIn recordsMethods Export data via a report.
+#' @order 3
 #' @export
 
 exportReports <- function(rcon, 
@@ -68,7 +13,8 @@ exportReports <- function(rcon,
   UseMethod("exportReports")
 }
 
-#' @rdname exportReports
+#' @rdname recordsMethods
+#' @order 7
 #' @export
 
 exportReports.redcapApiConnection <- function(rcon, 

@@ -41,7 +41,8 @@
 #' \code{\link{importMetaData}}, \cr
 #' \code{\link{exportInstruments}},\cr
 #' \code{\link{exportMappings}},\cr
-#' \code{\link{importMappings}}
+#' \code{\link{importMappings}}, \cr
+#' \code{\link{exportPDF}}
 #' 
 #' @examples
 #' \dontrun{

@@ -23,8 +23,8 @@ exportNextRecordName(rcon, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -35,17 +35,17 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Returns the maximum integer record ID + 1.
 }
 \description{
-To be used by projects with record auto-numbering enabled, 
+To be used by projects with record auto-numbering enabled,
 this method exports the next potential record ID for a project.
 }
 \details{
-It generates the next record name by determining the current maximum numerical 
+It generates the next record name by determining the current maximum numerical
 record ID and then incrementing it by one.
 }
 \section{REDCap API Documentation}{
 
 
-NOTE: This method does not create a new record, but merely determines 
+NOTE: This method does not create a new record, but merely determines
 what the next record name would be.
 }
 

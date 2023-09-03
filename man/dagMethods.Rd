@@ -74,29 +74,29 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \value{
 \code{exportDags} with the columns
 \tabular{ll}{
-  \code{data_access_group_name} \tab The human readable name for the data access group.\cr
-  \code{unique_group_name} \tab The internal unique group name.\cr
-  \code{data_access_group_id} \tab The internal numeric identifier.
+\code{data_access_group_name} \tab The human readable name for the data access group.\cr
+\code{unique_group_name} \tab The internal unique group name.\cr
+\code{data_access_group_id} \tab The internal numeric identifier.
 }
 
 \code{importDags} has no return, but will print a message indicating the
-number of Data Access Groups imported. 
+number of Data Access Groups imported.
 
 \code{deleteDags} has no return, but will print a message indicating the
 number of Data Access Groups deleted.
 }
 \description{
-These methods enable the user to export existing Data Access Groups, 
-  import new Data Access Groups, or delete Data Access Groups from a 
-  project.
+These methods enable the user to export existing Data Access Groups,
+import new Data Access Groups, or delete Data Access Groups from a
+project.
 }
 \details{
-To import new data access groups, the user must provide a value for 
-  \code{data_access_group_name} with no value (\code{NA}) for \code{unique_group_name}. 
-  
-  To modify a group name, provide a new value for \code{data_access_group_name}
-  with the associated \code{unique_group_name}. If \code{unique_group_name}
-  is provided, it must match a value currently in the project.
+To import new data access groups, the user must provide a value for
+\code{data_access_group_name} with no value (\code{NA}) for \code{unique_group_name}.
+
+To modify a group name, provide a new value for \code{data_access_group_name}
+with the associated \code{unique_group_name}. If \code{unique_group_name}
+is provided, it must match a value currently in the project.
 }
 \section{Functions}{
 \itemize{

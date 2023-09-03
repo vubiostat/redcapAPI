@@ -25,13 +25,13 @@ exportFileRepositoryListing(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{folder_id}{\code{integerish(0/1)}. The 
-folder ID of a specific folder in the File Repository for which you 
-wish to export a list of its files and sub-folders. 
+\item{folder_id}{\code{integerish(0/1)}. The
+folder ID of a specific folder in the File Repository for which you
+wish to export a list of its files and sub-folders.
 By default, the top-level directory of the File Repository will be used.}
 
 \item{recursive}{\code{logical(1)}. When \code{TRUE}, content of subfolders
-will be retrieved until a full listing is produced. If \code{FALSE}, 
+will be retrieved until a full listing is produced. If \code{FALSE},
 only the contents of the requested folder will be returned.}
 
 \item{...}{Arguments to pass to other methods}
@@ -52,16 +52,16 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Returns a data frame with the columns
 
 \tabular{ll}{
- \code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
- \code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
- \code{name} \tab The name of the folder of file. \cr
- \code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0.
+\code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
+\code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
+\code{name} \tab The name of the folder of file. \cr
+\code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0.
 }
 }
 \description{
 This method enables the user to export a list of folders
-  and files saved to the File Repository. The listing may optionally 
-  include contents of subfolders.
+and files saved to the File Repository. The listing may optionally
+include contents of subfolders.
 }
 \examples{
 \dontrun{

@@ -26,15 +26,15 @@ projects also require a column for \code{event_name}.}
 
 \item{...}{additional arguments to pass to other methods.}
 
-\item{refresh}{\code{logical(1)} If \code{TRUE}, the cached 
+\item{refresh}{\code{logical(1)} If \code{TRUE}, the cached
 value of repeating instruments and events on \code{rcon} will be
 refreshed.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -42,23 +42,23 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to import a list of the repeated 
-  instruments and repeating events for a project. This includes their 
-  unique instrument name as seen in the second column of the Data 
-  Dictionary, as well as each repeating instrument's corresponding custom 
-  repeating instrument label. For longitudinal projects, the unique 
-  event name is also needed for each repeating instrument. Additionally, 
-  repeating events must be submitted as separate items, in which the 
-  instrument name will be blank/null to indicate that it is a repeating 
-  event (rather than a repeating instrument).
+This method allows you to import a list of the repeated
+instruments and repeating events for a project. This includes their
+unique instrument name as seen in the second column of the Data
+Dictionary, as well as each repeating instrument's corresponding custom
+repeating instrument label. For longitudinal projects, the unique
+event name is also needed for each repeating instrument. Additionally,
+repeating events must be submitted as separate items, in which the
+instrument name will be blank/null to indicate that it is a repeating
+event (rather than a repeating instrument).
 }
 \details{
 It should be noted that it is \emph{not} possible to update the
 \code{has_repeating_instruments_or_events} property of the project through
-\code{importProjectInformation}. Enabling of repeating instruments and 
+\code{importProjectInformation}. Enabling of repeating instruments and
 events must be done through the GUI.
 
-Although the API does not provide a delete method, it is possible to 
+Although the API does not provide a delete method, it is possible to
 remove settings by doing an import that excludes the settings you wish
 to remove. All settings can be cleared by executing
 \code{importRepeatingInstrumentsEvents(rcon, REDCAP_REPEAT_INSTRUMENT_STRUCTURE)}.

@@ -23,8 +23,8 @@ exportVersion(rcon, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -33,17 +33,17 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 Version numbers are returned as a character string.
-  This feature is available for REDCap 6.0.0 and higher.
+This feature is available for REDCap 6.0.0 and higher.
 }
 \details{
 If this function is used in a version of REDCap that does not
-  support the Export Version Number function, the character string
-  \code{'5.12.2'} is returned. This is done solely for the convenience 
-  of always returning a value that can be compared against other versions.
+support the Export Version Number function, the character string
+\code{'5.12.2'} is returned. This is done solely for the convenience
+of always returning a value that can be compared against other versions.
 }
 \section{REDCap API Documentation (6.5.0)}{
 
-This method returns the current REDCap version number as plain text 
+This method returns the current REDCap version number as plain text
 (e.g., 4.13.18, 5.12.2, 6.0.0).
 }
 

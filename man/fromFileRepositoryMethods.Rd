@@ -55,18 +55,18 @@ deleteFromFileRepository(rcon, doc_id, ...)
 
 \item{doc_id}{\code{integerish(1)}. The document ID to be downloaded.}
 
-\item{folder_id}{\code{integerish(0/1)}. The ID of the folder into which 
-the file is to be imported. If length is zero, it is imported to the 
+\item{folder_id}{\code{integerish(0/1)}. The ID of the folder into which
+the file is to be imported. If length is zero, it is imported to the
 top-level folder.}
 
-\item{dir}{\code{character(1)}. A directory on the local system to which 
+\item{dir}{\code{character(1)}. A directory on the local system to which
 the file is to be saved. Defaults to the working directory.}
 
-\item{dir_create}{\code{logical(1)}. Create the directory \code{dir} 
-if it does not already exist. Defaults to \code{FALSE}. 
+\item{dir_create}{\code{logical(1)}. Create the directory \code{dir}
+if it does not already exist. Defaults to \code{FALSE}.
 If \code{dir} does not exist and \code{create = FALSE}, an error is thrown.}
 
-\item{refresh}{\code{logical(1)} When \code{TRUE}, the cached 
+\item{refresh}{\code{logical(1)} When \code{TRUE}, the cached
 File Repository data on \code{rcon} will be refreshed.}
 
 \item{...}{Arguments to pass to other methods}
@@ -84,29 +84,29 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportFromFileRepository}, \code{importToFileRepository}, 
-  and \code{deleteFromFileRepository} earch return a data frame 
-  with the columns:
+\code{exportFromFileRepository}, \code{importToFileRepository},
+and \code{deleteFromFileRepository} earch return a data frame
+with the columns:
 \tabular{ll}{
- \code{directory} \tab The directory in which the file is saved. \cr 
- \code{filename} \tab The name of the saved file.
+\code{directory} \tab The directory in which the file is saved. \cr
+\code{filename} \tab The name of the saved file.
 }
 
-Additionally, \code{exportFromFileRepository} displays a message 
-  with the file path to which the file was saved on the local computer. 
+Additionally, \code{exportFromFileRepository} displays a message
+with the file path to which the file was saved on the local computer.
 
 \code{importToFileRepository} displays a message with the path in the
-  file repository to which the file is imported. 
-  
+file repository to which the file is imported.
+
 \code{deleteFromFileRepository} displays a message with the path on the
-  file repostiory from which the file was deleted.
+file repostiory from which the file was deleted.
 }
 \description{
 These methods enable the user to export, import, or delete
-  individual files from a REDCap project's file repository.
+individual files from a REDCap project's file repository.
 }
 \details{
-When a file is deleted, the file will remain in the Recycle Bin 
+When a file is deleted, the file will remain in the Recycle Bin
 folder for up to 30 days.
 }
 \section{Functions}{

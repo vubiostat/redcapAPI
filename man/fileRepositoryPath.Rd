@@ -7,15 +7,15 @@
 fileRepositoryPath(doc_id = numeric(0), folder_id = numeric(0), fileRepo)
 }
 \arguments{
-\item{doc_id}{\code{integerish(0/1)}. The document ID for which the 
-file path should be returned. Only one of \code{doc_id} or 
+\item{doc_id}{\code{integerish(0/1)}. The document ID for which the
+file path should be returned. Only one of \code{doc_id} or
 \code{folder_id} should be specified.}
 
-\item{folder_id}{\code{integerish(0/1)}. The folder ID for which the 
-file path should be returned. Only one of \code{doc_id} or 
+\item{folder_id}{\code{integerish(0/1)}. The folder ID for which the
+file path should be returned. Only one of \code{doc_id} or
 \code{folder_id} should be specified.}
 
-\item{fileRepo}{\code{data.frame} with the file repository listing. 
+\item{fileRepo}{\code{data.frame} with the file repository listing.
 Typically provided by \code{rcon$fileRepository()}}
 }
 \description{

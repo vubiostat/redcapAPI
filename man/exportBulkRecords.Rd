@@ -24,7 +24,7 @@ this default specify a connection's forms with NA to just get all
 data.}
 
 \item{envir}{A environment to write the resulting Records in as variables
-given by their name in rcon or if from a form their rcon named pasted to 
+given by their name in rcon or if from a form their rcon named pasted to
 their form name joined by \code{sep}. If not specified the function
 will return a named list with the results. Will accept a number of the
 environment.}
@@ -37,8 +37,8 @@ for storing variables.}
 \item{\dots}{Any additional variables to pass to \code{\link{exportRecordsTyped}}.}
 }
 \value{
-Will return a named list of the resulting records if \code{envir} is 
-   NULL. Otherwise will assign them to the specified \code{envir}.
+Will return a named list of the resulting records if \code{envir} is
+NULL. Otherwise will assign them to the specified \code{envir}.
 }
 \description{
 Exports records from multiple REDCap Databases using

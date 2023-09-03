@@ -31,65 +31,75 @@ exportLogging(
 )
 }
 \arguments{
-\item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
+\item{rcon}{A \code{redcapConnection} object.}
 
-\item{logtype}{\code{character} with maximum length of 1. The log event types to export. By 
-default, all event types are exported. Must be one of
+\item{logtype}{\code{character(0/1)}. The log event types to export.
+When the length is zero, all event types are exported. Otherwise, it
+must be one of
 \code{c("export", "manage", "user", "record", "record_add", "record_edit", "record_delete", "lock_record", "page_view")}}
 
-\item{user}{\code{character} with maximum length of 1. Users for whom to return logs. By default
+\item{user}{\code{character(0/1)}. Users for whom to return logs. By default
 logs for all users are returned.}
 
-\item{record}{\code{character} with maximum length of 1. Record ID for which logs are to be returned.
+\item{record}{\code{character(0/1)}. Record ID for which logs are to be returned.
 By default, logs are returned for all records.}
 
-\item{dag}{\code{character} with maximum length of 1. Data access group ID for which to return logs. 
+\item{dag}{\code{character(0/1)}. Data access group ID for which to return logs.
 By default, logs are returned for all data access groups.}
 
-\item{beginTime}{\code{POSIXct} with maximum length 1. When given, only 
+\item{beginTime}{\code{POSIXct(0/1)}. When given, only
 logs recorded after this time will be returned.}
 
-\item{endTime}{\code{POSIXct} with maximum length 1. When given, only logs
+\item{endTime}{\code{POSIXct(0/1)}. When given, only logs
 recorded before this time will be returned.}
 
-\item{...}{Additional arguments to be passed between methods}
+\item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link{redcapError}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
+\value{
+Returns a data frame with columns
+\tabular{ll}{
+\code{timestamp} \tab The date/time of the logging record. \cr
+\code{username} \tab The user name of the user that performed the action
+being logged. \cr
+\code{action} \tab The classification of action being logged. \cr
+\code{details} \tab Details of the action being logged. \cr
+\code{record} \tab The record ID associated with the action being logged.
+When not related to a record, this will be \code{NA}
+}
+}
 \description{
-Export the logging (audit trail) of all changes made to 
-  a project, including data exports, data changes, project 
-  metadata changes, modification of user rights, etc.
+These methods enable to user to export the logging
+(audit trail) of all changes made to a project, including data exports,
+data changes, project metadata changes, modification of user rights, etc.
 }
 \examples{
 \dontrun{
-url <- "Enter your API URL here"
-  token <- "Enter your API token here"
-  
-  rcon <- redcapConnection(url = url, 
-                           token = token)
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
                     
-  # Export all of the logging events       
-  exportLogging(rcon)
+# Export all of the logging events       
+exportLogging(rcon)
   
-  # Export all of the events for record '2'
-  exportLogging(rcon, 
-                record = "2")
+# Export all of the events for record '2'
+exportLogging(rcon, 
+              record = "2")
                 
-  #Export all of the events where a record was deleted
-  exportLoging(rcon, 
-               logtype = "record_delete")
+# Export all of the events where a record was deleted
+exportLoging(rcon, 
+             logtype = "record_delete")
 }
-}
-\author{
-Benjamin Nutter
 }

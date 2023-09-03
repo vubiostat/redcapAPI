@@ -24,12 +24,12 @@ exportReportsTyped(rcon, report_id, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object}
 
-\item{report_id}{\code{integerish(1)} The ID number of the report to 
+\item{report_id}{\code{integerish(1)} The ID number of the report to
 be exported.}
 
 \item{...}{Argument to pass to other methods.}
 
-\item{drop_fields}{\code{character}. A vector of field names to remove 
+\item{drop_fields}{\code{character}. A vector of field names to remove
 from the export. Ignore if length = 0.}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
@@ -42,15 +42,15 @@ checkbox, form_complete, sql}. The function will be provided the variables
 matching the input. It defaults to \code{\link{isNAorBlank}} for all
 entries.}
 
-\item{validation}{A named \code{list} of user specified validation functions. The 
-same named keys are supported as the na argument. The function will be 
+\item{validation}{A named \code{list} of user specified validation functions. The
+same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
 these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 are not identified as NA will be passed to validation functions.}
 
 \item{cast}{A named \code{list} of user specified class casting functions. The
-same named keys are supported as the na argument. The function will be 
+same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}}
 
@@ -74,15 +74,15 @@ delimiter for the CSV file received from the API.}
 Export a Report from a REDCap Project
 }
 \details{
-This method allows you to export the data set of a report 
-  created on a project's 'Data Exports, Reports, and Stats' page.
+This method allows you to export the data set of a report
+created on a project's 'Data Exports, Reports, and Stats' page.
 
-Note about export rights: Please be aware that Data Export user 
-rights will be applied to this API request. For example, if you have 
-'No Access' data export rights in the project, then the API report export 
-will fail and return an error. And if you have 'De-Identified' or 'Remove 
-All Identifier Fields' data export rights, then some data fields *might* 
-be removed and filtered out of the data set returned from the API. 
-To make sure that no data is unnecessarily filtered out of your API 
+Note about export rights: Please be aware that Data Export user
+rights will be applied to this API request. For example, if you have
+'No Access' data export rights in the project, then the API report export
+will fail and return an error. And if you have 'De-Identified' or 'Remove
+All Identifier Fields' data export rights, then some data fields \emph{might}
+be removed and filtered out of the data set returned from the API.
+To make sure that no data is unnecessarily filtered out of your API
 request, you should have 'Full Data Set' export rights in the project.
 }
