@@ -40,7 +40,7 @@
 #'   flag will revert to \code{FALSE}.
 #' @param checkboxLabels \code{logical(1)}. When \code{FALSE} labels are 
 #'   applied as "Unchecked"/"Checked".  
-#'   When \code{TRUE}, they are applied as ""/"[field_label]" where [field_label] 
+#'   When \code{TRUE}, they are applied as `""/[field_label]` where `[field_label]` 
 #'   is the label assigned to the level in the data dictionary. 
 #' @param form_complete_auto \code{logical(1)}. When \code{TRUE} 
 #'   (default), the \code{[form]_complete} fields for any form 

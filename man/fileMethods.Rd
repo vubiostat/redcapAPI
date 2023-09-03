@@ -95,7 +95,7 @@ will be saved. By default, the working directory is used.}
 
 \item{file_prefix}{\code{logical(1)}.  Determines if a prefix is appended
 to the file name.  The prefix takes the form
-\link{record_id}-\link{event_name}-\link{file_name}.
+\verb{[record_id]-[event_name]-[file_name]}.
 The file name is always the same name of the file as it exists in REDCap.}
 
 \item{...}{Arguments to pass to other methods}

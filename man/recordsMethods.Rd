@@ -176,7 +176,7 @@ flag will revert to \code{FALSE}.}
 
 \item{checkboxLabels}{\code{logical(1)}. When \code{FALSE} labels are
 applied as "Unchecked"/"Checked".
-When \code{TRUE}, they are applied as ""/"\link{field_label}" where \link{field_label}
+When \code{TRUE}, they are applied as \verb{""/[field_label]} where \verb{[field_label]}
 is the label assigned to the level in the data dictionary.}
 
 \item{colClasses}{Named \code{character} vector. Column classes passed to

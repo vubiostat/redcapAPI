@@ -83,11 +83,11 @@
 #'   the number of fields that were imported.
 #' 
 #' @seealso 
-#' \code{\link{exportFieldNames}},\cr
-#' \code{\link{exportInstruments}},\cr
-#' \code{\link{exportMappings}},\cr
-#' \code{\link{importMappings}}, \cr
-#' \code{\link{exportPDF}}
+#' [exportFieldNames()],\cr
+#' [exportInstruments()],\cr
+#' [exportMappings()],\cr
+#' [importMappings()], \cr
+#' [exportPdf()]
 #' 
 #' @examples
 #' \dontrun{

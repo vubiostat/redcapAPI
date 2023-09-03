@@ -94,7 +94,7 @@
 #'      today/now button is displayed for date/time fields in the UI. \cr
 #'  \code{missing_data_codes} \tab Character value giving the missing data 
 #'      codes enabled for the project. They are given in the format 
-#'      [code],[label], with each coding separated by a pipe character. \cr
+#'      `[code],[label]`, with each coding separated by a pipe character. \cr
 #'  \code{external_modules} \tab Character value listing the external modules
 #'      enabled. \cr
 #'  \code{bypass_branching_erase_field_prompt} \tab Boolean value indicating 

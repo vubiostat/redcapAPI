@@ -32,7 +32,7 @@ converted to factor objects.}
 
 \item{form_rights}{\code{logical(1)} Indicates if the form rights should be
 transformed to one column per form. The API-provided character string
-is always returned with the format \link{form_name}:\link{access_code} and a comma separating
+is always returned with the format \verb{[form_name]:[access_code]} and a comma separating
 each form.}
 
 \item{...}{Arguments to be passed to other methods.}

@@ -177,9 +177,9 @@ importMetaData(rcon,
 }
 }
 \seealso{
-\code{\link{exportFieldNames}},\cr
-\code{\link{exportInstruments}},\cr
-\code{\link{exportMappings}},\cr
-\code{\link{importMappings}}, \cr
-\code{\link{exportPDF}}
+\code{\link[=exportFieldNames]{exportFieldNames()}},\cr
+\code{\link[=exportInstruments]{exportInstruments()}},\cr
+\code{\link[=exportMappings]{exportMappings()}},\cr
+\code{\link[=importMappings]{importMappings()}}, \cr
+\code{\link[=exportPdf]{exportPdf()}}
 }

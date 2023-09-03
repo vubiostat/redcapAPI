@@ -26,7 +26,7 @@
 #'   will be saved. By default, the working directory is used.
 #' @param file_prefix \code{logical(1)}.  Determines if a prefix is appended 
 #'   to the file name.  The prefix takes the form 
-#'   [record_id]-[event_name]-[file_name].  
+#'   `[record_id]-[event_name]-[file_name]`.  
 #'   The file name is always the same name of the file as it exists in REDCap.
 #'   
 #' @details These functions only export, import, or delete a single file.

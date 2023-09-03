@@ -37,12 +37,12 @@
 #' }
 #' 
 #' @seealso 
-#' \code{\link{exportMetaData}},\cr
-#' \code{\link{importMetaData}}, \cr
-#' \code{\link{exportInstruments}},\cr
-#' \code{\link{exportMappings}},\cr
-#' \code{\link{importMappings}}, \cr
-#' \code{\link{exportPDF}}
+#' [exportMetaData()],\cr
+#' [importMetaData()], \cr
+#' [exportInstruments()],\cr
+#' [exportMappings()],\cr
+#' [importMappings()], \cr
+#' [exportPdf()]
 #' 
 #' @examples
 #' \dontrun{

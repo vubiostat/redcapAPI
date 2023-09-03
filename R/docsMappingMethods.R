@@ -33,11 +33,11 @@
 #' 
 #' 
 #' @seealso 
-#' \code{\link{exportFieldNames}},\cr
-#' \code{\link{exportInstruments}},\cr
-#' \code{\link{exportMetaData}},\cr
-#' \code{\link{importMetaData}}, \cr
-#' \code{\link{exportPDF}}
+#' [exportFieldNames()],\cr
+#' [exportInstruments()],\cr
+#' [exportMetaData()],\cr
+#' [importMetaData()], \cr
+#' [exportPdf()]
 #' 
 #' @examples
 #' \dontrun{

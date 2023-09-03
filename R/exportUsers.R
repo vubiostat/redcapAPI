@@ -11,7 +11,7 @@
 #'   converted to factor objects.
 #' @param form_rights \code{logical(1)} Indicates if the form rights should be 
 #'   transformed to one column per form. The API-provided character string
-#'   is always returned with the format [form_name]:[access_code] and a comma separating
+#'   is always returned with the format `[form_name]:[access_code]` and a comma separating
 #'   each form.
 #' @param ... Arguments to be passed to other methods.
 #' @param error_handling An option for how to handle errors returned by the API.
