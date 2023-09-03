@@ -52,7 +52,7 @@
 #'   | 2    | De-Identified                  |
 #'   | 3    | Remove Identifier Fields       |
 #'   
-#'   ## Importing Users
+#'   ## Importing Users/User Roles
 #'   
 #'   It is not required that the user provide a data frame with all of the 
 #'   fields available for modification. Only fields that are provided will

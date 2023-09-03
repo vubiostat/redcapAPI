@@ -1,42 +1,22 @@
-#' @name exportUserRoles 
-#' @title Export User Roles for a Project
-#'
-#' @description This method allows you to export the list of user roles for a 
-#'   project, including their user privileges.
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param labels \code{logical(1)} Indicates if the data export and form access rights are
-#'   converted to factor objects.
-#' @param form_rights \code{logical(1)} Indicates if the form rights should be 
-#'   transformed to one column per form. The API-provided character string
-#'   is always returned with the format `[form_name]:[access_code]` and a comma separating
-#'   each form.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn userRoleMethods Export user roles from a project. 
+#' @order 1
 #' @export
 
 exportUserRoles <- function(rcon, ...){
   UseMethod("exportUserRoles")
 }
 
-#' @rdname exportUserRoles
+#' @rdname userRoleMethods
+#' @order 4
 #' @export
 
-exportUserRoles <- function(rcon, 
-                            labels = TRUE, 
-                            form_rights = TRUE, 
-                            ..., 
-                            error_handling = getOption("redcap_error_handling"), 
-                            config = list(), 
-                            api_param = list()){
+exportUserRoles.redcapApiConnection <- function(rcon, 
+                                                labels         = TRUE, 
+                                                form_rights    = TRUE, 
+                                                ..., 
+                                                error_handling = getOption("redcap_error_handling"), 
+                                                config         = list(), 
+                                                api_param      = list()){
   ###################################################################
   # Argument Validation                                          ####
   
