@@ -35,13 +35,11 @@ renameRecord(rcon, record_name, new_record_name, arm = NULL, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{record_name}{\code{character(1)} The name of an existing record
-in the project. Will also accept \code{numeric(1)} (which will be
-coerced to a character).}
+\item{record_name}{\code{character(1)} or \code{integerish(1)}.
+The name of an existing record in the project.}
 
-\item{new_record_name}{\code{character(1)} The new name to give to the
-record. Will also accept \code{numeric(1)} (which will be coerced to
-a character).}
+\item{new_record_name}{\code{character(1)} or \code{integerish(1)}.
+The new name to give to the record.}
 
 \item{arm}{\code{character(1)} or \code{NULL}, an optional arm number.
 If \code{NULL}, then all records with same name across all arms on

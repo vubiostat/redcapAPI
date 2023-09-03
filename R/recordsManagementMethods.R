@@ -7,14 +7,12 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param record_name \code{character(1)} The name of an existing record 
-#'   in the project. Will also accept \code{numeric(1)} (which will be
-#'   coerced to a character).
-#' @param new_record_name \code{character(1)} The new name to give to the 
-#'   record. Will also accept \code{numeric(1)} (which will be coerced to 
-#'   a character).
-#' @param arm \code{character(1)} or \code{NULL}, an optional arm number. 
-#'   If \code{NULL}, then all records with same name across all arms on 
+#' @param record_name `character(1)` or `integerish(1)`. 
+#'   The name of an existing record in the project. 
+#' @param new_record_name `character(1)` or `integerish(1)`. 
+#'   The new name to give to the record. 
+#' @param arm `character(1)` or `NULL`, an optional arm number. 
+#'   If `NULL`, then all records with same name across all arms on 
 #'   which it exists (if longitudinal with multiple arms) will be 
 #'   renamed to new record name, otherwise it will rename the record 
 #'   only in the specified arm.

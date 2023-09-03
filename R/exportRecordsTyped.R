@@ -1,208 +1,5 @@
-#' @name exportRecordsTyped
-#' 
-#' @title A replacement for \code{\link{exportRecords}} with full inversion of control over 
-#'        type casting.
-#' @description Exports records from a REDCap Database, allowing for 
-#'   subsets of subjects, fields, records, and events. This function is
-#'   the long term replacement for exportRecords. 
-#'
-#' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#' @param fields \code{character} vector of fields to be returned.  If \code{NULL}, 
-#'   all fields are returned (unless \code{forms} is specified).
-#' @param drop_fields \code{character} A vector of field names to remove from 
-#'   the export. Ignore if length = 0.
-#' @param forms \code{character} vector of forms to be returned.  If \code{NULL}, 
-#'   all forms are returned (unless \code{fields} is specified.
-#' @param records \code{character} or \code{integerish}. A vector of study id's 
-#'   to be returned.  If \code{NULL}, all subjects are returned.
-#' @param events A \code{character} vector of events to be returned from a 
-#'   longitudinal database.  If \code{NULL}, all events are returned. When 
-#'   using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
-#'   and only rows that match one of the values given are returned; be advised
-#'   that misspellings may result in unexpected results.
-#' @param survey \code{logical(1)} specifies whether or not to export the survey identifier field 
-#'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
-#'   (e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-#'   If you do not pass in this flag, it will default to "true". If set to 
-#'   "true", it will return the redcap_survey_identifier field and also the 
-#'   survey timestamp field for a particular survey when at least 
-#'   one field from that survey is being exported. NOTE: If the survey 
-#'   identifier field or survey timestamp fields are imported via API data 
-#'   import, they will simply be ignored since they are not real fields in 
-#'   the project but rather are pseudo-fields.
-#' @param dag \code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
-#'   field when data access groups are utilized in the project. If you do not 
-#'   pass in this flag, it will default to "false". NOTE: This flag is only 
-#'   viable if the user whose token is being used to make the API request is 
-#'   *not* in a data access group. If the user is in a group, then this 
-#'   flag will revert to its default value.
-#' @param date_begin \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
-#'   Otherwise, records created or modified after this date will be returned.
-#' @param date_end \code{POSIXct(1)}. Ignored if \code{NULL} (default). 
-#'   Otherwise, records created or modified before this date will be returned.
-#'
-#' @param na  A named \code{list} of user specified functions to determine if the
-#'   data is NA. This is useful when data is loaded that has coding for NA, e.g.
-#'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
-#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
-#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-#'   checkbox, form_complete, sql}. The function will be provided the variables
-#'   (x, field_name, coding). The function must return a vector of logicals
-#'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
-#'   entries.
-#' @param validation A named \code{list} of user specified validation functions. The 
-#'   same named keys are supported as the na argument. The function will be 
-#'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length. Helper functions to construct
-#'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
-#'   are not identified as NA will be passed to validation functions. 
-#' @param cast A named \code{list} of user specified class casting functions. The
-#'   same named keys are supported as the na argument. The function will be 
-#'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}.
-#'   The field type \code{system} may also be used to determine how the fields
-#'   \code{redcap_event_name}, \code{redcap_repeat_instrument}, and 
-#'   \code{redcap_data_access_group} are cast.
-#' @param assignment A named \code{list} of functions. These functions are provided, field_name,
-#'   label, description and field_type and return a list of attributes to assign
-#'   to the column. Defaults to creating a label attribute from the stripped
-#'   HTML and UNICODE raw label and scanning for units={"UNITS"} in description
-#'   to use as a units attribute.
-#' @param config named \code{list}. Additional configuration parameters to pass to \code{httr::POST},
-#'   These are appended to any parameters in \code{rcon$config}
-#' @param api_param named \code{list}. Additional API parameters to pass into the body of the
-#'   API call. This provides users to execute calls with options that may not
-#'   otherwise be supported by redcapAPI.
-#' @param csv_delimiter character. One of \code{c(",", "\t", ";", "|", "^")}. Designates the
-#'   delimiter for the CSV file received from the API.
-#' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
-#'   all records are pulled. Otherwise, the records all pulled in batches of this size.
-#' @param filter_empty_rows \code{logical(1)}. Filter out empty rows post retrieval. Defaults to TRUE.
-#' @param ... Consumes any additional parameters passed. Not used.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#'   
-#' @details
-#' 
-#' In all calls, the project's ID field will be included--there is no option
-#' provided to prevent this. Additionally, if the project has a secondary
-#' unique field specified, it will also be included. Inclusion of these fields
-#' is necessary to support some post-processing functions. 
-#' 
-#' By default, the system fields \code{redcap_event_name}, 
-#' \code{redcap_repeat_instrument}, and \code{redcap_repeat_instance} are 
-#' exported (when they are appropriate to the project). These are automatically
-#' included by the API. However, \code{exportRecordsTyped} assumes that if 
-#' you include only a subset of these system fields, then you truly only 
-#' want that subset and unrequested fields will be removed. Be aware that 
-#' this may cause problems with some post-processing functions that operate
-#' on repeating instrument data. 
-#' 
-#' The combination of the project ID field, secondary unique field, and the
-#' system fields are what uniquely identify an experimental unit. In nearly 
-#' all cases, it is desirable to have them all included.
-#' 
-#' A record of exports through the API is recorded in the Logging section 
-#' of the project.
-#' 
-#' The 'offline' version of the function operates on the raw (unlabeled) data 
-#' file downloaded from REDCap along with the data dictionary.  
-#' This is made available for instances where the API can not be accessed for 
-#' some reason (such as waiting for API approval from the REDCap administrator).
-#' 
-#' A 'batched' export is one where the export is performed over a series of 
-#' API calls rather than one large call.  For large projects on small servers, 
-#' this may prevent a single user from tying up the server and forcing others 
-#' to wait on a larger job.  The batched export is performed by first 
-#' calling the API to export the subject identifier field (the first field
-#' in the meta data).  The unique ID's are then assigned a batch number with 
-#' no more than \code{batch_size} ID's in any single batch.  The batches are 
-#' exported from the API and stacked together.
-#' 
-#' In longitudinal projects, \code{batch_size} may not necessarily be the 
-#' number of records exported in each batch.  If \code{batch_size} is 10 and 
-#' there are four records per patient, each batch will consist of 40 records.  
-#' Thus, if you are concerned about tying up the server with a large, 
-#' longitudinal project, it would be prudent to use a smaller batch size.
-#' 
-#' @section Inversion of Control:
-#' 
-#' The final product of calling this is a \code{data.frame} with columns
-#' that have been type cast to most commonly used analysis class (e.g. factor).
-#' This version allows the user to override any step of this process by
-#' specifying a different function for each of the stages of the type casting.
-#' The algorithm is as follows:
-#' 
-#' 1. Detect NAs in returned data (\code{na} argument).
-#' 2. Run \code{validate} functions for the field_types.
-#' 3. On the fields that are not NA and pass validate do the specified cast.
-#' 
-#' It is expected that the \code{na} and \code{validate} overrides should
-#' rarely be used. Their exposure via the function parameters is to future
-#' proof against possible bugs in the defaults, and allows for things that
-#' higher versions of REDCap add as possible field types. I.e., the overrides
-#' are for use to continue using the library when errors or changes to REDCap
-#' occur. 
-#' 
-#' The cast override is one were users can specify things that were controlled
-#' by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
-#' an addition to allow dates in the previous version to be overridden if the 
-#' user wanted to use the Date class. In this version, it would appear called
-#' as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
-#' for a full listing of package provided cast functions.
-#' 
-#' @section REDCap API Documentation (6.5.0):
-#' This function allows you to export a set of records for a project
-#' 
-#' Note about export rights (6.0.0+): Please be aware that Data Export user rights will be 
-#' applied to this API request. For example, if you have "No Access" data export rights 
-#' in the project, then the API data export will fail and return an error. And if you 
-#' have "De-Identified" or "Remove all tagged Identifier fields" data export rights, 
-#' then some data fields *might* be removed and filtered out of the data set returned 
-#' from the API. To make sure that no data is unnecessarily filtered out of your API 
-#' request, you should have "Full Data Set" export rights in the project.
-#' 
-#' @section REDCap Version:
-#' 5.8.2+ (Perhaps earlier) 
-#' 
-#' @section Known REDCap Limitations:
-#' None
-#' 
-#' @section Deidentified Batched Calls:
-#' Batched calls to the API are not a feature of the REDCap API, but may be imposed 
-#' by making multiple calls to the API.  The process of batching the export requires
-#' that an initial call be made to the API to retrieve only the record IDs.  The
-#' list of IDs is then broken into chunks, each about the size of \code{batch.size}.
-#' The batched calls then force the \code{records} argument in each call.
-#' 
-#' When a user's permissions require a de-identified data export, a batched call 
-#' should be expected to fail.  This is because, upon export, REDCap will hash the 
-#' identifiers.  When R attempts to pass the hashed identifiers back to REDCap, 
-#' REDCap will try to match the hashed identifiers to the unhashed identifiers in the
-#' database.  No matches will be found, and the export will fail.
-#' 
-#' Users who are exporting de-identified data will have to settle for using unbatched
-#' calls to the API (ie, \code{batch_size = -1})
-#' 
-#' @importFrom utils modifyList
-#' 
-#' @examples
-#' \dontrun{
-#' #Offline Connection example
-#' rcon_off <- 
-#'   offlineConnection(
-#'     meta_data = 
-#'       system.file(file.path("extdata/offlineConnectionFiles", 
-#'                             "TestRedcapAPI_DataDictionary.csv"), 
-#'                   package = "redcapAPI"), 
-#'     records = 
-#'       system.file(file.path("extdata/offlineConnectionFiles",
-#'                             "TestRedcapAPI_Records.csv"), 
-#'                   package = "redcapAPI"))
-#'
-#' exportRecordsTyped(rcon_off)
-#' }
-#' @seealso \code{\link{exportBulkRecords}}
+#' @describeIn recordsTypedMethods Export records with type casting.
+#' @order 1
 #' @export
 
 exportRecordsTyped <-
@@ -221,7 +18,8 @@ exportRecordsTyped <-
     
     UseMethod("exportRecordsTyped")
 
-#' @rdname exportRecordsTyped
+#' @describeIn recordsTypedMethods Export records without API access.
+#' @order 3
 #' @export
 
 exportRecordsTyped.redcapApiConnection <- 
@@ -433,8 +231,8 @@ exportRecordsTyped.redcapApiConnection <-
 
 
 
-# offline function ----------------------------------------------------
-#' @rdname exportRecordsTyped
+#' @rdname recordsTypedMethods
+#' @order 4
 #' @export
 
 exportRecordsTyped.redcapOfflineConnection <- function(rcon, 
