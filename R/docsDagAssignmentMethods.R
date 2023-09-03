@@ -8,30 +8,31 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data \code{data.frame} with the columns \code{username} and 
-#'   \code{redcap_data_access_group}. The should only be one row per 
+#' @param data `data.frame` with the columns `username` and 
+#'   `redcap_data_access_group`. The should only be one row per 
 #'   user name.
 #' 
 #' @details When modifying existing assignments using the import method, 
 #'   the user must provide the
-#'   unique user name and the group name. If the \code{redcap_data_access_group}
+#'   unique user name and the group name. If the `redcap_data_access_group`
 #'   column is not provided, the REDCap user will not be assigned to any group. 
 #' 
 #' @return 
-#' \code{exportUserDagAssignments} method returns a data frame with two columns:
-#' \tabular{ll}{
-#'  username \tab The unique user name for each user in the project.\cr
-#'  redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
-#' }
+#' `exportUserDagAssignments` method returns a data frame with two columns:
 #' 
-#' \code{importUserDagAssignments} has no return and prints a message indicating the number 
+#' |            |                                                    |
+#' |------------|----------------------------------------------------|
+#' | `username` | The unique user name for each user in the project. | 
+#' | `redcap_data_access_group` | The unique Data Access Group name to which the user is assigned. |
+#' 
+#' `importUserDagAssignments` has no return and prints a message indicating the number 
 #'   of assignments imported.
 #'   
 #' @seealso 
-#' \code{\link{exportDags}},\cr
-#' \code{\link{importDags}},\cr
-#' \code{\link{deleteDags}},\cr
-#' \code{\link{switchDag}}
+#' [exportDags()],\cr
+#' [importDags()],\cr
+#' [deleteDags()],\cr
+#' [switchDag()]
 #' 
 #'@examples
 #' \dontrun{

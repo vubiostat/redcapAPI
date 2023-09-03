@@ -8,37 +8,40 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data A \code{data.frame} with two columns: \code{data_access_group_name}
-#'   and \code{unique_group_name}. 
-#' @param dags \code{character} vector of names matching the \code{unique_group_name}.
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached data access
+#' @param data A `data.frame` with two columns: `data_access_group_name`
+#'   and `unique_group_name`. 
+#' @param dags `character` vector of names matching the `unique_group_name`.
+#' @param refresh `logical(1)`. When `TRUE`, cached data access
 #'   group data will be refreshed after the import.
 #'   
 #' @details To import new data access groups, the user must provide a value for 
-#'   \code{data_access_group_name} with no value (\code{NA}) for \code{unique_group_name}. 
+#'   `data_access_group_name` with no value (`NA`) for `unique_group_name`. 
 #'   
-#'   To modify a group name, provide a new value for \code{data_access_group_name}
-#'   with the associated \code{unique_group_name}. If \code{unique_group_name}
+#'   To modify a group name, provide a new value for `data_access_group_name`
+#'   with the associated `unique_group_name`. If `unique_group_name`
 #'   is provided, it must match a value currently in the project.
-#'
-#' @seealso
-#' \code{\link{switchDag}},\cr
-#' \code{\link{exportUserDagAssignments}}, \cr
-#' \code{\link{importUserDagAssignments}}
-#' 
+#'   
 #' @return 
-#' \code{exportDags} with the columns
-#' \tabular{ll}{
-#'   \code{data_access_group_name} \tab The human readable name for the data access group.\cr
-#'   \code{unique_group_name} \tab The internal unique group name.\cr
-#'   \code{data_access_group_id} \tab The internal numeric identifier.
-#' }
+#' `exportDags` with the columns
 #' 
-#' \code{importDags} has no return, but will print a message indicating the
+#' |                          |                                                    |
+#' |--------------------------|----------------------------------------------------|
+#' | `data_access_group_name` | The human readable name for the data access group. |
+#' | `unique_group_name`      | The internal unique group name.                    |
+#' | `data_access_group_id`   | The internal numeric identifier.                   |
+#' 
+#' `importDags` has no return, but will print a message indicating the
 #' number of Data Access Groups imported. 
 #' 
-#' \code{deleteDags} has no return, but will print a message indicating the
+#' `deleteDags` has no return, but will print a message indicating the
 #' number of Data Access Groups deleted.
+#' 
+#'
+#' @seealso
+#' [switchDag()],\cr
+#' [exportUserDagAssignments()], \cr
+#' [importUserDagAssignments()]
+#' 
 #' 
 #' @examples
 #' \dontrun{

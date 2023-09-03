@@ -7,47 +7,48 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param doc_id \code{integerish(1)}. The document ID to be downloaded.
-#' @param folder_id \code{integerish(0/1)}. The ID of the folder into which 
+#' @param doc_id `integerish(1)`. The document ID to be downloaded.
+#' @param folder_id `integerish(0/1)`. The ID of the folder into which 
 #'   the file is to be imported. If length is zero, it is imported to the 
 #'   top-level folder.
 #' @param file `character(1)`. A file on the local system to be imported
 #'   to the File Repository.
-#' @param dir \code{character(1)}. A directory on the local system to which 
+#' @param dir `character(1)`. A directory on the local system to which 
 #'   the file is to be saved. Defaults to the working directory.
-#' @param dir_create \code{logical(1)}. Create the directory \code{dir} 
-#'   if it does not already exist. Defaults to \code{FALSE}. 
-#'   If \code{dir} does not exist and \code{create = FALSE}, an error is thrown.
-#' @param refresh \code{logical(1)} When \code{TRUE}, the cached 
-#'   File Repository data on \code{rcon} will be refreshed. 
+#' @param dir_create `logical(1)`. Create the directory `dir` 
+#'   if it does not already exist. Defaults to `FALSE`. 
+#'   If `dir` does not exist and `create = FALSE`, an error is thrown.
+#' @param refresh `logical(1)` When `TRUE`, the cached 
+#'   File Repository data on `rcon` will be refreshed. 
 #' 
 #' @details When a file is deleted, the file will remain in the Recycle Bin 
 #' folder for up to 30 days.
 #' 
 #' @return 
-#' \code{exportFromFileRepository}, \code{importToFileRepository}, 
-#'   and \code{deleteFromFileRepository} earch return a data frame 
+#' `exportFromFileRepository`, `importToFileRepository`, 
+#'   and `deleteFromFileRepository` each return a data frame 
 #'   with the columns:
-#' \tabular{ll}{
-#'  \code{directory} \tab The directory in which the file is saved. \cr 
-#'  \code{filename} \tab The name of the saved file.
-#' }
+#' |             |                                           |
+#' |-------------|-------------------------------------------|
+#' | `directory` | The directory in which the file is saved. | 
+#' | `filename`  | The name of the saved file.               |
+#'
 #' 
-#' Additionally, \code{exportFromFileRepository} displays a message 
+#' Additionally, `exportFromFileRepository` displays a message 
 #'   with the file path to which the file was saved on the local computer. 
 #' 
-#' \code{importToFileRepository} displays a message with the path in the
+#' `importToFileRepository` displays a message with the path in the
 #'   file repository to which the file is imported. 
 #'   
-#' \code{deleteFromFileRepository} displays a message with the path on the
+#' `deleteFromFileRepository` displays a message with the path on the
 #'   file repostiory from which the file was deleted.
 #'   
 #' @seealso
-#' \code{\link{exportFileRepository}}, \cr
-#' \code{\link{importFileRepository}}, \cr
-#' \code{\link{deleteFileRepository}}, \cr
-#' \code{\link{exportFileRepositoryListing}}, \cr
-#' \code{\link{createFileRepositoryFolder}}
+#' [exportFileRepository()], \cr
+#' [importFileRepository()], \cr
+#' [deleteFileRepository()], \cr
+#' [exportFileRepositoryListing()], \cr
+#' [createFileRepositoryFolder()]
 #'   
 #' @examples
 #' \dontrun{

@@ -9,27 +9,26 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param arms \code{integerish} A vector of arm numbers that you wish to pull events for (by default,
-#'   all events are pulled). Will also accept \code{character}, but will coerce
+#' @param arms `integerish` A vector of arm numbers that you wish to pull events for (by default,
+#'   all events are pulled). Will also accept `character`, but will coerce
 #'   it to numeric before processing.
-#' @param data \code{data.frame} with columns \code{arm_num}, 
-#'   \code{unique_event_name}, and \code{form}. See Details
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached mappings 
-#'   in the \code{rcon} object are refreshed after the import.
+#' @param data `data.frame` with columns `arm_num`, `unique_event_name`, 
+#'   and `form`. See Details
+#' @param refresh `logical(1)`. When `TRUE`, cached mappings in the `rcon` 
+#'   object are refreshed after the import.
 #'   
 #' @details These methods are only applicable to longitudinal projects.
 #'   If the project information reports that the project is not longitudinal, 
 #'   a data frame with 0 rows is returned without calling the API. 
 #'  
 #' @return 
-#' \code{exportMappings} returns a data frame with the columns:
-#' \tabular{ll}{
-#'  \code{arm_num} \tab The arm number for the unique event mapped to the 
-#'    instrument. \cr
-#'  \code{unique_event_name} \tab The unique event name to which the 
-#'    instrument is assigned. \cr
-#'  \code{form} \tab The REDCap assigned instrument name mapped to the event.
-#' } 
+#' `exportMappings` returns a data frame with the columns:
+#' 
+#' |                     |                                                               |
+#' |---------------------|---------------------------------------------------------------|
+#' | `arm_num`           | The arm number for the unique event mapped to the instrument. | 
+#' | `unique_event_name` | The unique event name to which the instrument is assigned.    | 
+#' | `form`              | The REDCap assigned instrument name mapped to the event.      |
 #' 
 #' 
 #' @seealso 

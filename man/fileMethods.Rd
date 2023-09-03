@@ -78,8 +78,7 @@ which the desired file is stored.}
 This applies only to longitudinal projects.  If the event is not
 supplied for a longitudinal project, the API will return an error message}
 
-\item{repeat_instance}{\code{integerish(1)} or \code{NULL}.
-The repeat instance number of
+\item{repeat_instance}{\code{integerish(1)} or \code{NULL}. The repeat instance number of
 the repeating event or the repeating instrument. When available in your
 instance of REDCap, and passed as \code{NULL}, the API will assume a value of 1.}
 
@@ -94,8 +93,7 @@ check is performed.}
 will be saved. By default, the working directory is used.}
 
 \item{file_prefix}{\code{logical(1)}.  Determines if a prefix is appended
-to the file name.  The prefix takes the form
-\verb{[record_id]-[event_name]-[file_name]}.
+to the file name.  The prefix takes the form \verb{[record_id]-[event_name]-[file_name]}.
 The file name is always the same name of the file as it exists in REDCap.}
 
 \item{...}{Arguments to pass to other methods}

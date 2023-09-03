@@ -7,15 +7,16 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data \code{data.frame} with columns \code{username} and 
-#'   \code{unique_role_name}. Each \code{username} must be unique. 
-#'   Users without a \code{unique_role_name} will not be assigned to 
+#' @param data `data.frame` with columns `username` and 
+#'   `unique_role_name`. Each `username` must be unique. 
+#'   Users without a `unique_role_name` will not be assigned to 
 #'   a user role.
-#' @param refresh \code{logical(1)}. When \code{TRUE}, the cached value
-#'   in \code{rcon} will be refreshed after the import.
+#' @param refresh `logical(1)`. When `TRUE`, the cached value
+#'   in `rcon` will be refreshed after the import.
 #'   
 #' @return 
 #' `exportUserRoleAssignments` returns a data frame with the columns:
+#' 
 #' |                      |                                                      |
 #' |----------------------|------------------------------------------------------|
 #' | `username`           | Username of a user in the project.                   | 

@@ -8,60 +8,60 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param folder_id \code{integerish(0/1)} The folder ID with the files to 
+#' @param folder_id `integerish(0/1)` The folder ID with the files to 
 #'   download. If length 0, defaults to the top-level directory.
-#' @param dir \code{character(1)}. A directory on the local system to which 
+#' @param dir `character(1)`. A directory on the local system to which 
 #'   the files are to be saved. Defaults to the working directory.
-#' @param dir_create \code{logical(1)}. When \code{TRUE} create the directory 
-#'   \code{dir} if it does not already exist. Defaults to \code{FALSE}. 
-#'   If \code{dir} does not exist and \code{dir_create = FALSE}, an error is thrown.
-#' @param recursive \code{logical(1)}. When \code{TRUE}, export all subfolders 
+#' @param dir_create `logical(1)`. When `TRUE` create the directory 
+#'   `dir` if it does not already exist. Defaults to `FALSE`. 
+#'   If `dir` does not exist and `dir_create = FALSE`, an error is thrown.
+#' @param recursive `logical(1)`. When `TRUE`, export all subfolders 
 #'   and their files as well.
-#' @param refresh \code{logical(1)}. When \code{TRUE} (default), the cached 
-#'   File Repository data on \code{rcon} will be refreshed.
-#' @param dag_id \code{integerish(0/1)} The ID of a data access group. When 
+#' @param refresh `logical(1)`. When `TRUE` (default), the cached 
+#'   File Repository data on `rcon` will be refreshed.
+#' @param dag_id `integerish(0/1)` The ID of a data access group. When 
 #'   provided, access to the folder will be restricted to the DAG.
-#' @param role_id \code{integerish(0/1)} The ID of a role. When provided, 
+#' @param role_id `integerish(0/1)` The ID of a role. When provided, 
 #'   access to the folder will be restricted to users with that role.
-#' @param confirm \code{character}. One of \code{c("ask", "no", "yes")}. 
-#'   When \code{"ask"}, user will be prompted to confirm the deletion. 
-#'   When \code{"no"}, the function will terminate with no action. When 
-#'   \code{"yes"}, the function will proceed without confirmation (useful
+#' @param confirm `character`. One of `c("ask", "no", "yes")`. 
+#'   When `"ask"`, user will be prompted to confirm the deletion. 
+#'   When `"no"`, the function will terminate with no action. When 
+#'   `"yes"`, the function will proceed without confirmation (useful
 #'   for automated processes).
 #'
-#' @details \code{deleteFileRepository} will only delete files and cannot
+#' @details `deleteFileRepository` will only delete files and cannot
 #'   delete folders. 
 #'   
 #'   Deleted files will remain in the recycling bin for up to 30 days. 
 #'   
 #' @return 
-#' \code{exportFileRepository} and \code{importFileRepository} display messages 
+#' `exportFileRepository` and `importFileRepository` display messages 
 #' giving the directory to which files were saved to the local machine and 
 #' File Repository, respectively. They also return a data frame with the columns: 
 #' 
-#' \tabular{ll}{
-#'  \code{directory} \tab The directory in which the file is saved. \cr 
-#'  \code{filename} \tab The name of the saved file.
-#' }
+#' |             |                                           |
+#' |-------------|-------------------------------------------|
+#' | `directory` | The directory in which the file is saved. | 
+#' | `filename`  |  The name of the saved file.              |
 #' 
-#' \code{deleteFileRepository} displays a message giving the files that were 
+#' `deleteFileRepository` displays a message giving the files that were 
 #' deleted from the File Repository. It also returns a data frame with the 
 #' columns:
 #' 
-#' \tabular{ll}{
-#'  \code{folder_id} \tab The REDCap assigned ID number for the folder.
-#'      This will be \code{NA} for files. \cr
-#'  \code{doc_id} \tab The REDCap assigned ID number for the file. \cr
-#'  \code{name} \tab The filename of the deleted files. \cr
-#'  \code{parent_folder} \tab The folder ID of parent folder.
-#' }
+#' |                |                                                                           |
+#' |----------------|---------------------------------------------------------------------------|
+#' | `folder_id`    | The REDCap assigned ID number for the folder. This will be `NA` for files.|
+#' | `doc_id`       | The REDCap assigned ID number for the file.                               |
+#' | `name`         | The filename of the deleted files.                                        |
+#' |`parent_folder` | The folder ID of parent folder.                                           |
+#'
 #' 
 #' @seealso 
-#' \code{\link{exportFromFileRepository}}, \cr
-#' \code{\link{importToFileRepository}}, \cr
-#' \code{\link{deleteFromFileRepository}}, \cr
-#' \code{\link{exportFileRepositoryListing}}, \cr
-#' \code{\link{createFileRepositoryFolder}}
+#' [exportFromFileRepository()], \cr
+#' [importToFileRepository()], \cr
+#' [deleteFromFileRepository()], \cr
+#' [exportFileRepositoryListing()], \cr
+#' [createFileRepositoryFolder()]
 #' 
 #' @examples
 #' \dontrun{

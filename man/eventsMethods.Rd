@@ -53,20 +53,19 @@ deleteEvents(rcon, events = NULL, ...)
 \item{arms}{\code{character} or \code{integerish} identifying the arm
 numbers for which event data will be exported.}
 
-\item{events}{\code{character} giving the unique event names
-of the events to be deleted.}
+\item{events}{\code{character} giving the unique event names of the events to
+be deleted.}
 
-\item{data}{\code{data.frame}. Must have columns \code{event_name}
-and \code{arm_num}. To modify existing events, it must also have a column
-\code{unique_event_name}. It may optionally have columns for
-\code{days_offset}, \code{offset_min}, \code{offset_max}.
+\item{data}{\code{data.frame}. Must have columns \code{event_name} and \code{arm_num}.
+To modify existing events, it must also have a column \code{unique_event_name}.
+It may optionally have columns for \code{days_offset}, \code{offset_min}, \code{offset_max}.
 For backward compatibility, this argument may be passed as \code{event_data}.}
 
 \item{override}{\code{logical(1)}. By default, data will add to or modify
 existing arms data. When \code{TRUE}, all the existing arms data is
 deleted and replaced with the contents of \code{data}.}
 
-\item{refresh}{\code{logical(1)} If \code{TRUE}, the cached arms data will
+\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached arms data will
 be refreshed after the API action is complete.}
 
 \item{...}{Arguments to pass to other methods}
@@ -84,24 +83,18 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportEvents} returns a data frame with the columns:
-\tabular{ll}{
-\code{event_name } \tab The user provided name for the event.\cr
-\code{arm_num } \tab The arm number the event is associated with.\cr
-\code{unique_event_name } \tab The REDCap generated event name.\cr
-\code{custom_event_label } \tab An optional user provided label that
-may be used in place of the event name.\cr
-\code{event_id } \tab REDCap's internal event identifier.\cr
-\code{days_offset } \tab The number of days since time zero (start of
-the study or project period) an event is scheduled to occur. This
-field is only provided when the scheduling module is enabled.\cr
-\code{offset_min } \tab The number of days before the \code{days_offset}
-during which the event may occur. This field is only provided when
-the scheduling module is enabled.\cr
-\code{offset_max } \tab The number of days before the \code{days_offset}
-during which the event may occur. This field is only provided when
-the scheduling module is enabled.
+\code{exportEvents} returns a data frame with the columns:\tabular{ll}{
+    \tab  \cr
+   event_name \tab The user provided name for the event. \cr
+   arm_num \tab The arm number the event is associated with. \cr
+   unique_event_name \tab The REDCap generated event name. \cr
+   custom_event_label \tab An optional user provided label that may be used in place of the event name. \cr
+   event_id \tab REDCap's internal event identifier. \cr
+   days_offset \tab The number of days since time zero (start of the study or project period) an event is scheduled to occur. This field is only provided when the scheduling module is enabled. \cr
+   offset_min \tab The number of days before the \code{days_offset} during which the event may occur. This field is only provided when the scheduling module is enabled. \cr
+   offset_max \tab The number of days before the \code{days_offset} during which the event may occur. This field is only provided when  the scheduling module is enabled. \cr
 }
+
 
 \code{importEvents} has no return and prints a message indicating how many
 events were added or modified.
@@ -192,6 +185,6 @@ deleteEvents(rcon,
 
 }
 \seealso{
-\code{\link{exportMappings}}, \cr
-\code{\link{importMappings}}
+\code{\link[=exportMappings]{exportMappings()}}, \cr
+\code{\link[=importMappings]{importMappings()}}
 }

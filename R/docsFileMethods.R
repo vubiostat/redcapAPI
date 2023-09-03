@@ -7,26 +7,24 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param record \code{character(1)} or \code{integerish(1)}. The record ID in 
+#' @param record `character(1)` or `integerish(1)`. The record ID in 
 #'   which the desired file is stored. 
-#' @param field \code{character(1)}. The field name in which the file is stored. 
-#' @param event \code{character(1)} or \code{NULL}. The event name for the file.  
+#' @param field `character(1)`. The field name in which the file is stored. 
+#' @param event `character(1)` or `NULL`. The event name for the file.  
 #'   This applies only to longitudinal projects.  If the event is not
 #'   supplied for a longitudinal project, the API will return an error message
-#' @param repeat_instance \code{integerish(1)} or \code{NULL}. 
-#'   The repeat instance number of 
+#' @param repeat_instance `integerish(1)` or `NULL`. The repeat instance number of 
 #'   the repeating event or the repeating instrument. When available in your 
-#'   instance of REDCap, and passed as \code{NULL}, the API will assume a value of 1.
-#' @param file \code{character(1)}. The file path to the file to be imported.
-#' @param overwrite \code{logical(1)}.  When \code{FALSE}, the function checks 
+#'   instance of REDCap, and passed as `NULL`, the API will assume a value of 1.
+#' @param file `character(1)`. The file path to the file to be imported.
+#' @param overwrite `logical(1)`.  When `FALSE`, the function checks 
 #'   if a file already exists for that record.  If a file exists, the function 
-#'   terminates to prevent overwriting.  When \code{TRUE}, no additional 
+#'   terminates to prevent overwriting.  When `TRUE`, no additional 
 #'   check is performed.
-#' @param dir \code{character(1)}. A directory/folder to which the file 
+#' @param dir `character(1)`. A directory/folder to which the file 
 #'   will be saved. By default, the working directory is used.
-#' @param file_prefix \code{logical(1)}.  Determines if a prefix is appended 
-#'   to the file name.  The prefix takes the form 
-#'   `[record_id]-[event_name]-[file_name]`.  
+#' @param file_prefix `logical(1)`.  Determines if a prefix is appended 
+#'   to the file name.  The prefix takes the form `[record_id]-[event_name]-[file_name]`.  
 #'   The file name is always the same name of the file as it exists in REDCap.
 #'   
 #' @details These functions only export, import, or delete a single file.
@@ -36,13 +34,13 @@
 #' may be appended as a prefix.
 #' 
 #' @return 
-#' \code{exportFiles} has no return and displays a message with file path to
+#' `exportFiles` has no return and displays a message with file path to
 #'   which the exported file was saved.
 #'   
-#' \code{importFiles} has no return and displays a message indicating whether
+#' `importFiles` has no return and displays a message indicating whether
 #'   the import was successful.
 #'
-#' \code{deleteFiles} has no return and displays a message indicating whether
+#' `deleteFiles` has no return and displays a message indicating whether
 #'   the file was successfully deleted from the project.
 #'   
 #' @examples

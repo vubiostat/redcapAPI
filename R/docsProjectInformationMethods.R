@@ -8,101 +8,77 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data \code{data.frame} with only one row and any subset of allowable fields to be
+#' @param data `data.frame` with only one row and any subset of allowable fields to be
 #'   updated. See Details.
-#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached project information
+#' @param refresh `logical(1)`. If `TRUE`, the cached project information
 #'   will be updated after the import.
 #'   
 #' @details
 #' When importing, fields that are not editable will be quietly removed prior to 
 #'   import. This allows the user to use the result of 
-#'   \code{exportProjectInformation} as a template for the import.
+#'   `exportProjectInformation` as a template for the import.
 #'   
 #'   For any values that are boolean, they should be represented as either a '0' 
 #'   (no/false) or '1' (yes/true).
 #'   
-#'   It is not required for \code{data} to have all of the fields, but only
+#'   It is not required for `data` to have all of the fields, but only
 #'   the fields the user wishes to update (see examples). 
 #'   
 #'   The following project attributes can be updated:
 #' 
-#' \itemize{
-#'  \item{\code{project_title}}
-#'  \item{\code{project_language}}
-#'  \item{\code{purpose}}
-#'  \item{\code{purpose_other}}
-#'  \item{\code{project_notes}}
-#'  \item{\code{custom_record_label}}
-#'  \item{\code{secondary_unique_field}}
-#'  \item{\code{is_longitudinal}}
-#'  \item{\code{surveys_enabled}}
-#'  \item{\code{scheduling_enabled}}
-#'  \item{\code{record_autonumbering_enabled}}
-#'  \item{\code{randomization_enabled}}
-#'  \item{\code{project_irb_number}}
-#'  \item{\code{project_grant_number}}
-#'  \item{\code{project_pi_firstname}}
-#'  \item{\code{project_pi_lastname}}
-#'  \item{\code{display_today_now_button}}
-#'  \item{\code{bypass_branching_erase_field_prompt}}
-#' }
+#' * project_title
+#' * project_language
+#' * purpose
+#' * purpose_other
+#' * project_notes
+#' * custom_record_label
+#' * secondary_unique_field
+#' * is_longitudinal
+#' * surveys_enabled
+#' * scheduling_enabled
+#' * record_autonumbering_enabled
+#' * randomization_enabled
+#' * project_irb_number
+#' * project_grant_number
+#' * project_pi_firstname
+#' * project_pi_lastname
+#' * display_today_now_button
+#' * bypass_branching_erase_field_prompt
 #' 
 #' @return
-#' \code{exportProjectInformation} returns a data frame with the columns
-#' \tabular{ll}{
-#'  \code{project_id} \tab The internal ID number assigned to the project. \cr
-#'  \code{project_title} \tab The project title given to the project. \cr
-#'  \code{creation_time} \tab The date/time the project was created. \cr
-#'  \code{production_time} \tab The date/time the project was moved into 
-#'      production status. \cr
-#'  \code{in_production} \tab Boolean value indicating if the project is 
-#'      in production status. \cr
-#'  \code{project_language} \tab The language associated with the project. \cr
-#'  \code{purpose} \tab An integerish value identifying the purpose of the 
-#'      project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research', 
-#'      3 = 'Quality Improvement', 4 = 'Operational Support'. \cr
-#'  \code{purpose_other} \tab The user supplied character value given when
-#'      the project purpose is 'Other'. \cr
-#'  \code{project_notes} \tab The user supplied notes about the project. \cr
-#'  \code{custom_record_label} \tab The user provided custom label for the 
-#'      record identifier field. \cr
-#'  \code{secondary_unique_field} \tab The name of the secondary unique 
-#'      field, if this has been configured. \cr 
-#'  \code{is_longitudinal} \tab Boolean value indicating if the project is
-#'      a longitudinal project. \cr
-#'  \code{has_repeating_instruments_or_events} \tab Boolean value indicating
-#'      if the repeating instruments or events module has been enabled. \cr
-#'  \code{surveys_enabled} \tab Boolean value indicating if the surveys
-#'      module has been enabled. \cr
-#'  \code{scheduling_enabled} \tab Boolean value indicating if the scheduling
-#'      module has been enabled. \cr
-#'  \code{record_autonumbering_enabled} \tab Boolean value indicating if the
-#'      record autonumbering feature has been enabled. \cr
-#'  \code{randomization_enabled} \tab Boolean value indicating if the 
-#'      randomization module has been enabled. \cr
-#'  \code{ddp_enabled} \tab Boolean value indicating if dynamic data pull
-#'      has been enabled for a project (may only be enabled by a 
-#'      REDCap administrator). \cr
-#'  \code{project_irb_number} \tab The user provided IRB number for the project. \cr
-#'  \code{project_grant_number} \tab The user provided grant number for
-#'      the project. \cr
-#'  \code{project_pi_firstname} \tab The first name of the principal 
-#'      investigator. \cr
-#'  \code{project_pi_lastname} \tab The last name of the principal 
-#'      investigator. \cr
-#'  \code{display_today_now_button} \tab Boolean value indicating if the 
-#'      today/now button is displayed for date/time fields in the UI. \cr
-#'  \code{missing_data_codes} \tab Character value giving the missing data 
-#'      codes enabled for the project. They are given in the format 
-#'      `[code],[label]`, with each coding separated by a pipe character. \cr
-#'  \code{external_modules} \tab Character value listing the external modules
-#'      enabled. \cr
-#'  \code{bypass_branching_erase_field_prompt} \tab Boolean value indicating 
-#'      if the box for "Prevent branching logic from hiding fields that have values"
-#'      has been checked under "Additional Customizations."
-#' }
+#' `exportProjectInformation` returns a data frame with the columns
 #' 
-#' \code{importProjectInformation} has no return and displays a message 
+#' |              |                                                 |
+#' |--------------|-------------------------------------------------|
+#' | `project_id` | The internal ID number assigned to the project. |
+#' | `project_title` | The project title given to the project. |
+#' | `creation_time` | The date/time the project was created. |
+#' | `production_time` | The date/time the project was moved into production status. |
+#' | `in_production` | Boolean value indicating if the project is in production status. |
+#' | `project_language` | The language associated with the project. |
+#' | `purpose` | An integerish value identifying the purpose of the project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research', 3 = 'Quality Improvement', 4 = 'Operational Support'. |
+#' | `purpose_other` | The user supplied character value given when the project purpose is 'Other'. |
+#' | `project_notes` | The user supplied notes about the project. |
+#' | `custom_record_label` | The user provided custom label for the record identifier field. |
+#' | `secondary_unique_field` | The name of the secondary unique field, if this has been configured. | 
+#' | `is_longitudinal` | Boolean value indicating if the project is a longitudinal project. |
+#' | `has_repeating_instruments_or_events` | Boolean value indicating if the repeating instruments or events module has been enabled. |
+#' | `surveys_enabled` | Boolean value indicating if the surveys module has been enabled. |
+#' | `scheduling_enabled` | Boolean value indicating if the scheduling module has been enabled. |
+#' | `record_autonumbering_enabled` | Boolean value indicating if the record autonumbering feature has been enabled. |
+#' | `randomization_enabled` | Boolean value indicating if the randomization module has been enabled. |
+#' | `ddp_enabled` | Boolean value indicating if dynamic data pull has been enabled for a project (may only be enabled by a REDCap administrator). |
+#' | `project_irb_number` | The user provided IRB number for the project. |
+#' | `project_grant_number` | The user provided grant number for the project. |
+#' | `project_pi_firstname` | The first name of the principal investigator. |
+#' | `project_pi_lastname` | The last name of the principal investigator. |
+#' | `display_today_now_button` | Boolean value indicating if the today/now button is displayed for date/time fields in the UI. |
+#' | `missing_data_codes` | Character value giving the missing data codes enabled for the project. They are given in the format `[code],[label]`, with each coding separated by a pipe character. |
+#' | `external_modules` | Character value listing the external modules enabled. |
+#' | `bypass_branching_erase_field_prompt` | Boolean value indicating if the box for "Prevent branching logic from hiding fields that have values" has been checked under "Additional Customizations."
+#'
+#' 
+#' `importProjectInformation` has no return and displays a message 
 #'   indicating the number of fields updated.
 #' 
 #' @examples

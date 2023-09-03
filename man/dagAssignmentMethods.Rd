@@ -52,11 +52,12 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportUserDagAssignments} method returns a data frame with two columns:
-\tabular{ll}{
-username \tab The unique user name for each user in the project.\cr
-redcap_data_access_group \tab The unique Data Access Group name to which the user is assigned.
+\code{exportUserDagAssignments} method returns a data frame with two columns:\tabular{ll}{
+    \tab  \cr
+   \code{username} \tab The unique user name for each user in the project. \cr
+   \code{redcap_data_access_group} \tab The unique Data Access Group name to which the user is assigned. \cr
 }
+
 
 \code{importUserDagAssignments} has no return and prints a message indicating the number
 of assignments imported.
@@ -111,8 +112,8 @@ importUserDagAssigments(rcon,
 }
 }
 \seealso{
-\code{\link{exportDags}},\cr
-\code{\link{importDags}},\cr
-\code{\link{deleteDags}},\cr
-\code{\link{switchDag}}
+\code{\link[=exportDags]{exportDags()}},\cr
+\code{\link[=importDags]{importDags()}},\cr
+\code{\link[=deleteDags]{deleteDags()}},\cr
+\code{\link[=switchDag]{switchDag()}}
 }

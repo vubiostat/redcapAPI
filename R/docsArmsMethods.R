@@ -7,16 +7,16 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data A \code{data.frame} with two columns.  The first column 
-#'   (\code{arm_num}) is an integerish value . The second (\code{name}) is
+#' @param data A `data.frame` with two columns.  The first column 
+#'   (`arm_num`) is an `integerish` value . The second (`name`) is
 #'   a character value. For backward compatibility, 
-#'   this may also be passed as \code{arms_data}.
-#' @param override \code{logical(1)}. By default, data will add to or modify 
-#'   existing arms data. When \code{TRUE}, all the existing arms data is 
-#'   deleted and replaced with the contents of \code{data}.
-#' @param refresh \code{logical(1)} If \code{TRUE}, the cached arms data will
+#'   this may also be passed as `arms_data`.
+#' @param override `logical(1)`. By default, data will add to or modify 
+#'   existing arms data. When `TRUE`, all the existing arms data is 
+#'   deleted and replaced with the contents of `data`.
+#' @param refresh `logical(1)` If `TRUE`, the cached arms data will
 #'   be refreshed after the API action is complete.
-#' @param arms \code{character} or \code{integerish} identifying the arm 
+#' @param arms `character` or `integerish` identifying the arm 
 #'   numbers to export or delete.
 #' 
 #' @details 
@@ -24,29 +24,30 @@
 #'   the user attempts to export arms for a classical project, a 
 #'   data frame will be returned with zero rows.
 #' 
-#'   When importing, arms are added when the value of \code{arm_num}
+#'   When importing, arms are added when the value of `arm_num`
 #'   does not already exist in the project. 
 #'   
-#'   Arm names may be modified by altering the \code{name} value associated
-#'   with an existing \code{arm_num} value. 
+#'   Arm names may be modified by altering the `name` value associated
+#'   with an existing `arm_num` value. 
 #'   
-#'   Deleting arms--whether by \code{deleteArms} or \code{importArms} with 
-#'   \code{override = TRUE}--is a destructive act that also deletes 
+#'   Deleting arms--whether by `deleteArms` or `importArms` with 
+#'   `override = TRUE`--is a destructive act that also deletes 
 #'   events and records associated with the arm. This is irreversible 
 #'   data loss. REDCap will only permit these actions to occur in projects
 #'   in Development status.
 #'   
 #' @return
-#' \code{exportArms} returns a \code{data.frame} with columns:
-#' \tabular{ll}{
-#'  \code{arm_num} \tab The ID number for the arm in the project.\cr
-#'  \code{name} \tab The display name of the arm.
-#' }
+#' `exportArms` returns a `data.frame` with columns:
 #' 
-#' \code{importArms} has no return and prints a message indicating the 
+#' |           |                                           |
+#' |-----------|-------------------------------------------|
+#' | `arm_num` | The ID number for the arm in the project. | 
+#' | `name`    | The display name of the arm.              |
+#' 
+#' `importArms` has no return and prints a message indicating the 
 #'   number of arms imported.
 #'   
-#' \code{deleteArms} has no return and prints a message indicating the
+#' `deleteArms` has no return and prints a message indicating the
 #'   number of arms deleted.
 #'   
 #' @examples

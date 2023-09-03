@@ -6,13 +6,13 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param records \code{character} or \code{integerish}. Record ID's to be 
+#' @param records `character` or `integerish`. Record ID's to be 
 #'   returned.
-#' @param arm \code{integerish}. the arm number of the arm in which the 
+#' @param arm `integerish`. the arm number of the arm in which the 
 #'   record(s) should be deleted. This can only be used if the project is 
 #'   longitudinal with more than one arm. If the arm parameter is not 
 #'   provided, the specified records will be deleted from all arms in which 
-#'   they exist. Whereas, if \code{arm} is provided, they will only be deleted from 
+#'   they exist. Whereas, if `arm` is provided, they will only be deleted from 
 #'   the specified arm.  
 #' 
 #' @return

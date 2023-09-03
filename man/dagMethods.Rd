@@ -72,12 +72,13 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportDags} with the columns
-\tabular{ll}{
-\code{data_access_group_name} \tab The human readable name for the data access group.\cr
-\code{unique_group_name} \tab The internal unique group name.\cr
-\code{data_access_group_id} \tab The internal numeric identifier.
+\code{exportDags} with the columns\tabular{ll}{
+    \tab  \cr
+   \code{data_access_group_name} \tab The human readable name for the data access group. \cr
+   \code{unique_group_name} \tab The internal unique group name. \cr
+   \code{data_access_group_id} \tab The internal numeric identifier. \cr
 }
+
 
 \code{importDags} has no return, but will print a message indicating the
 number of Data Access Groups imported.
@@ -137,7 +138,7 @@ deleteDags(rcon,
 
 }
 \seealso{
-\code{\link{switchDag}},\cr
-\code{\link{exportUserDagAssignments}}, \cr
-\code{\link{importUserDagAssignments}}
+\code{\link[=switchDag]{switchDag()}},\cr
+\code{\link[=exportUserDagAssignments]{exportUserDagAssignments()}}, \cr
+\code{\link[=importUserDagAssignments]{importUserDagAssignments()}}
 }

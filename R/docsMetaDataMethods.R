@@ -8,21 +8,21 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param fields \code{character} vector of field names for which the metadata is to 
+#' @param fields `character` vector of field names for which the metadata is to 
 #'   be retrieved. 
-#' @param forms \code{character} vector of forms for which the metadata is to be
+#' @param forms `character` vector of forms for which the metadata is to be
 #'   retrieved. If a form name is given, all of the fields on that form
-#'   will be returned, regardless of whether it is included in \code{fields} or 
+#'   will be returned, regardless of whether it is included in `fields` or 
 #'   not.  Form names should match those in the second column of the data 
 #'   dictionary, and not the display names shown on the web interface.
-#' @param data \code{data.frame} with the Meta Data to import. 
-#' @param refresh \code{logical(1)}. When \code{TRUE}, the cached metadata
+#' @param data `data.frame` with the Meta Data to import. 
+#' @param refresh `logical(1)`. When `TRUE`, the cached metadata
 #'   and instruments will be refreshed after the import.
-#' @param field_types \code{character} giving the acceptable field types
-#'   when validating the \code{field_type} column. This  
-#' @param validation_types \code{character} giving the acceptable values 
-#'   for the \code{text_validation_or_show_slider_number} column.
-#' @param drop_utf8 \code{logical(1)}. When \code{TRUE}, non-ASCII characters 
+#' @param field_types `character` giving the acceptable field types
+#'   when validating the `field_type` column. This  
+#' @param validation_types `character` giving the acceptable values 
+#'   for the `text_validation_or_show_slider_number` column.
+#' @param drop_utf8 `logical(1)`. When `TRUE`, non-ASCII characters 
 #'   will be replaced with empty characters.
 #'   
 #' @details
@@ -38,46 +38,43 @@
 #'   letters must be lowercase (the function will coerce them to lower before
 #'   checking for duplicate field names).
 #'   
-#' Field types may be one of \code{REDCAP_METADATA_FIELDTYPE}. In the event that a 
-#'   new field type is added to REDCap and \code{redcapAPI} isn't yet updated, 
-#'   the user may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
+#' Field types may be one of `REDCAP_METADATA_FIELDTYPE`. In the event that a 
+#'   new field type is added to REDCap and `redcapAPI` isn't yet updated, 
+#'   the user may add additional values via `c(REDCAP_METADATA_FIELDTYPE, "new_type")`.
 #'   
-#' Validation types may be one of \code{REDCAP_METADATA_VALIDATION_TYPE} or 
-#'  \code{NA}. As with field types, additional values can be appended if
+#' Validation types may be one of `REDCAP_METADATA_VALIDATION_TYPE` or 
+#'  `NA`. As with field types, additional values can be appended if
 #'  necessary. Only fields that have a field type of "text" or "slider" 
-#'  should have a validation type. "slider" fields should be either \code{NA}
-#'  (do not display the selected number) or \code{"number"}.
+#'  should have a validation type. "slider" fields should be either `NA`
+#'  (do not display the selected number) or `"number"`.
 #'  
 #' For multiple choice fields, the selection choices take the format of 
-#'   \code{"code1, label1 | ... | coden, labeln"}. For slider fields, the 
-#'   format is \code{"left_value | mid_value | right_value"}. Any of those 
+#'   `"code1, label1 | ... | coden, labeln"`. For slider fields, the 
+#'   format is `"left_value | mid_value | right_value"`. Any of those 
 #'   values may be an empty character, but the two pipes are required, nonetheless.
 #' 
-#' For calculated fields, the values in \code{"select_choices_or_calculations"}
+#' For calculated fields, the values in `"select_choices_or_calculations"`
 #'   are currently unvalidated.  
 #' 
 #' All of the values between brackets in the branching logic must be either a
-#'   field name or an existing unique event name (such as \code{"event_1_arm_1"})
+#'   field name or an existing unique event name (such as `"event_1_arm_1"`)
 #'   
 #' @return
 #' 
-#' \code{exportMetaData} returns a data frame. Not all 18 (or more) columns are
-#' documented here, but the most commonly used within \code{redcapAPI} are 
+#' `exportMetaData` returns a data frame. Not all 18 (or more) columns are
+#' documented here, but the most commonly used within `redcapAPI` are 
 #' (these may appear in a different order in the data frame):
-#' \tabular{ll}{
-#'  \code{field_name} \tab The name of a field in the project.\cr
-#'  \code{filed_label} \tab The human-readable form of the field name.\cr
-#'  \code{form_name} \tab The name of the form on which the field is found.\cr
-#'  \code{field_type} \tab One of two fields used to determine how a field
-#'        is transformed into an R object.\cr
-#'  \code{select_choices_or_calculations} \tab The second field used to 
-#'        determine how a field is translated into an R object.\cr
-#'  \code{text_validation_type_or_show_slider_number} \tab Describes how 
-#'        fields are validated. For slider fields, it gives the limits and
-#'        center point to display.\cr
-#'  \code{field_annotation} \tab Contains annotations such as units of
-#'       measures. Also contains action tags.
-#' }
+#' 
+#' |                                  |                                    |
+#' |----------------------------------|------------------------------------|
+#' | `field_name`                     | The name of a field in the project.|
+#' | `filed_label`                    | The human-readable form of the field name.|
+#' | `form_name`                      | The name of the form on which the field is found.|
+#' | `field_type`                     | One of two fields used to determine how a field is transformed into an R object.|
+#' | `select_choices_or_calculations` | The second field used to determine how a field is translated into an R object.|
+#' | `text_validation_type_or_show_slider_number` | Describes how fields are validated. For slider fields, it gives the limits and center point to display.|
+#' | `field_annotation`               | Contains annotations such as units of measures. Also contains action tags. |
+#'
 #' 
 #' \code{importMetaData} has no return and displays a message indicating 
 #'   the number of fields that were imported.

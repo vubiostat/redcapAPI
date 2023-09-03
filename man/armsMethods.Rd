@@ -54,7 +54,7 @@ deleteArms(rcon, arms, ...)
 numbers to export or delete.}
 
 \item{data}{A \code{data.frame} with two columns.  The first column
-(\code{arm_num}) is an integerish value . The second (\code{name}) is
+(\code{arm_num}) is an \code{integerish} value . The second (\code{name}) is
 a character value. For backward compatibility,
 this may also be passed as \code{arms_data}.}
 
@@ -80,11 +80,12 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportArms} returns a \code{data.frame} with columns:
-\tabular{ll}{
-\code{arm_num} \tab The ID number for the arm in the project.\cr
-\code{name} \tab The display name of the arm.
+\code{exportArms} returns a \code{data.frame} with columns:\tabular{ll}{
+    \tab  \cr
+   \code{arm_num} \tab The ID number for the arm in the project. \cr
+   \code{name} \tab The display name of the arm. \cr
 }
+
 
 \code{importArms} has no return and prints a message indicating the
 number of arms imported.
