@@ -77,6 +77,8 @@ exportReportsTyped(rcon, report_id, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
+\item{report_id}{\code{integerish(1)}. The ID number of the report to be exported.}
+
 \item{fields}{\code{character} or \code{NULL}. Vector of fields to be returned.  If \code{NULL},
 all fields are returned (unless \code{forms} is specified).}
 

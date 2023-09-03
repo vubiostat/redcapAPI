@@ -61,6 +61,16 @@
 #' @param overwriteBehavior \code{character(1)}. One of \code{c("normal", "overwrite")}. 
 #'   \code{"normal"} prevents blank fields from overwriting populated fields.  
 #'   \code{"overwrite"} causes blanks to overwrite data in the database.
+#' @param force_auto_number \code{logical(1)}. If record auto-numbering has been
+#'   enabled in the project, it may be desirable to import records where each 
+#'   record's record name is automatically determined by REDCap (just as it 
+#'   does in the user interface). When \code{TRUE}, the 
+#'   record names provided in the request will not be used (although they 
+#'   are still required in order to associate multiple rows of data to an 
+#'   individual record in the request); instead those records in the 
+#'   request will receive new record names during the import process. 
+#'   It is recommended that the user use `returnContent = "auto_ids"`
+#'   when `force_auto_number = TRUE`
 #' @param returnContent \code{character(1)}.  
 #'   One of \code{c("count", "ids", "nothing", "auto_ids")}.
 #'   'count' returns the number of records imported; 
@@ -87,6 +97,7 @@
 #'   (unlabeled) data set.
 #' @param metaDataFile \code{character(1)}. Gives the location of the data dictionary 
 #'   downloaded from REDCap.
+#' @param meta_data Deprecated version of \code{metaDataFile}.
 #'   
 #' @details
 #' 
@@ -247,7 +258,8 @@ recordsMethods <- function(rcon,
                            colClasses,
                            data, 
                            arm, 
-                           overwriteBehavior, 
+                           overwriteBehavior,
+                           force_auto_number,
                            returnContent, 
                            returnData, 
                            logfile, 

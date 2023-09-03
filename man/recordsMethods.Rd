@@ -197,6 +197,17 @@ the specified arm.}
 \code{"normal"} prevents blank fields from overwriting populated fields.
 \code{"overwrite"} causes blanks to overwrite data in the database.}
 
+\item{force_auto_number}{\code{logical(1)}. If record auto-numbering has been
+enabled in the project, it may be desirable to import records where each
+record's record name is automatically determined by REDCap (just as it
+does in the user interface). When \code{TRUE}, the
+record names provided in the request will not be used (although they
+are still required in order to associate multiple rows of data to an
+individual record in the request); instead those records in the
+request will receive new record names during the import process.
+It is recommended that the user use \code{returnContent = "auto_ids"}
+when \code{force_auto_number = TRUE}}
+
 \item{returnContent}{\code{character(1)}.
 One of \code{c("count", "ids", "nothing", "auto_ids")}.
 'count' returns the number of records imported;
@@ -242,6 +253,8 @@ see \code{\link{redcapError}}.}
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
+
+\item{meta_data}{Deprecated version of \code{metaDataFile}.}
 
 \item{form_complete_auto}{\code{logical(1)}. When \code{TRUE}
 (default), the \code{[form]_complete} fields for any form

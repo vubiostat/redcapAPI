@@ -59,6 +59,9 @@ deleteFromFileRepository(rcon, doc_id, ...)
 the file is to be imported. If length is zero, it is imported to the
 top-level folder.}
 
+\item{file}{\code{character(1)}. A file on the local system to be imported
+to the File Repository.}
+
 \item{dir}{\code{character(1)}. A directory on the local system to which
 the file is to be saved. Defaults to the working directory.}
 

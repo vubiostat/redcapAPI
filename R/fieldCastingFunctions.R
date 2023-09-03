@@ -735,7 +735,7 @@ mChoiceCast <- function(data,
                                        args, 
                                        correct_length, 
                                        default_validate = .default_validate){
-  validate <- modifyList(default_validate, validation)
+  validate <- utils::modifyList(default_validate, validation)
   
   funs <- lapply(
     field_types,
@@ -788,7 +788,7 @@ mChoiceCast <- function(data,
                                      default_cast = .default_cast){
   # REMINDER: Any changes to this method may suggest changes are needed to .exportRecordsTyped_recastRecords
   Records <- Raw
-  cast <- modifyList(default_cast, cast)
+  cast <- utils::modifyList(default_cast, cast)
   # Edits to this for loop may necessitate edits to the for loop in recastData
   for(i in seq_along(Raw))
   {

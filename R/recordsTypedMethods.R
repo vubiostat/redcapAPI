@@ -9,6 +9,7 @@
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @inheritParams common-cast-args
+#' @param report_id `integerish(1)`. The ID number of the report to be exported. 
 #' @param fields `character` or `NULL`. Vector of fields to be returned.  If `NULL`, 
 #'   all fields are returned (unless `forms` is specified).
 #' @param drop_fields `character` or `NULL`. A vector of field names to remove from 

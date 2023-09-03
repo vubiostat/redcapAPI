@@ -11,6 +11,8 @@
 #' @param folder_id \code{integerish(0/1)}. The ID of the folder into which 
 #'   the file is to be imported. If length is zero, it is imported to the 
 #'   top-level folder.
+#' @param file `character(1)`. A file on the local system to be imported
+#'   to the File Repository.
 #' @param dir \code{character(1)}. A directory on the local system to which 
 #'   the file is to be saved. Defaults to the working directory.
 #' @param dir_create \code{logical(1)}. Create the directory \code{dir} 
@@ -87,7 +89,8 @@
 
 fromFileRepositoryMethods <- function(rcon, 
                                       doc_id, 
-                                      folder_id, 
+                                      folder_id,
+                                      file,
                                       dir, 
                                       dir_create, 
                                       refresh, 
