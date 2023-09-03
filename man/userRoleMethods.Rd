@@ -233,13 +233,13 @@ NewData <- data.frame(unique_role_name = "KN439U",
                       design = 0, 
                       api_export = 1, 
                       api_import = "No Access")
-importUsers(rcon, 
-            data = NewData)
+importUserRoles(rcon, 
+                data = NewData)
             
 
 # Remove a user from a project
-deleteUsers(rcon, 
-            user_roles = "KN439U")
+deleteUserRoles(rcon, 
+                user_roles = "KN439U")
 } 
 
 }
