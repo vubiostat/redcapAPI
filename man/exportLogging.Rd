@@ -68,15 +68,13 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame with columns
-\tabular{ll}{
-\code{timestamp} \tab The date/time of the logging record. \cr
-\code{username} \tab The user name of the user that performed the action
-being logged. \cr
-\code{action} \tab The classification of action being logged. \cr
-\code{details} \tab Details of the action being logged. \cr
-\code{record} \tab The record ID associated with the action being logged.
-When not related to a record, this will be \code{NA}
+Returns a data frame with columns\tabular{ll}{
+    \tab  \cr
+   \code{timestamp} \tab The date/time of the logging record. \cr
+   \code{username} \tab The user name of the user that performed the action being logged. \cr
+   \code{action} \tab The classification of action being logged. \cr
+   \code{details} \tab Details of the action being logged. \cr
+   \code{record} \tab The record ID associated with the action being logged. When not related to a record, this will be \code{NA} \cr
 }
 }
 \description{

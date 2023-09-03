@@ -33,10 +33,10 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame with the columns:
-\tabular{ll}{
-\code{instrument_name} \tab The REDCap generated instrument name. \cr
-\code{instrument_label} \tab The user provided instrument label.
+Returns a data frame with the columns:\tabular{ll}{
+    \tab  \cr
+   \code{instrument_name} \tab The REDCap generated instrument name. \cr
+   \code{instrument_label} \tab The user provided instrument label. \cr
 }
 }
 \description{

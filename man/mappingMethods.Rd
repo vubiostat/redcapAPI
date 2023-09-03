@@ -39,11 +39,11 @@ importMappings(rcon, data, refresh = TRUE, ...)
 all events are pulled). Will also accept \code{character}, but will coerce
 it to numeric before processing.}
 
-\item{data}{\code{data.frame} with columns \code{arm_num},
-\code{unique_event_name}, and \code{form}. See Details}
+\item{data}{\code{data.frame} with columns \code{arm_num}, \code{unique_event_name},
+and \code{form}. See Details}
 
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached mappings
-in the \code{rcon} object are refreshed after the import.}
+\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached mappings in the \code{rcon}
+object are refreshed after the import.}
 
 \item{...}{Arguments to pass to other methods}
 
@@ -60,13 +60,11 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportMappings} returns a data frame with the columns:
-\tabular{ll}{
-\code{arm_num} \tab The arm number for the unique event mapped to the
-instrument. \cr
-\code{unique_event_name} \tab The unique event name to which the
-instrument is assigned. \cr
-\code{form} \tab The REDCap assigned instrument name mapped to the event.
+\code{exportMappings} returns a data frame with the columns:\tabular{ll}{
+    \tab  \cr
+   \code{arm_num} \tab The arm number for the unique event mapped to the instrument. \cr
+   \code{unique_event_name} \tab The unique event name to which the instrument is assigned. \cr
+   \code{form} \tab The REDCap assigned instrument name mapped to the event. \cr
 }
 }
 \description{

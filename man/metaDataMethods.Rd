@@ -80,21 +80,17 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \value{
 \code{exportMetaData} returns a data frame. Not all 18 (or more) columns are
 documented here, but the most commonly used within \code{redcapAPI} are
-(these may appear in a different order in the data frame):
-\tabular{ll}{
-\code{field_name} \tab The name of a field in the project.\cr
-\code{filed_label} \tab The human-readable form of the field name.\cr
-\code{form_name} \tab The name of the form on which the field is found.\cr
-\code{field_type} \tab One of two fields used to determine how a field
-is transformed into an R object.\cr
-\code{select_choices_or_calculations} \tab The second field used to
-determine how a field is translated into an R object.\cr
-\code{text_validation_type_or_show_slider_number} \tab Describes how
-fields are validated. For slider fields, it gives the limits and
-center point to display.\cr
-\code{field_annotation} \tab Contains annotations such as units of
-measures. Also contains action tags.
+(these may appear in a different order in the data frame):\tabular{ll}{
+    \tab  \cr
+   \code{field_name} \tab The name of a field in the project. \cr
+   \code{filed_label} \tab The human-readable form of the field name. \cr
+   \code{form_name} \tab The name of the form on which the field is found. \cr
+   \code{field_type} \tab One of two fields used to determine how a field is transformed into an R object. \cr
+   \code{select_choices_or_calculations} \tab The second field used to determine how a field is translated into an R object. \cr
+   \code{text_validation_type_or_show_slider_number} \tab Describes how fields are validated. For slider fields, it gives the limits and center point to display. \cr
+   \code{field_annotation} \tab Contains annotations such as units of measures. Also contains action tags. \cr
 }
+
 
 \code{importMetaData} has no return and displays a message indicating
 the number of fields that were imported.

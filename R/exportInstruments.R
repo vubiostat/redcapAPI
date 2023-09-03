@@ -10,10 +10,12 @@
 #' 
 #' @return 
 #' Returns a data frame with the columns:
-#' \tabular{ll}{
-#'  \code{instrument_name} \tab The REDCap generated instrument name. \cr
-#'  \code{instrument_label} \tab The user provided instrument label.
-#' }
+#' 
+#' |                   |                                       |
+#' |-------------------|---------------------------------------|
+#' | `instrument_name`  | The REDCap generated instrument name. |
+#' | `instrument_label` | The user provided instrument label.   |
+#'
 #'
 #' @seealso
 #' [exportMetaData()],\cr

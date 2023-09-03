@@ -81,18 +81,18 @@ or all records.
 These methods mimics the behavior of "Download PDF of Instruments" button on the
 REDCap user interface. They permit the user to export a PDF file for:
 \enumerate{
-\item{A single colleciton instrument (blank)}
-\item{All instruments (blank)}
-\item{A single instrument (with data from a single redord)}
-\item{All instruments (with data from a single record)}
-\item{All instruments (with data from all records)}
+\item A single colleciton instrument (blank)c
+\item All instruments (blank)
+\item A single instrument (with data from a single record)c
+\item All instruments (with data from a single record)
+\item All instruments (with data from all records)
 }
 }
 \seealso{
-\code{\link{exportMetaData}},\cr
-\code{\link{importMetaData}}, \cr
-\code{\link{exportFieldNames}}, \cr
-\code{\link{exportInstruments}},\cr
-\code{\link{exportMappings}},\cr
-\code{\link{importMappings}}
+\code{\link[=exportMetaData]{exportMetaData()}},\cr
+\code{\link[=importMetaData]{importMetaData()}}, \cr
+\code{\link[=exportFieldNames]{exportFieldNames()}}, \cr
+\code{\link[=exportInstruments]{exportInstruments()}},\cr
+\code{\link[=exportMappings]{exportMappings()}},\cr
+\code{\link[=importMappings]{importMappings()}}
 }

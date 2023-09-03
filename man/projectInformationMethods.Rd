@@ -55,59 +55,36 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportProjectInformation} returns a data frame with the columns
-\tabular{ll}{
-\code{project_id} \tab The internal ID number assigned to the project. \cr
-\code{project_title} \tab The project title given to the project. \cr
-\code{creation_time} \tab The date/time the project was created. \cr
-\code{production_time} \tab The date/time the project was moved into
-production status. \cr
-\code{in_production} \tab Boolean value indicating if the project is
-in production status. \cr
-\code{project_language} \tab The language associated with the project. \cr
-\code{purpose} \tab An integerish value identifying the purpose of the
-project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research',
-3 = 'Quality Improvement', 4 = 'Operational Support'. \cr
-\code{purpose_other} \tab The user supplied character value given when
-the project purpose is 'Other'. \cr
-\code{project_notes} \tab The user supplied notes about the project. \cr
-\code{custom_record_label} \tab The user provided custom label for the
-record identifier field. \cr
-\code{secondary_unique_field} \tab The name of the secondary unique
-field, if this has been configured. \cr
-\code{is_longitudinal} \tab Boolean value indicating if the project is
-a longitudinal project. \cr
-\code{has_repeating_instruments_or_events} \tab Boolean value indicating
-if the repeating instruments or events module has been enabled. \cr
-\code{surveys_enabled} \tab Boolean value indicating if the surveys
-module has been enabled. \cr
-\code{scheduling_enabled} \tab Boolean value indicating if the scheduling
-module has been enabled. \cr
-\code{record_autonumbering_enabled} \tab Boolean value indicating if the
-record autonumbering feature has been enabled. \cr
-\code{randomization_enabled} \tab Boolean value indicating if the
-randomization module has been enabled. \cr
-\code{ddp_enabled} \tab Boolean value indicating if dynamic data pull
-has been enabled for a project (may only be enabled by a
-REDCap administrator). \cr
-\code{project_irb_number} \tab The user provided IRB number for the project. \cr
-\code{project_grant_number} \tab The user provided grant number for
-the project. \cr
-\code{project_pi_firstname} \tab The first name of the principal
-investigator. \cr
-\code{project_pi_lastname} \tab The last name of the principal
-investigator. \cr
-\code{display_today_now_button} \tab Boolean value indicating if the
-today/now button is displayed for date/time fields in the UI. \cr
-\code{missing_data_codes} \tab Character value giving the missing data
-codes enabled for the project. They are given in the format
-\verb{[code],[label]}, with each coding separated by a pipe character. \cr
-\code{external_modules} \tab Character value listing the external modules
-enabled. \cr
-\code{bypass_branching_erase_field_prompt} \tab Boolean value indicating
-if the box for "Prevent branching logic from hiding fields that have values"
-has been checked under "Additional Customizations."
+\code{exportProjectInformation} returns a data frame with the columns\tabular{ll}{
+    \tab  \cr
+   \code{project_id} \tab The internal ID number assigned to the project. \cr
+   \code{project_title} \tab The project title given to the project. \cr
+   \code{creation_time} \tab The date/time the project was created. \cr
+   \code{production_time} \tab The date/time the project was moved into production status. \cr
+   \code{in_production} \tab Boolean value indicating if the project is in production status. \cr
+   \code{project_language} \tab The language associated with the project. \cr
+   \code{purpose} \tab An integerish value identifying the purpose of the project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research', 3 = 'Quality Improvement', 4 = 'Operational Support'. \cr
+   \code{purpose_other} \tab The user supplied character value given when the project purpose is 'Other'. \cr
+   \code{project_notes} \tab The user supplied notes about the project. \cr
+   \code{custom_record_label} \tab The user provided custom label for the record identifier field. \cr
+   \code{secondary_unique_field} \tab The name of the secondary unique field, if this has been configured. \cr
+   \code{is_longitudinal} \tab Boolean value indicating if the project is a longitudinal project. \cr
+   \code{has_repeating_instruments_or_events} \tab Boolean value indicating if the repeating instruments or events module has been enabled. \cr
+   \code{surveys_enabled} \tab Boolean value indicating if the surveys module has been enabled. \cr
+   \code{scheduling_enabled} \tab Boolean value indicating if the scheduling module has been enabled. \cr
+   \code{record_autonumbering_enabled} \tab Boolean value indicating if the record autonumbering feature has been enabled. \cr
+   \code{randomization_enabled} \tab Boolean value indicating if the randomization module has been enabled. \cr
+   \code{ddp_enabled} \tab Boolean value indicating if dynamic data pull has been enabled for a project (may only be enabled by a REDCap administrator). \cr
+   \code{project_irb_number} \tab The user provided IRB number for the project. \cr
+   \code{project_grant_number} \tab The user provided grant number for the project. \cr
+   \code{project_pi_firstname} \tab The first name of the principal investigator. \cr
+   \code{project_pi_lastname} \tab The last name of the principal investigator. \cr
+   \code{display_today_now_button} \tab Boolean value indicating if the today/now button is displayed for date/time fields in the UI. \cr
+   \code{missing_data_codes} \tab Character value giving the missing data codes enabled for the project. They are given in the format \verb{[code],[label]}, with each coding separated by a pipe character. \cr
+   \code{external_modules} \tab Character value listing the external modules enabled. \cr
+   \code{bypass_branching_erase_field_prompt} \tab Boolean value indicating if the box for "Prevent branching logic from hiding fields that have values" has been checked under "Additional Customizations." \cr
 }
+
 
 \code{importProjectInformation} has no return and displays a message
 indicating the number of fields updated.
@@ -129,26 +106,25 @@ It is not required for \code{data} to have all of the fields, but only
 the fields the user wishes to update (see examples).
 
 The following project attributes can be updated:
-
 \itemize{
-\item{\code{project_title}}
-\item{\code{project_language}}
-\item{\code{purpose}}
-\item{\code{purpose_other}}
-\item{\code{project_notes}}
-\item{\code{custom_record_label}}
-\item{\code{secondary_unique_field}}
-\item{\code{is_longitudinal}}
-\item{\code{surveys_enabled}}
-\item{\code{scheduling_enabled}}
-\item{\code{record_autonumbering_enabled}}
-\item{\code{randomization_enabled}}
-\item{\code{project_irb_number}}
-\item{\code{project_grant_number}}
-\item{\code{project_pi_firstname}}
-\item{\code{project_pi_lastname}}
-\item{\code{display_today_now_button}}
-\item{\code{bypass_branching_erase_field_prompt}}
+\item project_title
+\item project_language
+\item purpose
+\item purpose_other
+\item project_notes
+\item custom_record_label
+\item secondary_unique_field
+\item is_longitudinal
+\item surveys_enabled
+\item scheduling_enabled
+\item record_autonumbering_enabled
+\item randomization_enabled
+\item project_irb_number
+\item project_grant_number
+\item project_pi_firstname
+\item project_pi_lastname
+\item display_today_now_button
+\item bypass_branching_erase_field_prompt
 }
 }
 \section{Functions}{

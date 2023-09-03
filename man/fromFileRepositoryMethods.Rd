@@ -88,12 +88,13 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportFromFileRepository}, \code{importToFileRepository},
-and \code{deleteFromFileRepository} earch return a data frame
-with the columns:
-\tabular{ll}{
-\code{directory} \tab The directory in which the file is saved. \cr
-\code{filename} \tab The name of the saved file.
+and \code{deleteFromFileRepository} each return a data frame
+with the columns:\tabular{ll}{
+    \tab  \cr
+   \code{directory} \tab The directory in which the file is saved. \cr
+   \code{filename} \tab The name of the saved file. \cr
 }
+
 
 Additionally, \code{exportFromFileRepository} displays a message
 with the file path to which the file was saved on the local computer.
@@ -158,9 +159,9 @@ deleteFileFromRepository(rcon,
   
 }
 \seealso{
-\code{\link{exportFileRepository}}, \cr
-\code{\link{importFileRepository}}, \cr
-\code{\link{deleteFileRepository}}, \cr
-\code{\link{exportFileRepositoryListing}}, \cr
-\code{\link{createFileRepositoryFolder}}
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=importFileRepository]{importFileRepository()}}, \cr
+\code{\link[=deleteFileRepository]{deleteFileRepository()}}, \cr
+\code{\link[=exportFileRepositoryListing]{exportFileRepositoryListing()}}, \cr
+\code{\link[=createFileRepositoryFolder]{createFileRepositoryFolder()}}
 }

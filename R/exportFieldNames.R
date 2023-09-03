@@ -8,15 +8,15 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param fields \code{NULL} or \code{character(1)}. Field name to be returned.  By 
+#' @param fields `NULL` or `character(1)`. Field name to be returned.  By 
 #'   default, all fields are returned.
 #' 
 #' @details
-#' \code{exportFieldNames} returns a data frame of the field names the user
+#' `exportFieldNames` returns a data frame of the field names the user
 #' may use when performing export and import functions. This is most useful 
 #' when working with checkbox fields, which have a different field name than 
 #' the one used in the Meta Data. The exported/imported field names for 
-#' checkbox fields have the pattern \code{[field_name]___[coded_checkbox_value]}
+#' checkbox fields have the pattern `[field_name]___[coded_checkbox_value]`
 #' (there are exactly three underscores separating the field name and the
 #' coded value).
 #' 
@@ -24,17 +24,13 @@
 #' export. (Signature fields also have the "file" type and are not included)
 #' 
 #' @return 
-#' \code{exportFieldNames} returns a data frame with the columns: 
-#' \tabular{ll}{
-#'   \code{original_field_name} \tab The field name as recorded in the 
-#'        data dictionary\cr
-#'   \code{choice_value} \tab represents the raw coded value for a checkbox 
-#'        choice. For non-checkbox fields, this will always be \code{NA}.\cr
-#'   \code{export_field_name} \tab The field name specific to the field.
-#'        For non-checkbox fields, this is the same as \code{original_field_name}.
-#'        For checkbox fields, it is the field name appended with 
-#'        \code{___[choice_value]}.
-#' }
+#' `exportFieldNames` returns a data frame with the columns: 
+#' 
+#' |                       |                                                  |
+#' |-----------------------|--------------------------------------------------|
+#' | `original_field_name` | The field name as recorded in the data dictionary|
+#' | `choice_value` | represents the raw coded value for a checkbox choice. For non-checkbox fields, this will always be `NA`.|
+#' | `export_field_name` | The field name specific to the field. For non-checkbox fields, this is the same as `original_field_name`. For checkbox fields, it is the field name appended with `___[choice_value]`. |
 #' 
 #' @seealso 
 #' [exportMetaData()],\cr

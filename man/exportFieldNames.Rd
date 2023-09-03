@@ -38,16 +38,11 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportFieldNames} returns a data frame with the columns:
-\tabular{ll}{
-\code{original_field_name} \tab The field name as recorded in the
-data dictionary\cr
-\code{choice_value} \tab represents the raw coded value for a checkbox
-choice. For non-checkbox fields, this will always be \code{NA}.\cr
-\code{export_field_name} \tab The field name specific to the field.
-For non-checkbox fields, this is the same as \code{original_field_name}.
-For checkbox fields, it is the field name appended with
-\code{___[choice_value]}.
+\code{exportFieldNames} returns a data frame with the columns:\tabular{ll}{
+    \tab  \cr
+   \code{original_field_name} \tab The field name as recorded in the data dictionary \cr
+   \code{choice_value} \tab represents the raw coded value for a checkbox choice. For non-checkbox fields, this will always be \code{NA}. \cr
+   \code{export_field_name} \tab The field name specific to the field. For non-checkbox fields, this is the same as \code{original_field_name}. For checkbox fields, it is the field name appended with \verb{___[choice_value]}. \cr
 }
 }
 \description{
@@ -60,7 +55,7 @@ relevant when working with checkbox fields.
 may use when performing export and import functions. This is most useful
 when working with checkbox fields, which have a different field name than
 the one used in the Meta Data. The exported/imported field names for
-checkbox fields have the pattern \code{[field_name]___[coded_checkbox_value]}
+checkbox fields have the pattern \verb{[field_name]___[coded_checkbox_value]}
 (there are exactly three underscores separating the field name and the
 coded value).
 

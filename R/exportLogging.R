@@ -8,32 +8,32 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param logtype \code{character(0/1)}. The log event types to export. 
+#' @param logtype `character(0/1)`. The log event types to export. 
 #'   When the length is zero, all event types are exported. Otherwise, it
 #'   must be one of
-#'   \code{c("export", "manage", "user", "record", "record_add", "record_edit", "record_delete", "lock_record", "page_view")}
-#' @param user \code{character(0/1)}. Users for whom to return logs. By default
+#'   `c("export", "manage", "user", "record", "record_add", "record_edit", "record_delete", "lock_record", "page_view")`
+#' @param user `character(0/1)`. Users for whom to return logs. By default
 #'   logs for all users are returned.
-#' @param record \code{character(0/1)}. Record ID for which logs are to be returned.
+#' @param record `character(0/1)`. Record ID for which logs are to be returned.
 #'   By default, logs are returned for all records.
-#' @param dag \code{character(0/1)}. Data access group ID for which to return logs. 
+#' @param dag `character(0/1)`. Data access group ID for which to return logs. 
 #'   By default, logs are returned for all data access groups.
-#' @param beginTime \code{POSIXct(0/1)}. When given, only 
+#' @param beginTime `POSIXct(0/1)`. When given, only 
 #'   logs recorded after this time will be returned.
-#' @param endTime \code{POSIXct(0/1)}. When given, only logs
+#' @param endTime `POSIXct(0/1)`. When given, only logs
 #'   recorded before this time will be returned. 
 #'   
 #' @return 
 #' Returns a data frame with columns
-#' \tabular{ll}{
-#'  \code{timestamp} \tab The date/time of the logging record. \cr
-#'  \code{username} \tab The user name of the user that performed the action
-#'      being logged. \cr
-#'  \code{action} \tab The classification of action being logged. \cr
-#'  \code{details} \tab Details of the action being logged. \cr
-#'  \code{record} \tab The record ID associated with the action being logged.
-#'      When not related to a record, this will be \code{NA}
-#' }
+#' 
+#' |            |                                      |
+#' |------------|--------------------------------------|
+#' | `timestamp` | The date/time of the logging record. |
+#' | `username`  | The user name of the user that performed the action being logged. |
+#' | `action`    | The classification of action being logged. |
+#' | `details`   | Details of the action being logged. |
+#' | `record`    | The record ID associated with the action being logged. When not related to a record, this will be `NA` |
+#'
 #' 
 #' @examples
 #' \dontrun{

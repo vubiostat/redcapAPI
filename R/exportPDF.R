@@ -9,30 +9,30 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param dir \code{character(1)}. The directory into which the file 
+#' @param dir `character(1)`. The directory into which the file 
 #'   should be saved.
-#' @param filename \code{character(1)}. The base of the file name.  When 
-#'   \code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  When
-#'   \code{record} has a value, it will be appended with 
-#'   \code{"_record_[record id].pdf"} 
-#' @param record \code{character(1)}, \code{integerish(1)}, or \code{NULL}.  
+#' @param filename `character(1)`. The base of the file name.  When 
+#'   `record = NULL`, it will be appended with `"_blank.pdf"`.  When
+#'   `record` has a value, it will be appended with 
+#'   `"_record_[record id].pdf"` 
+#' @param record `character(1)`, `integerish(1)`, or `NULL`.  
 #'   The record id for which forms should be downloaded.  
-#' @param events \code{character}. The events for which forms should be downloaded
-#' @param instruments \code{character}. The instruments for which forms 
+#' @param events `character`. The events for which forms should be downloaded
+#' @param instruments `character`. The instruments for which forms 
 #'   should be downloaded
-#' @param all_records \code{logical(1)}. When \code{TRUE} forms for all records 
-#'   are downloaded. When \code{TRUE}, this overrides the \code{records} argument.
+#' @param all_records `logical(1)`. When `TRUE` forms for all records 
+#'   are downloaded. When `TRUE`, this overrides the `records` argument.
 #' 
 #' @details
 #' These methods mimics the behavior of "Download PDF of Instruments" button on the
 #' REDCap user interface. They permit the user to export a PDF file for:
-#' \enumerate{
-#'  \item{A single colleciton instrument (blank)}
-#'  \item{All instruments (blank)}
-#'  \item{A single instrument (with data from a single redord)}
-#'  \item{All instruments (with data from a single record)}
-#'  \item{All instruments (with data from all records)}
-#' }
+#' 
+#'  1. A single colleciton instrument (blank)c
+#'  2. All instruments (blank)
+#'  3. A single instrument (with data from a single record)c
+#'  4. All instruments (with data from a single record)
+#'  5. All instruments (with data from all records)
+#'
 #'
 #' @return 
 #' \code{exportPdf} has no return. After saving the file to the local 
@@ -40,12 +40,12 @@
 #' on the system.
 #'
 #' @seealso
-#' \code{\link{exportMetaData}},\cr
-#' \code{\link{importMetaData}}, \cr
-#' \code{\link{exportFieldNames}}, \cr
-#' \code{\link{exportInstruments}},\cr
-#' \code{\link{exportMappings}},\cr
-#' \code{\link{importMappings}}
+#' [exportMetaData()],\cr
+#' [importMetaData()], \cr
+#' [exportFieldNames()], \cr
+#' [exportInstruments()],\cr
+#' [exportMappings()],\cr
+#' [importMappings()]
 
 exportPdf <- function(rcon, 
                       dir, 
