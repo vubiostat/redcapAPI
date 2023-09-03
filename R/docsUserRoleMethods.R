@@ -62,7 +62,40 @@
 #' many users were added or modified.
 #' 
 #' `deleteUserRoles` has no return value and displays a message indicating how 
-#' many users were deleted. 
+#' many users were deleted.
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' # Export users-roles
+#' exportUserRoles(rcon)
+#' 
+#' # Export user-roles without additional form access variables
+#' exportUsersRoles(rcon, 
+#'                  form_rights = FALSE)
+#'             
+#' # Export users as raw data
+#' exportUserRoles(rcon, 
+#'                 labels = FALSE)
+#'             
+#'             
+#' # Import new permissions
+#' NewData <- data.frame(unique_role_name = "KN439U", 
+#'                       design = 0, 
+#'                       api_export = 1, 
+#'                       api_import = "No Access")
+#' importUserRoles(rcon, 
+#'                 data = NewData)
+#'             
+#' 
+#' # Remove a user from a project
+#' deleteUserRoles(rcon, 
+#'                 user_roles = "KN439U")
+#' } 
 #' 
 #' @seealso 
 #' [exportUsers()], \cr
@@ -77,7 +110,7 @@
 userRoleMethods <- function(rcon, 
                             labels, 
                             form_rights, 
-                            users, 
+                            user_roles, 
                             data, 
                             consolidate, 
                             refresh, 

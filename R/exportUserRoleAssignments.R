@@ -1,26 +1,13 @@
-#' @name exportUserRoleAssignments
-#' @title Export User-Role Assignments
-#' 
-#' @description This method allows you to export existing User-Role assignments for a project
-#' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn userRoleAssignmentMethods Export user-role assignments from a project.
+#' @order 1
 #' @export
 
 exportUserRoleAssignments <- function(rcon, ...){
   UseMethod("exportUserRoleAssignments")
 }
 
-#' @rdname exportUserRoleAssignments
+#' @rdname userRoleAssignmentMethods
+#' @order 3
 #' @export
 
 exportUserRoleAssignments.redcapApiConnection <- function(rcon, 

@@ -216,6 +216,40 @@ using a JSON format.
 \item \code{deleteUsers()}: Remove users from a project.
 
 }}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Export users
+exportUsers(rcon)
+
+# Export users without additional form access variables
+exportUsers(rcon, 
+            form_rights = FALSE)
+            
+# Export users as raw data
+exportUsers(rcon, 
+            labels = FALSE)
+            
+            
+# Import new permissions
+NewData <- data.frame(username = "target_user", 
+                      design = 0, 
+                      api_export = 1, 
+                      api_import = "No Access")
+importUsers(rcon, 
+            data = NewData)
+            
+
+# Remove a user from a project
+deleteUsers(rcon, 
+            users = "target_user")
+}
+
+}
 \seealso{
 \code{\link[=exportUserRoles]{exportUserRoles()}}, \cr
 \code{\link[=importUserRoles]{importUserRoles()}}, \cr

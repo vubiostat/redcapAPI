@@ -59,7 +59,8 @@ transformed to one column per form. The API-provided character string
 is always returned with the format \verb{[form_name]:[access_code]} and a comma separating
 each form.}
 
-\item{users}{\code{character}. Vector of unique user names to be deleted.}
+\item{user_roles}{\code{character}. Unique role names to be deleted from
+the project.}
 
 \item{data}{\code{data.frame}. Provides the user data for import. It must have
 a column titled \code{username}. All other columns are optional.}
@@ -84,9 +85,6 @@ see \code{\link{redcapError}}.}
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
-
-\item{user_roles}{\code{character}. Unique role names to be deleted from
-the project.}
 }
 \value{
 \code{exportUserRoles} returns a data frame with the columns:\tabular{ll}{
@@ -211,6 +209,40 @@ using a JSON format.
 \item \code{deleteUserRoles()}: Delete user roles from a project.
 
 }}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Export users-roles
+exportUserRoles(rcon)
+
+# Export user-roles without additional form access variables
+exportUsersRoles(rcon, 
+                 form_rights = FALSE)
+            
+# Export users as raw data
+exportUserRoles(rcon, 
+                labels = FALSE)
+            
+            
+# Import new permissions
+NewData <- data.frame(unique_role_name = "KN439U", 
+                      design = 0, 
+                      api_export = 1, 
+                      api_import = "No Access")
+importUsers(rcon, 
+            data = NewData)
+            
+
+# Remove a user from a project
+deleteUsers(rcon, 
+            user_roles = "KN439U")
+} 
+
+}
 \seealso{
 \code{\link[=exportUsers]{exportUsers()}}, \cr
 \code{\link[=importUsers]{importUsers()}}, \cr
