@@ -42,7 +42,7 @@ provided, access to the folder will be restricted to the DAG.}
 \item{role_id}{\code{integerish(0/1)} The ID of a role. When provided,
 access to the folder will be restricted to users with that role.}
 
-\item{...}{Additional arguments to be passed between methods}
+\item{...}{Arguments to pass to other methods}
 
 \item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached
 File Repository data on \code{rcon} will be refreshed.}
@@ -60,11 +60,10 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame with the columns
-
-\tabular{ll}{
-\code{folder_id} \tab The REDCap assigned ID value for the newly created folder.\cr
-\code{name} \tab The name assigned to the folder by the user.
+Returns a data frame with the columns\tabular{ll}{
+    \tab  \cr
+   \code{folder_id} \tab The REDCap assigned ID value for the newly created folder. \cr
+   \code{name} \tab The name assigned to the folder by the user. \cr
 }
 }
 \description{
@@ -97,11 +96,11 @@ createFileRepositoryFolder(rcon,
   
 }
 \seealso{
-\code{\link{exportFromFileRepository}}, \cr
-\code{\link{importToFileRepository}}, \cr
-\code{\link{deleteFromFileRepository}}, \cr
-\code{\link{exportFileRepository}}, \cr
-\code{\link{importFileRepository}}, \cr
-\code{\link{deleteFileRepository}}, \cr
-\code{\link{exportFileRepositoryListing}}
+\code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr
+\code{\link[=importToFileRepository]{importToFileRepository()}}, \cr
+\code{\link[=deleteFromFileRepository]{deleteFromFileRepository()}}, \cr
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=importFileRepository]{importFileRepository()}}, \cr
+\code{\link[=deleteFileRepository]{deleteFileRepository()}}, \cr
+\code{\link[=exportFileRepositoryListing]{exportFileRepositoryListing()}}
 }

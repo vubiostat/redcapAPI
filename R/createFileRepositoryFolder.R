@@ -8,34 +8,34 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args 
-#' @param name \code{character(1)} The name of the folder. If a folder by 
+#' @param name `character(1)` The name of the folder. If a folder by 
 #'   this name already exists, no action will be taken.
-#' @param folder_id \code{integerish(0/1)}. The ID of the parent folder. When
+#' @param folder_id `integerish(0/1)`. The ID of the parent folder. When
 #'   length is 0, the new folder is placed in the top-level.
-#' @param dag_id \code{integerish(0/1)} The ID of a data access group. When
+#' @param dag_id `integerish(0/1)` The ID of a data access group. When
 #'   provided, access to the folder will be restricted to the DAG.
-#' @param role_id \code{integerish(0/1)} The ID of a role. When provided, 
+#' @param role_id `integerish(0/1)` The ID of a role. When provided, 
 #'   access to the folder will be restricted to users with that role.
-#' @param ... Additional arguments to be passed between methods
-#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
-#'   File Repository data on \code{rcon} will be refreshed. 
+#' @param refresh `logical(1)` When `TRUE` (default), the cached 
+#'   File Repository data on `rcon` will be refreshed. 
 #'
 #' @return
 #' Returns a data frame with the columns
 #' 
-#' \tabular{ll}{
-#'  \code{folder_id} \tab The REDCap assigned ID value for the newly created folder.\cr
-#'  \code{name} \tab The name assigned to the folder by the user. 
-#' }
+#' |             |                                                            |
+#' |-------------|------------------------------------------------------------|
+#' | `folder_id` | The REDCap assigned ID value for the newly created folder. |
+#' | `name`      | The name assigned to the folder by the user.               |
+#'
 #'   
 #' @seealso
-#' \code{\link{exportFromFileRepository}}, \cr
-#' \code{\link{importToFileRepository}}, \cr
-#' \code{\link{deleteFromFileRepository}}, \cr
-#' \code{\link{exportFileRepository}}, \cr
-#' \code{\link{importFileRepository}}, \cr
-#' \code{\link{deleteFileRepository}}, \cr
-#' \code{\link{exportFileRepositoryListing}}
+#' [exportFromFileRepository()], \cr
+#' [importToFileRepository()], \cr
+#' [deleteFromFileRepository()], \cr
+#' [exportFileRepository()], \cr
+#' [importFileRepository()], \cr
+#' [deleteFileRepository()], \cr
+#' [exportFileRepositoryListing()]
 #' 
 #' @examples
 #' \dontrun{
