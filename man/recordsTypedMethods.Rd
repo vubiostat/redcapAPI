@@ -120,20 +120,20 @@ data is NA. This is useful when data is loaded that has coding for NA, e.g.
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 checkbox, form_complete, sql}. The function will be provided the variables
 (x, field_name, coding). The function must return a vector of logicals
-matching the input. It defaults to \code{\link{isNAorBlank}} for all
+matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
 
 \item{validation}{A named \code{list} of user specified validation functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
-these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
+these are \code{\link[=valRx]{valRx()}} and \code{\link[=valChoice]{valChoice()}}. Only fields that
 are not identified as NA will be passed to validation functions.}
 
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}}
+vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign
@@ -156,7 +156,7 @@ An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the

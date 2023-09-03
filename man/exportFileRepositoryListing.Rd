@@ -41,7 +41,7 @@ An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
