@@ -143,7 +143,7 @@ blocks of 8, a warning will be printed and you will receive 32 replicates in the
 randomization table.
 }
 \examples{
-{
+\dontrun{
 unlockREDCap(connections = c(rcon = "project_alias"), 
              url = "your_redcap_url", 
              keyring = "API_KEYs", 

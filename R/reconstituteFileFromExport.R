@@ -1,23 +1,28 @@
 #' @name reconstituteFileFromExport
 #' @title Save a File to a Local Directory from a Response
 #' 
-#' @description Converts the file from a \code{response} object and saves
+#' @description Converts the file from a `response` object and saves
 #'   it to the local file directory. 
 #'   
-#' @param response An object of class \code{response}. 
-#' @param dir \code{character(1)} A directory on the local file system into
+#' @param response An object of class `response`. 
+#' @param dir `character(1)` A directory on the local file system into
 #'   which the file will be saved. 
-#' @param dir_create \code{logical(1)} If TRUE and the directory does not 
+#' @param dir_create `logical(1)` If TRUE and the directory does not 
 #'   exist, it will be created. Defaults to FALSE. 
 #'   If dir does not exist and create = FALSE, an error is thrown.
-#' @param file_prefix \code{character(1)} An optional prefix to prepend to
+#' @param file_prefix `character(1)` An optional prefix to prepend to
 #'   the file name. This may be desirable to explicitly associate files
 #'   with a record and/or event.
-#' @param filename \code{character(0/1)} An optional filename. This is used
+#' @param filename `character(0/1)` An optional filename. This is used
 #'   in the case where a filename is being provided. It this has length 0, 
 #'   the filename will be extracted from the API response.
 #'   
-#' @author Benjamin Nutter
+#' @seealso
+#' [exportFiles()], \cr
+#' [exportFromFileRepository()], \cr
+#' [exportFileRepository()], \cr
+#' [exportPdf()]   
+#'   
 #' @export
 
 reconstituteFileFromExport <- function(response, 

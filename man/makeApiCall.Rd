@@ -61,9 +61,9 @@ returns that response.
                body = list(content = "metadata",
                            format = "csv",
                            returnFormat = "csv"))
-  MetaData <- read.csv(text = as.character(MetaData),
-                      stringsAsFactors = FALSE,
-                       na.strings = "")
+  MetaData <- utils::read.csv(text = as.character(MetaData),
+                              stringsAsFactors = FALSE,
+                              na.strings = "")
 
 
 

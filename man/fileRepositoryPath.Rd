@@ -21,6 +21,3 @@ Typically provided by \code{rcon$fileRepository()}}
 \description{
 Reconstruct the file repository path
 }
-\author{
-Benjamin Nutter
-}

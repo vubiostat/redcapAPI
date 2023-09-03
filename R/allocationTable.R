@@ -73,7 +73,8 @@
 #' | `blocks`           | Blocking scheme used to generate the randomization. | 
 #' | `weights`          | Weighting scheme for the randomization. | 
 #' 
-#' @examples{
+#' @examples
+#' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
 #'              url = "your_redcap_url", 
 #'              keyring = "API_KEYs", 

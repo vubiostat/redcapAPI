@@ -34,12 +34,14 @@ missingSummary_offline(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{excludeMissingForms}{\code{logical(1)} If all of the fields in a form are missing, would
-you like to assume that they are purposefully missing?  For instance, if
-a patient did not experience an adverse event, the adverse event form would
-contain no data and you would not want it in this report.}
+\item{excludeMissingForms}{\code{logical(1)} When \code{TRUE}, forms where all
+fields are missing are assumed to be deliberately missing data and
+are excluded from the count of missing values. An example when this is
+desirable is if a patient did not experience an adverse event;
+the adverse event form would contain no data and the empty fields
+should not be considered missing data.}
 
-\item{...}{Additional arguments to pass to other methods.  Currently ignored.}
+\item{...}{Arguments to pass to other methods}
 
 \item{fixed_fields}{\code{character} A vector of field names that will be used as
 the identifying fields in the output summary. This always includes the record
@@ -47,25 +49,28 @@ identifier (ie, the first field in the data dictionary). By default it
 also includes any fields identified in \code{REDCAP_SYSTEM_FIELDS}, which
 are fields that REDCap adds to exports to identify arms, events, etc..}
 
-\item{exportRecordsArgs}{named \code{list} with arguments to pass to \code{exportRecords}.
+\item{exportRecordsArgs}{named \code{list}. Arguments to pass to \code{exportRecords}.
 This allows for testing specific forms, events, and/or records. Internally, any
-setting you make for \code{factors, labels, dates, survey}, or \code{dag}
+setting you make for \verb{factors, labels, dates, survey}, or \code{dag}
 arguments will be ignored.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link{redcapError}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 
-\item{records}{\code{character(1)} A filename pointing to the raw records download from REDCap.}
+\item{records}{\code{character(1)} A filename pointing to the raw records
+download from REDCap.}
 
-\item{meta_data}{\code{character(1)} A filename pointing to the data dictionary download from REDCap.}
+\item{meta_data}{\code{character(1)} A filename pointing to the data dictionary
+download from REDCap.}
 }
 \description{
 Returns a data frame of subject events with missing values.
@@ -90,6 +95,19 @@ have an adverse event.  In this case, a form dedicated to adverse events
 would contain meaningless missing values and could be excluded from the
 report.
 }
-\author{
-Benjamin Nutter
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Generate a summary of missing values for the entire project
+missingSummary(rcon)
+
+# Generate a summary of missing values for a single form
+missingSummary(rcon, 
+               exportRecordsArgs = list(forms = "target_form"))
+}
+
 }

@@ -1,4 +1,3 @@
-# Complete documentation in documentation.R
 #' @describeIn metaDataMethods Import New Meta Data (Data Dictionary) Definitions 
 #' @order 2
 #' @export

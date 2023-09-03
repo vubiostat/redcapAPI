@@ -72,13 +72,14 @@ restoreProject(object, ...)
 \code{restoreProject.list}, where \code{object} is a list of data frames
 to use in restoring the project.}
 
-\item{...}{Arguments to pass to other methods.}
+\item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link{redcapError}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
@@ -124,7 +125,7 @@ via \code{importMappings}. The API doesn't support deleting
 mappings, but an import replaces the existing mappings.}
 
 \item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting
+configuration via \code{\link[=importRepeatingInstrumentsEvents]{importRepeatingInstrumentsEvents()}}. The API doesn't support deleting
 repeating instruments, but an import replaces the existing instruments.
 NOT YET IMPLEMENTED}
 
@@ -152,19 +153,38 @@ a project.
 When restoring a project, all arguments are optional. Any argument
 that is \code{NULL} will result in no import being made. The order of
 reconstructing the project is (purging data occurs in the reverse order):
-
-\itemize{
-\item{1. }{Update project information}
-\item{2. }{Import Arms Data}
-\item{3. }{Import Events Data}
-\item{4. }{Import Meta Data}
-\item{5. }{Import Mappings}
-\item{6. }{Import Repeating Instruments}
-\item{7. }{Import Users}
-\item{8. }{Import User Roles}
-\item{9. }{Import User Role Assignments}
-\item{10. }{Import Data Access Groups}
-\item{11. }{Import Data Access Group Assignments}
-\item{12. }{Import Records}
+\enumerate{
+\item Update project information
+\item Import Arms Data
+\item Import Events Data
+\item Import Meta Data
+\item Import Mappings
+\item Import Repeating Instruments
+\item Import Users
+\item Import User Roles
+\item Import User Role Assignments
+\item Import Data Access Groups
+\item Import Data Access Group Assignments
+\item Import Records
 }
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Preserve a project
+preserveProject(rcon)
+
+# Purge a project
+purgeProject(rcon, 
+             purge_all = TRUE)
+                
+# Restore a project
+restoreProject(rcon)
+
+}
+
 }

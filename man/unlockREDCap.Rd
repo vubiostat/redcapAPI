@@ -25,13 +25,13 @@ The name in the returned list is this name.}
 \item{keyring}{character. Potential keyring, not used by default.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
-which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
+which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
 \item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
 On MacOS it will use rstudioapi::askForPassword if available.}
 
-\item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
+\item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise

@@ -4,7 +4,7 @@
 #' @description Converts a dataframe into a character value in the format
 #'   of a CSV for import through the API.
 #'   
-#' @param data \code{data.frame} to be imported to the API
+#' @param data `data.frame` to be imported to the API
 #' 
 
 writeDataForImport <- function(data){

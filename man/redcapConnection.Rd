@@ -40,17 +40,14 @@ offlineConnection(
 \method{print}{redcapOfflineConnection}(x, ...)
 }
 \arguments{
-\item{url}{URL for a REDCap database API.  Check your institution's REDCap
-documentation for this address.  Either \code{url} or \code{conn} must
-be specified.}
+\item{url}{\code{character(1)}. URL for the user's REDCap database API.}
 
-\item{token}{REDCap API token}
+\item{token}{\code{character(1)} REDCap API token}
 
-\item{config}{A list to be passed to \code{httr::POST}.  This allows the
+\item{config}{A list to be passed to \code{\link[httr:POST]{httr::POST()}}.  This allows the
 user to set additional configurations for the API calls, such as
-certificates, ssl version, etc. For the majority of users, this does
-not need to be altered.  See Details for more about this argument's
-purpose and the \code{redcapAPI} wiki for specifics on its use.}
+certificates, SSL version, etc. For the majority of users, this does
+not need to be altered.}
 
 \item{retries}{\code{integerish(1)}. Sets the number of attempts to make to the
 API if a timeout error is encountered. Must be a positive value.}
@@ -121,8 +118,8 @@ data as downloaded from the API, for instance. Using labelled or formatted
 data is likely to result in errors when passed to other functions.}
 }
 \description{
-Creates an object of class \code{redcapApiConnection} for
-using the REDCap API
+These methods enable the user to create a connection object
+used to access the database.
 }
 \details{
 \code{redcapConnection} objects will retrieve and cache various forms of
@@ -153,30 +150,11 @@ be altered at any time using the methods \code{rcon$set_retries(r)},
 The argument to these functions have the same requirements as the
 corresponding arguments to \code{redcapConnection}.
 
-For convenience, you may consider using
-\code{options(redcap_api_url=[your URL here])} in your RProfile.
-To obtain an API token for a project, do the following:\cr
-Enter the 'User Rights' section of a project\cr
-Select a user\cr
-Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on
-configuring REDCap to use the API can be found at \url{https://github.com/vubiostat/redcapAPI/wiki}
-
 Tokens are specific to a project, and a token must be created for each
 project for which you wish to use the API.
 
-The \code{config} argument is passed to the \code{httr::POST} argument of
-the same name.  The most likely reason for using this argument is that the
-certificate files bundled in \code{httr} have fallen out of date.
-Hadley Wickham is pretty good about keeping those certificates up
-to date, so most of the time this problem can be resolved by updating
-\code{httr} to the most recent version.  If that doesn't work, a
-certificate file can be manually passed via the \code{config} argument.
-The \code{redcapAPI} wiki has a more detailed tutorial on how to
-find and pass an SSL certificate to the API call
-(\url{https://github.com/vubiostat/redcapAPI/wiki/Manually-Setting-an-SSL-Certificate-File}).
-
 Additional Curl option can be set in the \code{config} argument.  See the documentation
-for \code{httr::config} and \code{httr:httr_options} for more Curl options.
+for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.
 }
 \examples{
 \dontrun{
@@ -198,7 +176,4 @@ rcon$flush_fieldnames()
 rcon$has_fieldnames()
 }
 
-}
-\author{
-Jeffrey Horner
 }

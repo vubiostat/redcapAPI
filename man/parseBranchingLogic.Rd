@@ -33,6 +33,3 @@ The utility of this function is limited to simple logic where all of the
 data exist within the same row. Any complex statements using events
 will result in a failure.
 }
-\author{
-Benjamin Nutter
-}

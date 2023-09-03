@@ -31,11 +31,11 @@
 #' [stripUnicode()]
 #' 
 #' @examples
-#' 
+#' \dontrun{
 #' stripHTMLandUnicode("field_name", "<b>Field label</b>", "field annotation")
 #' 
 #' unitsFieldAnnotation("field", "label", "units={\"meters\"}")
-#' 
+#' }
 #' 
 #' @export
 

@@ -10,6 +10,8 @@
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @inheritParams userMethods
+#' @param data `data.frame`. Provides the user data for import. It must have
+#'   a column titled `unique_role_name`. All other columns are optional.
 #' @param user_roles `character`. Unique role names to be deleted from
 #'   the project. 
 #'   

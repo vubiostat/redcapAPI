@@ -7,9 +7,9 @@
 #'   option. Identifying these fields is important to handling them
 #'   correctly.
 #'
-#' @param field_name \code{character(1)} The name of a field to be tested.
-#' @param field_names \code{character} vector of field names.
-#' @param x \code{atomic} object.
+#' @param field_name `character(1)` The name of a field to be tested.
+#' @param field_names `character` vector of field names.
+#' @param x `atomic` object.
 
 isZeroCodedCheckField <- function(field_name){
   coll <- checkmate::makeAssertCollection()

@@ -6,7 +6,7 @@
 #'   be the first field in the meta data. The second, if provided, will
 #'   be the name of the secondary unique field specified in the project.
 #'
-#' @param rcon A \code{redcapConnection} object. 
+#' @param rcon A `redcapConnection` object. 
 #' 
 
 getProjectIdFields <- function(rcon){

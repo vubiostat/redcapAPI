@@ -34,6 +34,9 @@ the filename will be extracted from the API response.}
 Converts the file from a \code{response} object and saves
 it to the local file directory.
 }
-\author{
-Benjamin Nutter
+\seealso{
+\code{\link[=exportFiles]{exportFiles()}}, \cr
+\code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=exportPdf]{exportPdf()}}
 }

@@ -7,10 +7,11 @@
 redcapError(x, error_handling)
 }
 \arguments{
-\item{x}{Object returned by \code{\link[httr]{POST}}.}
+\item{x}{Object returned by \code{\link[httr:POST]{httr::POST()}}.}
 
-\item{error_handling}{Direction for how to handle errors.  May be either
-\code{"null"} or \code{"error"}. See Details.}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link{redcapError}}.}
 }
 \description{
 Determine the proper way to handle errors returned from the API.
@@ -43,16 +44,4 @@ error handler is set to \code{"null"}, a \code{NULL} is returned.  When the
 error handler is set to \code{"error"}, the error is returned.  The option
 is set globally using \code{options(redcap_error_handler = "null")} and is
 set to \code{"null"} by default.
-}
-\section{Handled Errors}{
-
-Only the errors listed below are handled.  All others throw a hard error.
-
-"ERROR: The value of the parameter \"content\" is not valid"\cr
-"ERROR: You cannot export arms for classic projects"\cr
-"ERROR: You cannot export events for classic projects"
-}
-
-\author{
-Benjamin Nutter
 }

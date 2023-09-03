@@ -205,15 +205,15 @@
 #'          it can be named anything one desires.
 #'          The name in the returned list is this name. 
 #' @param envir environment. The target environment for the connections. Defaults to NULL
-#'          which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
+#'          which returns the keys as a list. Use [globalenv()] to assign in the
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of one's institutional REDCap server api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
 #'          On MacOS it will use rstudioapi::askForPassword if available. 
-#' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
+#' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
-#'         connections are assigned into the specified \code{envir}.
+#'         connections are assigned into the specified `envir`.
 #' @importFrom getPass getPass
 #' @importFrom yaml read_yaml
 #' @importFrom keyring key_get

@@ -1,24 +1,19 @@
 #' @name fieldChoiceMapping
-#' @title Splits a Field Choice Mapping Into a Two Column Matrix
+#' @title Split a Field Choice Mapping Into a Two Column Matrix
 #' 
-#' @description Uses the string from the \code{select_choices_or_calculations}
+#' @description Uses the string from the `select_choices_or_calculations`
 #'   for the meta data to create a matrix of codes and their mapped 
 #'   labels. 
 #'   
-#' @param object May be either a \code{character(1)} with the content of the 
-#'   field choices (i.e. \code{meta_data$select_choices_or_calculations}), 
-#'   or a \code{redcapConnection} object.
-#' @param field_name \code{character(1)} gives the field name for which to 
+#' @param object `redcapConnection` or `character(1)`. When `character`, is 
+#'   matches the format of the meta data field choices
+#'   (i.e. `rcon$meta_data()$select_choices_or_calculations`).
+#' @param field_name `character(1)` gives the field name for which to 
 #'   make the choice mapping.
-#' @param ... arguments to pass to other methods.
+#' @inheritParams common-dot-args
 #'   
 #' @return 
-#' Returns a matrix with two columns, \code{choice_value} and \code{choice_label}
-#' 
-#' @author Benjamin Nutter, Shawn Garbett
-#' 
-#' @source 
-#' https://stackoverflow.com/questions/23961022/split-strings-on-first-and-last-commas
+#' Returns a matrix with two columns, `choice_value` and `choice_label`
 #' 
 #' @export
 

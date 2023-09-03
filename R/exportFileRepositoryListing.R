@@ -151,9 +151,9 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   
   response <- as.character(response)
   if (nchar(response) > 0){
-    response <- read.csv(text = response, 
-                         stringsAsFactors = FALSE, 
-                         na.strings = "")
+    response <- utils::read.csv(text = response, 
+                                stringsAsFactors = FALSE, 
+                                na.strings = "")
     response$parent_folder <- rep(parent, 
                                   nrow(response))
   } else {

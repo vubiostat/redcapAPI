@@ -45,7 +45,7 @@ mChoiceCast(data, rcon, style = "labelled", drop_fields = TRUE)
 \arguments{
 \item{data}{\code{data.frame} with the data fields to be recoded.}
 
-\item{rcon}{\code{recapConnection} object.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{fields}{\code{character/logical/integerish}. A vector for identifying
 which fields to recode. When \code{logical}, the length must match
@@ -55,13 +55,10 @@ multiple choice field; no action will be taken on such fields.
 For this function, yes/no and true/false fields are considered
 multiple choice fields. Fields of class \code{mChoice} are quietly skipped.}
 
-\item{cast}{A named \code{list} of user specified class casting functions.
-Keys must correspond to a truncated REDCap field type, i.e.
-{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
-number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql}. The function will be
-provided the variables (x, field_name, coding).
-See \code{\link{fieldValidationAndCasting}}}
+\item{cast}{A named \code{list} of user specified class casting functions. The
+same named keys are supported as the na argument. The function will be
+provided the variables (x, field_name, coding). The function must return a
+vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{suffix}{\code{character(1)}. An optional suffix to provide if
 the recoded variables should be returned as new columns. For example,
@@ -77,14 +74,14 @@ data is NA. This is useful when data is loaded that has coding for NA, e.g.
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
 checkbox, form_complete, sql}. The function will be provided the variables
 (x, field_name, coding). The function must return a vector of logicals
-matching the input. It defaults to \code{\link{isNAorBlank}} for all
+matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
 
 \item{validation}{A named \code{list} of user specified validation functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
-these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
+these are \code{\link[=valRx]{valRx()}} and \code{\link[=valChoice]{valChoice()}}. Only fields that
 are not identified as NA will be passed to validation functions.}
 
 \item{quiet}{Print no messages if triggered, Default=FALSE.}
@@ -93,12 +90,13 @@ are not identified as NA will be passed to validation functions.}
 
 \item{style}{character. One of "labelled" or "coded". Default is "labelled"}
 
-\item{drop_fields}{logical(1). Drop fields that were aggregated.}
+\item{drop_fields}{\code{character} or \code{NULL}. A vector of field names to remove from
+the data.}
 }
 \description{
 The functions provided here allow for recasting fields
 after records have been exported. They generally have a similar
-interface to the casting strategy of \code{\link{exportRecordsTyped}},
+interface to the casting strategy of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}},
 though they may not each offer all the same options.
 }
 \details{
@@ -130,15 +128,43 @@ to be loaded.
 }
 \examples{
 \dontrun{
+# Using recastRecords after export
+Recs <- 
+  exportRecordsTyped(rcon) |>
+  recastRecords(rcon, 
+                fields = "dropdown_test",
+                cast = list(dropdown = castCode))
+                
+                
+# Using castForImport
+castForImport(Records, 
+              rcon)
+              
+              
+# Using castForImport to recast zero-coded checkbox values
+castForImport(Records, 
+              rcon, 
+              cast = list(checkbox = castCheckForImport(c("0", "Unchecked"))))
+
+
 # Using guessCast
-recs <- exportRecordsTyped(rcon, 
+exportRecordsTyped(rcon, 
                            cast = raw_cast) |> 
   guessCast(rcon, 
             validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
             cast=as.Date,
             threshold=0.6)
+            
+            
+# Using mChoiceCast
+exportRecordsTyped(rcon) |> 
+  mChoiceCast(rcon)
 
-# Using mChoiceCast            
-recs <- exportRecordsTyped(rcon) |> mChoiceCast(rcon)
 }
+
+
+}
+\seealso{
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}
 }

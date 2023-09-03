@@ -63,7 +63,7 @@ each form.}
 the project.}
 
 \item{data}{\code{data.frame}. Provides the user data for import. It must have
-a column titled \code{username}. All other columns are optional.}
+a column titled \code{unique_role_name}. All other columns are optional.}
 
 \item{consolidate}{\code{logical(1)}. When \code{TRUE}, the form and data
 export access values will be read from the expanded columns. Otherwise,

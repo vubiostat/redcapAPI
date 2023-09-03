@@ -108,10 +108,10 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config)
   
-  Raw <- read.csv(text = as.character(response), 
-                  na.strings = "", 
-                  sep = csv_delimiter,
-                  stringsAsFactors = FALSE)
+  Raw <- utils::read.csv(text = as.character(response), 
+                         na.strings = "", 
+                         sep = csv_delimiter,
+                         stringsAsFactors = FALSE)
   
   if (length(drop_fields) > 0){
     Raw <- Raw[!names(Raw) %in% drop_fields]

@@ -39,11 +39,11 @@ Useful utilities are provided in \code{\link[=stringCleanup]{stringCleanup()}}
 An example of the form searched for is \verb{units=\\\{"meters"\\\}}
 }
 \examples{
-
+\dontrun{
 stripHTMLandUnicode("field_name", "<b>Field label</b>", "field annotation")
 
 unitsFieldAnnotation("field", "label", "units={\"meters\"}")
-
+}
 
 }
 \seealso{
