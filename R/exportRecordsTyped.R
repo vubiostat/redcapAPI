@@ -18,7 +18,7 @@ exportRecordsTyped <-
     
     UseMethod("exportRecordsTyped")
 
-#' @describeIn recordsTypedMethods Export records without API access.
+#' @rdname recordsTypedMethods
 #' @order 3
 #' @export
 
@@ -231,7 +231,7 @@ exportRecordsTyped.redcapApiConnection <-
 
 
 
-#' @rdname recordsTypedMethods
+#' @describeIn recordsTypedMethods Export records without API access.
 #' @order 4
 #' @export
 

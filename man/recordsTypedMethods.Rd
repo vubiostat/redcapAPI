@@ -252,7 +252,7 @@ for a full listing of package provided cast functions.
 
 \item \code{exportReportsTyped()}: Export reports with type casting.
 
-\item \code{exportRecordsTyped(redcapApiConnection)}: Export records without API access.
+\item \code{exportRecordsTyped(redcapOfflineConnection)}: Export records without API access.
 
 }}
 \examples{
@@ -277,9 +277,17 @@ exportRecordsTyped(rcon,
 exportRecordsTyped(rcon, 
                    forms = c("registration", "visit_1", "medications"))
                    
+# Export records using filterLogic, an API parameter not provided
+# in the exportRecordsTyped function signature
+exportRecordsTyped(
+  rcon, 
+  records = 1:3, 
+  api_param = list(filterLogic = "[age_at_enrollment] > 25")
+)
                    
                    
-# Export a report
+                   
+# Export a report 
 exportReports(rcon, 
               report_id = 12345)
               

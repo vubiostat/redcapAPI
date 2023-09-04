@@ -148,9 +148,17 @@
 #' exportRecordsTyped(rcon, 
 #'                    forms = c("registration", "visit_1", "medications"))
 #'                    
+#' # Export records using filterLogic, an API parameter not provided
+#' # in the exportRecordsTyped function signature
+#' exportRecordsTyped(
+#'   rcon, 
+#'   records = 1:3, 
+#'   api_param = list(filterLogic = "[age_at_enrollment] > 25")
+#' )
 #'                    
 #'                    
-#' # Export a report
+#'                    
+#' # Export a report 
 #' exportReports(rcon, 
 #'               report_id = 12345)
 #'               
