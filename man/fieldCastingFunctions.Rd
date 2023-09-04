@@ -166,5 +166,6 @@ exportRecordsTyped(rcon) |>
 }
 \seealso{
 \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
-\code{\link[=exportReportsTyped]{exportReportsTyped()}}
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}, \cr
+\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
 }

@@ -56,7 +56,8 @@
 #'   
 #' @seealso 
 #' [exportRecordsTyped()], \cr
-#' [exportReportsTyped()]
+#' [exportReportsTyped()], \cr
+#' [fieldValidationAndCasting()]
 #'   
 #'   
 #' @examples
