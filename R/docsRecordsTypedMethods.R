@@ -3,7 +3,7 @@
 #' 
 #' @description These methods enable the user to export records from a 
 #'   database or from a report. These methods have more control for casting
-#'   fields to R objects than \code{exportRecords}. 
+#'   fields to R objects than `exportRecords`. 
 #'   
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
@@ -111,7 +111,7 @@
 #' by an ever increasing set of flags before. E.g., `dates=as.Date` was
 #' an addition to allow dates in the previous version to be overridden if the 
 #' user wanted to use the Date class. In this version, it would appear called
-#' as `cast=list(_date=as.Date))`. See \code{\link{fieldValidationAndCasting}}
+#' as `cast=list(_date=as.Date))`. See [fieldValidationAndCasting()]
 #' for a full listing of package provided cast functions. 
 #' 
 #' @return
@@ -120,11 +120,11 @@
 #' `exportReportsTyped` returns a data frame with the formatted data.
 #' 
 #' @seealso 
-#' \code{\link{exportRecords}}, \cr
-#' \code{\link{exportReports}}, \cr
-#' \code{\link{fieldValidationAndCasting}}, \cr
-#' \code{\link{fieldCastingFunctions}}, \cr
-#' \code{\link{exportBulkRecords}}
+#' [exportRecords()], \cr
+#' [exportReports()], \cr
+#' [fieldValidationAndCasting()], \cr
+#' [fieldCastingFunctions()], \cr
+#' [exportBulkRecords()]
 #' 
 #' @examples
 #' \dontrun{

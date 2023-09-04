@@ -4,12 +4,11 @@
 #' @description Prepares a data frame for import via the API. Allows for 
 #'   data to be passed in either the raw format or the labelled data 
 #'   received from `exportUsers`.
-#'   
+#'
+#' @inheritParams common-rcon-arg
 #' @param data `data.frame` with the structure of 
 #'   `redcapAPI:::REDCAP_USER_STRUCTURE`. It may also have additional 
 #'   columns for the form and export access of each of the instruments.
-#' @param rcon `redcapConnection`. Used to determine the instruments
-#'   in the project.
 #' @param consolidate `logical(1)` If `TRUE`, the form and data 
 #'   export access values will be read from the expanded columns. Otherwise, 
 #'   the consolidated values (as provided by the API export) are utilized.

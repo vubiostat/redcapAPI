@@ -9,9 +9,8 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param arms `integerish` A vector of arm numbers that you wish to pull events for (by default,
-#'   all events are pulled). Will also accept `character`, but will coerce
-#'   it to numeric before processing.
+#' @param arms `integerish` or `character`. A vector of arm numbers. When 
+#'   given, mappings are only exported for the given arms.
 #' @param data `data.frame` with columns `arm_num`, `unique_event_name`, 
 #'   and `form`. See Details
 #' @param refresh `logical(1)`. When `TRUE`, cached mappings in the `rcon` 

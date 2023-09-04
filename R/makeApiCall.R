@@ -3,15 +3,15 @@
 #' 
 #' @description Constructs and executes API calls to the REDCap API. These
 #'   are left deliberately abstract in order to be flexible enough to 
-#'   support the \code{redcapAPI} functions, but also allow users to 
+#'   support the `redcapAPI` functions, but also allow users to 
 #'   execute calls for new REDCap features that are not yet implemented.
 #'   
-#' @param rcon \code{redcapApiConnection} object.
-#' @param body \code{list} List of parameters to be passed to \code{\link[httr]{POST}}'s 
-#'   \code{body} argument
-#' @param config \code{list} A list of options to be passed to \code{\link[httr]{POST}}.
-#'   These will be appended to the \code{config} options included in the 
-#'   \code{rcon} object.
+#' @inheritParams common-rcon-arg
+#' @param body `list` List of parameters to be passed to [httr::POST()]'s 
+#'   `body` argument
+#' @param config `list` A list of options to be passed to [httr::POST()].
+#'   These will be appended to the `config` options included in the 
+#'   `rcon` object.
 #'   
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
@@ -23,26 +23,21 @@
 #'   The body of the call contains all of the arguments being passed to the 
 #'   API. When building body components, be sure to review the documentation. 
 #'   options to the API that require an array need to be built using 
-#'   \code{vectorToApiBodyList}; options that are not an array can be entered
+#'   `vectorToApiBodyList`; options that are not an array can be entered
 #'   directly (see examples). 
 #'   
-#'   The config list is a list of parameters to pass to \code{\link[httr]{POST}}. 
+#'   The config list is a list of parameters to pass to [httr::POST()]. 
 #'   Refer to documentation there for details.
 #'   
-#'   Using the settings stored in the \code{redcapConnection} object, a response
+#'   Using the settings stored in the `redcapConnection` object, a response
 #'   code of 408 (Request Timeout), 500 (Internal Server Error), 
 #'   502 (Bad Gateway), 503 (Service Unavailable), or 504 (Gateway Timeout)
-#'   will prompt reattempts at calling the API. See \code{\link{redcapConnection}}
+#'   will prompt reattempts at calling the API. See [redcapConnection()]
 #'   for details. If the API reaches its attempt limit without resolving to 
 #'   any other code, the last response is returned. If any other response
 #'   code is returned at any point in the retry loop, the loop breaks and 
 #'   returns that response.
 #'   
-#' @author Benjamin Nutter
-#' 
-#' @references
-#' Please refer to your institution's API documentation.
-#' 
 #' @examples 
 #' \dontrun{
 #'   url <- "Enter your API URL here"

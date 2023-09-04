@@ -4,10 +4,10 @@
 #' @description Evaluates each row of a data frame for missingness. If all
 #' fields (excluding the identifying fields) are missing, the row is 
 #' removed from the data. For the purpose of this function, 
-#' \code{redcap_data_access_group} is considered an identifying field.
+#' `redcap_data_access_group` is considered an identifying field.
 #' 
+#' @inheritParams common-rcon-arg
 #' @param data A `data.frame` to be filtered.
-#' @param rcon A `redcapConnection` object.
 #' 
 
 filterEmptyRow <- function(data, 

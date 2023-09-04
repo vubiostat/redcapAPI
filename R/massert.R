@@ -3,30 +3,28 @@
 #' 
 #' @description This documentation attempts to describe arguments to make assertions
 #' on arguments.  In order to prevent confusion, it is imperative to develop some
-#' terminology up front. We will use \emph{function argument} to refer to an argument
+#' terminology up front. We will use _function argument_ to refer to an argument
 #' of the function for which we are conducting assertions.  We will  use 
-#' \emph{assertion argument} to refer to arguments to pass to the assertion function 
-#' being applied to a function argument.  Lastly, we will use \emph{massert argument}
-#' to refer to arguments to \code{massert}
+#' _assertion argument_ to refer to arguments to pass to the assertion function 
+#' being applied to a function argument.  Lastly, we will use _massert argument_
+#' to refer to arguments to `massert`
 #'   
 #' @param formula A one sided formula naming the arguments on which the assertion
 #'   will be performed.
 #' @param fun An assertion function to perform.
-#' @param ... Additional lists. Each argument provided is a named list of \code{assertion 
-#'   arguments}. The name of each element in a list should match the name of a 
-#'   \code{function argument}. \code{lower = list(var1 = 0, var2 = 10)} sets 
-#'   the \emph{assertion argument} \code{lower = 0} for \emph{function argument} 
-#'   \code{var1}; and sets the \emph{assertion argument} \code{lower = 10} for 
-#'   \code{function argument} \code{var2}. The \emph{massert arguments} in \code{...} 
+#' @param ... Additional lists. Each argument provided is a named list of `assertion 
+#'   arguments`. The name of each element in a list should match the name of a 
+#'   `function argument`. `lower = list(var1 = 0, var2 = 10)` sets 
+#'   the _assertion argument_ `lower = 0` for _function argument_ 
+#'   `var1`; and sets the _assertion argument_ `lower = 10` for 
+#'   `function argument` `var2`. The _massert arguments_ in `...` 
 #'   may themselves be named or unnamed.
 #' @param fixed A named list of arguments that are fixed across all assertions.
 #' 
-#' @details Only one assert function may be utilized in each call to \code{massert}. 
+#' @details Only one assert function may be utilized in each call to `massert`. 
 #'   This allows for all numeric variables to be checked in one call, all logical 
 #'   variables to be checked in a subsequent call, etc.
 #'   
-#' @author Benjamin Nutter
-
 
 massert <- function(formula, fun, ..., fixed = list())
 {

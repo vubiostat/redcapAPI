@@ -76,7 +76,7 @@
 #' | `field_annotation`               | Contains annotations such as units of measures. Also contains action tags. |
 #'
 #' 
-#' \code{importMetaData} has no return and displays a message indicating 
+#' `importMetaData` has no return and displays a message indicating 
 #'   the number of fields that were imported.
 #' 
 #' @seealso 

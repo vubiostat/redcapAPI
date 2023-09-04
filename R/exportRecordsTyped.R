@@ -704,25 +704,25 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @title A helper function to export multiple records and forms using
 #' a single call.
 #' @description Exports records from multiple REDCap Databases using
-#' multiple calls to \code{\link{exportRecordsTyped}}
+#' multiple calls to [exportRecordsTyped()]
 #'
-#' @param rcon A named list of REDCap connection object as created by \code{\link{redcapConnection}}.
-#' @param forms A named list that is a subset of rcon's names. A specified \code{rcon}
-#'              will provide a list of forms for repeated calls to \code{exportRecordsType}.
+#' @inheritParams common-rcon-arg
+#' @param forms A named list that is a subset of rcon's names. A specified `rcon`
+#'              will provide a list of forms for repeated calls to `exportRecordsType`.
 #'              If a connection reference is missing it will default to all forms. To override
 #'              this default specify a connection's forms with NA to just get all
 #'              data. 
 #' @param envir A environment to write the resulting Records in as variables
 #'   given by their name in rcon or if from a form their rcon named pasted to 
-#'   their form name joined by \code{sep}. If not specified the function
+#'   their form name joined by `sep`. If not specified the function
 #'   will return a named list with the results. Will accept a number of the
 #'   environment.
 #' @param sep A character string to use when joining the rcon name to the form name
 #' for storing variables. 
 #' @param post A function that will run on all returned sets of Records. 
-#' @param \dots Any additional variables to pass to \code{\link{exportRecordsTyped}}.
-#' @return Will return a named list of the resulting records if \code{envir} is 
-#'    NULL. Otherwise will assign them to the specified \code{envir}.
+#' @param \dots Any additional variables to pass to [exportRecordsTyped()].
+#' @return Will return a named list of the resulting records if `envir` is 
+#'    NULL. Otherwise will assign them to the specified `envir`.
 #' @examples
 #' \dontrun{
 #' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
@@ -757,6 +757,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #'# post processed in the same manner as specified by `post`.
 #' }
 #' @export
+
 exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
 {
   if(is.numeric(envir)) envir <- as.environment(envir)

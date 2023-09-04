@@ -18,22 +18,22 @@
 #'   only in the specified arm.
 #'   
 #' @return
-#' \code{exportNextRecordName} returns an integerish value. The value is
+#' `exportNextRecordName` returns an integerish value. The value is
 #'   determined by looking up the highest record ID number in the 
 #'   project and incrementing it by 1. 
 #'
-#' \code{renameRecord} return a logical value that indicates if the 
+#' `renameRecord` return a logical value that indicates if the 
 #'   operation was successful.
 #'   
 #'   
 #'   
 #' @seealso 
-#' \code{\link{exportRecords}}, \cr
-#' \code{\link{exportReports}}, \cr
-#' \code{\link{importRecords}}, \cr
-#' \code{\link{deleteRecords}}, \cr
-#' \code{\link{exportRecordsTyped}}, \cr
-#' \code{\link{exportReportsTyped}}
+#' [exportRecords()], \cr
+#' [exportReports()], \cr
+#' [importRecords()], \cr
+#' [deleteRecords()], \cr
+#' [exportRecordsTyped()], \cr
+#' [exportReportsTyped()]
 #' 
 #' @examples
 #' \dontrun{

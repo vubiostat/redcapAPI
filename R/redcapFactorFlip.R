@@ -10,12 +10,10 @@
 #'   dropdown, check, yesno, etc.
 #'   
 #' @details Each factor type variable in REDCap is given the attributes 
-#' \code{redcapLabels} and \code{redcapLevels}.  With these attached to the 
+#' `redcapLabels` and `redcapLevels`.  With these attached to the 
 #' vector, switching between the coded and labelled values can be done with 
 #' ease.  This may be helpful when the coded value has importance, 
 #' such as 0/1 for death, or if a yes is worth 6 points (instead of 1).
-#' 
-#' @author Benjamin Nutter
 #' 
 
 redcapFactorFlip <- function(v){

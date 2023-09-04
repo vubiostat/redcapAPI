@@ -2,8 +2,8 @@
 #' @title Checkbox Suffixes
 #' 
 #' @description Checkbox variables return one vector of data for each option defined
-#'   in the variable.  The variables are returned with the suffix \code{___[option]}.
-#'   \code{exportRecords} needs these suffixes in order to retrieve all of the 
+#'   in the variable.  The variables are returned with the suffix `___[option]`.
+#'   `exportRecords` needs these suffixes in order to retrieve all of the 
 #'   variables and to apply the correct labels.
 #'   
 #' @param fields The current field names of interest

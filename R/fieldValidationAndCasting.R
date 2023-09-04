@@ -75,7 +75,7 @@
 #' for checkbox fields. For both, unchecked variables are cast to an empty 
 #' string (""). Checked variables are cast to the option label and option code, 
 #' respectively. `castCheckLabelCharacter` and `castCheckCodeCharacter`
-#' is an equivalent casting function that returns a `character` vector 
+#' are equivalent casting functions that returns a `character` vector 
 #' instead of a `factor`.
 #' 
 #' `castCheckForImport` is a special case function to allow the user to

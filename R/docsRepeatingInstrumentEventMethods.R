@@ -16,15 +16,15 @@
 #'   refreshed.
 #'   
 #' @details Repeating events (as opposed to repeating instruments) are 
-#'   provided as a row of data where the `form_name` column is \code{NA}.
+#'   provided as a row of data where the `form_name` column is `NA`.
 #'   
 #'   It is not possible to update the `has_repeating_instruments_or_events` 
 #'   property of the project through `importProjectInformation`. 
 #'   Enabling of repeating instruments and events must be done through the GUI.
 #' 
 #'   Although the API does not provide a delete method, it is possible to 
-#'   remove settings by doing an import that excludes the settings you wish
-#'   to remove. All settings can be cleared by executing
+#'   remove settings by doing an import that excludes the settings that are
+#'   to be deleted. All settings can be cleared by executing
 #'   `importRepeatingInstrumentsEvents(rcon, REDCAP_REPEAT_INSTRUMENT_STRUCTURE)`.
 #'   
 #' @return

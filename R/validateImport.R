@@ -5,14 +5,14 @@
 #' @description Validates the variables in a data frame prior to attempting 
 #'   an import to REDCap
 #'   
-#' @param data \code{data.frame} being prepared for import to REDCap.
+#' @param data `data.frame` being prepared for import to REDCap.
 #' @param meta_data REDCap database meta data.
 #' @param logfile A character string giving the filepath to which the 
-#'   results of the validation are printed.  If \code{""}, the results 
+#'   results of the validation are printed.  If `""`, the results 
 #'   are printed in the console.
 #'   
 #' @details
-#' \code{validateImport} is called internally by \code{importRecords} and is 
+#' `validateImport` is called internally by `importRecords` and is 
 #' not available to the user.
 #' 
 #' Each variable is validated by matching they type of variable with the type 
@@ -67,11 +67,6 @@
 #' comes after the @@, but before the period, and may consist of any 
 #' number of letters, numbers, periods, or dashes.  Finally, the string ends 
 #' with a period then anywhere from 2 to 6 letters.
-#' 
-#' @author Benjamin Nutter
-#' 
-#' @references
-#' See the REDCap Help and FAQ page's section on 'Text Validation Types'
 #' 
 validateImport <- function(data, meta_data, logfile = "")
 {

@@ -74,13 +74,13 @@
 #' @usage NULL
 #' @order 0
 # dummy function to control the order of arguments in the help file.
-dagsMethods <- function(rcon, 
-                        dags, 
-                        data, 
-                        refresh, 
-                        ..., 
-                        error_handling, 
-                        config, 
-                        api_param){
+dagMethods <- function(rcon, 
+                       dags, 
+                       data, 
+                       refresh, 
+                       ..., 
+                       error_handling, 
+                       config, 
+                       api_param){
   NULL
 }

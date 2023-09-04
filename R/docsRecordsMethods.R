@@ -99,7 +99,7 @@
 #' In longitudinal projects, `batch.size` may not necessarily be the 
 #' number of records exported in each batch.  If `batch.size` is 10 and 
 #' there are four records per patient, each batch will consist of 40 records.  
-#' Thus, if you are concerned about tying up the server with a large, 
+#' Thus, if the user is concerned about tying up the server with a large, 
 #' longitudinal project, it would be prudent to use a smaller batch size.
 #' 
 #' 

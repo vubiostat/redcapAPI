@@ -52,7 +52,7 @@
 #' corresponding arguments to `redcapConnection`.
 #' 
 #' Tokens are specific to a project, and a token must be created for each 
-#' project for which you wish to use the API.
+#' project for which the user wishes to use the API.
 #' 
 #' Additional Curl option can be set in the `config` argument.  See the documentation
 #' for [httr::config()] and [httr::httr_options()] for more Curl options.

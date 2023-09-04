@@ -7,37 +7,37 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data A \code{data.frame} to be imported to the project.
-#' @param overwriteBehavior \code{character(1)}. One of \code{c("normal", "overwrite")}. 
-#'   \code{"normal"} prevents blank fields from overwriting populated fields.  
-#'   \code{"overwrite"} causes blanks to overwrite data in the database.
-#' @param force_auto_number \code{logical(1)}. If record auto-numbering has been
+#' @param data A `data.frame` to be imported to the project.
+#' @param overwriteBehavior `character(1)`. One of `c("normal", "overwrite")`. 
+#'   `"normal"` prevents blank fields from overwriting populated fields.  
+#'   `"overwrite"` causes blanks to overwrite data in the database.
+#' @param force_auto_number `logical(1)`. If record auto-numbering has been
 #'   enabled in the project, it may be desirable to import records where each 
 #'   record's record name is automatically determined by REDCap (just as it 
-#'   does in the user interface). When \code{TRUE}, the 
+#'   does in the user interface). When `TRUE`, the 
 #'   record names provided in the request will not be used (although they 
 #'   are still required in order to associate multiple rows of data to an 
 #'   individual record in the request); instead those records in the 
 #'   request will receive new record names during the import process. 
 #'   It is recommended that the user use `returnContent = "auto_ids"`
 #'   when `force_auto_number = TRUE`
-#' @param returnContent \code{character(1)}.  
-#'   One of \code{c("count", "ids", "nothing", "auto_ids")}.
+#' @param returnContent `character(1)`.  
+#'   One of `c("count", "ids", "nothing", "auto_ids")`.
 #'   'count' returns the number of records imported; 
 #'   'ids' returns the record ids that are imported;
 #'   'nothing' returns no message; 
 #'   'auto_ids' returns a list of pairs of all record IDs that were imported. 
-#'   If used when \code{force_auto_number = FALSE}, the value will be changed to \code{'ids'}.
-#' @param returnData \code{logical(1)}. When \code{TRUE}, prevents the REDCap 
+#'   If used when `force_auto_number = FALSE`, the value will be changed to `'ids'`.
+#' @param returnData `logical(1)`. When `TRUE`, prevents the REDCap 
 #'   import and instead returns the data frame that would have been given
 #'   for import. This is sometimes helpful if the API import fails without
 #'   providing an informative message. The data frame can be written to a csv
 #'   and uploaded using the interactive tools to troubleshoot the
 #'   problem. 
-#' @param logfile \code{character(1)}. An optional filepath (preferably .txt) 
+#' @param logfile `character(1)`. An optional filepath (preferably .txt) 
 #'   in which to print the log of errors and warnings about the data.
-#'   When \code{""}, the log is printed to the console. 
-#' @param batch.size \code{integerish(1)}.  Specifies the number of subjects to be included 
+#'   When `""`, the log is printed to the console. 
+#' @param batch.size `integerish(1)`.  Specifies the number of subjects to be included 
 #'   in each batch of a batched export or import.  Non-positive numbers 
 #'   export/import the entire operation in a single batch. 
 #'   Batching may be beneficial to prevent tying up smaller servers.  

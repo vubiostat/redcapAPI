@@ -13,8 +13,7 @@
 #'   should be saved.
 #' @param filename `character(1)`. The base of the file name.  When 
 #'   `record = NULL`, it will be appended with `"_blank.pdf"`.  When
-#'   `record` has a value, it will be appended with 
-#'   `"_record_[record id].pdf"` 
+#'   `record` has a value, it will be appended with `"_record_[record id].pdf"` 
 #' @param record `character(1)`, `integerish(1)`, or `NULL`.  
 #'   The record id for which forms should be downloaded.  
 #' @param events `character`. The events for which forms should be downloaded
@@ -27,7 +26,7 @@
 #' These methods mimics the behavior of "Download PDF of Instruments" button on the
 #' REDCap user interface. They permit the user to export a PDF file for:
 #' 
-#'  1. A single colleciton instrument (blank)c
+#'  1. A single collection instrument (blank)c
 #'  2. All instruments (blank)
 #'  3. A single instrument (with data from a single record)c
 #'  4. All instruments (with data from a single record)
@@ -35,7 +34,7 @@
 #'
 #'
 #' @return 
-#' \code{exportPdf} has no return. After saving the file to the local 
+#' `exportPdf` has no return. After saving the file to the local 
 #' computer, a message is displayed providing the location of the file
 #' on the system.
 #'

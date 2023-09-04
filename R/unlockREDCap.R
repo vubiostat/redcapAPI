@@ -212,7 +212,7 @@
 #' @param passwordFUN function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
 #'          On MacOS it will use rstudioapi::askForPassword if available. 
 #' @param \dots Additional arguments passed to [redcapConnection()].
-#' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
+#' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
 #' @importFrom getPass getPass
 #' @importFrom yaml read_yaml

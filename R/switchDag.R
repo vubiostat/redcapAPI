@@ -9,19 +9,19 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param dag \code{character(1)} A unique data access group to which to 
-#'   assign the current user. Use \code{NA} to leave the user unassigned.
-#' @param refresh \code{logical(1)} If \code{TRUE}, the cached data access
+#' @param dag `character(1)` A unique data access group to which to 
+#'   assign the current user. Use `NA` to leave the user unassigned.
+#' @param refresh `logical(1)` If `TRUE`, the cached data access
 #'   group assignments will be refreshed.
 #'   
-#' @return Returns \code{TRUE} when the call is completed successfully.
+#' @return Returns `TRUE` when the call is completed successfully.
 #' 
 #' @seealso 
-#' \code{\link{exportDags}},\cr
-#' \code{\link{importDags}},\cr
-#' \code{\link{deleteDags}}, \cr
-#' \code{\link{exportUserDagAssignments}}, \cr
-#' \code{\link{importUserDagAssignments}}
+#' [exportDags()],\cr
+#' [importDags()],\cr
+#' [deleteDags()], \cr
+#' [exportUserDagAssignments()], \cr
+#' [importUserDagAssignments()]
 #' 
 #' @examples
 #' \dontrun{

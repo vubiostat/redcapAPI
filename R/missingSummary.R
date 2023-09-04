@@ -24,7 +24,7 @@
 #'   are fields that REDCap adds to exports to identify arms, events, etc..
 #' @param exportRecordsArgs named `list`. Arguments to pass to `exportRecords`. 
 #'   This allows for testing specific forms, events, and/or records. Internally, any 
-#'   setting you make for `factors, labels, dates, survey`, or `dag` 
+#'   setting passed for `factors, labels, dates, survey`, or `dag` 
 #'   arguments will be ignored.
 #'   
 #' @details The intention of this function is to generate a list of subject

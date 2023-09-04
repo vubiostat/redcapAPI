@@ -9,7 +9,7 @@
 #' unchanged.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param Records \code{data.frame} containing the records from
+#' @param Records `data.frame` containing the records from
 #'        [exportRecordsTyped()]
 #'        
 #' @export

@@ -9,6 +9,16 @@
 #' @param ignore.case `logical(1)`, should cases be ignored when matching
 #'   patterns? Defaults to `TRUE`.
 #'   
+#' @return 
+#' `stripHTMLTags` returns a `character` vector.
+#' 
+#' `stripUnicode` returns a `character` vector.
+#' 
+#' @examples
+#' stripHTMLTags("<p>Text in a paragraph <b>tag</b> with bold formatting </p>")
+#' 
+#' stripUnicode("\U00B5 = 0")
+#' 
 #' @export
 
 stripHTMLTags <- function(x, 

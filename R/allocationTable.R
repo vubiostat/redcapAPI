@@ -15,7 +15,7 @@
 #' @param random `character(1)`. The field name to be randomized.
 #' @param strata `character`. Field names by which to stratify the randomization.
 #' @param group `character(1)`. A field name giving a group by which randomization should be 
-#'   stratified.  This could also be listed in \code{strata}, but the argument
+#'   stratified.  This could also be listed in `strata`, but the argument
 #'   is provided to remain consistent with the REDCap user interface.
 #' @param dag.id `integerish`. Data Access Group IDs.  
 #' @param replicates `integerish(1)`. The number of randomizations to perform 
@@ -43,22 +43,21 @@
 #'   groups.  There must be one number for each level of the randomization variable.  If named, 
 #'   the names must match the group labels.  If unnamed, the group labels will be assigned in the
 #'   same order they appear in the data dictionary.  The weights will be normalized, so they do
-#'   not need to sum to 1.0.  In other words, \code{weights=c(3, 1)} can indicate a 3:1 sampling
+#'   not need to sum to 1.0.  In other words, `weights=c(3, 1)` can indicate a 3:1 sampling
 #'   ratio.
 #' 
 #' @details Each element in `block.size` must be a multiple of the number of 
 #'   groups in the randomized variable.  
 #' 
 #'   The 'offline' version of the function operates on the data dictionary file 
-#'   downloaded from 
-#'   REDCap.  This is made available for instances where the
+#'   downloaded from REDCap.  This is made available for instances where the
 #'   API can not be accessed for some reason (such as waiting for API approval 
 #'   from the REDCap administrator).
 #' 
 #'   The value of `replicates` controls how many allocations are generated.  It 
 #'   is possible to get slightly more replicates than requested if your blocking design
-#'   cannot exactly match replicates.  For example, if you as for 30 replicates in 
-#'   blocks of 8, a warning will be printed and you will receive 32 replicates in the
+#'   cannot exactly match replicates.  For example, if the users asks for 30 replicates in 
+#'   blocks of 8, a warning will be printed and 32 replicates will be returned in the
 #'   randomization table.
 #'   
 #' @return 

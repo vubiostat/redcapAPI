@@ -8,32 +8,32 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args 
-#' @param folder_id \code{integerish(0/1)}. The 
-#'   folder ID of a specific folder in the File Repository for which you 
-#'   wish to export a list of its files and sub-folders. 
+#' @param folder_id `integerish(0/1)`. The 
+#'   folder ID of a specific folder in the File Repository for which a list of 
+#'   files and sub-folders will be exported. 
 #'   By default, the top-level directory of the File Repository will be used.
-#' @param recursive \code{logical(1)}. When \code{TRUE}, content of subfolders
-#'   will be retrieved until a full listing is produced. If \code{FALSE}, 
+#' @param recursive `logical(1)`. When `TRUE`, content of subfolders
+#'   will be retrieved until a full listing is produced. If `FALSE`, 
 #'   only the contents of the requested folder will be returned.
 #' 
 #' @return 
 #' Returns a data frame with the columns
 #' 
-#' \tabular{ll}{
-#'  \code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
-#'  \code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
-#'  \code{name} \tab The name of the folder of file. \cr
-#'  \code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0.
-#' }
+#' |                 |                                                      |
+#' |-----------------|------------------------------------------------------|
+#' | `folder_id`     | The REDCap assigned ID value for the folder. Will be `NA` if the item is a file. |
+#' | `doc_id`        | The REDCap assigned ID value for the file. Will be `NA` if the item is a folder. |
+#' | `name`          | The name of the folder of file.                                                       |
+#' | `parent_folder` | The ID of the parent folder of the item. The top-level folder is represented as 0.    |
 #' 
 #' @seealso
-#' \code{\link{exportFromFileRepository}}, \cr
-#' \code{\link{importToFileRepository}}, \cr
-#' \code{\link{deleteFromFileRepository}}, \cr
-#' \code{\link{exportFileRepository}}, \cr
-#' \code{\link{importFileRepository}}, \cr
-#' \code{\link{deleteFileRepository}}, \cr
-#' \code{\link{createFileRepositoryFolder}}
+#' [exportFromFileRepository()], \cr
+#' [importToFileRepository()], \cr
+#' [deleteFromFileRepository()], \cr
+#' [exportFileRepository()], \cr
+#' [importFileRepository()], \cr
+#' [deleteFileRepository()], \cr
+#' [createFileRepositoryFolder()]
 #' 
 #' @examples
 #' \dontrun{
