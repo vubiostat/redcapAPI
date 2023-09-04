@@ -42,11 +42,11 @@ test_that(
 
     # To be considered 'longitudinal', both arms and events must be defined.
     expect_message(importArms(rcon, 
-                              arms_data = Arms), 
+                              data = Arms), 
                    "Arms imported: 3")
     
     expect_message(importEvents(rcon, 
-                                event_data = Events), 
+                                data = Events), 
                    "Events imported: 3")
     
     rcon$refresh_projectInformation()
@@ -61,6 +61,17 @@ test_that(
                       nrows = 3)
     
     # delete the Arms
+    expect_message(deleteEvents(rcon, 
+                                events = c("event_1_arm_1", 
+                                           "event_1_arm_2", 
+                                           "event_1_arm_3")), 
+                   "Events deleted: 3")
+    
+    # backward compatible with event_data argument
+    expect_message(importEvents(rcon, 
+                                event_data = Events), 
+                   "Events imported: 3")
+    
     expect_message(deleteEvents(rcon, 
                                 events = c("event_1_arm_1", 
                                            "event_1_arm_2", 
@@ -89,11 +100,11 @@ test_that(
     
     # To be considered 'longitudinal', both arms and events must be defined.
     expect_message(importArms(rcon, 
-                              arms_data = Arms), 
+                              data = Arms), 
                    "Arms imported: 3")
     
     expect_message(importEvents(rcon, 
-                                event_data = Events), 
+                                data = Events), 
                    "Events imported: 3")
     
     rcon$refresh_projectInformation()
@@ -110,7 +121,7 @@ test_that(
                                 arm_num = 1:3)
     
     expect_message(importEvents(rcon, 
-                                event_data = OverrideEvent, 
+                                data = OverrideEvent, 
                                 override = TRUE), 
                    "Events imported: 3")
     
@@ -144,11 +155,11 @@ test_that(
     
     # To be considered 'longitudinal', both arms and events must be defined.
     expect_message(importArms(rcon, 
-                              arms_data = Arms), 
+                              data = Arms), 
                    "Arms imported: 3")
     
     expect_message(importEvents(rcon, 
-                                event_data = Events), 
+                                data = Events), 
                    "Events imported: 3")
     
     rcon$refresh_projectInformation()
@@ -159,11 +170,11 @@ test_that(
     
     # import the additional events
     expect_message(importArms(rcon, 
-                              arms_data = Arms2), 
+                              data = Arms2), 
                    "Arms imported: 2")
     
     expect_message(importEvents(rcon, 
-                                event_data = Events2), 
+                                data = Events2), 
                    "Events imported: 2")
     
     # Confirm that all of the arms are present.

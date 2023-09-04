@@ -108,10 +108,10 @@ importMetaData(rcon,
                test_redcapAPI_MetaData)
 
 importArms(rcon, 
-           arms_data = Arms)
+           data = Arms)
 
 importEvents(rcon, 
-             event_data = Events)
+             data = Events)
 
 importProjectInformation(rcon, 
                          data = data.frame(is_longitudinal = 1))

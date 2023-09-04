@@ -87,6 +87,20 @@ exportMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  if (!is.null(fields)){
+    checkmate::assert_subset(x = fields, 
+                             choices = rcon$metadata()$field_name, 
+                             add = coll)
+  }
+  
+  if (!is.null(forms)){
+    checkmate::assert_subset(x = forms, 
+                             choices = rcon$instruments()$instrument_name, 
+                             add = coll)
+  }
+  
+  checkmate::reportAssertions(coll)
+  
   # Build the Body List ---------------------------------------------
   body <- c(list(token = rcon$token,
                content = "metadata",

@@ -27,10 +27,10 @@ importMetaData(rcon,
                                          c("record_id", "repeating_instrument"), ])
 
 importArms(rcon, 
-           arms_data = Arms)
+           data = Arms)
 
 importEvents(rcon, 
-             event_data = Events)
+             data = Events)
 
 importMappings(rcon, 
                data = data.frame(arm_num = 1, 
