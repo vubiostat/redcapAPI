@@ -18,6 +18,10 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(exportMetaData(rcon, fields = 1:3), 
                  "'fields'[:] Must be of type 'character'")
+    
+    expect_error(exportMetaData(rcon, 
+                                fields = "not_a_field"), 
+                 "'fields': Must be a subset of")
   }
 )
 
@@ -27,6 +31,8 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(exportMetaData(rcon, forms = 1:3), 
                  "'forms'[:] Must be of type 'character'")
+    expect_error(exportMetaData(rcon, forms = "not_a_form"), 
+                 "'forms': Must be a subset of")
   }
 )
 

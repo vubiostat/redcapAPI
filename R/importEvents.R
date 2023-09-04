@@ -13,14 +13,15 @@
 #'   in Development status.
 #'   
 #' @param rcon a \code{redcapConnection} object. 
-#' @param event_data \code{data.frame}. Must have columns "event_name"
+#' @param data \code{data.frame}. Must have columns "event_name"
 #'   and "arm_num". To modify existing events, it must also have a column
 #'   "unique_event_name". It may optionally have columns for 
-#'   "day_offset", "offset_min", "offset_max".
+#'   "day_offset", "offset_min", "offset_max". For backward compatibility, 
+#'   this argument may be passed as \code{event_data}.
 #' @param override \code{logical(1)}. Defaults to \code{FALSE}, which will
 #'   only add new events or modify existing events. When \code{TRUE}, all
 #'   existing events are deleted and replaced with the events in 
-#'   \code{event_data}.
+#'   \code{data}.
 #' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
 #'   be refreshed after the import.
 #' @param ... Additional arguments to pass to other methods. 
@@ -36,7 +37,7 @@
 #' @export
 
 importEvents <- function(rcon, 
-                         event_data, 
+                         data, 
                          override = FALSE, 
                          ...){
   UseMethod("importEvents")
@@ -46,13 +47,17 @@ importEvents <- function(rcon,
 #' @export
 
 importEvents <- function(rcon, 
-                         event_data, 
+                         data, 
                          override       = FALSE, 
                          refresh        = TRUE,
                          ..., 
                          error_handling = getOption("redcap_error_handling"), 
                          config         = list(), 
                          api_param      = list()){
+  
+  dots <- list(...)
+  if ("event_data" %in% names(dots)) data <- dots$event_data
+  
   ###################################################################
   # Argument Validation
   
@@ -62,7 +67,7 @@ importEvents <- function(rcon,
                           classes = "redcapApiConnection", 
                           add = coll)
   
-  checkmate::assert_data_frame(x = event_data, 
+  checkmate::assert_data_frame(x = data, 
                                add = coll)
   
   checkmate::assert_logical(x = override, 
@@ -89,7 +94,7 @@ importEvents <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  checkmate::assert_subset(x = names(event_data), 
+  checkmate::assert_subset(x = names(data), 
                            choices = names(REDCAP_EVENT_STRUCTURE), # Defined in redcapDataStructure.R 
                            add = coll)
   
@@ -103,7 +108,7 @@ importEvents <- function(rcon,
                override = as.numeric(override), 
                format = "csv", 
                returnFormat = "csv", 
-               data = writeDataForImport(event_data))
+               data = writeDataForImport(data))
   
   body <- body[lengths(body) > 0]
   

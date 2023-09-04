@@ -561,6 +561,14 @@ test_that(
                      "Some records failed validation")
     
     expect_true(attr(ImportData, "invalid")$value == invalid_value)
+    
+    
+    # Preserve missing values with checkboxes
+    TheData[[test_field]][2] <- NA
+    ImportData <- 
+      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
+                                  rcon = rcon))
+    expect_true(is.na(ImportData[[test_field]][2]))
   }
 )
 
@@ -703,7 +711,7 @@ test_that(
 test_that(
   "only requested fields are recast", 
   {
-    Records <- data.frame(checkbox_test___x = c("0", "", "", "0"), 
+    Records <- data.frame(checkbox_test___x = c("0", "", "1", "0"), 
                           checkbox_test___y = c("y", "y", "", "y"))
     
     ForImport <- castForImport(Records, 
@@ -711,7 +719,7 @@ test_that(
                                fields = "checkbox_test___x",
                                cast = list(checkbox = castCheckForImport(checked = "0")))
     expect_equal(ForImport$checkbox_test___x, 
-                 c(1, 0, 0, 1))
+                 c(1, NA, 0, 1))
     expect_equal(ForImport$checkbox_test___y, 
                  c("y", "y", "", "y"))
   }
