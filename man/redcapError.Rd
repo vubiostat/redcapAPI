@@ -11,7 +11,7 @@ redcapError(x, error_handling)
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 }
 \description{
 Determine the proper way to handle errors returned from the API.

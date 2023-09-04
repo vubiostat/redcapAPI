@@ -51,12 +51,12 @@ are fields that REDCap adds to exports to identify arms, events, etc..}
 
 \item{exportRecordsArgs}{named \code{list}. Arguments to pass to \code{exportRecords}.
 This allows for testing specific forms, events, and/or records. Internally, any
-setting you make for \verb{factors, labels, dates, survey}, or \code{dag}
+setting passed for \verb{factors, labels, dates, survey}, or \code{dag}
 arguments will be ignored.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

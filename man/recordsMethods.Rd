@@ -165,7 +165,7 @@ downloaded from REDCap.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -227,7 +227,7 @@ exported from the API and stacked together.
 In longitudinal projects, \code{batch.size} may not necessarily be the
 number of records exported in each batch.  If \code{batch.size} is 10 and
 there are four records per patient, each batch will consist of 40 records.
-Thus, if you are concerned about tying up the server with a large,
+Thus, if the user is concerned about tying up the server with a large,
 longitudinal project, it would be prudent to use a smaller batch size.
 }
 \section{Functions}{

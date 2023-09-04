@@ -151,7 +151,7 @@ The argument to these functions have the same requirements as the
 corresponding arguments to \code{redcapConnection}.
 
 Tokens are specific to a project, and a token must be created for each
-project for which you wish to use the API.
+project for which the user wishes to use the API.
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
 for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.

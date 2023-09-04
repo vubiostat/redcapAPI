@@ -11,8 +11,7 @@ prepUserImportData(data, rcon, consolidate = TRUE, user_role = FALSE)
 \code{redcapAPI:::REDCAP_USER_STRUCTURE}. It may also have additional
 columns for the form and export access of each of the instruments.}
 
-\item{rcon}{\code{redcapConnection}. Used to determine the instruments
-in the project.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data
 export access values will be read from the expanded columns. Otherwise,

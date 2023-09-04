@@ -76,9 +76,3 @@ comes after the @, but before the period, and may consist of any
 number of letters, numbers, periods, or dashes.  Finally, the string ends
 with a period then anywhere from 2 to 6 letters.
 }
-\references{
-See the REDCap Help and FAQ page's section on 'Text Validation Types'
-}
-\author{
-Benjamin Nutter
-}

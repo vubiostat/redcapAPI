@@ -61,10 +61,7 @@ For backward compatibility of \code{redcapAPI}, we continue to alter the codings
 in the meta data. We do not anticipate many problems, as most people don't use
 underscores in the checkbox codings
 
-If your scripts were written under REDCap 5.5.21 or higher, you will have no backward
+If your scripts were written under REDCap 5.5.21 or higher, there will be no backward
 compatibility problems related to this issue.
 }
 
-\author{
-Benjamin Nutter
-}

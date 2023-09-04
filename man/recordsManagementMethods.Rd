@@ -51,7 +51,7 @@ only in the specified arm.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -98,10 +98,10 @@ renameRecord(rcon,
 
 }
 \seealso{
-\code{\link{exportRecords}}, \cr
-\code{\link{exportReports}}, \cr
-\code{\link{importRecords}}, \cr
-\code{\link{deleteRecords}}, \cr
-\code{\link{exportRecordsTyped}}, \cr
-\code{\link{exportReportsTyped}}
+\code{\link[=exportRecords]{exportRecords()}}, \cr
+\code{\link[=exportReports]{exportReports()}}, \cr
+\code{\link[=importRecords]{importRecords()}}, \cr
+\code{\link[=deleteRecords]{deleteRecords()}}, \cr
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}
 }

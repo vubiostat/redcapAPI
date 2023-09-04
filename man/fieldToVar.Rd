@@ -53,6 +53,3 @@ Converts a field exported from REDCap into a valid R vector
 This function is called internally by \code{exportRecords} and
 \code{exportReports}.  it is not available to the user.
 }
-\author{
-Jeffrey Horner
-}

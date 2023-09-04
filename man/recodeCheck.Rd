@@ -36,7 +36,7 @@ Rewrites the labelling of \code{checkbox} variables from
 Checked/Unchecked to Yes/No (or some other user-specified labelling).
 }
 \details{
-\code{checkbox} variables are \emph{not} identified using the metadata
+\code{checkbox} variables are not identified using the metadata
 from the REDCap database.  Instead, variables are scanned, and those
 variables in which every value is in \code{levels} are assumed to be
 \code{checkbox} variables.
@@ -50,7 +50,4 @@ The actual code to perform this is not particularly difficult
 but \code{checkbox} variables are common enough in REDCap
 (and the Checked/Unchecked scheme so unpalatable) that a quick way to
 replace the labels was highly desirable
-}
-\author{
-Benjamin Nutter
 }

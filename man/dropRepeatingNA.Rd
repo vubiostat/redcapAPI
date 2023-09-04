@@ -8,9 +8,9 @@ dropRepeatingNA(Records, rcon, quiet = FALSE)
 }
 \arguments{
 \item{Records}{A \code{data.frame} containing the records from
-\code{\link{exportRecordsTyped}}}
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}}
 
-\item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{quiet}{\code{logical(1)}. When \code{FALSE}, a message is printed
 indicating how many rows were in \code{Records} at the start and

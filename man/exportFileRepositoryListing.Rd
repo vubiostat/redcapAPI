@@ -26,8 +26,8 @@ exportFileRepositoryListing(
 \item{rcon}{A \code{redcapConnection} object.}
 
 \item{folder_id}{\code{integerish(0/1)}. The
-folder ID of a specific folder in the File Repository for which you
-wish to export a list of its files and sub-folders.
+folder ID of a specific folder in the File Repository for which a list of
+files and sub-folders will be exported.
 By default, the top-level directory of the File Repository will be used.}
 
 \item{recursive}{\code{logical(1)}. When \code{TRUE}, content of subfolders
@@ -38,7 +38,7 @@ only the contents of the requested folder will be returned.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -49,13 +49,12 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame with the columns
-
-\tabular{ll}{
-\code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
-\code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
-\code{name} \tab The name of the folder of file. \cr
-\code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0.
+Returns a data frame with the columns\tabular{ll}{
+    \tab  \cr
+   \code{folder_id} \tab The REDCap assigned ID value for the folder. Will be \code{NA} if the item is a file. \cr
+   \code{doc_id} \tab The REDCap assigned ID value for the file. Will be \code{NA} if the item is a folder. \cr
+   \code{name} \tab The name of the folder of file. \cr
+   \code{parent_folder} \tab The ID of the parent folder of the item. The top-level folder is represented as 0. \cr
 }
 }
 \description{
@@ -84,11 +83,11 @@ exportFileRepositoryListing(rcon,
 
 }
 \seealso{
-\code{\link{exportFromFileRepository}}, \cr
-\code{\link{importToFileRepository}}, \cr
-\code{\link{deleteFromFileRepository}}, \cr
-\code{\link{exportFileRepository}}, \cr
-\code{\link{importFileRepository}}, \cr
-\code{\link{deleteFileRepository}}, \cr
-\code{\link{createFileRepositoryFolder}}
+\code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr
+\code{\link[=importToFileRepository]{importToFileRepository()}}, \cr
+\code{\link[=deleteFromFileRepository]{deleteFromFileRepository()}}, \cr
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=importFileRepository]{importFileRepository()}}, \cr
+\code{\link[=deleteFileRepository]{deleteFileRepository()}}, \cr
+\code{\link[=createFileRepositoryFolder]{createFileRepositoryFolder()}}
 }

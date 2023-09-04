@@ -31,7 +31,7 @@ group assignments will be refreshed.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -63,9 +63,9 @@ switchDag(rcon,
 }
 }
 \seealso{
-\code{\link{exportDags}},\cr
-\code{\link{importDags}},\cr
-\code{\link{deleteDags}}, \cr
-\code{\link{exportUserDagAssignments}}, \cr
-\code{\link{importUserDagAssignments}}
+\code{\link[=exportDags]{exportDags()}},\cr
+\code{\link[=importDags]{importDags()}},\cr
+\code{\link[=deleteDags]{deleteDags()}}, \cr
+\code{\link[=exportUserDagAssignments]{exportUserDagAssignments()}}, \cr
+\code{\link[=importUserDagAssignments]{importUserDagAssignments()}}
 }

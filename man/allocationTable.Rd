@@ -131,15 +131,14 @@ Each element in \code{block.size} must be a multiple of the number of
 groups in the randomized variable.
 
 The 'offline' version of the function operates on the data dictionary file
-downloaded from
-REDCap.  This is made available for instances where the
+downloaded from REDCap.  This is made available for instances where the
 API can not be accessed for some reason (such as waiting for API approval
 from the REDCap administrator).
 
 The value of \code{replicates} controls how many allocations are generated.  It
 is possible to get slightly more replicates than requested if your blocking design
-cannot exactly match replicates.  For example, if you as for 30 replicates in
-blocks of 8, a warning will be printed and you will receive 32 replicates in the
+cannot exactly match replicates.  For example, if the users asks for 30 replicates in
+blocks of 8, a warning will be printed and 32 replicates will be returned in the
 randomization table.
 }
 \examples{

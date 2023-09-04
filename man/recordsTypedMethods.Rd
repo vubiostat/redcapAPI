@@ -155,7 +155,7 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -242,7 +242,7 @@ The cast override is one where users can specify things that were controlled
 by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
 an addition to allow dates in the previous version to be overridden if the
 user wanted to use the Date class. In this version, it would appear called
-as \verb{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
+as \verb{cast=list(_date=as.Date))}. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
 for a full listing of package provided cast functions.
 }
 }
@@ -301,9 +301,9 @@ exportRecordsTyped(rcon_off)
 
 }
 \seealso{
-\code{\link{exportRecords}}, \cr
-\code{\link{exportReports}}, \cr
-\code{\link{fieldValidationAndCasting}}, \cr
-\code{\link{fieldCastingFunctions}}, \cr
-\code{\link{exportBulkRecords}}
+\code{\link[=exportRecords]{exportRecords()}}, \cr
+\code{\link[=exportReports]{exportReports()}}, \cr
+\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}, \cr
+\code{\link[=fieldCastingFunctions]{fieldCastingFunctions()}}, \cr
+\code{\link[=exportBulkRecords]{exportBulkRecords()}}
 }

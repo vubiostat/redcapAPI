@@ -3,7 +3,6 @@
 %   R/importDags.R, R/deleteDags.R
 \name{dagMethods}
 \alias{dagMethods}
-\alias{dagsMethods}
 \alias{exportDags}
 \alias{importDags}
 \alias{deleteDags}
@@ -61,7 +60,7 @@ group data will be refreshed after the import.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

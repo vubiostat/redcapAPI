@@ -22,6 +22,3 @@ vector, switching between the coded and labelled values can be done with
 ease.  This may be helpful when the coded value has importance,
 such as 0/1 for death, or if a yes is worth 6 points (instead of 1).
 }
-\author{
-Benjamin Nutter
-}

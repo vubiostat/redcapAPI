@@ -47,7 +47,7 @@ refreshed.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -83,8 +83,8 @@ property of the project through \code{importProjectInformation}.
 Enabling of repeating instruments and events must be done through the GUI.
 
 Although the API does not provide a delete method, it is possible to
-remove settings by doing an import that excludes the settings you wish
-to remove. All settings can be cleared by executing
+remove settings by doing an import that excludes the settings that are
+to be deleted. All settings can be cleared by executing
 \code{importRepeatingInstrumentsEvents(rcon, REDCAP_REPEAT_INSTRUMENT_STRUCTURE)}.
 }
 \section{Functions}{

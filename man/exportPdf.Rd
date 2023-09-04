@@ -38,8 +38,7 @@ should be saved.}
 
 \item{filename}{\code{character(1)}. The base of the file name.  When
 \code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  When
-\code{record} has a value, it will be appended with
-\code{"_record_[record id].pdf"}}
+\code{record} has a value, it will be appended with \code{"_record_[record id].pdf"}}
 
 \item{record}{\code{character(1)}, \code{integerish(1)}, or \code{NULL}.
 The record id for which forms should be downloaded.}
@@ -56,7 +55,7 @@ are downloaded. When \code{TRUE}, this overrides the \code{records} argument.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
@@ -81,7 +80,7 @@ or all records.
 These methods mimics the behavior of "Download PDF of Instruments" button on the
 REDCap user interface. They permit the user to export a PDF file for:
 \enumerate{
-\item A single colleciton instrument (blank)c
+\item A single collection instrument (blank)c
 \item All instruments (blank)
 \item A single instrument (with data from a single record)c
 \item All instruments (with data from a single record)

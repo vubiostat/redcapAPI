@@ -196,7 +196,7 @@ instead of a \code{factor}.
 for checkbox fields. For both, unchecked variables are cast to an empty
 string (""). Checked variables are cast to the option label and option code,
 respectively. \code{castCheckLabelCharacter} and \code{castCheckCodeCharacter}
-is an equivalent casting function that returns a \code{character} vector
+are equivalent casting functions that returns a \code{character} vector
 instead of a \code{factor}.
 
 \code{castCheckForImport} is a special case function to allow the user to

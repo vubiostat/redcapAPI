@@ -35,9 +35,8 @@ importMappings(rcon, data, refresh = TRUE, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{arms}{\code{integerish} A vector of arm numbers that you wish to pull events for (by default,
-all events are pulled). Will also accept \code{character}, but will coerce
-it to numeric before processing.}
+\item{arms}{\code{integerish} or \code{character}. A vector of arm numbers. When
+given, mappings are only exported for the given arms.}
 
 \item{data}{\code{data.frame} with columns \code{arm_num}, \code{unique_event_name},
 and \code{form}. See Details}
@@ -49,7 +48,7 @@ object are refreshed after the import.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}.}
+see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

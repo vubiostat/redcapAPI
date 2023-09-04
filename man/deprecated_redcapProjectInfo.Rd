@@ -69,5 +69,5 @@ API method not be available.}
 \description{
 The \code{redcapProjectInfo} function has been deprecated to avoid
 confusion with the API method now executed by \code{exportProjectInformation}.
-The replacement function is \code{\link{exportBundle}}.
+The replacement function is \code{\link[=exportBundle]{exportBundle()}}.
 }

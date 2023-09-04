@@ -7,12 +7,12 @@
 makeApiCall(rcon, body = list(), config = list())
 }
 \arguments{
-\item{rcon}{\code{redcapApiConnection} object.}
+\item{rcon}{A \code{redcapConnection} object.}
 
-\item{body}{\code{list} List of parameters to be passed to \code{\link[httr]{POST}}'s
+\item{body}{\code{list} List of parameters to be passed to \code{\link[httr:POST]{httr::POST()}}'s
 \code{body} argument}
 
-\item{config}{\code{list} A list of options to be passed to \code{\link[httr]{POST}}.
+\item{config}{\code{list} A list of options to be passed to \code{\link[httr:POST]{httr::POST()}}.
 These will be appended to the \code{config} options included in the
 \code{rcon} object.}
 }
@@ -36,13 +36,13 @@ options to the API that require an array need to be built using
 \code{vectorToApiBodyList}; options that are not an array can be entered
 directly (see examples).
 
-The config list is a list of parameters to pass to \code{\link[httr]{POST}}.
+The config list is a list of parameters to pass to \code{\link[httr:POST]{httr::POST()}}.
 Refer to documentation there for details.
 
 Using the settings stored in the \code{redcapConnection} object, a response
 code of 408 (Request Timeout), 500 (Internal Server Error),
 502 (Bad Gateway), 503 (Service Unavailable), or 504 (Gateway Timeout)
-will prompt reattempts at calling the API. See \code{\link{redcapConnection}}
+will prompt reattempts at calling the API. See \code{\link[=redcapConnection]{redcapConnection()}}
 for details. If the API reaches its attempt limit without resolving to
 any other code, the last response is returned. If any other response
 code is returned at any point in the retry loop, the loop breaks and
@@ -144,10 +144,4 @@ returns that response.
  
 }
 
-}
-\references{
-Please refer to your institution's API documentation.
-}
-\author{
-Benjamin Nutter
 }
