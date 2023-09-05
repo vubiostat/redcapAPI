@@ -6,7 +6,7 @@
 \usage{
 importEvents(
   rcon,
-  event_data,
+  data,
   override = FALSE,
   refresh = TRUE,
   ...,
@@ -17,7 +17,7 @@ importEvents(
 
 importEvents(
   rcon,
-  event_data,
+  data,
   override = FALSE,
   refresh = TRUE,
   ...,
@@ -29,15 +29,16 @@ importEvents(
 \arguments{
 \item{rcon}{a \code{redcapConnection} object.}
 
-\item{event_data}{\code{data.frame}. Must have columns "event_name"
+\item{data}{\code{data.frame}. Must have columns "event_name"
 and "arm_num". To modify existing events, it must also have a column
 "unique_event_name". It may optionally have columns for 
-"day_offset", "offset_min", "offset_max".}
+"day_offset", "offset_min", "offset_max". For backward compatibility, 
+this argument may be passed as \code{event_data}.}
 
 \item{override}{\code{logical(1)}. Defaults to \code{FALSE}, which will
 only add new events or modify existing events. When \code{TRUE}, all
 existing events are deleted and replaced with the events in 
-\code{event_data}.}
+\code{data}.}
 
 \item{refresh}{\code{logical(1)}. When \code{TRUE}, cached event data will 
 be refreshed after the import.}

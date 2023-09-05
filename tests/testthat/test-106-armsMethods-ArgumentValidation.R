@@ -58,13 +58,13 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importArms("not an rcon", 
-                            arms_data = Arms), 
+                            data = Arms), 
                  "no applicable method for 'importArms'")
   }
 )
 
 test_that(
-  "Return an error when arms_data is not a data.frame", 
+  "Return an error when data is not a data.frame", 
   {
     local_reproducible_output(width = 200)
     
@@ -73,21 +73,21 @@ test_that(
     
     expect_error(importArms(rcon, 
                             "not a data frame"), 
-                 "Variable 'arms_data': Must be of type 'data.frame'")
+                 "Variable 'data': Must be of type 'data.frame'")
     
     # Has the correct column names
     expect_error(importArms(rcon, 
-                            arms_data = ArmsImproper), 
-                 "Variable 'names[(]arms_data[)]': Must be a subset of [{]'arm_num','name'[}]")
+                            data = ArmsImproper), 
+                 "Variable 'names[(]data[)]': Must be a subset of [{]'arm_num','name'[}]")
     
     # The vectors have the correct names now, but we've given them the wrong class
     names(ArmsImproper) <- c("arm_num", "name")
     expect_error(importArms(rcon, 
-                            arms_data = ArmsImproper), 
-                 "'arms_data[$]arm_num': Must be of type 'integerish'")
+                            data = ArmsImproper), 
+                 "'data[$]arm_num': Must be of type 'integerish'")
     expect_error(importArms(rcon, 
-                            arms_data = ArmsImproper), 
-                 "'arms_data[$]name': Must be of type 'character'")
+                            data = ArmsImproper), 
+                 "'data[$]name': Must be of type 'character'")
   }
 )
 
@@ -128,25 +128,25 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importArms(rcon, 
-                            arms_data = Arms,
+                            data = Arms,
                             error_handling = "not an option"), 
                  "'error[_]handling': Must be element of set [{]'null','error'[}]")
     
     expect_error(importArms(rcon,
-                            arms_data = Arms,
+                            data = Arms,
                             config = list(1)),
                  "'config': Must have names")
     expect_error(importArms(rcon,
-                            arms_data = Arms,
+                            data = Arms,
                             config = "not a list"),
                  "'config': Must be of type 'list'")
     
     expect_error(importArms(rcon,
-                            arms_data = Arms,
+                            data = Arms,
                             api_param = list(1)),
                  "'api_param': Must have names")
     expect_error(importArms(rcon,
-                            arms_data = Arms,
+                            data = Arms,
                             api_param = "not a list"),
                  "'api_param': Must be of type 'list'")
   }

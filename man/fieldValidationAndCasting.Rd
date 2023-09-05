@@ -8,21 +8,32 @@
 \alias{valChoice}
 \alias{valPhone}
 \alias{castLabel}
+\alias{castLabelCharacter}
 \alias{castCode}
+\alias{castCodeCharacter}
 \alias{castRaw}
 \alias{castChecked}
+\alias{castCheckedCharacter}
 \alias{castCheckLabel}
+\alias{castCheckLabelCharacter}
 \alias{castCheckCode}
+\alias{castCheckCodeCharacter}
 \alias{castCheckForImport}
 \alias{castDpNumeric}
 \alias{castDpCharacter}
 \alias{castTimeHHMM}
 \alias{castTimeMMSS}
 \alias{raw_cast}
+\alias{default_cast_no_factor}
+\alias{default_cast_character}
 \alias{na_values}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
 An object of class \code{list} of length 20.
+
+An object of class \code{list} of length 24.
+
+An object of class \code{list} of length 24.
 }
 \usage{
 isNAorBlank(x, ...)
@@ -35,15 +46,25 @@ valPhone(x, field_name, coding)
 
 castLabel(x, field_name, coding)
 
+castLabelCharacter(x, field_name, coding)
+
 castCode(x, field_name, coding)
+
+castCodeCharacter(x, field_name, coding)
 
 castRaw(x, field_name, coding)
 
 castChecked(x, field_name, coding)
 
+castCheckedCharacter(x, field_name, coding)
+
 castCheckLabel(x, field_name, coding)
 
+castCheckLabelCharacter(x, field_name, coding)
+
 castCheckCode(x, field_name, coding)
+
+castCheckCodeCharacter(x, field_name, coding)
 
 castCheckForImport(checked = c("Checked", "1"))
 
@@ -56,6 +77,10 @@ castTimeHHMM(x, field_name, coding)
 castTimeMMSS(x, field_name, coding)
 
 raw_cast
+
+default_cast_no_factor
+
+default_cast_character
 
 na_values(FUN)
 }
@@ -160,6 +185,14 @@ that will pass the API requirements.
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.
+
+\code{default_cast_no_factor} is a list of casting functions that matches
+all of the default casts but with the exception that any fields that would
+have been cast to factors will instead be cast to characters. It is 
+provided for the user that prefers to work absent factors. The list
+\code{default_cast_character} is equivalent and is provided for those that
+prefer to describe their casting in terms of what the result is (and not
+what it isn't).
 
 \code{na_values} A helper function to create a list of functions
 to test for NA based on field type. Useful for bulk override of

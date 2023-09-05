@@ -22,9 +22,9 @@ importMetaData(rcon,
                MetaData)
 
 importArms(rcon, 
-           arms_data = test_redcapAPI_Arms)
+           data = test_redcapAPI_Arms)
 importEvents(rcon, 
-             event_data = test_redcapAPI_Events)
+             data = test_redcapAPI_Events)
 
 importProjectInformation(rcon, 
                          data.frame(is_longitudinal = 1))
