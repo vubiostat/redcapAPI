@@ -48,26 +48,26 @@ mChoiceCast(data, rcon, style = "labelled", drop_fields = TRUE)
 \item{rcon}{\code{recapConnection} object.}
 
 \item{fields}{\code{character/logical/integerish}. A vector for identifying
-which fields to recode. When \code{logical}, the length must match 
+which fields to recode. When \code{logical}, the length must match
 the number of columns in \code{data} (i.e., recycling not permitted).
-A message is printed if any of the indicated fields are not a 
+A message is printed if any of the indicated fields are not a
 multiple choice field; no action will be taken on such fields.
-For this function, yes/no and true/false fields are considered 
+For this function, yes/no and true/false fields are considered
 multiple choice fields. Fields of class \code{mChoice} are quietly skipped.}
 
-\item{cast}{A named \code{list} of user specified class casting functions. 
+\item{cast}{A named \code{list} of user specified class casting functions.
 Keys must correspond to a truncated REDCap field type, i.e.
 {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql}. The function will be 
-provided the variables (x, field_name, coding). 
+checkbox, form_complete, sql}. The function will be
+provided the variables (x, field_name, coding).
 See \code{\link{fieldValidationAndCasting}}}
 
-\item{suffix}{\code{character(1)}. An optional suffix to provide if 
-the recoded variables should be returned as new columns. For example, 
-if recoding a field \code{forklift_brand} and \code{suffix = "_labelled"}, 
-the result will have one column with the coded values 
-(\code{forklift_brand}) and one column with the labelled values 
+\item{suffix}{\code{character(1)}. An optional suffix to provide if
+the recoded variables should be returned as new columns. For example,
+if recoding a field \code{forklift_brand} and \code{suffix = "_labelled"},
+the result will have one column with the coded values
+(\code{forklift_brand}) and one column with the labelled values
 (\code{forklift_brand_labelled}).}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
@@ -80,8 +80,8 @@ checkbox, form_complete, sql}. The function will be provided the variables
 matching the input. It defaults to \code{\link{isNAorBlank}} for all
 entries.}
 
-\item{validation}{A named \code{list} of user specified validation functions. The 
-same named keys are supported as the na argument. The function will be 
+\item{validation}{A named \code{list} of user specified validation functions. The
+same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
 these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
@@ -96,37 +96,37 @@ are not identified as NA will be passed to validation functions.}
 \item{drop_fields}{logical(1). Drop fields that were aggregated.}
 }
 \description{
-The functions provided here allow for recasting fields 
-  after records have been exported. They generally have a similar 
-  interface to the casting strategy of \code{\link{exportRecordsTyped}}, 
-  though they may not each offer all the same options.
+The functions provided here allow for recasting fields
+after records have been exported. They generally have a similar
+interface to the casting strategy of \code{\link{exportRecordsTyped}},
+though they may not each offer all the same options.
 }
 \details{
-\code{recastRecords} is a post-processing function motivated 
-  initially by the need to switch between codes and labels in multiple 
-  choice fields. Field types for which no casting function is specified will
-  be returned with no changes. It will not attempt to validate the content
-  of fields; fields that can not be successfully cast will be quietly 
-  returned as missing values. 
-  
-  \code{castForImport} is written with defaults that will return data 
-  in a format ready to be imported to a project via \code{importRecords}. 
-  All fields are returned as character vectors. If any values fail to
-  validation check, are report is returned as an attribute named \code{invalid}. 
-  These are then set to \code{NA}, which will be imported as blanks through
-  the API. 
-  
-  \code{guessCast} is a helper function to make a guess at casting uncast 
-  columns. It will do a type cast if a validation is met above
-  a threshold ratio of non-NA records. It modifies the existing
-  \code{invalid} attribute to reflect the cast. \code{guessDate} is 
-  a special cast of \code{guessCast} that has defaults set for casting
-  a date field.
-  
-  \code{mChoiceCast} is a helper function that adds the \code{Hmisc::mChoice} 
-  multiple choice class. It adds a column for a multiple choice checkbox 
-  that is cast to the \code{Hmisc::mChoice} class. Requires \code{Hmisc} 
-  to be loaded.
+\code{recastRecords} is a post-processing function motivated
+initially by the need to switch between codes and labels in multiple
+choice fields. Field types for which no casting function is specified will
+be returned with no changes. It will not attempt to validate the content
+of fields; fields that can not be successfully cast will be quietly
+returned as missing values.
+
+\code{castForImport} is written with defaults that will return data
+in a format ready to be imported to a project via \code{importRecords}.
+All fields are returned as character vectors. If any values fail to
+validation check, are report is returned as an attribute named \code{invalid}.
+These are then set to \code{NA}, which will be imported as blanks through
+the API.
+
+\code{guessCast} is a helper function to make a guess at casting uncast
+columns. It will do a type cast if a validation is met above
+a threshold ratio of non-NA records. It modifies the existing
+\code{invalid} attribute to reflect the cast. \code{guessDate} is
+a special cast of \code{guessCast} that has defaults set for casting
+a date field.
+
+\code{mChoiceCast} is a helper function that adds the \code{Hmisc::mChoice}
+multiple choice class. It adds a column for a multiple choice checkbox
+that is cast to the \code{Hmisc::mChoice} class. Requires \code{Hmisc}
+to be loaded.
 }
 \examples{
 \dontrun{

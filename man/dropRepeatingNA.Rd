@@ -13,7 +13,7 @@ dropRepeatingNA(Records, rcon, quiet = FALSE)
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
 
 \item{quiet}{\code{logical(1)}. When \code{FALSE}, a message is printed
-indicating how many rows were in \code{Records} at the start and 
+indicating how many rows were in \code{Records} at the start and
 completion of the subset.}
 }
 \description{

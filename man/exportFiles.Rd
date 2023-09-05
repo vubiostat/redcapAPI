@@ -32,11 +32,11 @@ exportFiles(rcon, record, field, event = NULL, dir, filePrefix = TRUE, ...)
 This applies only to longitudinal projects.  If the event is not
 supplied for a longitudinal project, the API will return an error message}
 
-\item{dir}{A directory/folder to which the file will be saved. 
+\item{dir}{A directory/folder to which the file will be saved.
 By default, the working directory is used}
 
-\item{filePrefix}{Logical.  Determines if a prefix is appended to the file 
-name.  The prefix takes the form [record_id]-[event_name]-[file_name].  
+\item{filePrefix}{Logical.  Determines if a prefix is appended to the file
+name.  The prefix takes the form \link{record_id}-\link{event_name}-\link{file_name}.
 The file name is always the same name of the file as it exists in REDCap}
 
 \item{...}{Arguments to be passed to other methods}
@@ -48,8 +48,8 @@ of REDCap, and passed as NULL, the API will assume a value of 1.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -57,30 +57,30 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-A single file from a single record is retrieved.  The behavior 
-of this function is consistent with the behavior of the API, which only 
+A single file from a single record is retrieved.  The behavior
+of this function is consistent with the behavior of the API, which only
 allows one file to be downloaded at a time
 }
 \details{
-The function may only export a single file.  
+The function may only export a single file.
 See the examples for suggestions on exporting multiple files.
 
-Note that the name of the file can not be changed.  Whatever name exists in 
-REDCap is the name that will be used, although the record ID and event name 
+Note that the name of the file can not be changed.  Whatever name exists in
+REDCap is the name that will be used, although the record ID and event name
 may be appended as a prefix
 }
 \section{REDCap API Documentation (6.5.0)}{
 
-This method allows you to download a document that has been attached to an 
-individual record for a File Upload field. Please note that this method may also 
+This method allows you to download a document that has been attached to an
+individual record for a File Upload field. Please note that this method may also
 be used for Signature fields (i.e. File Upload fields with "signature" validation type).
 
-Note about export rights: Please be aware that Data Export user rights will be 
-applied to this API request. For example, if you have "No Access" data export rights 
-in the project, then the API file export will fail and return an error. And if you 
-have "De-Identified" or "Remove all tagged Identifier fields" data export rights, 
-then the API file export will fail and return an error *only if* the File Upload 
-field has been tagged as an Identifier field. To make sure that your API request 
+Note about export rights: Please be aware that Data Export user rights will be
+applied to this API request. For example, if you have "No Access" data export rights
+in the project, then the API file export will fail and return an error. And if you
+have "De-Identified" or "Remove all tagged Identifier fields" data export rights,
+then the API file export will fail and return an error \emph{only if} the File Upload
+field has been tagged as an Identifier field. To make sure that your API request
 does not return an error, you should have "Full Data Set" export rights in the project.
 }
 

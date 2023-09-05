@@ -33,7 +33,7 @@ exportLogging(
 \arguments{
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
 
-\item{logtype}{\code{character} with maximum length of 1. The log event types to export. By 
+\item{logtype}{\code{character} with maximum length of 1. The log event types to export. By
 default, all event types are exported. Must be one of
 \code{c("export", "manage", "user", "record", "record_add", "record_edit", "record_delete", "lock_record", "page_view")}}
 
@@ -43,10 +43,10 @@ logs for all users are returned.}
 \item{record}{\code{character} with maximum length of 1. Record ID for which logs are to be returned.
 By default, logs are returned for all records.}
 
-\item{dag}{\code{character} with maximum length of 1. Data access group ID for which to return logs. 
+\item{dag}{\code{character} with maximum length of 1. Data access group ID for which to return logs.
 By default, logs are returned for all data access groups.}
 
-\item{beginTime}{\code{POSIXct} with maximum length 1. When given, only 
+\item{beginTime}{\code{POSIXct} with maximum length 1. When given, only
 logs recorded after this time will be returned.}
 
 \item{endTime}{\code{POSIXct} with maximum length 1. When given, only logs
@@ -57,8 +57,8 @@ recorded before this time will be returned.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -66,9 +66,9 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-Export the logging (audit trail) of all changes made to 
-  a project, including data exports, data changes, project 
-  metadata changes, modification of user rights, etc.
+Export the logging (audit trail) of all changes made to
+a project, including data exports, data changes, project
+metadata changes, modification of user rights, etc.
 }
 \examples{
 \dontrun{

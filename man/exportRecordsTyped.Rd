@@ -4,8 +4,8 @@
 \alias{exportRecordsTyped}
 \alias{exportRecordsTyped.redcapApiConnection}
 \alias{exportRecordsTyped.redcapOfflineConnection}
-\title{A replacement for \code{\link{exportRecords}} with full inversion of control over 
-       type casting.}
+\title{A replacement for \code{\link{exportRecords}} with full inversion of control over
+type casting.}
 \usage{
 exportRecordsTyped(
   rcon,
@@ -58,48 +58,48 @@ exportRecordsTyped(
 \arguments{
 \item{rcon}{A REDCap connection object as created by \code{redcapConnection}.}
 
-\item{fields}{\code{character} vector of fields to be returned.  If \code{NULL}, 
+\item{fields}{\code{character} vector of fields to be returned.  If \code{NULL},
 all fields are returned (unless \code{forms} is specified).}
 
-\item{drop_fields}{\code{character} A vector of field names to remove from 
+\item{drop_fields}{\code{character} A vector of field names to remove from
 the export. Ignore if length = 0.}
 
-\item{forms}{\code{character} vector of forms to be returned.  If \code{NULL}, 
+\item{forms}{\code{character} vector of forms to be returned.  If \code{NULL},
 all forms are returned (unless \code{fields} is specified.}
 
-\item{records}{\code{character} or \code{integerish}. A vector of study id's 
+\item{records}{\code{character} or \code{integerish}. A vector of study id's
 to be returned.  If \code{NULL}, all subjects are returned.}
 
-\item{events}{A \code{character} vector of events to be returned from a 
-longitudinal database.  If \code{NULL}, all events are returned. When 
-using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
+\item{events}{A \code{character} vector of events to be returned from a
+longitudinal database.  If \code{NULL}, all events are returned. When
+using a \code{redcapOfflineConnection} object, this argument is unvalidated,
 and only rows that match one of the values given are returned; be advised
 that misspellings may result in unexpected results.}
 
 \item{...}{Consumes any additional parameters passed. Not used.}
 
-\item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field 
-(e.g., "redcap_survey_identifier") or survey timestamp fields 
-(e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-If you do not pass in this flag, it will default to "true". If set to 
-"true", it will return the redcap_survey_identifier field and also the 
-survey timestamp field for a particular survey when at least 
-one field from that survey is being exported. NOTE: If the survey 
-identifier field or survey timestamp fields are imported via API data 
-import, they will simply be ignored since they are not real fields in 
+\item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field
+(e.g., "redcap_survey_identifier") or survey timestamp fields
+(e.g., form_name+"_timestamp") when surveys are utilized in the project.
+If you do not pass in this flag, it will default to "true". If set to
+"true", it will return the redcap_survey_identifier field and also the
+survey timestamp field for a particular survey when at least
+one field from that survey is being exported. NOTE: If the survey
+identifier field or survey timestamp fields are imported via API data
+import, they will simply be ignored since they are not real fields in
 the project but rather are pseudo-fields.}
 
-\item{dag}{\code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
-field when data access groups are utilized in the project. If you do not 
-pass in this flag, it will default to "false". NOTE: This flag is only 
-viable if the user whose token is being used to make the API request is 
-*not* in a data access group. If the user is in a group, then this 
+\item{dag}{\code{logical(1)} specifies whether or not to export the "redcap_data_access_group"
+field when data access groups are utilized in the project. If you do not
+pass in this flag, it will default to "false". NOTE: This flag is only
+viable if the user whose token is being used to make the API request is
+\emph{not} in a data access group. If the user is in a group, then this
 flag will revert to its default value.}
 
-\item{date_begin}{\code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+\item{date_begin}{\code{POSIXct(1)}. Ignored if \code{NULL} (default).
 Otherwise, records created or modified after this date will be returned.}
 
-\item{date_end}{\code{POSIXct(1)}. Ignored if \code{NULL} (default). 
+\item{date_end}{\code{POSIXct(1)}. Ignored if \code{NULL} (default).
 Otherwise, records created or modified before this date will be returned.}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
@@ -112,19 +112,19 @@ checkbox, form_complete, sql}. The function will be provided the variables
 matching the input. It defaults to \code{\link{isNAorBlank}} for all
 entries.}
 
-\item{validation}{A named \code{list} of user specified validation functions. The 
-same named keys are supported as the na argument. The function will be 
+\item{validation}{A named \code{list} of user specified validation functions. The
+same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. Helper functions to construct
 these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
 are not identified as NA will be passed to validation functions.}
 
 \item{cast}{A named \code{list} of user specified class casting functions. The
-same named keys are supported as the na argument. The function will be 
+same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
 vector of logical matching the input length. See \code{\link{fieldValidationAndCasting}}.
 The field type \code{system} may also be used to determine how the fields
-\code{redcap_event_name}, \code{redcap_repeat_instrument}, and 
+\code{redcap_event_name}, \code{redcap_repeat_instrument}, and
 \code{redcap_data_access_group} are cast.}
 
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
@@ -152,50 +152,50 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 see \code{\link{redcapError}}}
 }
 \description{
-Exports records from a REDCap Database, allowing for 
-  subsets of subjects, fields, records, and events. This function is
-  the long term replacement for exportRecords.
+Exports records from a REDCap Database, allowing for
+subsets of subjects, fields, records, and events. This function is
+the long term replacement for exportRecords.
 }
 \details{
 In all calls, the project's ID field will be included--there is no option
 provided to prevent this. Additionally, if the project has a secondary
 unique field specified, it will also be included. Inclusion of these fields
-is necessary to support some post-processing functions. 
+is necessary to support some post-processing functions.
 
-By default, the system fields \code{redcap_event_name}, 
-\code{redcap_repeat_instrument}, and \code{redcap_repeat_instance} are 
+By default, the system fields \code{redcap_event_name},
+\code{redcap_repeat_instrument}, and \code{redcap_repeat_instance} are
 exported (when they are appropriate to the project). These are automatically
-included by the API. However, \code{exportRecordsTyped} assumes that if 
-you include only a subset of these system fields, then you truly only 
-want that subset and unrequested fields will be removed. Be aware that 
+included by the API. However, \code{exportRecordsTyped} assumes that if
+you include only a subset of these system fields, then you truly only
+want that subset and unrequested fields will be removed. Be aware that
 this may cause problems with some post-processing functions that operate
-on repeating instrument data. 
+on repeating instrument data.
 
 The combination of the project ID field, secondary unique field, and the
-system fields are what uniquely identify an experimental unit. In nearly 
+system fields are what uniquely identify an experimental unit. In nearly
 all cases, it is desirable to have them all included.
 
-A record of exports through the API is recorded in the Logging section 
+A record of exports through the API is recorded in the Logging section
 of the project.
 
-The 'offline' version of the function operates on the raw (unlabeled) data 
-file downloaded from REDCap along with the data dictionary.  
-This is made available for instances where the API can not be accessed for 
+The 'offline' version of the function operates on the raw (unlabeled) data
+file downloaded from REDCap along with the data dictionary.
+This is made available for instances where the API can not be accessed for
 some reason (such as waiting for API approval from the REDCap administrator).
 
-A 'batched' export is one where the export is performed over a series of 
-API calls rather than one large call.  For large projects on small servers, 
-this may prevent a single user from tying up the server and forcing others 
-to wait on a larger job.  The batched export is performed by first 
+A 'batched' export is one where the export is performed over a series of
+API calls rather than one large call.  For large projects on small servers,
+this may prevent a single user from tying up the server and forcing others
+to wait on a larger job.  The batched export is performed by first
 calling the API to export the subject identifier field (the first field
-in the meta data).  The unique ID's are then assigned a batch number with 
-no more than \code{batch_size} ID's in any single batch.  The batches are 
+in the meta data).  The unique ID's are then assigned a batch number with
+no more than \code{batch_size} ID's in any single batch.  The batches are
 exported from the API and stacked together.
 
-In longitudinal projects, \code{batch_size} may not necessarily be the 
-number of records exported in each batch.  If \code{batch_size} is 10 and 
-there are four records per patient, each batch will consist of 40 records.  
-Thus, if you are concerned about tying up the server with a large, 
+In longitudinal projects, \code{batch_size} may not necessarily be the
+number of records exported in each batch.  If \code{batch_size} is 10 and
+there are four records per patient, each batch will consist of 40 records.
+Thus, if you are concerned about tying up the server with a large,
 longitudinal project, it would be prudent to use a smaller batch size.
 }
 \section{Inversion of Control}{
@@ -206,21 +206,22 @@ that have been type cast to most commonly used analysis class (e.g. factor).
 This version allows the user to override any step of this process by
 specifying a different function for each of the stages of the type casting.
 The algorithm is as follows:
-
-1. Detect NAs in returned data (\code{na} argument).
-2. Run \code{validate} functions for the field_types.
-3. On the fields that are not NA and pass validate do the specified cast.
+\enumerate{
+\item Detect NAs in returned data (\code{na} argument).
+\item Run \code{validate} functions for the field_types.
+\item On the fields that are not NA and pass validate do the specified cast.
+}
 
 It is expected that the \code{na} and \code{validate} overrides should
 rarely be used. Their exposure via the function parameters is to future
 proof against possible bugs in the defaults, and allows for things that
 higher versions of REDCap add as possible field types. I.e., the overrides
 are for use to continue using the library when errors or changes to REDCap
-occur. 
+occur.
 
 The cast override is one were users can specify things that were controlled
 by an ever increasing set of flags before. E.g., \code{dates=as.Date} was
-an addition to allow dates in the previous version to be overridden if the 
+an addition to allow dates in the previous version to be overridden if the
 user wanted to use the Date class. In this version, it would appear called
 as \code{cast=list(_date=as.Date))}. See \code{\link{fieldValidationAndCasting}}
 for a full listing of package provided cast functions.
@@ -230,12 +231,12 @@ for a full listing of package provided cast functions.
 
 This function allows you to export a set of records for a project
 
-Note about export rights (6.0.0+): Please be aware that Data Export user rights will be 
-applied to this API request. For example, if you have "No Access" data export rights 
-in the project, then the API data export will fail and return an error. And if you 
-have "De-Identified" or "Remove all tagged Identifier fields" data export rights, 
-then some data fields *might* be removed and filtered out of the data set returned 
-from the API. To make sure that no data is unnecessarily filtered out of your API 
+Note about export rights (6.0.0+): Please be aware that Data Export user rights will be
+applied to this API request. For example, if you have "No Access" data export rights
+in the project, then the API data export will fail and return an error. And if you
+have "De-Identified" or "Remove all tagged Identifier fields" data export rights,
+then some data fields \emph{might} be removed and filtered out of the data set returned
+from the API. To make sure that no data is unnecessarily filtered out of your API
 request, you should have "Full Data Set" export rights in the project.
 }
 
@@ -251,15 +252,15 @@ None
 
 \section{Deidentified Batched Calls}{
 
-Batched calls to the API are not a feature of the REDCap API, but may be imposed 
+Batched calls to the API are not a feature of the REDCap API, but may be imposed
 by making multiple calls to the API.  The process of batching the export requires
 that an initial call be made to the API to retrieve only the record IDs.  The
 list of IDs is then broken into chunks, each about the size of \code{batch.size}.
 The batched calls then force the \code{records} argument in each call.
 
-When a user's permissions require a de-identified data export, a batched call 
-should be expected to fail.  This is because, upon export, REDCap will hash the 
-identifiers.  When R attempts to pass the hashed identifiers back to REDCap, 
+When a user's permissions require a de-identified data export, a batched call
+should be expected to fail.  This is because, upon export, REDCap will hash the
+identifiers.  When R attempts to pass the hashed identifiers back to REDCap,
 REDCap will try to match the hashed identifiers to the unhashed identifiers in the
 database.  No matches will be found, and the export will fail.
 

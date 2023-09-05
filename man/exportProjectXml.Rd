@@ -44,50 +44,36 @@ saved.}
 only meta data values are returned. When \code{FALSE}, project records
 data are also exported.}
 
-\item{records}{\code{character} or \code{integerish}. A vector of study id's 
-to be returned.  If \code{NULL}, all subjects are returned.}
+\item{records}{\code{character} or \code{integerish}. A vector of study id's
+to be returned.  When \code{NULL}, all subjects are returned.}
 
-\item{fields}{\code{character} vector of fields to be returned.  If \code{NULL}, 
+\item{fields}{\code{character}. Vector of fields to be returned.  When \code{NULL},
 all fields are returned (unless \code{forms} is specified).}
 
-\item{events}{A \code{character} vector of events to be returned from a 
-longitudinal database.  If \code{NULL}, all events are returned. When 
-using a \code{redcapOfflineConnection} object, this argument is unvalidated, 
-and only rows that match one of the values given are returned; be advised
-that misspellings may result in unexpected results.}
+\item{events}{A \code{character}. Vector of events to be returned from a
+longitudinal database.  When \code{NULL}, all events are returned.}
 
-\item{survey}{\code{logical(1)} specifies whether or not to export the survey identifier field 
-(e.g., "redcap_survey_identifier") or survey timestamp fields 
-(e.g., form_name+"_timestamp") when surveys are utilized in the project. 
-If you do not pass in this flag, it will default to "true". If set to 
-"true", it will return the redcap_survey_identifier field and also the 
-survey timestamp field for a particular survey when at least 
-one field from that survey is being exported. NOTE: If the survey 
-identifier field or survey timestamp fields are imported via API data 
-import, they will simply be ignored since they are not real fields in 
-the project but rather are pseudo-fields.}
+\item{survey}{\code{logical(1)}. When \code{TRUE} the survey identifier fields
+(e.g., "redcap_survey_identifier") or survey timestamp fields
+(e.g., form_name+"_timestamp") will be included in the export
+when surveys are utilized in the project.}
 
-\item{dag}{\code{logical(1)} specifies whether or not to export the "redcap_data_access_group" 
-field when data access groups are utilized in the project. If you do not 
-pass in this flag, it will default to "false". NOTE: This flag is only 
-viable if the user whose token is being used to make the API request is 
-*not* in a data access group. If the user is in a group, then this 
-flag will revert to its default value.}
+\item{dag}{\code{logical(1)}. When \code{TRUE} the \code{redcap_data_access_group}
+field is exported when data access groups are utilized in the project.}
 
-\item{export_files}{\code{logical(1)} \code{TRUE} will cause the XML returned 
-to include all files uploaded for File Upload and Signature fields 
-for all records in the project, whereas FALSE will cause all such 
-fields not to be included. NOTE: Setting this option to \code{TRUE} can 
-make the export very large and may prevent it from completing if the 
+\item{export_files}{\code{logical(1)}. When \code{TRUE} will cause the XML returned
+to include all files uploaded for File Upload and Signature fields
+for all records in the project. Setting this option to \code{TRUE} can
+make the export very large and may prevent it from completing if the
 project contains many files or very large files.}
 
 \item{...}{Additional arguments to be passed between methods.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+see \code{\link[=redcapError]{redcapError()}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -95,25 +81,44 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-The entire project (all records, events, arms, instruments, 
-  fields, and project attributes) can be downloaded as a single XML 
-  file, which is in CDISC ODM format (ODM version 1.3.1). This XML 
-  file can be used to create a clone of the project (including its data, 
-  optionally) on this REDCap server or on another REDCap server 
-  (it can be uploaded on the Create New Project page). Because it is in 
-  CDISC ODM format, it can also be used to import the project into 
-  another ODM-compatible system. NOTE: All the option paramters listed 
-  below ONLY apply to data returned if the 'return_metadata_only' 
-  parameter is set to FALSE (default). For this API method, ALL metadata 
-  (all fields, forms, events, and arms) will always be exported. 
-  Only the data returned can be filtered using the optional parameters.
+These methods enable the user to export a project's settings
+as an XML file in CDISC ODM format. This file may be used to transfer
+the project to another project, REDCap instance, or any other
+CDISC ODM compliant database.
+}
+\details{
+The entire project (all records, events, arms, instruments,
+fields, and project attributes) can be downloaded as a single XML
+file, which is in CDISC ODM format (ODM version 1.3.1). This XML
+file can be used to create a clone of the project (including its data,
+optionally) on this REDCap server or on another REDCap server
+(it can be uploaded on the Create New Project page). Because it is in
+CDISC ODM format, it can also be used to import the project into
+another ODM-compatible system.
+
+When the \code{return_metadata_only} parameter is set to \code{FALSE}, the
+Data Export user rights will be applied to any data returned. For example,
+if the user has 'De-Identified' or 'Remove All Identifier Fields'
+data export rights, then some data fields might be removed and
+filtered out of the data set. To make sure that no data is
+unnecessarily filtered out of the API request, the user should have
+'Full Data Set' export rights in the project.
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "token_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+xml_file <- tempfile(file.ext = ".xml")
+exportProjectXml(rcon, 
+                 file = xml_file)
+}
+
   
-  Note about export rights: If the 'return_metadata_only' parameter is set 
-  to FALSE, then please be aware that Data Export user rights will be 
-  applied to any data returned from this API request. For example, 
-  if you have 'De-Identified' or 'Remove All Identifier Fields' 
-  data export rights, then some data fields might be removed and 
-  filtered out of the data set returned from the API. To make sure that 
-  no data is unnecessarily filtered out of your API request, 
-  you should have 'Full Data Set' export rights in the project.
+  
+}
+\seealso{
+\code{\link[=createRedcapProject]{createRedcapProject()}}
 }

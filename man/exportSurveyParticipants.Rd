@@ -29,8 +29,8 @@ exportSurveyParticipants(rcon, instrument, event, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -41,9 +41,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Retrieving dataframe of survey participants managed in REDCap
 }
 \details{
-REDCap allows the user to manage a list of participants (if they are known) for each survey. This function 
-pulls this information into a dataframe. The contents of the dataframe are the contact fields of the participants, 
-the link to the survey for that participant if the participant hasn't completed the survey yet (otherwise, NA), 
+REDCap allows the user to manage a list of participants (if they are known) for each survey. This function
+pulls this information into a dataframe. The contents of the dataframe are the contact fields of the participants,
+the link to the survey for that participant if the participant hasn't completed the survey yet (otherwise, NA),
 the participants record id, and other information.
 }
 \author{

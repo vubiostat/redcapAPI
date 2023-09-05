@@ -31,8 +31,8 @@ will be updated after the import.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -40,38 +40,38 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to update some of the basic 
-  attributes of a given REDCap project, such as the project's title, 
-  if it is longitudinal, if surveys are enabled, etc. Its data format 
-  corresponds to the format in the API method Export Project Information.
+This method allows you to update some of the basic
+attributes of a given REDCap project, such as the project's title,
+if it is longitudinal, if surveys are enabled, etc. Its data format
+corresponds to the format in the API method Export Project Information.
 }
 \details{
-Fields that are not editable will be quietly removed prior to 
-  import. This allows the user to use the result of 
-  \code{exportProjectInformation} as a template for the import.
-  
-  Attributes for the project in the format specified. For any values
-  that are boolean, they should be represented as either a '0' (no/false) 
-  or '1' (yes/true). The following project attributes can be updated:
+Fields that are not editable will be quietly removed prior to
+import. This allows the user to use the result of
+\code{exportProjectInformation} as a template for the import.
+
+Attributes for the project in the format specified. For any values
+that are boolean, they should be represented as either a '0' (no/false)
+or '1' (yes/true). The following project attributes can be updated:
 
 \itemize{
- \item{\code{project_title}}
- \item{\code{project_language}}
- \item{\code{purpose}}
- \item{\code{purpose_other}}
- \item{\code{project_notes}}
- \item{\code{custom_record_label}}
- \item{\code{secondary_unique_field}}
- \item{\code{is_longitudinal}}
- \item{\code{surveys_enabled}}
- \item{\code{scheduling_enabled}}
- \item{\code{record_autonumbering_enabled}}
- \item{\code{randomization_enabled}}
- \item{\code{project_irb_number}}
- \item{\code{project_grant_number}}
- \item{\code{project_pi_firstname}}
- \item{\code{project_pi_lastname}}
- \item{\code{display_today_now_button}}
- \item{\code{bypass_branching_erase_field_prompt}}
+\item{\code{project_title}}
+\item{\code{project_language}}
+\item{\code{purpose}}
+\item{\code{purpose_other}}
+\item{\code{project_notes}}
+\item{\code{custom_record_label}}
+\item{\code{secondary_unique_field}}
+\item{\code{is_longitudinal}}
+\item{\code{surveys_enabled}}
+\item{\code{scheduling_enabled}}
+\item{\code{record_autonumbering_enabled}}
+\item{\code{randomization_enabled}}
+\item{\code{project_irb_number}}
+\item{\code{project_grant_number}}
+\item{\code{project_pi_firstname}}
+\item{\code{project_pi_lastname}}
+\item{\code{display_today_now_button}}
+\item{\code{bypass_branching_erase_field_prompt}}
 }
 }

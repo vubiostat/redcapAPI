@@ -30,28 +30,28 @@ createFileRepositoryFolder(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{name}{\code{character(1)} The name of the folder. If a folder by 
+\item{name}{\code{character(1)} The name of the folder. If a folder by
 this name already exists, no action will be taken.}
 
 \item{folder_id}{\code{integerish(0/1)}. The ID of the parent folder. If
 length is 0, the new folder is placed in the top-level.}
 
-\item{dag_id}{\code{integerish(0/1)} The ID of a data access group. If 
+\item{dag_id}{\code{integerish(0/1)} The ID of a data access group. If
 provided, access to the folder will be restricted to the DAG.}
 
-\item{role_id}{\code{integerish(0/1)} The ID of a role. If provided, 
+\item{role_id}{\code{integerish(0/1)} The ID of a role. If provided,
 access to the folder will be restricted to users with that role.}
 
 \item{...}{Additional arguments to be passed between methods}
 
-\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached 
+\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached
 File Repository data on \code{rcon} will be refreshed.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -60,15 +60,15 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 Creates a folder in the file repository. This can be made
-  a subfolder of an existing folder, given the folder ID of the parent
-  folder.
+a subfolder of an existing folder, given the folder ID of the parent
+folder.
 }
 \details{
-This method allows you to create a new folder in the File 
-  Repository. You may optionally provide the folder_id of the parent 
-  folder under which you wish this folder to be created. Providing a 
-  dag_id and/or role_id will allow you to restrict access to only users 
-  within a specific DAG (Data Access Group) or User Role, respectively.
+This method allows you to create a new folder in the File
+Repository. You may optionally provide the folder_id of the parent
+folder under which you wish this folder to be created. Providing a
+dag_id and/or role_id will allow you to restrict access to only users
+within a specific DAG (Data Access Group) or User Role, respectively.
 }
 \author{
 Benjamin Nutter

@@ -30,7 +30,7 @@ deleteEvents(
 \item{events}{\code{character} vector giving the unique event names
 of the events to be deleted.}
 
-\item{refresh}{\code{logical(1)} If \code{TRUE}, cached event data will be 
+\item{refresh}{\code{logical(1)} If \code{TRUE}, cached event data will be
 refreshed after the deletion.}
 
 \item{...}{Additional arguments to pass to other methods.}
@@ -38,8 +38,8 @@ refreshed after the deletion.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -48,9 +48,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
 This method allows you to delete Events from a project.
-  Notice: Because of this method's destructive nature, it is only 
-  available for use for projects in Development status. Additionally, 
-  please be aware that deleting an event will automatically delete 
-  any records/data that have been collected under that event 
-  (this is non-reversible data loss).
+Notice: Because of this method's destructive nature, it is only
+available for use for projects in Development status. Additionally,
+please be aware that deleting an event will automatically delete
+any records/data that have been collected under that event
+(this is non-reversible data loss).
 }

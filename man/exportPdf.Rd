@@ -35,11 +35,11 @@ exportPdf(
 
 \item{dir}{The directory into which the file should be saved.}
 
-\item{filename}{\code{character(1)}. The base of the file name.  If 
-\code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  If 
+\item{filename}{\code{character(1)}. The base of the file name.  If
+\code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  If
 \code{record} has a value, it will be appended with \code{"_record_[record id].pdf"}}
 
-\item{record}{The record id for which forms should be downloaded.  May only 
+\item{record}{The record id for which forms should be downloaded.  May only
 have length 1. May be either \code{character} or \code{numeric}.}
 
 \item{events}{The events for which forms should be downloaded}
@@ -54,8 +54,8 @@ When \code{TRUE}, this overrides the \code{records} argument.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -66,8 +66,8 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Creates a PDF file that is saved to the directory specified by the user.
 }
 \description{
-This function allows you to download PDF files of data collection 
-instruments.  The download may be with or without collected data, and may 
+This function allows you to download PDF files of data collection
+instruments.  The download may be with or without collected data, and may
 return a single record, multiple records, or all records.
 }
 \details{
@@ -76,15 +76,15 @@ REDCap user interface.
 }
 \section{REDCap API Documentation}{
 
-This function allows you to export a PDF file for any of the following: 1) a 
-single data collection instrument (blank), 2) all instruments (blank), 3) a 
-single instrument (with data from a single record), 4) all instruments (with 
-data from a single record), or 5) all instruments (with data from ALL records). 
-This is the exact same PDF file that is downloadable from a project's data entry 
-form in the web interface, and additionally, the user's privileges with regard to 
-data exports will be applied here just like they are when downloading the PDF in 
-the web interface (e.g., if they have de-identified data export rights, then it 
-will remove data from certain fields in the PDF). If the user has "No Access" data 
+This function allows you to export a PDF file for any of the following: 1) a
+single data collection instrument (blank), 2) all instruments (blank), 3) a
+single instrument (with data from a single record), 4) all instruments (with
+data from a single record), or 5) all instruments (with data from ALL records).
+This is the exact same PDF file that is downloadable from a project's data entry
+form in the web interface, and additionally, the user's privileges with regard to
+data exports will be applied here just like they are when downloading the PDF in
+the web interface (e.g., if they have de-identified data export rights, then it
+will remove data from certain fields in the PDF). If the user has "No Access" data
 export rights, they will not be able to use this method, and an error will be returned.
 }
 

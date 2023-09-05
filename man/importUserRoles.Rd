@@ -25,8 +25,8 @@ importUserRoles(rcon, data, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data 
-export access values will be read from the expanded columns. Otherwise, 
+\item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data
+export access values will be read from the expanded columns. Otherwise,
 the consolidated values (as provided by the API export) are utilized.}
 
 \item{refresh}{\code{logical(1)}. If \code{TRUE}, the cached data will
@@ -35,8 +35,8 @@ be refreshed after the import.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -44,27 +44,27 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to import new user roles into a 
-  project while setting their privileges, or update the privileges of 
-  existing user roles in the project.
+This method allows you to import new user roles into a
+project while setting their privileges, or update the privileges of
+existing user roles in the project.
 }
 \details{
 When setting permissions for a user right project access fields (those
-  not related to forms or exports) are set as either 0 or 1 (or "No Access"
-  and "Access", respectively). The settings may be any of these four values.
-  
-For form access fields, the values must be one of 0, 2, 1, or 3 ("No Access", 
-"Read Only", "View records/responses and edit records (survey responses are read-only)", 
-or "Edit survey responses", respectively). 
+not related to forms or exports) are set as either 0 or 1 (or "No Access"
+and "Access", respectively). The settings may be any of these four values.
 
-Data export fields must be one of 0, 2, 3, or 1 ("No Access", "De-Identified", 
-"Remove Identifier Fields", "Full Data Set", respectively). 
+For form access fields, the values must be one of 0, 2, 1, or 3 ("No Access",
+"Read Only", "View records/responses and edit records (survey responses are read-only)",
+or "Edit survey responses", respectively).
+
+Data export fields must be one of 0, 2, 3, or 1 ("No Access", "De-Identified",
+"Remove Identifier Fields", "Full Data Set", respectively).
 
 The user data is passed through \code{prepUserImportData} before sending it
-to the API, so text values listed above may also be used and will be 
-converted to the numeric equivalent. 
+to the API, so text values listed above may also be used and will be
+converted to the numeric equivalent.
 
 It is also permissible to use a column for each form individually, as can
-be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
+be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these
 settings will be consolidated into the text string expected by the API.
 }

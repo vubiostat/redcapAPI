@@ -29,16 +29,16 @@ exportUsers(rcon, ...)
 \item{labels}{\code{logical(1)} Indicates if the data export and form access rights are
 converted to factor objects.}
 
-\item{form_rights}{\code{logical(1)} Indicates if the form rights should be 
+\item{form_rights}{\code{logical(1)} Indicates if the form rights should be
 transformed to one column per form. The API-provided character string
-is always returned with the format [form_name]:[access_code] and a comma separating
+is always returned with the format \link{form_name}:\link{access_code} and a comma separating
 each form.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -46,25 +46,25 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame. The number of columns in the data frame will depend on your 
+Returns a data frame. The number of columns in the data frame will depend on your
 version of REDCap.
 \itemize{
-  \item{\code{username }}{User name}
-  \item{\code{email }}{The user's e-mail address}
-  \item{\code{firstname }}{The user's first name}
-  \item{\code{lastname }}{The user's last name}
-  \item{\code{expiration }}{The expiration date of the user's access to the project}
-  \item{\code{data_access_group }}{The data access group the user is assigned to}
-  \item{\code{data_export }}{The user's data export rights. 0=no access, 
-    2=De-Identified, 1=Full Data Set}
-  \item{\code{mobile_app }}{(6.5.0+) Flag for if the user has permissions for the 
-    mobile application}
-  \item{\code{mobile_app_download_data }}{(6.5.0+) Flag for if the user may download
-    data from the mobile app}
+\item{\code{username }}{User name}
+\item{\code{email }}{The user's e-mail address}
+\item{\code{firstname }}{The user's first name}
+\item{\code{lastname }}{The user's last name}
+\item{\code{expiration }}{The expiration date of the user's access to the project}
+\item{\code{data_access_group }}{The data access group the user is assigned to}
+\item{\code{data_export }}{The user's data export rights. 0=no access,
+2=De-Identified, 1=Full Data Set}
+\item{\code{mobile_app }}{(6.5.0+) Flag for if the user has permissions for the
+mobile application}
+\item{\code{mobile_app_download_data }}{(6.5.0+) Flag for if the user may download
+data from the mobile app}
 }
 
-The data frame will have one additional column for each form giving the user's 
-form-level permissions in the project.  0=no access, 2=read only, 
+The data frame will have one additional column for each form giving the user's
+form-level permissions in the project.  0=no access, 2=read only,
 1=view records/responses and
 edit records (survey responses are read-only), 3 = edit survey responses
 }

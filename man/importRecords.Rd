@@ -41,8 +41,8 @@ overwrite data in the REDCap database.}
 
 \item{returnContent}{Character string.  'count' returns the number of
 records imported; 'ids' returns the record ids that are imported;
-'nothing' returns no message; 'auto_ids' returns a list of pairs of all 
-record IDs that were imported. If used when \code{force_auto_number = FALSE}, 
+'nothing' returns no message; 'auto_ids' returns a list of pairs of all
+record IDs that were imported. If used when \code{force_auto_number = FALSE},
 the value will be changed to \code{'ids'}.}
 
 \item{returnData}{Logical.  Prevents the REDCap import and instead
@@ -60,18 +60,18 @@ If \code{""}, the log is printed to the console.}
 \item{...}{Arguments to be passed to other methods.}
 
 \item{force_auto_number}{\code{logical(1)} If record auto-numbering has been
-enabled in the project, it may be desirable to import records where each 
-record's record name is automatically determined by REDCap (just as it 
-does in the user interface). If this parameter is set to 'true', the 
-record names provided in the request will not be used (although they 
-are still required in order to associate multiple rows of data to an 
-individual record in the request), but instead those records in the 
-request will receive new record names during the import process. 
+enabled in the project, it may be desirable to import records where each
+record's record name is automatically determined by REDCap (just as it
+does in the user interface). If this parameter is set to 'true', the
+record names provided in the request will not be used (although they
+are still required in order to associate multiple rows of data to an
+individual record in the request), but instead those records in the
+request will receive new record names during the import process.
 NOTE: To see how the provided record names get translated into new auto
- record names, the returnContent parameter should be set to 'auto_ids', 
- which will return a record list similar to 'ids' value, but it will have
- the new record name followed by the provided record name in the request, 
- in which the two are comma-delimited.}
+record names, the returnContent parameter should be set to 'auto_ids',
+which will return a record list similar to 'ids' value, but it will have
+the new record name followed by the provided record name in the request,
+in which the two are comma-delimited.}
 
 \item{batch.size}{Specifies size of batches.  A negative value
 indicates no batching.}
@@ -79,8 +79,8 @@ indicates no batching.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -97,13 +97,13 @@ of the project.
 \code{importRecords} prevents the most common import errors by testing the
 data before attempting the import.  Namely
 \enumerate{
-  \item Check that all variables in \code{data} exist in the REDCap data dictionary.
-  \item Check that the study id variable exists
-  \item Force the study id variable to the first position in the data frame (with a warning)
-  \item Remove calculated fields (with a warning)
-  \item Verify that REDCap date fields are represented in the data frame as
-    either character, POSIXct, or Date class objects.
-  \item Determine if values are within their specified validation limits.
+\item Check that all variables in \code{data} exist in the REDCap data dictionary.
+\item Check that the study id variable exists
+\item Force the study id variable to the first position in the data frame (with a warning)
+\item Remove calculated fields (with a warning)
+\item Verify that REDCap date fields are represented in the data frame as
+either character, POSIXct, or Date class objects.
+\item Determine if values are within their specified validation limits.
 }
 
 See the documentation for \code{\link{validateImport}} for detailed
@@ -112,24 +112,24 @@ explanations of the validation.
 \section{Limitations}{
 
 
-The REDCap API is fairly restrictive about what it will accept as valid data for import. 
-\code{importRecords} tries to simplify the process by allowing users to 
+The REDCap API is fairly restrictive about what it will accept as valid data for import.
+\code{importRecords} tries to simplify the process by allowing users to
 submit data in any form recognized by the data dictionary. It is then converted
-internally to the 
+internally to the
 appropriate text format for import. This means, for example, that a radio button value
 where the code \code{1} is mapped to the label \code{Guitar} (defined in the user interface
 with "1, Guitar"), the user can provide
-either "1" or "Guitar" as a value and \code{importRecords} will translate it to the 
-code that the API expects. 
+either "1" or "Guitar" as a value and \code{importRecords} will translate it to the
+code that the API expects.
 
 While this provides a level of convenience for the user, it has some limitations when
-applied to checkbox values. When submitting checkbox values for import, it is strongly 
-recommended that you submit either the code "0" (for unchecked), "1" (for checked), or the 
-labels "Unchecked" and "Checked". 
+applied to checkbox values. When submitting checkbox values for import, it is strongly
+recommended that you submit either the code "0" (for unchecked), "1" (for checked), or the
+labels "Unchecked" and "Checked".
 
 In particular, when the checkbox labels are defined with a code or label that is "0" or "1"
-(for example, "0, checkbox_label" or "check_code, 0"), \code{importRecords} is unable to 
-determine if a 0 indicates an unchecked box or if the zero is the label of a checked box. 
+(for example, "0, checkbox_label" or "check_code, 0"), \code{importRecords} is unable to
+determine if a 0 indicates an unchecked box or if the zero is the label of a checked box.
 When encountering ambiguity, \code{importRecords} will always assume "0" represents an
 unchecked box and "1" represents a checked box.
 }

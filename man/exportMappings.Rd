@@ -28,8 +28,8 @@ it to numeric before processing.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -40,16 +40,16 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Retrieve a data frame giving the events-form mapping for a project.
 }
 \details{
-The data frame that is returned shows the arm number, unique 
+The data frame that is returned shows the arm number, unique
 event name, and forms mapped in a project.
- 
-If the project information reports that the project is not longitudinal, 
+
+If the project information reports that the project is not longitudinal,
 a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{
 
-This function allows you to export the instrument-event mappings for a project 
-(i.e., how the data collection instruments are designated for certain events in a 
+This function allows you to export the instrument-event mappings for a project
+(i.e., how the data collection instruments are designated for certain events in a
 longitudinal project).
 
 NOTE: this only works for longitudinal projects
@@ -61,7 +61,7 @@ NOTE: this only works for longitudinal projects
 }
 
 \section{Known REDCap Limitations}{
- 
+
 None
 }
 

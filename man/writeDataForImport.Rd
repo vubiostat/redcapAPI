@@ -11,5 +11,5 @@ writeDataForImport(data)
 }
 \description{
 Converts a dataframe into a character value in the format
-  of a CSV for import through the API.
+of a CSV for import through the API.
 }

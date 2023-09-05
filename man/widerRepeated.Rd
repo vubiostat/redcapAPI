@@ -15,8 +15,8 @@ widerRepeated(Records, rcon)
 \description{
 Converts a dataframe into wide format given a single REDCap form.
 This function assumes that the Records argument is the result of exportRecordsTyped,
-and that all empty values have been previously dropped. This will only widen dataframes 
-that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and 
-"redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned 
+and that all empty values have been previously dropped. This will only widen dataframes
+that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and
+"redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned
 unchanged.
 }

@@ -21,14 +21,14 @@ exportArms(rcon, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{arms}{\code{character} identifying the arm numbers to retrieve. 
+\item{arms}{\code{character} identifying the arm numbers to retrieve.
 May also be \code{integerish}.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -39,24 +39,24 @@ that may not otherwise be supported by \code{redcapAPI}.}
 Returns a data frame with two columns
 
 \itemize{
-  \item{\code{arm_num} }{The arm number}
-  \item{\code{name} }{The arm's descriptive name}
+\item{\code{arm_num} }{The arm number}
+\item{\code{name} }{The arm's descriptive name}
 }
 }
 \description{
 This function allows you to export the Arms for a project
-  Note: this only works for longitudinal projects
+Note: this only works for longitudinal projects
 }
 \details{
 It is not sufficient to make the project a longitudinal project. The
 project must satisfy one of two conditions: 1) have at least two arms and
-one event defined in each arm; or 2) have one arm and at least two events defined. If 
+one event defined in each arm; or 2) have one arm and at least two events defined. If
 neither of these conditions are satisfied, the API will return a message
-such as \code{ERROR: You cannot export arms for classic projects}, an 
-error message that isn't as descriptive of the nature of the problem as 
+such as \code{ERROR: You cannot export arms for classic projects}, an
+error message that isn't as descriptive of the nature of the problem as
 we might like.
 
-If the project information reports that the project is not longitudinal, 
+If the project information reports that the project is not longitudinal,
 a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{

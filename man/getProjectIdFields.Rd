@@ -10,8 +10,8 @@ getProjectIdFields(rcon)
 \item{rcon}{A \code{redcapConnection} object.}
 }
 \description{
-Returns a character vector listing the project ID fields. 
-  This will be at most a vector of length two. The first element will
-  be the first field in the meta data. The second, if provided, will
-  be the name of the secondary unique field specified in the project.
+Returns a character vector listing the project ID fields.
+This will be at most a vector of length two. The first element will
+be the first field in the meta data. The second, if provided, will
+be the name of the secondary unique field specified in the project.
 }

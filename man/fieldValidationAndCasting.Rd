@@ -87,7 +87,7 @@ na_values(FUN)
 \arguments{
 \item{x}{\code{character}. A vector to check.}
 
-\item{...}{Consumes anything else passed to function. I.e., field_name and 
+\item{...}{Consumes anything else passed to function. I.e., field_name and
 coding.}
 
 \item{rx}{\code{character}. The regular expression pattern to check.}
@@ -96,10 +96,10 @@ coding.}
 
 \item{coding}{named \code{character} vector. The defined coding from the meta data.}
 
-\item{checked}{\code{character}. Values to recognize as checked in a 
+\item{checked}{\code{character}. Values to recognize as checked in a
 checkbox field.}
 
-\item{dec_symbol}{\code{character(1)}. The symbol in the field used to 
+\item{dec_symbol}{\code{character(1)}. The symbol in the field used to
 denote a decimal.}
 
 \item{n_dec}{\code{integerish(1)}. The number of decimal places permitted
@@ -108,11 +108,11 @@ by the field validation.}
 \item{FUN}{\code{function}. A function that takes a character vector.}
 }
 \description{
-This set of functions assists in validating that the content of 
-  fields coming from REDCap match the MetaData, allowing for a 
-  validation report to provided. The cast helpers allow for transforming
-  the REDCap data into R data types and allowing the user to customize 
-  the end product.
+This set of functions assists in validating that the content of
+fields coming from REDCap match the MetaData, allowing for a
+validation report to provided. The cast helpers allow for transforming
+the REDCap data into R data types and allowing the user to customize
+the end product.
 }
 \details{
 Functions passed to the \code{na}, \code{validation}, and
@@ -120,23 +120,23 @@ Functions passed to the \code{na}, \code{validation}, and
 of \code{function(x, coding, field_name)}. \code{na} and \code{validation}
 functions are expected to return a logical vector of the same length as the
 column processed. Helper routines
-are provided here for common cases to construct these functions. 
+are provided here for common cases to construct these functions.
 
 \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
 function for constructing \code{na} overrides in \code{\link{exportRecordsTyped}}.
 
-\code{valRx} constructs a validation function from a regular expression pattern. 
+\code{valRx} constructs a validation function from a regular expression pattern.
 The function returns a TRUE/FALSE if the value matches the pattern.
 
-\code{valChoice} constructs a validation function from a set of choices 
+\code{valChoice} constructs a validation function from a set of choices
 defined in the MetaData. The functions returns a TRUE/FALSE if the value
 matches one of the choices.
 
-\code{valPhone} constructs a validation function for (North American) 
-  phone numbers. It removes punctuation and spaces prior to validating
-  with the regular expression.
+\code{valPhone} constructs a validation function for (North American)
+phone numbers. It removes punctuation and spaces prior to validating
+with the regular expression.
 
-\code{castLabel} constructs a casting function for multiple choice variables. 
+\code{castLabel} constructs a casting function for multiple choice variables.
 The field will be cast to return the choice label (generally more human readable)
 
 \code{castCode} constructs a casting function for multiple choice variables.
@@ -144,51 +144,51 @@ Similar to \code{castLabel}, but the choice value is returned instead. The
 values are typically more compact and their meaning may not be obvious.
 
 \code{castRaw} constructs a casting function that returns the content
-from REDCap as it was received. It is functionally equivalent to \code{identity}. 
-For multiple choice variables, the result will be coerced to numeric, if possible; 
+from REDCap as it was received. It is functionally equivalent to \code{identity}.
+For multiple choice variables, the result will be coerced to numeric, if possible;
 otherwise, the result is character vector.
 
 \code{castChecked} constructs a casting function for checkbox fields. It
 returns values in the form of Unchecked/Checked.
 
 \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
-for checkbox fields. For both, unchecked variables are cast to an empty 
-string (""). Checked variables are cast to the option label and option code, 
+for checkbox fields. For both, unchecked variables are cast to an empty
+string (""). Checked variables are cast to the option label and option code,
 respectively.
 
 \code{castCheckForImport} is a special case function to allow the user to
 specify exactly which values are to be considered "Checked". Values that
 match are returned as 1 and all other values are returned as 0. This is
-motivated by the special case where the coding on a checkbox includes 
+motivated by the special case where the coding on a checkbox includes
 "0, Option". In the resulting field \code{checkbox___0}, a coded value
-of 0 actually implies the choice was selected. In order to perform an 
-import on such data, it is necessary to cast it using 
+of 0 actually implies the choice was selected. In order to perform an
+import on such data, it is necessary to cast it using
 \code{castCheckForImport(c("0"))}.
 
-\code{castDpNumeric} is a casting function for fields that use the 
-\code{number_ndp_comma} field type (where \code{n} is the number of 
+\code{castDpNumeric} is a casting function for fields that use the
+\code{number_ndp_comma} field type (where \code{n} is the number of
 decimal places). This function will convert the values to numeric
-values for use in analysis. This is a function that returns the 
-appropriate casting function, thus the appropriate usage when using 
+values for use in analysis. This is a function that returns the
+appropriate casting function, thus the appropriate usage when using
 the defaults is \code{cast = list(number_1dp_comma = castDpNumeric())}
 (using the parentheses).
 
 \code{castDpCharacter} is a casting function to return fields that use
-\code{number_ndp_comma} field types to character strings for import. This 
-is a function that returns the appropriate casting function, thus the 
-appropriate usage when casting for one decimal place is 
+\code{number_ndp_comma} field types to character strings for import. This
+is a function that returns the appropriate casting function, thus the
+appropriate usage when casting for one decimal place is
 \code{cast = list(number_1dp_comma = castDpCharacter(1))}.
 
-\code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to 
-facilitate importing data. They convert time data into a character format 
-that will pass the API requirements. 
+\code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to
+facilitate importing data. They convert time data into a character format
+that will pass the API requirements.
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.
 
 \code{default_cast_no_factor} is a list of casting functions that matches
 all of the default casts but with the exception that any fields that would
-have been cast to factors will instead be cast to characters. It is 
+have been cast to factors will instead be cast to characters. It is
 provided for the user that prefers to work absent factors. The list
 \code{default_cast_character} is equivalent and is provided for those that
 prefer to describe their casting in terms of what the result is (and not

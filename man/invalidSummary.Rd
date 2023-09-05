@@ -15,7 +15,7 @@
 \arguments{
 \item{x}{The \code{invalid} class object.}
 
-\item{...}{additional arguments to `print`}
+\item{...}{additional arguments to \code{print}}
 
 \item{object}{The \code{invalid} class object.}
 }

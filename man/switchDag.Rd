@@ -20,7 +20,7 @@ switchDag(rcon, dag, ...)
 \arguments{
 \item{rcon}{\code{redcapConnection} object.}
 
-\item{dag}{\code{character(1)} A unique data access group to which to 
+\item{dag}{\code{character(1)} A unique data access group to which to
 assign the current user. Use \code{NA} to leave the user unassigned.}
 
 \item{...}{Additional arguments to pass to other methods.}
@@ -31,8 +31,8 @@ group assignments will be refreshed.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -40,9 +40,9 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows the current API user to switch 
-  (assign/reassign/unassign) their current Data Access Group assignment 
-  if they have been assigned to multiple DAGs via the DAG Switcher page 
-  in the project. Returns \code{TRUE} when the call is completed
-  successfully.
+This method allows the current API user to switch
+(assign/reassign/unassign) their current Data Access Group assignment
+if they have been assigned to multiple DAGs via the DAG Switcher page
+in the project. Returns \code{TRUE} when the call is completed
+successfully.
 }

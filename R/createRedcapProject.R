@@ -1,71 +1,107 @@
 #' @name createRedcapProject
 #' @title Create REDCap Project
 #' 
-#' @description This method allows you to create a new REDCap project. 
-#'   A 64-character Super API Token is required for this method (as opposed 
-#'   to project-level API methods that require a regular 32-character 
-#'   token associated with the project-user). In the API request, you must 
-#'   minimally provide the project attributes 'project_title' and 
-#'   'purpose' (with numerical value 0=Practice/Just for fun, 1=Other, 
-#'   2=Research, 3=Quality Improvement, 4=Operational Support) when 
-#'   creating a project.
-#'   
-#'   When a project is created with this method, the project will 
-#'   automatically be given all the project-level defaults just as if you
-#'   created a new empty project via the web user interface, such as a 
-#'   automatically creating a single data collection instrument seeded with a 
-#'   single Record ID field and Form Status field, as well as 
-#'   (for longitudinal projects) one arm with one event. And if you intend 
-#'   to create your own arms or events immediately after creating the project, 
-#'   it is recommended that you utilize the override=1 parameter in the 
-#'   'Import Arms' or 'Import Events' method, respectively, so that the 
-#'   default arm and event are removed when you add your own. Also, the user 
-#'   creating the project will automatically be added to the project as a
-#'   user with full user privileges and a project-level API token, 
-#'   which could then be used for subsequent project-level API requests.
+#' @description These methods enable a user with a 64-character Super API
+#'   token to create a new REDCap project. 
 #'    
-#'   NOTE: Only users with Super API Tokens can utilize this method. 
-#'   Users can only be granted a super token by a REDCap administrator 
-#'   (using the API Tokens page in the REDCap Control Center). Please be 
-#'   advised that users with a Super API Token can create new REDCap projects 
-#'   via the API without any approval needed by a REDCap administrator.
-#'   If you are interested in obtaining a super token, please contact your 
-#'   local REDCap administrator.
-#'    
-#' @param rcon A \code{redcapConnection} object.
-#' @param project_title \code{character(1)} Title for the new project. 
-#' @param purpose \code{character}, one of 
-#'   \code{c("Practice/just for fun", "Other", "Research", "Quality Improvement", "Operational Support")}
-#' @param purpose_other \code{character(1)} or \code{NULL}. Ignored unless 
-#'   \code{purpose = "Other"}, in which case this becomes a required argument.
-#' @param is_longitudinal \code{logical(1)}, determines if the project will 
+#' @param rcon A `redcapConnection` object.
+#' @param project_title `character(1)`. Title for the new project. 
+#' @param purpose `character`, one of 
+#'   `c("Practice/just for fun", "Other", "Research", "Quality Improvement", "Operational Support")`
+#' @param purpose_other `character(1)` or `NULL`. Ignored unless 
+#'   `purpose = "Other"`, in which case this becomes a required argument.
+#' @param is_longitudinal `logical(1)`. When `TRUE` the project will 
 #'   be set as a longitudinal project.
-#' @param surveys_enabled \code{logical(1)}, determines if surveys are enabled
+#' @param surveys_enabled `logical(1)`. When `TRUE` surveys are enabled
 #'   for the project. (This will not add any survey instruments, only 
 #'   enable them).
-#' @param record_autonumbering_enabled \code{logical(1)}, determines if 
+#' @param record_autonumbering_enabled `logical(1)`. When `TRUE` if 
 #'   auto numbering will be enabled in the project.
-#' @param xml \code{character(1)} an XML string in CDISC ODM XML format that 
+#' @param xml `character(1)` or `NULL` an XML string in CDISC ODM XML format that 
 #'   contains project metadata (fields, forms, events, arms) and might 
-#'   optionally contain data to be imported as well. The XML contained in 
-#'   this parameter can come from a REDCap Project XML export file from 
-#'   REDCap itself, or may come from another system that is capable of 
-#'   exporting projects and data in CDISC ODM format. If the 'odm' parameter 
-#'   is included in the API request, it will use the XML to import its 
-#'   contents into the newly created project. This will allow you not only 
-#'   to create the project with the API request, but also to import all fields, 
-#'   forms, and project attributes (and events and arms, if longitudinal) as 
-#'   well as record data all at the same time.
+#'   optionally contain data to be imported as well. When not `NULL`, 
+#'   all other arguments are ignored. See Details. 
 #' @param ... Additional arguments to be passed between methods.
 #' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
+#'   see [redcapError()]
+#' @param config `list` Additional configuration parameters to pass to 
+#'   [httr::POST()]. These are appended to any parameters in 
+#'   `rcon$config`.
+#' @param api_param `list` Additional API parameters to pass into the
 #'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
+#'   that may not otherwise be supported by `redcapAPI`.
 #'   
+#' @details
+#'   The user creating the project will automatically be added to the project as a
+#'   user with full user privileges and a project-level API token, 
+#'   which could then be used for subsequent project-level API requests.
+#'   
+#'   When the project is created, it will automatically be given all the 
+#'   project-level defaults just as if it had been created via the web user 
+#'   interface, such as automatically creating a single data collection 
+#'   instrument seeded with a single Record ID field and Form Status field, 
+#'   as well as (for longitudinal projects) one arm with one event. 
+#'   
+#'   If the user intends to populate the project with arms and events 
+#'   immediately after creating the project, it is recommended that 
+#'   `override = TRUE` be used in `importArms` and `importEvents` so that the 
+#'   default arm and event are removed. 
+#'   
+#'   The `xml` argument must be in CDISC ODM XML format. It may come from a 
+#'   REDCap Project XML export  file from REDCap itself 
+#'   (see [exportProjectXml()]), or may come from another system that is capable of 
+#'   exporting projects and data in CDISC ODM format. If the `xml` argument 
+#'   is used in the API request, it will use the XML to import its 
+#'   contents into the newly created project. This will not only 
+#'   create the project with the API request, but also to import all fields, 
+#'   forms, and project attributes (and events and arms, if longitudinal) as 
+#'   well as record data all at the same time.
+#'    
+#'   Only users with a 64-character Super API Tokens can utilize this method
+#'   (the standard API token is 32 characters). Users can only be granted a 
+#'   super token by a REDCap administrator (using the API Tokens page in the 
+#'   REDCap Control Center). Please be advised that users with a Super API 
+#'   Token can create new REDCap projects via the API without any approval 
+#'   needed by a REDCap administrator.
+#' 
+#' @return
+#' Returns a `character(1)` the 32-character, project level API token 
+#' assigned to the user that created the project. This token is intended 
+#' to be used for further project configuration using the API. 
+#'
+#' @seealso 
+#' [exportProjectXml()]
+#' 
+#' @examples
+#' \dontrun{
+#' # The token must be a 64-character token
+#' super_token <- redcapConnection(url = "your_redcap_url", 
+#'                                 token = "[64-character-super-api-token]")
+#'          
+#' # Create a new project    
+#' createRedcapProject(super_token, 
+#'                     project_title = "New Project Name", 
+#'                     purpose = "Quality Improvement", 
+#'                     is_longitudinal = FALSE, 
+#'                     surveys_enabled = TRUE)
+#'                     
+#'                     
+#'                     
+#' # Copy an existing project into a new project
+#' unlockREDCap(connections = c(rcon = "token_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' xml_file <- tempfile(file.ext = ".xml")
+#' exportProjectXml(rcon, 
+#'                  file = xml_file)
+#'  
+#' xml_text <- paste0(readLines(xml_file), collapse = " ")
+#' createRedcapProject(super_token, 
+#'                     xml = xml_text)
+#' }
+#'
 #' @export
 
 createRedcapProject <- function(rcon, 
@@ -105,38 +141,39 @@ createRedcapProject.redcapApiConnection <- function(rcon,
                           classes = "redcapConnection", 
                           add = coll)
   
-  checkmate::assert_character(x = project_title, 
+  if (is.null(xml)){
+    checkmate::assert_character(x = project_title, 
+                                len = 1, 
+                                any.missing = FALSE, 
+                                add = coll)
+    
+    purpose <- checkmate::matchArg(x = purpose, 
+                                   choices = REDCAP_PROJECT_PURPOSE, 
+                                   add = coll, 
+                                   .var.name = "purpose")
+    
+    checkmate::assert_character(x = purpose_other, 
+                                len = 1, 
+                                null.ok = isTRUE(!purpose %in% "Other"), 
+                                add = coll)
+    
+    checkmate::assert_logical(x = is_longitudinal, 
                               len = 1, 
-                              any.missing = FALSE, 
                               add = coll)
-  
-  purpose <- checkmate::matchArg(x = purpose, 
-                                 choices = REDCAP_PROJECT_PURPOSE, 
-                                 add = coll, 
-                                 .var.name = "purpose")
- 
-  checkmate::assert_character(x = purpose_other, 
+    
+    checkmate::assert_logical(x = surveys_enabled, 
                               len = 1, 
-                              null.ok = isTRUE(!purpose %in% "Other"), 
                               add = coll)
-  
-  checkmate::assert_logical(x = is_longitudinal, 
-                            len = 1, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = surveys_enabled, 
-                            len = 1, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = record_autonumbering_enabled, 
-                            len = 1, 
-                            add = coll)
-  
-  checkmate::assert_character(x = xml, 
+    
+    checkmate::assert_logical(x = record_autonumbering_enabled, 
                               len = 1, 
-                              null.ok = TRUE, 
                               add = coll)
-  
+  } else {  
+    checkmate::assert_character(x = xml, 
+                                len = 1, 
+                                null.ok = TRUE, 
+                                add = coll)
+  }  
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
                                         .var.name = "error_handling",
