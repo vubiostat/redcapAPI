@@ -9,6 +9,9 @@
 #' @inheritParams common-rcon-arg
 #' @param data A `data.frame` to be filtered.
 #' 
+#' @seealso 
+#' [exportRecordsTyped()], \cr
+#' [exportReportsTyped()]
 
 filterEmptyRow <- function(data, 
                            rcon){

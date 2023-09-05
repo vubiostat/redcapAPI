@@ -4,11 +4,15 @@
 #' @description Drops rows where the repeat instrument is NA. Returns a data frame of records where repeat instruments have a value.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param Records A `data.frame` containing the records from
-#'        [exportRecordsTyped()]
+#' @param Records A `data.frame` containing the records from [exportRecordsTyped()]
 #' @param quiet `logical(1)`. When `FALSE`, a message is printed
 #'   indicating how many rows were in `Records` at the start and 
 #'   completion of the subset.
+#'   
+#' @seealso
+#' [exportRecordsTyped()], \cr
+#' [exportReportsTyped()]
+#' 
 
 dropRepeatingNA <- function(Records, 
                             rcon, 

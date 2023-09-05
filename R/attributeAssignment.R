@@ -27,6 +27,8 @@
 #' `unitsFieldAnnotation` returns a character vector.
 #' 
 #' @seealso 
+#' [exportRecordsTyped()], \cr
+#' [exportReportsTyped()], \cr
 #' [stripHTMLTags()], \cr
 #' [stripUnicode()]
 #' 

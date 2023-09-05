@@ -165,7 +165,16 @@ exportRecordsTyped(rcon) |>
 
 }
 \seealso{
+\subsection{Exporting records}{
+
 \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
 \code{\link[=exportReportsTyped]{exportReportsTyped()}}, \cr
 \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
+}
+
+\subsection{Other Post Processing Functions}{
+
+\code{\link[=splitForms]{splitForms()}}, \cr
+\code{\link[=widerRepeated]{widerRepeated()}}
+}
 }

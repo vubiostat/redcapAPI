@@ -120,11 +120,25 @@
 #' `exportReportsTyped` returns a data frame with the formatted data.
 #' 
 #' @seealso 
+#' ## Other records exporting functions
+#' 
 #' [exportRecords()], \cr
 #' [exportReports()], \cr
-#' [fieldValidationAndCasting()], \cr
-#' [fieldCastingFunctions()], \cr
 #' [exportBulkRecords()]
+#' 
+#' ## Field validations and casting
+#' 
+#' [fieldValidationAndCasting()] 
+#' 
+#' ## Post-processing functionality
+#' 
+#' [recastRecords()], \cr
+#' [guessCast()], \cr
+#' [guessDate()], \cr
+#' [castForImport()], \cr
+#' [mChoiceCast()], \cr
+#' [splitForms()], \cr
+#' [widerRepeated()]
 #' 
 #' @examples
 #' \dontrun{

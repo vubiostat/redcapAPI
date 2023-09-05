@@ -55,9 +55,16 @@
 #'   to be loaded.
 #'   
 #' @seealso 
+#' ## Exporting records
+#' 
 #' [exportRecordsTyped()], \cr
 #' [exportReportsTyped()], \cr
 #' [fieldValidationAndCasting()]
+#' 
+#' ## Other Post Processing Functions
+#' 
+#' [splitForms()], \cr
+#' [widerRepeated()]
 #'   
 #'   
 #' @examples

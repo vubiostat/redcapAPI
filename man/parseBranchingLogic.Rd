@@ -33,3 +33,15 @@ The utility of this function is limited to simple logic where all of the
 data exist within the same row. Any complex statements using events
 will result in a failure.
 }
+\examples{
+\dontrun{
+parseBranchingLogic("[age] > 30")
+parseBranchingLogic("[dropdown_test] = 'd'")
+parseBranchingLogic(c("[age] > 30", 
+                      "[dropdown_test] = 'd'"))
+}
+
+}
+\seealso{
+\code{\link[=missingSummary]{missingSummary()}}
+}

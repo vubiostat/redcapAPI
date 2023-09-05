@@ -47,6 +47,8 @@ unitsFieldAnnotation("field", "label", "units={\"meters\"}")
 
 }
 \seealso{
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}, \cr
 \code{\link[=stripHTMLTags]{stripHTMLTags()}}, \cr
 \code{\link[=stripUnicode]{stripUnicode()}}
 }

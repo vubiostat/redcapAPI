@@ -9,9 +9,31 @@
 #' unchanged.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param Records `data.frame` containing the records from
-#'        [exportRecordsTyped()]
+#' @param Records `data.frame` containing the records from [exportRecordsTyped()]
 #'        
+#' @seealso 
+#' ## Other post-processing functions
+#' 
+#' [recastRecords()], \cr
+#' [guessCast()], \cr
+#' [guessDate()], \cr
+#' [castForImport()], \cr
+#' [mChoiceCast()], \cr
+#' [splitForms()]
+#' 
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' Records <- exportRecordsTyped(rcon)
+#' 
+#' widerRepeated(Records, rcon)
+#' }
+#' 
 #' @export
 
 widerRepeated <- function(Records, rcon)

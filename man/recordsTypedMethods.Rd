@@ -309,9 +309,26 @@ exportRecordsTyped(rcon_off)
 
 }
 \seealso{
+\subsection{Other records exporting functions}{
+
 \code{\link[=exportRecords]{exportRecords()}}, \cr
 \code{\link[=exportReports]{exportReports()}}, \cr
-\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}, \cr
-\code{\link[=fieldCastingFunctions]{fieldCastingFunctions()}}, \cr
 \code{\link[=exportBulkRecords]{exportBulkRecords()}}
+}
+
+\subsection{Field validations and casting}{
+
+\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
+}
+
+\subsection{Post-processing functionality}{
+
+\code{\link[=recastRecords]{recastRecords()}}, \cr
+\code{\link[=guessCast]{guessCast()}}, \cr
+\code{\link[=guessDate]{guessDate()}}, \cr
+\code{\link[=castForImport]{castForImport()}}, \cr
+\code{\link[=mChoiceCast]{mChoiceCast()}}, \cr
+\code{\link[=splitForms]{splitForms()}}, \cr
+\code{\link[=widerRepeated]{widerRepeated()}}
+}
 }

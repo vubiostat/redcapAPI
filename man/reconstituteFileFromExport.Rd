@@ -34,6 +34,24 @@ the filename will be extracted from the API response.}
 Converts the file from a \code{response} object and saves
 it to the local file directory.
 }
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+response <- makeApiCall(rcon, 
+                        body = list(content = 'file', 
+                        action = 'export', 
+                        record = '1', 
+                        field = 'file_upload_test', 
+                        event = 'event_1_arm_1'))
+reconstituteFileFromExport(response,  
+                           dir = tempdir())
+}  
+  
+}
 \seealso{
 \code{\link[=exportFiles]{exportFiles()}}, \cr
 \code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr

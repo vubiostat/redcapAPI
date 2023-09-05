@@ -24,6 +24,17 @@
 #'   will result in a failure. 
 #'   
 #' @return Returns a list of unevaluated expressions.
+#' 
+#' @seealso [missingSummary()]
+#' 
+#' @examples
+#' \dontrun{
+#' parseBranchingLogic("[age] > 30")
+#' parseBranchingLogic("[dropdown_test] = 'd'")
+#' parseBranchingLogic(c("[age] > 30", 
+#'                       "[dropdown_test] = 'd'"))
+#' }
+#' 
 
 parseBranchingLogic <- function(l){
   l <- gsub("\\n", " ", l)
