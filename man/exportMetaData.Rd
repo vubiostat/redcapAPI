@@ -23,24 +23,24 @@ exportMetaData(rcon, ...)
 
 \item{...}{Arguments to be passed to other methods.}
 
-\item{fields}{A character vector of field names for which the metadata is to 
+\item{fields}{A character vector of field names for which the metadata is to
 be retrieved.}
 
 \item{forms}{A character vector of forms for which the metadata is to be
 retrieved. Note that if a form name is given, all of the fields on that form
-will be returned, regardless of whether it is included in \code{fields} or 
-not.  Be careful to use the form names in the second column of the data 
+will be returned, regardless of whether it is included in \code{fields} or
+not.  Be careful to use the form names in the second column of the data
 dictionary, and not the display names shown on the webpage.}
 
-\item{drop_utf8}{\code{logical(1)}. In some cases, UTF-8 characters can 
+\item{drop_utf8}{\code{logical(1)}. In some cases, UTF-8 characters can
 pose problems for exporting the data dictionary.  Set this to \code{TRUE}
 to replace any UTF-8 characters with empty characters.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -48,13 +48,13 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-Retrieves the meta data for a REDcap database, including 
-field names, labels, types, formulas, etc.  This file can be used to parse 
-levels of factors, apply labels, and other data management tasks once the 
+Retrieves the meta data for a REDcap database, including
+field names, labels, types, formulas, etc.  This file can be used to parse
+levels of factors, apply labels, and other data management tasks once the
 data are retrieved
 }
 \details{
-A record of this export is placed in the REDCap logging page, 
+A record of this export is placed in the REDCap logging page,
 but the file that is exported is not stored in the database.
 }
 \section{REDCap API Documentation}{

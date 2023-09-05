@@ -19,7 +19,7 @@ importUserDagAssignments(rcon, data, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{data}{\code{data.frame} with the columns \code{username} and 
+\item{data}{\code{data.frame} with the columns \code{username} and
 \code{redcap_data_access_group}.}
 
 \item{...}{Arguments to be passed to other methods.}
@@ -27,8 +27,8 @@ importUserDagAssignments(rcon, data, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -38,8 +38,8 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \description{
 This method allows you to assign users to any data access group.
 
-NOTE: If you wish to modify an existing mapping, you must provide its 
-unique username and group name. If the 'redcap_data_access_group' column 
+NOTE: If you wish to modify an existing mapping, you must provide its
+unique username and group name. If the 'redcap_data_access_group' column
 is not provided, user will not assigned to any group. There should be only
 one record per username.
 }

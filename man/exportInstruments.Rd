@@ -23,8 +23,8 @@ exportInstruments(rcon, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -44,15 +44,15 @@ Returns a data frame of instruments, names, etc.
 
 \section{REDCap API Documentation}{
 
-This function allows you to export a list of the data collection instruments 
-for a project. This includes their unique instrument name as seen in the second 
-column of the Data Dictionary, as well as each instrument's corresponding 
-instrument label, which is seen on a project's left-hand menu when entering data. 
+This function allows you to export a list of the data collection instruments
+for a project. This includes their unique instrument name as seen in the second
+column of the Data Dictionary, as well as each instrument's corresponding
+instrument label, which is seen on a project's left-hand menu when entering data.
 The instruments will be ordered according to their order in the project.
 }
 
 \section{Known REDCap Limitations}{
- 
+
 None
 }
 

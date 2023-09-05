@@ -21,18 +21,18 @@ renameRecord(rcon, record_name, new_record_name, arm = NULL, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{record_name}{\code{character(1)} The name of an existing record 
+\item{record_name}{\code{character(1)} The name of an existing record
 in the project. Will also accept \code{numeric(1)} (which will be
 coerced to a character).}
 
-\item{new_record_name}{\code{character(1)} The new name to give to the 
-record. Will also accept \code{numeric(1)} (which will be coerced to 
+\item{new_record_name}{\code{character(1)} The new name to give to the
+record. Will also accept \code{numeric(1)} (which will be coerced to
 a character).}
 
-\item{arm}{\code{character(1)} or \code{NULL}, an optional arm number. 
-If \code{NULL}, then all records with same name across all arms on 
-which it exists (if longitudinal with multiple arms) will be 
-renamed to new record name, otherwise it will rename the record 
+\item{arm}{\code{character(1)} or \code{NULL}, an optional arm number.
+If \code{NULL}, then all records with same name across all arms on
+which it exists (if longitudinal with multiple arms) will be
+renamed to new record name, otherwise it will rename the record
 only in the specified arm.}
 
 \item{...}{Arguments to pass to other methods.}
@@ -40,8 +40,8 @@ only in the specified arm.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -49,6 +49,6 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to rename a record from a project 
-  in a single API request.
+This method allows you to rename a record from a project
+in a single API request.
 }

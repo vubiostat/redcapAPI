@@ -39,8 +39,8 @@ of REDCap, and passed as NULL, the API will assume a value of 1.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -48,7 +48,7 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This function allows you to remove a document that has been 
+This function allows you to remove a document that has been
 attached to an individual record
 }
 \references{

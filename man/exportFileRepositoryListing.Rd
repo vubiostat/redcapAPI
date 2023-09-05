@@ -25,13 +25,13 @@ exportFileRepositoryListing(
 \arguments{
 \item{rcon}{a \code{redcapConnection} object.}
 
-\item{folder_id}{\code{integerish} with maximum length 1. the 
-folder ID of a specific folder in the File Repository for which you 
-wish to export a list of its files and sub-folders. 
+\item{folder_id}{\code{integerish} with maximum length 1. the
+folder ID of a specific folder in the File Repository for which you
+wish to export a list of its files and sub-folders.
 By default, the top-level directory of the File Repository will be used.}
 
 \item{recursive}{\code{logical(1)}. When \code{TRUE}, content of subfolders
-will be retrieved until a full listing is produced. If \code{FALSE}, 
+will be retrieved until a full listing is produced. If \code{FALSE},
 only the contents of the requested folder will be returned.}
 
 \item{...}{Additional arguments to be passed between methods}
@@ -39,8 +39,8 @@ only the contents of the requested folder will be returned.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -48,14 +48,14 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-Exports a list of folders and files saved to the file 
-  repository. Includes an option to explore folders recursively.
+Exports a list of folders and files saved to the file
+repository. Includes an option to explore folders recursively.
 }
 \details{
-This method allows you to export a list of all files and 
-  sub-folders from a specific folder in a project's File Repository. 
-  Each sub-folder will have an associated folder_id number, and each 
-  file will have an associated doc_id number.
+This method allows you to export a list of all files and
+sub-folders from a specific folder in a project's File Repository.
+Each sub-folder will have an associated folder_id number, and each
+file will have an associated doc_id number.
 }
 \author{
 Cole Beck

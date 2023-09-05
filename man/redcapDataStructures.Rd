@@ -37,7 +37,7 @@ the established REDCap data structure.}
 package to use a reference for comparing to expected data structure.}
 }
 \description{
-Utilities for recognizing and validating data structures 
-  for use with the REDCap API
+Utilities for recognizing and validating data structures
+for use with the REDCap API
 }
 \keyword{datasets}

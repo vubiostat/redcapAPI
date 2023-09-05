@@ -21,8 +21,8 @@ warnZeroCodedFieldPresent(field_names)
 }
 \description{
 Check fields that have 0 as a coding option can confuse
-  certain data processing steps because it can be difficult to 
-  differentiate if a "0" value represents an unchecked or checked 
-  option. Identifying these fields is important to handling them
-  correctly.
+certain data processing steps because it can be difficult to
+differentiate if a "0" value represents an unchecked or checked
+option. Identifying these fields is important to handling them
+correctly.
 }

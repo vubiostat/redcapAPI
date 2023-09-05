@@ -29,17 +29,17 @@ exportFileRepository(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{folder_id}{\code{integerish(0/1)} The folder ID with the files to 
+\item{folder_id}{\code{integerish(0/1)} The folder ID with the files to
 download. If length 0, defaults to the top-level directory.}
 
-\item{dir}{\code{character(1)}. A directory on the local system to which 
+\item{dir}{\code{character(1)}. A directory on the local system to which
 the file is to be saved. Defaults to the working directory.}
 
-\item{dir_create}{\code{logical(1)}. Create the directory \code{dir} if it 
-does not already exist. Defaults to \code{FALSE}. If \code{dir} does 
+\item{dir_create}{\code{logical(1)}. Create the directory \code{dir} if it
+does not already exist. Defaults to \code{FALSE}. If \code{dir} does
 not exist and \code{dir_create = FALSE}, an error is thrown.}
 
-\item{recursive}{\code{logical(1)}. If \code{TRUE}, export all subfolders 
+\item{recursive}{\code{logical(1)}. If \code{TRUE}, export all subfolders
 and their files as well}
 
 \item{...}{Additional arguments to be passed between methods}
@@ -47,8 +47,8 @@ and their files as well}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -56,14 +56,14 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns a data frame listing the files that were downloaded and the 
-  directories in which they are saved.
+Returns a data frame listing the files that were downloaded and the
+directories in which they are saved.
 }
 \description{
-Exports all of the files in a directory in the File 
-  Repository. This is an extension of \code{exportFromFileRepository}, 
-  which downloads a single file and may be applied recursively to download
-  files in subdirectories as well.
+Exports all of the files in a directory in the File
+Repository. This is an extension of \code{exportFromFileRepository},
+which downloads a single file and may be applied recursively to download
+files in subdirectories as well.
 }
 \author{
 Benjamin Nutter

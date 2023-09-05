@@ -20,19 +20,19 @@ deleteFromFileRepository(rcon, doc_id, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{doc_id}{\code{integerish(1)} The document ID of the file to be 
+\item{doc_id}{\code{integerish(1)} The document ID of the file to be
 deleted.}
 
 \item{...}{Arguments to pass to other methods.}
 
-\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached 
+\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached
 File Repository data on \code{rcon} will be refreshed.}
 
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -40,12 +40,12 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-Deletes a single file from the File Repository based on 
-  its document ID.
+Deletes a single file from the File Repository based on
+its document ID.
 }
 \details{
-This method allows you to delete a single file in a project's 
-File Repository. Once deleted, the file will remain in the Recycle Bin 
+This method allows you to delete a single file in a project's
+File Repository. Once deleted, the file will remain in the Recycle Bin
 folder for up to 30 days.
 }
 \author{

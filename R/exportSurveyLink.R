@@ -1,33 +1,5 @@
-#' @name exportSurveyLink
-#' @title Export Survey Link for a Participant
-#'
-#' @description This method returns a unique survey link (i.e., a URL) in 
-#'   plain text format for a specified record and data collection 
-#'   instrument (and event, if longitudinal) in a project. If the user 
-#'   does not have 'Survey Distribution Tools' privileges, they will not be 
-#'   able to use this method, and an error will be returned. If the 
-#'   specified data collection instrument has not been enabled as a 
-#'   survey in the project, an error will be returned.
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param record \code{character(1)} giving the record ID. May also be 
-#'   numeric (will be coerced to character).
-#' @param instrument \code{character(1)} giving the survey instrument. This 
-#'   must be one of the form names listed in the meta data.
-#' @param event \code{character(1)} A unique event name. Only applies to 
-#'   longitudinal projects. 
-#' @param repeat_instance \code{integerish(1)}, the repeat instance if the
-#'   instrument is designated as a repeating instrument. Default value is 1.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn surveyMethods Export a survey participant's survey instrument link.
+#' @order 2
 #' @export
 
 exportSurveyLink <- function(rcon, 
@@ -39,7 +11,8 @@ exportSurveyLink <- function(rcon,
   UseMethod("exportSurveyLink")
 }
 
-#' @rdname exportSurveyLink
+#' @rdname surveyMethods
+#' @order 6
 #' @export
 
 exportSurveyLink.redcapApiConnection <- function(rcon, 

@@ -23,8 +23,8 @@ exportRepeatingInstrumentsEvents(rcon, ...)
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -32,13 +32,13 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \description{
-This method allows you to export a list of the repeated 
-  instruments and repeating events for a project. This includes 
-  their unique instrument name as seen in the second column of the 
-  Data Dictionary, as well as each repeating instrument's corresponding 
-  custom repeating instrument label. For longitudinal projects, the 
-  unique event name is also returned for each repeating instrument. 
-  Additionally, repeating events are returned as separate items, in 
-  which the instrument name will be blank/null to indicate that it is a 
-  repeating event (rather than a repeating instrument).
+This method allows you to export a list of the repeated
+instruments and repeating events for a project. This includes
+their unique instrument name as seen in the second column of the
+Data Dictionary, as well as each repeating instrument's corresponding
+custom repeating instrument label. For longitudinal projects, the
+unique event name is also returned for each repeating instrument.
+Additionally, repeating events are returned as separate items, in
+which the instrument name will be blank/null to indicate that it is a
+repeating event (rather than a repeating instrument).
 }

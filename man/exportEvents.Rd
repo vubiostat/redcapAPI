@@ -27,8 +27,8 @@ a character vector, but will coerce to numeric before processing.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -38,12 +38,12 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \value{
 Returns a data frame with six columns
 \itemize{
-  \item{\code{event_name} }{The descriptive name of the event.}
-  \item{\code{arm_num} }{The arm number in which the event occurs.}
-  \item{\code{day_offset} }{The days offset from the first event.}
-  \item{\code{offset_min} }{The minimum offset value.}
-  \item{\code{offset_max} }{The maximum offset value.}
-  \item{\code{unique_event_name} }{A unique event identifying name.}
+\item{\code{event_name} }{The descriptive name of the event.}
+\item{\code{arm_num} }{The arm number in which the event occurs.}
+\item{\code{day_offset} }{The days offset from the first event.}
+\item{\code{offset_min} }{The minimum offset value.}
+\item{\code{offset_max} }{The maximum offset value.}
+\item{\code{unique_event_name} }{A unique event identifying name.}
 }
 }
 \description{
@@ -53,13 +53,13 @@ and data access privileges for each user.
 \details{
 It is not sufficient to make the project a longitudinal project. The
 project must satisfy one of two conditions: 1) have at least two arms and
-one event defined; or 2) have one arm and at least two events defined. If 
+one event defined; or 2) have one arm and at least two events defined. If
 neither of these conditions are satisfied, the API will return a message
-such as \code{ERROR: You cannot export arms for classic projects}, an 
-error message that isn't as descriptive of the nature of the problem as 
+such as \code{ERROR: You cannot export arms for classic projects}, an
+error message that isn't as descriptive of the nature of the problem as
 we might like.
 
-If the project information reports that the project is not longitudinal, 
+If the project information reports that the project is not longitudinal,
 a data frame with 0 rows is returned without calling the API.
 }
 \section{REDCap API Documentation}{

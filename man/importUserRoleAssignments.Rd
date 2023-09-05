@@ -20,9 +20,9 @@ importUserRoleAssignments(rcon, data, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{data}{A \code{data.frame} with columns \code{username} and 
-\code{unique_role_name}. Each \code{username} must be unique. 
-Users without a \code{unique_role_name} will not be assigned to 
+\item{data}{A \code{data.frame} with columns \code{username} and
+\code{unique_role_name}. Each \code{username} must be unique.
+Users without a \code{unique_role_name} will not be assigned to
 a user role.}
 
 \item{...}{Arguments to be passed to other methods.}
@@ -33,8 +33,8 @@ in \code{rcon} will be refreshed after the import.}
 \item{error_handling}{An option for how to handle errors returned by the API.
 see \code{\link{redcapError}}}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{\code{list} Additional configuration parameters to pass to
+\code{\link[httr]{POST}}. These are appended to any parameters in
 \code{rcon$config}.}
 
 \item{api_param}{\code{list} Additional API parameters to pass into the
@@ -44,8 +44,8 @@ that may not otherwise be supported by \code{redcapAPI}.}
 \description{
 This method allows you to assign users to any user role.
 
-NOTE: If you wish to modify an existing mapping, you must provide its 
-unique username and role name. If the 'unique_role_name' column is not 
-provided, user will not assigned to any user role. 
+NOTE: If you wish to modify an existing mapping, you must provide its
+unique username and role name. If the 'unique_role_name' column is not
+provided, user will not assigned to any user role.
 There should be only one record per username.
 }

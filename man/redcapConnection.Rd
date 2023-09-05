@@ -40,58 +40,58 @@ offlineConnection(
 \method{print}{redcapOfflineConnection}(x, ...)
 }
 \arguments{
-\item{url}{URL for a REDCap database API.  Check your institution's REDCap 
-documentation for this address.  Either \code{url} or \code{conn} must 
+\item{url}{URL for a REDCap database API.  Check your institution's REDCap
+documentation for this address.  Either \code{url} or \code{conn} must
 be specified.}
 
 \item{token}{REDCap API token}
 
-\item{config}{A list to be passed to \code{httr::POST}.  This allows the 
-user to set additional configurations for the API calls, such as 
-certificates, ssl version, etc. For the majority of users, this does 
-not need to be altered.  See Details for more about this argument's 
+\item{config}{A list to be passed to \code{httr::POST}.  This allows the
+user to set additional configurations for the API calls, such as
+certificates, ssl version, etc. For the majority of users, this does
+not need to be altered.  See Details for more about this argument's
 purpose and the \code{redcapAPI} wiki for specifics on its use.}
 
 \item{retries}{\code{integerish(1)}. Sets the number of attempts to make to the
 API if a timeout error is encountered. Must be a positive value.}
 
-\item{retry_interval}{\code{numeric}. Sets the intervals (in seconds) at 
-which retries are attempted. By default, set at a \code{2^r} where 
-\code{r} is the \code{r}th retry (ie, 2, 4, 8, 16, ...). For fixed 
+\item{retry_interval}{\code{numeric}. Sets the intervals (in seconds) at
+which retries are attempted. By default, set at a \code{2^r} where
+\code{r} is the \code{r}th retry (ie, 2, 4, 8, 16, ...). For fixed
 intervals, provide a single value. Values will be recycled to match
 the number of retries.}
 
-\item{retry_quietly}{\code{logical(1)}. When \code{FALSE}, messages will 
+\item{retry_quietly}{\code{logical(1)}. When \code{FALSE}, messages will
 be shown giving the status of the API calls. Defaults to \code{TRUE}.}
 
 \item{x}{\code{redcapConnection} object to be printed}
 
 \item{...}{arguments to pass to other methods}
 
-\item{meta_data}{Either a \code{character} giving the file from which the 
+\item{meta_data}{Either a \code{character} giving the file from which the
 metadata can be read, or a \code{data.frame}.}
 
-\item{arms}{Either a \code{character} giving the file from which the 
+\item{arms}{Either a \code{character} giving the file from which the
 arms can be read, or a \code{data.frame}.}
 
-\item{events}{Either a \code{character} giving the file from which the 
+\item{events}{Either a \code{character} giving the file from which the
 events can be read, or a \code{data.frame}.}
 
-\item{instruments}{Either a \code{character} giving the file from which the 
+\item{instruments}{Either a \code{character} giving the file from which the
 instruments can be read, or a \code{data.frame}.}
 
-\item{field_names}{Either a \code{character} giving the file from which the 
+\item{field_names}{Either a \code{character} giving the file from which the
 field names can be read, or a \code{data.frame}.}
 
-\item{mapping}{Either a \code{character} giving the file from which the 
+\item{mapping}{Either a \code{character} giving the file from which the
 Event Instrument mappings can be read, or a \code{data.frame}.}
 
-\item{repeat_instrument}{Either a \code{character} giving the file from which the 
+\item{repeat_instrument}{Either a \code{character} giving the file from which the
 Repeating Instruments and Events settings can be read, or a \code{data.frame}.
-Note: The REDCap GUI doesn't offer a download file of these settings 
+Note: The REDCap GUI doesn't offer a download file of these settings
 (at the time of this writing).}
 
-\item{users}{Either a \code{character} giving the file from which the 
+\item{users}{Either a \code{character} giving the file from which the
 User settings can be read, or a \code{data.frame}.}
 
 \item{user_roles}{Either a \code{character} giving the file from which the
@@ -100,79 +100,79 @@ User Roles can be read, or a \code{data.frame}.}
 \item{user_role_assignment}{Either a \code{character} giving the file from which the
 User Role Assigments can be read, or a \code{data.frame}.}
 
-\item{dags}{Either a \code{character} giving the file from which the 
+\item{dags}{Either a \code{character} giving the file from which the
 Data Access Groups can be read, or a \code{data.frame}.}
 
 \item{dag_assignment}{Either a \code{character} giving the file from which the
 Data Access Group Assigments can be read, or a \code{data.frame}.}
 
-\item{project_info}{Either a \code{character} giving the file from which the 
+\item{project_info}{Either a \code{character} giving the file from which the
 Project Information can be read, or a \code{data.frame}.}
 
-\item{version}{Either a \code{character} giving the file from which the 
+\item{version}{Either a \code{character} giving the file from which the
 version can be read, or a \code{data.frame}.}
 
-\item{file_repo}{Either a \code{character} giving the file from which the 
+\item{file_repo}{Either a \code{character} giving the file from which the
 File Repository Listing can be read, or a \code{data.frame}.}
 
-\item{records}{Either a \code{character} giving the file from which the 
-Records can be read, or a \code{data.frame}. This should be the raw 
+\item{records}{Either a \code{character} giving the file from which the
+Records can be read, or a \code{data.frame}. This should be the raw
 data as downloaded from the API, for instance. Using labelled or formatted
 data is likely to result in errors when passed to other functions.}
 }
 \description{
-Creates an object of class \code{redcapApiConnection} for 
+Creates an object of class \code{redcapApiConnection} for
 using the REDCap API
 }
 \details{
-\code{redcapConnection} objects will retrieve and cache various forms of 
-project information. This can make metadata, arms, dags, events, instruments, fieldnames, 
+\code{redcapConnection} objects will retrieve and cache various forms of
+project information. This can make metadata, arms, dags, events, instruments, fieldnames,
 arm-event mappings, users, version, project information, fileRepository,
 and repeating instruments available
-directly from the \code{redcapConnection} object. Take note that 
+directly from the \code{redcapConnection} object. Take note that
 the retrieval of these objects uses the default values of the respective
-export functions (excepting the file repository, 
-which uses \code{recursive = TRUE}). 
+export functions (excepting the file repository,
+which uses \code{recursive = TRUE}).
 
-For each of these objects, there are four methods that can be called from 
+For each of these objects, there are four methods that can be called from
 the \code{redcapConnection} object: the get method (called via
-\code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}), 
-which returns a logical indicating if the metadata has been cached; 
-the flush method (\code{rcon$flush_metadata}), which removes the cached value; 
-and the refresh method (\code{rcon$refresh_metadata}), which replaces the 
+\code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}),
+which returns a logical indicating if the metadata has been cached;
+the flush method (\code{rcon$flush_metadata}), which removes the cached value;
+and the refresh method (\code{rcon$refresh_metadata}), which replaces the
 current value with a new call to the API. There is also a \code{flush_all}
 and \code{refresh_all} method.
 
-The \code{redcapConnection} object also stores the user preferences for 
-handling repeated attempts to call the API. In the event of a timeout 
+The \code{redcapConnection} object also stores the user preferences for
+handling repeated attempts to call the API. In the event of a timeout
 error or server unavailability, these settings allow a system pause before
-attempting another API call. In the event all of the retries fail, the 
-error message of the last attempt will be returned. These settings may 
-be altered at any time using the methods \code{rcon$set_retries(r)}, 
-\code{rcon$set_retry_interval(ri)}, and \code{rcon$set_retry_quietly(rq)}. 
-The argument to these functions have the same requirements as the 
+attempting another API call. In the event all of the retries fail, the
+error message of the last attempt will be returned. These settings may
+be altered at any time using the methods \code{rcon$set_retries(r)},
+\code{rcon$set_retry_interval(ri)}, and \code{rcon$set_retry_quietly(rq)}.
+The argument to these functions have the same requirements as the
 corresponding arguments to \code{redcapConnection}.
 
-For convenience, you may consider using 
+For convenience, you may consider using
 \code{options(redcap_api_url=[your URL here])} in your RProfile.
 To obtain an API token for a project, do the following:\cr
 Enter the 'User Rights' section of a project\cr
 Select a user\cr
-Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on 
+Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on
 configuring REDCap to use the API can be found at \url{https://github.com/vubiostat/redcapAPI/wiki}
 
-Tokens are specific to a project, and a token must be created for each 
+Tokens are specific to a project, and a token must be created for each
 project for which you wish to use the API.
 
-The \code{config} argument is passed to the \code{httr::POST} argument of 
-the same name.  The most likely reason for using this argument is that the 
-certificate files bundled in \code{httr} have fallen out of date.  
-Hadley Wickham is pretty good about keeping those certificates up 
-to date, so most of the time this problem can be resolved by updating 
-\code{httr} to the most recent version.  If that doesn't work, a 
-certificate file can be manually passed via the \code{config} argument.  
-The \code{redcapAPI} wiki has a more detailed tutorial on how to 
-find and pass an SSL certificate to the API call 
+The \code{config} argument is passed to the \code{httr::POST} argument of
+the same name.  The most likely reason for using this argument is that the
+certificate files bundled in \code{httr} have fallen out of date.
+Hadley Wickham is pretty good about keeping those certificates up
+to date, so most of the time this problem can be resolved by updating
+\code{httr} to the most recent version.  If that doesn't work, a
+certificate file can be manually passed via the \code{config} argument.
+The \code{redcapAPI} wiki has a more detailed tutorial on how to
+find and pass an SSL certificate to the API call
 (\url{https://github.com/vubiostat/redcapAPI/wiki/Manually-Setting-an-SSL-Certificate-File}).
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
