@@ -3,7 +3,7 @@ packageStartupMessage(
   "* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`\n",
   "* The `exportReports` function interface will be replaced. Please switch your processes to `exportReportsTyped`\n",
   "* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import.\n ",
-  "* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`.\n",
+  "* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`).\n",
   "* The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.\n", 
   "See NEWS for more details."
 )

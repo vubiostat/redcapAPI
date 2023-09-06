@@ -55,7 +55,7 @@
 #'   data via `importRecords`
 #' @param purge_all `logical(1)`. A shortcut option to purge all 
 #'   data elements from a project.
-#' @param flush `logical(1)`. If `TRUE`, the all caches in the connection
+#' @param flush `logical(1)`. When `TRUE`, all caches in the connection
 #'   object will be flushed after completing the operation. This is highly 
 #'   recommended.
 #'   

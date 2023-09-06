@@ -22,7 +22,7 @@
 #' @param date Logical. If `TRUE`, user expiration dates are converted to 
 #'   `POSIXct` objects.
 #' @param label Logical.  If `TRUE`, the user form permissions are 
-#'   converted to labelled factors.
+#'   converted to labeled factors.
 #' @param meta_data Logical.  Indicates if the meta data (data dictionary) 
 #'   should be exported.
 #' @param users Logical. Indicates if the users table should be exported.

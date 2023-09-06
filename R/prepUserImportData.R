@@ -2,7 +2,7 @@
 #' @title Prepare User Data for Import
 #' 
 #' @description Prepares a data frame for import via the API. Allows for 
-#'   data to be passed in either the raw format or the labelled data 
+#'   data to be passed in either the raw format or the labeled data 
 #'   received from `exportUsers`.
 #'
 #' @inheritParams common-rcon-arg

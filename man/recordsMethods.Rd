@@ -200,7 +200,7 @@ There are four ways the data from checkbox variables may be
 represented depending on the values of \code{factors} and
 \code{checkboxLabels}. The most common are the first and third
 rows of the table below.  When \code{checkboxLabels = TRUE}, either
-the coded value or the labelled value is returned if the box is
+the coded value or the labeled value is returned if the box is
 checked, or an empty string if it is not.\tabular{lll}{
    \code{factors} \tab \code{checkboxLabels} \tab \code{Output} \cr
    \code{FALSE} \tab \code{FALSE} \tab 0 / 1 \cr
@@ -212,7 +212,7 @@ checked, or an empty string if it is not.\tabular{lll}{
 
 The 'offline' version of \code{exportReports} operates on the raw (unlabeled) data
 file downloaded from REDCap along with the data dictionary.
-This is made available for instances where the API can not be accessed for
+This is made available for instances where the API cannot be accessed for
 some reason (such as waiting for API approval from the REDCap administrator).
 
 A 'batched' export (or import) is one where the export is performed over a series of

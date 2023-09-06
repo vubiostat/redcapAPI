@@ -62,10 +62,10 @@ vector of logical matching the input length. See \code{\link[=fieldValidationAnd
 
 \item{suffix}{\code{character(1)}. An optional suffix to provide if
 the recoded variables should be returned as new columns. For example,
-if recoding a field \code{forklift_brand} and \code{suffix = "_labelled"},
+if recoding a field \code{forklift_brand} and \code{suffix = "_labeled"},
 the result will have one column with the coded values
-(\code{forklift_brand}) and one column with the labelled values
-(\code{forklift_brand_labelled}).}
+(\code{forklift_brand}) and one column with the labeled values
+(\code{forklift_brand_labeled}).}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
@@ -104,7 +104,7 @@ though they may not each offer all the same options.
 initially by the need to switch between codes and labels in multiple
 choice fields. Field types for which no casting function is specified will
 be returned with no changes. It will not attempt to validate the content
-of fields; fields that can not be successfully cast will be quietly
+of fields; fields that cannot be successfully cast will be quietly
 returned as missing values.
 
 \code{castForImport} is written with defaults that will return data

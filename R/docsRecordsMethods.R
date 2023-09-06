@@ -72,7 +72,7 @@
 #' represented depending on the values of `factors` and 
 #' `checkboxLabels`. The most common are the first and third 
 #' rows of the table below.  When `checkboxLabels = TRUE`, either 
-#' the coded value or the labelled value is returned if the box is 
+#' the coded value or the labeled value is returned if the box is 
 #' checked, or an empty string if it is not.
 #' 
 #' | `factors`    | `checkboxLabels`      | `Output`            |
@@ -84,7 +84,7 @@
 #' 
 #' The 'offline' version of `exportReports` operates on the raw (unlabeled) data 
 #' file downloaded from REDCap along with the data dictionary.  
-#' This is made available for instances where the API can not be accessed for 
+#' This is made available for instances where the API cannot be accessed for 
 #' some reason (such as waiting for API approval from the REDCap administrator).
 #' 
 #' A 'batched' export (or import) is one where the export is performed over a series of 

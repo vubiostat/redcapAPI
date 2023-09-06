@@ -1,15 +1,15 @@
 #' @name recodeCheck
 #' @export recodeCheck
 #' 
-#' @title Change labelling of `checkbox` variables
-#' @description Rewrites the labelling of `checkbox` variables from 
-#'   Checked/Unchecked to Yes/No (or some other user-specified labelling).
+#' @title Change labeling of `checkbox` variables
+#' @description Rewrites the labeling of `checkbox` variables from 
+#'   Checked/Unchecked to Yes/No (or some other user-specified labeling).
 #'   
 #' @param df A data frame, presumably retrieved from REDCap, though not a 
 #'   strict requirement.
 #' @param vars Optional character vector of variables to convert.  If left 
 #'   missing, all of the variables in `df` that are identified as 
-#'   `checkbox` variables are relabelled.  See 'Details' for more about 
+#'   `checkbox` variables are relabeled.  See 'Details' for more about 
 #'   identifying `checkbox` variables.
 #' @param old A character vector to be passed to `factor`.  
 #'   This indicates the levels to be replaced and their order.

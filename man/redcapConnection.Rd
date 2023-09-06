@@ -114,7 +114,7 @@ File Repository Listing can be read, or a \code{data.frame}.}
 
 \item{records}{Either a \code{character} giving the file from which the
 Records can be read, or a \code{data.frame}. This should be the raw
-data as downloaded from the API, for instance. Using labelled or formatted
+data as downloaded from the API, for instance. Using labeled or formatted
 data is likely to result in errors when passed to other functions.}
 }
 \description{

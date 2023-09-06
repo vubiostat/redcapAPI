@@ -127,7 +127,7 @@ in a project field, import a file, or delete an existing file.
 \details{
 These functions only export, import, or delete a single file.
 
-When exporting, the file can not be changed; whatever name exists in
+When exporting, the file cannot be changed; whatever name exists in
 REDCap is the name that will be used. The record ID and event name
 may be appended as a prefix.
 }

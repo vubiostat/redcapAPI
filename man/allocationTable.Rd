@@ -132,7 +132,7 @@ groups in the randomized variable.
 
 The 'offline' version of the function operates on the data dictionary file
 downloaded from REDCap.  This is made available for instances where the
-API can not be accessed for some reason (such as waiting for API approval
+API cannot be accessed for some reason (such as waiting for API approval
 from the REDCap administrator).
 
 The value of \code{replicates} controls how many allocations are generated.  It

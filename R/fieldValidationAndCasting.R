@@ -344,7 +344,7 @@ castCheckForImport <- function(checked = c("Checked", "1")){
 
 # utility function returns the index of the codebook matching the 
 # content of the vector. Permits accurate matching without foreknowledge
-# of whether the data are coded or labelled.
+# of whether the data are coded or labeled.
 getCodingIndex <- function(x, coding){
   code_match <- match(as.character(x), coding)
   

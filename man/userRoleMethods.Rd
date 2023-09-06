@@ -143,7 +143,7 @@ user.
 }
 \details{
 User project access fields (those not related to forms or exports)
-are mapped between coded and labelled values as:\tabular{ll}{
+are mapped between coded and labeled values as:\tabular{ll}{
    Code \tab Label \cr
    0 \tab No Access \cr
    1 \tab Access \cr
@@ -175,7 +175,7 @@ be modified. The only required field for imports is the \code{username} field.
 
 When setting permissions for a user project access fields, form access,
 and form export permissions, the user may provided any of the coded
-or labelled values above. The user data is passed through
+or labeled values above. The user data is passed through
 \code{\link[=prepUserImportData]{prepUserImportData()}} before sending it to the API;
 text values will be converted to the numeric value.
 

@@ -41,7 +41,7 @@ exportBundle(
 \code{POSIXct} objects.}
 
 \item{label}{Logical.  If \code{TRUE}, the user form permissions are
-converted to labelled factors.}
+converted to labeled factors.}
 
 \item{meta_data}{Logical.  Indicates if the meta data (data dictionary)
 should be exported.}

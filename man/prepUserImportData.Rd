@@ -26,7 +26,7 @@ API for import.
 }
 \description{
 Prepares a data frame for import via the API. Allows for
-data to be passed in either the raw format or the labelled data
+data to be passed in either the raw format or the labeled data
 received from \code{exportUsers}.
 }
 \examples{

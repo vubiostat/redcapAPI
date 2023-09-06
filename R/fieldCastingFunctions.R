@@ -20,10 +20,10 @@
 #'   the data. 
 #' @param suffix `character(1)`. An optional suffix to provide if 
 #'   the recoded variables should be returned as new columns. For example, 
-#'   if recoding a field `forklift_brand` and `suffix = "_labelled"`, 
+#'   if recoding a field `forklift_brand` and `suffix = "_labeled"`, 
 #'   the result will have one column with the coded values 
-#'   (`forklift_brand`) and one column with the labelled values 
-#'   (`forklift_brand_labelled`).
+#'   (`forklift_brand`) and one column with the labeled values 
+#'   (`forklift_brand_labeled`).
 #' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param threshold numeric(1). The threshold of non-NA data to trigger casting.
 #' @param style character. One of "labelled" or "coded". Default is "labelled"
@@ -32,7 +32,7 @@
 #'   initially by the need to switch between codes and labels in multiple 
 #'   choice fields. Field types for which no casting function is specified will
 #'   be returned with no changes. It will not attempt to validate the content
-#'   of fields; fields that can not be successfully cast will be quietly 
+#'   of fields; fields that cannot be successfully cast will be quietly 
 #'   returned as missing values. 
 #'   
 #'   `castForImport` is written with defaults that will return data 

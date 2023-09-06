@@ -178,7 +178,7 @@ fields to R objects than \code{exportRecords}.
 \details{
 The 'offline' method operates on the raw (unlabeled) data
 file downloaded from REDCap along with the data dictionary.
-This is made available for instances where the API can not be accessed for
+This is made available for instances where the API cannot be accessed for
 some reason (such as waiting for API approval from the REDCap administrator).
 \subsection{Record Identifier Fields}{
 

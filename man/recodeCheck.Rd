@@ -2,7 +2,7 @@
 % Please edit documentation in R/recodeCheck.R
 \name{recodeCheck}
 \alias{recodeCheck}
-\title{Change labelling of \code{checkbox} variables}
+\title{Change labeling of \code{checkbox} variables}
 \usage{
 recodeCheck(
   df,
@@ -18,7 +18,7 @@ strict requirement.}
 
 \item{vars}{Optional character vector of variables to convert.  If left
 missing, all of the variables in \code{df} that are identified as
-\code{checkbox} variables are relabelled.  See 'Details' for more about
+\code{checkbox} variables are relabeled.  See 'Details' for more about
 identifying \code{checkbox} variables.}
 
 \item{old}{A character vector to be passed to \code{factor}.
@@ -32,8 +32,8 @@ order of the elements in \code{levels} and \code{labels},
 simply set this to \code{TRUE}.}
 }
 \description{
-Rewrites the labelling of \code{checkbox} variables from
-Checked/Unchecked to Yes/No (or some other user-specified labelling).
+Rewrites the labeling of \code{checkbox} variables from
+Checked/Unchecked to Yes/No (or some other user-specified labeling).
 }
 \details{
 \code{checkbox} variables are not identified using the metadata

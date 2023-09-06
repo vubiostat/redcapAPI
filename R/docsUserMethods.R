@@ -27,7 +27,7 @@
 #'   
 #' @details
 #'   User project access fields (those not related to forms or exports) 
-#'   are mapped between coded and labelled values as:
+#'   are mapped between coded and labeled values as:
 #' 
 #'   | Code | Label     |
 #'   |------|-----------|
@@ -60,7 +60,7 @@
 #' 
 #'   When setting permissions for a user project access fields, form access, 
 #'   and form export permissions, the user may provided any of the coded 
-#'   or labelled values above. The user data is passed through 
+#'   or labeled values above. The user data is passed through 
 #'   [prepUserImportData()] before sending it to the API;  
 #'   text values will be converted to the numeric value. 
 #' 

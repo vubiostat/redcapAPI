@@ -109,7 +109,7 @@ data via \code{importRecords}}
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all
 data elements from a project.}
 
-\item{flush}{\code{logical(1)}. If \code{TRUE}, the all caches in the connection
+\item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
 object will be flushed after completing the operation. This is highly
 recommended.}
 
