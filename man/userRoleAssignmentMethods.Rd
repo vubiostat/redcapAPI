@@ -7,7 +7,7 @@
 \alias{importUserRoleAssignments}
 \alias{exportUserRoleAssignments.redcapApiConnection}
 \alias{importUserRoleAssignments.redcapApiConnection}
-\title{Export or Import User Role Assignments}
+\title{Export or Import User-Role Assignments}
 \usage{
 exportUserRoleAssignments(rcon, ...)
 
@@ -82,10 +82,10 @@ unlockREDCap(connections = c(rcon = "project_alias"),
              keyring = "API_KEYs", 
              envir = globalenv())
              
-# Export user role assignments
+# Export user-role assignments
 exportUserRoleAssignments(rcon)
 
-# Import/modify a user role assignment
+# Import/modify a user-role assignment
 NewData <- data.frame(username = "desired_user_name", 
                       unique_role_name = "KN3430U")
 importUserRolesAssignments(rcon, 

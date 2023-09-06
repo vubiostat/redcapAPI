@@ -48,7 +48,7 @@
 #' createFileRepositoryFolder(rcon, 
 #'                            name = "New Folder Name")
 #'                            
-#' # Create a folder in a sub-folder
+#' # Create a folder in a subfolder
 #' createFileRepositoryFolder(rcon, 
 #'                            name = "New Folder Name", 
 #'                            folder_id = 12345)

@@ -33,7 +33,7 @@ simply set this to \code{TRUE}.}
 }
 \description{
 Rewrites the labeling of \code{checkbox} variables from
-Checked/Unchecked to Yes/No (or some other user-specified labeling).
+Checked/Unchecked to Yes/No (or some other user specified labeling).
 }
 \details{
 \code{checkbox} variables are not identified using the metadata

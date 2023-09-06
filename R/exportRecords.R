@@ -384,8 +384,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
   if (all(nchar(unique_id) == 32L))
   {
     warning("The record IDs in this project appear to be de-identified. ",
-            "Subject data may not match across batches. ",
-            "See 'Deidentified Batched Calls' in '?exportRecords'")
+            "Subject data may not match across batches.")
   }
   
   #* Determine batch numbers for the IDs.

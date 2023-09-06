@@ -429,7 +429,7 @@ REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <-
     "lock_records", 
     "lock_records_all_forms")
 
-# User Role Assignment Structure 
+# User-Role Assignment Structure 
 
 REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <- 
   data.frame(username = character(0), 

@@ -10,7 +10,7 @@
 #' @inheritParams common-api-args 
 #' @param folder_id `integerish(0/1)`. The 
 #'   folder ID of a specific folder in the File Repository for which a list of 
-#'   files and sub-folders will be exported. 
+#'   files and subfolders will be exported. 
 #'   By default, the top-level directory of the File Repository will be used.
 #' @param recursive `logical(1)`. When `TRUE`, content of subfolders
 #'   will be retrieved until a full listing is produced. If `FALSE`, 
@@ -49,7 +49,7 @@
 #' exportFileRepositoryListing(rcon, 
 #'                             recursive = TRUE)
 #'                             
-#' # Export the listing of a sub-folder in the File Repository
+#' # Export the listing of a subfolder in the File Repository
 #' exportFileRepositoryListing(rcon, 
 #'                             folder_id = 12345)
 #' }

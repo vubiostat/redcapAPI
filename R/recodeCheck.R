@@ -3,7 +3,7 @@
 #' 
 #' @title Change labeling of `checkbox` variables
 #' @description Rewrites the labeling of `checkbox` variables from 
-#'   Checked/Unchecked to Yes/No (or some other user-specified labeling).
+#'   Checked/Unchecked to Yes/No (or some other user specified labeling).
 #'   
 #' @param df A data frame, presumably retrieved from REDCap, though not a 
 #'   strict requirement.

@@ -41,7 +41,7 @@
 #' @param user_roles Either `logical(1)` indicating if user roles data should be
 #'   purged from the project; or a `data.frame` for restoring user roles
 #'   data via `importUserRoles`. NOT YET IMPLEMENTED
-#' @param user_role_assignments A `data.frame` for restoring user role 
+#' @param user_role_assignments A `data.frame` for restoring user-role 
 #'   assignments via `importUserRoleAssignments`. The API doesn't support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
 #' @param dags Either `logical(1)` indicating if DAG data should be
@@ -50,8 +50,8 @@
 #' @param dag_assignments A `data.frame` for restoring DAG 
 #'   assignments via `importDagAssignments`. The API doesn't support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
-#' @param records Either `logical(1)` indicating if user roles data should be
-#'   purged from the project; or a `data.frame` for restoring user roles
+#' @param records Either `logical(1)` indicating if records data should be
+#'   purged from the project; or a `data.frame` for restoring records
 #'   data via `importRecords`
 #' @param purge_all `logical(1)`. A shortcut option to purge all 
 #'   data elements from a project.
@@ -71,7 +71,7 @@
 #'  6. Import Repeating Instruments
 #'  7. Import Users
 #'  8. Import User Roles
-#'  9. Import User Role Assignments
+#'  9. Import User-Role Assignments
 #'  10. Import Data Access Groups
 #'  11. Import Data Access Group Assignments
 #'  12. Import Records

@@ -29,7 +29,7 @@
 #'   of the total sample size.  When `block.size=c(8, 4, 2)` and 
 #' `block.size.shift = c(0, .5, .9)`, the first half of the randomization 
 #'   is performed in blocks of 8, then the next 40 percent of the randomization
-#'   is performed in blocks of 4, with the last 10 percent performed in blocks
+#'   is performed in blocks of 4, with the last ten percent performed in blocks
 #'   of 2.
 #' @param seed.dev `integerish`. At least one value is required.  If only one value is given, 
 #'   it will be converted to a vector with length equal to the number of strata.

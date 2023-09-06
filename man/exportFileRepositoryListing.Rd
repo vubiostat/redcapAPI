@@ -27,7 +27,7 @@ exportFileRepositoryListing(
 
 \item{folder_id}{\code{integerish(0/1)}. The
 folder ID of a specific folder in the File Repository for which a list of
-files and sub-folders will be exported.
+files and subfolders will be exported.
 By default, the top-level directory of the File Repository will be used.}
 
 \item{recursive}{\code{logical(1)}. When \code{TRUE}, content of subfolders
@@ -76,7 +76,7 @@ exportFileRepositoryListing(rcon)
 exportFileRepositoryListing(rcon, 
                             recursive = TRUE)
                             
-# Export the listing of a sub-folder in the File Repository
+# Export the listing of a subfolder in the File Repository
 exportFileRepositoryListing(rcon, 
                             folder_id = 12345)
 }

@@ -313,7 +313,7 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("Repeat Inst.         : %s", is_cached(x$has_repeatInstrumentEvent())),
       sprintf("Users                : %s", is_cached(x$has_users())), 
       sprintf("User Roles           : %s", is_cached(x$has_user_roles())),
-      sprintf("User Role Assignment : %s", is_cached(x$has_user_role_assignment())),
+      sprintf("User-Role Assignment : %s", is_cached(x$has_user_role_assignment())),
       sprintf("DAGs                 : %s", is_cached(x$has_dags())),
       sprintf("DAG Assignment       : %s", is_cached(x$has_dag_assignment())),
       sprintf("Project Info         : %s", is_cached(x$has_projectInformation())),
@@ -344,11 +344,11 @@ print.redcapApiConnection <- function(x, ...){
 #' @param user_roles Either a `character` giving the file from which the
 #'   User Roles can be read, or a `data.frame`.
 #' @param user_role_assignment Either a `character` giving the file from which the
-#'   User Role Assigments can be read, or a `data.frame`. 
+#'   User-Role Assignments can be read, or a `data.frame`. 
 #' @param dags Either a `character` giving the file from which the 
 #'   Data Access Groups can be read, or a `data.frame`.
 #' @param dag_assignment Either a `character` giving the file from which the
-#'   Data Access Group Assigments can be read, or a `data.frame`.
+#'   Data Access Group Assignments can be read, or a `data.frame`.
 #' @param project_info Either a `character` giving the file from which the 
 #'   Project Information can be read, or a `data.frame`.
 #' @param version Either a `character` giving the file from which the 

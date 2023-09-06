@@ -602,8 +602,8 @@ validate_import_email <- function(x, field_name, logfile)
 # Tests to perform
 # * valid phone numbers pass
 # * NA passes
-# * phone numbers of more than 10 digits become NA
-# * phone numbers of more than 10 digits produce a message
+# * phone numbers of more than ten digits become NA
+# * phone numbers of more than ten digits produce a message
 # * phone numbers with invalid format become NA
 # * phone numbers with invalid format produce a message
 
@@ -619,7 +619,7 @@ validate_import_phone <- function(x, field_name, logfile)
   print_validation_message(
     field_name = field_name,
     indices = which(w_long),
-    message = paste0("Value(s) are not 10 digit phone numbers.\n",
+    message = paste0("Value(s) are not ten digit phone numbers.\n",
                      "Values not imported."), 
     logfile = logfile
   )

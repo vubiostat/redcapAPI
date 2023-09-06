@@ -95,13 +95,13 @@ User settings can be read, or a \code{data.frame}.}
 User Roles can be read, or a \code{data.frame}.}
 
 \item{user_role_assignment}{Either a \code{character} giving the file from which the
-User Role Assigments can be read, or a \code{data.frame}.}
+User-Role Assignments can be read, or a \code{data.frame}.}
 
 \item{dags}{Either a \code{character} giving the file from which the
 Data Access Groups can be read, or a \code{data.frame}.}
 
 \item{dag_assignment}{Either a \code{character} giving the file from which the
-Data Access Group Assigments can be read, or a \code{data.frame}.}
+Data Access Group Assignments can be read, or a \code{data.frame}.}
 
 \item{project_info}{Either a \code{character} giving the file from which the
 Project Information can be read, or a \code{data.frame}.}

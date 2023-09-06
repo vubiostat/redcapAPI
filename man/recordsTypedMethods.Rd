@@ -212,7 +212,7 @@ no more than \code{batch_size} ID's in any single batch.  The batches are
 exported from the API and stacked together.
 
 In longitudinal projects, \code{batch_size} may not necessarily be the
-number of records exported in each batch.  If \code{batch_size} is 10 and
+number of records exported in each batch.  If \code{batch_size} is ten and
 there are four records per patient, each batch will consist of 40 records.
 Thus, if the user is concerned about tying up the server with a large,
 longitudinal project, it would be prudent to use a smaller batch size.

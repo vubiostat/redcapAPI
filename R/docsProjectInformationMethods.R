@@ -56,7 +56,7 @@
 #' | `production_time` | The date/time the project was moved into production status. |
 #' | `in_production` | Boolean value indicating if the project is in production status. |
 #' | `project_language` | The language associated with the project. |
-#' | `purpose` | An integerish value identifying the purpose of the project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research', 3 = 'Quality Improvement', 4 = 'Operational Support'. |
+#' | `purpose` | An integerish value identifying the purpose of the project. 0 = "Practice/Just for fun", 1 = "Other", 2 = "Research", 3 = "Quality Improvement", 4 = "Operational Support". |
 #' | `purpose_other` | The user supplied character value given when the project purpose is 'Other'. |
 #' | `project_notes` | The user supplied notes about the project. |
 #' | `custom_record_label` | The user provided custom label for the record identifier field. |

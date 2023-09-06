@@ -10,7 +10,7 @@ packageStartupMessage(
 
 .onLoad <- function(libname,pkgname)
 {
-  # Set the time out to 5 minutes (300 seconds) 
+  # Set the time out to five minutes (300 seconds) 
   # If a setting had already existed for timeout_ms, restore it.  
   # We don't want to disrupt the user's settings
   old <- httr::set_config(httr::timeout(300))

@@ -1,5 +1,5 @@
 #' @name userRoleAssignmentMethods
-#' @title Export or Import User Role Assignments
+#' @title Export or Import User-Role Assignments
 #'
 #' @description These methods enable the user to export the user-role 
 #'   assignments, add assignments, or modify existing assignments. 
@@ -30,10 +30,10 @@
 #'              keyring = "API_KEYs", 
 #'              envir = globalenv())
 #'              
-#' # Export user role assignments
+#' # Export user-role assignments
 #' exportUserRoleAssignments(rcon)
 #' 
-#' # Import/modify a user role assignment
+#' # Import/modify a user-role assignment
 #' NewData <- data.frame(username = "desired_user_name", 
 #'                       unique_role_name = "KN3430U")
 #' importUserRolesAssignments(rcon, 

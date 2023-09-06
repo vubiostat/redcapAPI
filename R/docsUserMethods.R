@@ -1,5 +1,5 @@
 #' @name userMethods
-#' @title Export, Import, or Delete Users and User Permisisons
+#' @title Export, Import, or Delete Users and User Permissisons
 #' 
 #' @description These methods enable the user to add and remove users from
 #'   a project. They also enable the user to modify the permissions 

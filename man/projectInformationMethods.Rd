@@ -63,7 +63,7 @@ that may not otherwise be supported by \code{redcapAPI}.}
    \code{production_time} \tab The date/time the project was moved into production status. \cr
    \code{in_production} \tab Boolean value indicating if the project is in production status. \cr
    \code{project_language} \tab The language associated with the project. \cr
-   \code{purpose} \tab An integerish value identifying the purpose of the project. 0 = 'Practice/Just for fun', 1 = 'Other', 2 = 'Research', 3 = 'Quality Improvement', 4 = 'Operational Support'. \cr
+   \code{purpose} \tab An integerish value identifying the purpose of the project. 0 = "Practice/Just for fun", 1 = "Other", 2 = "Research", 3 = "Quality Improvement", 4 = "Operational Support". \cr
    \code{purpose_other} \tab The user supplied character value given when the project purpose is 'Other'. \cr
    \code{project_notes} \tab The user supplied notes about the project. \cr
    \code{custom_record_label} \tab The user provided custom label for the record identifier field. \cr

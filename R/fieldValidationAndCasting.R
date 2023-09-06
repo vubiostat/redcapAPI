@@ -80,10 +80,10 @@
 #' 
 #' `castCheckForImport` is a special case function to allow the user to
 #' specify exactly which values are to be considered "Checked". Values that
-#' match are returned as 1 and all other values are returned as 0. This is
+#' match are returned as `1` and all other values are returned as `0`. This is
 #' motivated by the special case where the coding on a checkbox includes 
 #' "0, Option". In the resulting field `checkbox___0`, a coded value
-#' of 0 actually implies the choice was selected. In order to perform an 
+#' of `0` actually implies the choice was selected. In order to perform an 
 #' import on such data, it is necessary to cast it using 
 #' `castCheckForImport(c("0"))`.
 #' 

@@ -102,8 +102,8 @@ data via \code{importUserRoles}. NOT YET IMPLEMENTED}
 purged from the project; or a \code{data.frame} for restoring DAGs
 data via \code{importDags}. NOT YET IMPLEMENTED}
 
-\item{records}{Either \code{logical(1)} indicating if user roles data should be
-purged from the project; or a \code{data.frame} for restoring user roles
+\item{records}{Either \code{logical(1)} indicating if records data should be
+purged from the project; or a \code{data.frame} for restoring records
 data via \code{importRecords}}
 
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all
@@ -129,7 +129,7 @@ configuration via \code{\link[=importRepeatingInstrumentsEvents]{importRepeating
 repeating instruments, but an import replaces the existing instruments.
 NOT YET IMPLEMENTED}
 
-\item{user_role_assignments}{A \code{data.frame} for restoring user role
+\item{user_role_assignments}{A \code{data.frame} for restoring user-role
 assignments via \code{importUserRoleAssignments}. The API doesn't support deleting
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 
@@ -162,7 +162,7 @@ reconstructing the project is (purging data occurs in the reverse order):
 \item Import Repeating Instruments
 \item Import Users
 \item Import User Roles
-\item Import User Role Assignments
+\item Import User-Role Assignments
 \item Import Data Access Groups
 \item Import Data Access Group Assignments
 \item Import Records

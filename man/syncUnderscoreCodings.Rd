@@ -52,7 +52,7 @@ REDCap expects the underscore codings to be used.
 \section{Backward Compatibility}{
 
 In retrospect, we realize that the way \code{syncUnderscoreCodings} is written
-is backwards.  We should have altered the field names in the records
+is backward.  We should have altered the field names in the records
 data frame.  Any scripts that make use of \code{syncUnderscoreCodings} and were
 written prior to version 5.5.21 will fail because the underscores in the codings
 will now be present where they weren't before.

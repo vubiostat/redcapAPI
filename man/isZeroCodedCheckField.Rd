@@ -29,9 +29,9 @@ field name appears to be zero-coded.
 of the fields passed appear to be zero-coded.
 }
 \description{
-Check fields that have 0 as a coding option can confuse
+Check fields that have \code{0} as a coding option can confuse
 certain data processing steps because it can be difficult to
-differentiate if a "0" value represents an unchecked or checked
+differentiate if a \code{0} value represents an unchecked or checked
 option. Identifying these fields is important to handling them
 correctly.
 }

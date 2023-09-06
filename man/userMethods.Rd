@@ -9,7 +9,7 @@
 \alias{exportUsers.redcapApiConnection}
 \alias{importUsers.redcapApiConnection}
 \alias{deleteUsers.redcapApiConnection}
-\title{Export, Import, or Delete Users and User Permisisons}
+\title{Export, Import, or Delete Users and User Permissisons}
 \usage{
 exportUsers(rcon, ...)
 

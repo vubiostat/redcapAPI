@@ -80,7 +80,7 @@ first element is 0.  This controls when the block size changes as a proportion
 of the total sample size.  When \code{block.size=c(8, 4, 2)} and
 \code{block.size.shift = c(0, .5, .9)}, the first half of the randomization
 is performed in blocks of 8, then the next 40 percent of the randomization
-is performed in blocks of 4, with the last 10 percent performed in blocks
+is performed in blocks of 4, with the last ten percent performed in blocks
 of 2.}
 
 \item{seed.dev}{\code{integerish}. At least one value is required.  If only one value is given,
