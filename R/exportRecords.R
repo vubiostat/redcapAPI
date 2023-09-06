@@ -146,7 +146,7 @@ exportRecords.redcapApiConnection <-
   
   MetaData <- rcon$metadata()
   
-  #* for purposes of the export, we don't need the descriptive fields.
+  #* for purposes of the export, we do not need the descriptive fields.
   #* Including them makes the process more error prone, so we'll ignore them.
   MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]
 

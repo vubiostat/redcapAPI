@@ -17,8 +17,8 @@
 #'   the events.  
 #'   
 #'   For this reason, it is often preferable to have these kinds of errors return 
-#'   `NULL` so that the program doesn't crash if it doesn't need to (one such 
-#'   instance where it doesn't need to crash is when `exportEvents` is called
+#'   `NULL` so that the program does not crash if it does not need to (one such 
+#'   instance where it does not need to crash is when `exportEvents` is called
 #'   within `exportRecords`; the `events` argument is irrelevant to a 
 #'   classic project and the error can safely be ignored.
 #'   

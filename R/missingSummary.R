@@ -238,7 +238,7 @@ missingSummary_offline <- function(records,
       # NOTE: in the result, TRUE means the value is missing
       #                      FALSE means the value is non-missing
       if (tmp_form == "_complete"){
-        # If we are here, we didn't find a matching form name. We will 
+        # If we are here, we did not find a matching form name. We will 
         # assume variables not on a form are always non-missing.
         records[[i]] <- rep(FALSE, nrow(records))
       }
@@ -304,7 +304,7 @@ missingSummary_offline <- function(records,
                                   })
     # If the `[form]_complete` field is missing, we set the missingness value of the 
     # record for fields on that value to FALSE, indicating that they are non-missing
-    # That is, we don't consider a value missing unless the form is marked either 'Complete' or 'Incomplete'
+    # That is, we do not consider a value missing unless the form is marked either 'Complete' or 'Incomplete'
     completeFormMissing <- unlist(completeFormMissing)
     if (!is.null(completeFormMissing)){
       records[i, completeFormMissing] <- FALSE    

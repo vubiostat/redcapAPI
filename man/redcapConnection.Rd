@@ -85,7 +85,7 @@ Event Instrument mappings can be read, or a \code{data.frame}.}
 
 \item{repeat_instrument}{Either a \code{character} giving the file from which the
 Repeating Instruments and Events settings can be read, or a \code{data.frame}.
-Note: The REDCap GUI doesn't offer a download file of these settings
+Note: The REDCap GUI does not offer a download file of these settings
 (at the time of this writing).}
 
 \item{users}{Either a \code{character} giving the file from which the

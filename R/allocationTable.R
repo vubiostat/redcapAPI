@@ -313,7 +313,7 @@ allocationTable.redcapApiConnection <- function(rcon,
                        "'."))
     }
   }
-  #* 19. if 'weights' doesn't have names, assume the weights were given in the order of levels(random)
+  #* 19. if 'weights' does not have names, assume the weights were given in the order of levels(random)
   else {
     names(weights) <- random_level_names
     warning(paste0("No names given with 'weights'.  The names '",

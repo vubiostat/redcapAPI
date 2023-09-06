@@ -116,7 +116,7 @@
 #' provided for the user that prefers to work absent factors. The list
 #' `default_cast_character` is equivalent and is provided for those that
 #' prefer to describe their casting in terms of what the result is (and not
-#' what it isn't).
+#' what it is not).
 #' 
 #' 
 #' @return 
@@ -369,7 +369,7 @@ getCheckedValue <- function(coding, field_name){
                      "Checked", 
                      "yes")
   
-  # When casting from raw, we don't want to consider "0" as checked 
+  # When casting from raw, we do not want to consider "0" as checked 
   # for zero coded fields.
   if (isZeroCodedCheckField(field_name)){
     checked_value <- checked_value[-1]

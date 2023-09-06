@@ -72,7 +72,7 @@ fieldToVar <- function(records,
                            warning(w);
                            invokeRestart("muffleWarning")},
     {
-      #* If the variable isn't in the data dictionary (usually it's a field added by REDCap,
+      #* If the variable is not in the data dictionary (usually it's a field added by REDCap,
       #* such as redcap_event_name, instrument_complete, etc), give it a generic name to
       #* pass to switch.
       if (!length(field_type)) 

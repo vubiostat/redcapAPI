@@ -135,7 +135,7 @@ exportRecordsTyped.redcapApiConnection <-
   user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
   system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
   
-  # The REDCap API won't accept system fields in the fields argument. 
+  # The REDCap API will not accept system fields in the fields argument. 
   # we have to remove them from the request.
   fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
   
@@ -164,7 +164,7 @@ exportRecordsTyped.redcapApiConnection <-
    ###################################################################
   # Call API for Raw Results
   
-  # We don't need to pass forms to the API because we have 
+  # We do not need to pass forms to the API because we have 
   # absorbed that information directly into fields
   body <- c(list(content                = "record", 
                  format                 = "csv", 
@@ -299,7 +299,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
   system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
   
-  # The REDCap API won't accept system fields in the fields argument. 
+  # The REDCap API will not accept system fields in the fields argument. 
   # we have to remove them from the request.
   fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
   
@@ -525,7 +525,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     rep((length(fields) == 0 && length(forms) == 0), 
         nrow(FieldFormMap))
   
-  # For the forms, we can't assume they are in forms. Instead, we initialize
+  # For the forms, we cannot assume they are in forms. Instead, we initialize
   # this to FALSE and have to provide positive proof that they are in forms.
   FieldFormMap$is_in_forms <- rep(FALSE, nrow(FieldFormMap))
   
@@ -558,7 +558,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   # If any of the checkbox options are listed if drop_fields
   # Remove all of the checkbox options.
-  # Also sets the is_in_forms to FALSE to ensure it isn't 
+  # Also sets the is_in_forms to FALSE to ensure it is not 
   # included in the API call.
   
   if (length(drop_fields) > 0){

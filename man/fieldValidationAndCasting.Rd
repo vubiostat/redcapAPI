@@ -238,7 +238,7 @@ have been cast to factors will instead be cast to characters. It is
 provided for the user that prefers to work absent factors. The list
 \code{default_cast_character} is equivalent and is provided for those that
 prefer to describe their casting in terms of what the result is (and not
-what it isn't).
+what it is not).
 }
 }
 \examples{

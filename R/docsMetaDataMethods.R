@@ -39,7 +39,7 @@
 #'   checking for duplicate field names).
 #'   
 #' Field types may be one of `REDCAP_METADATA_FIELDTYPE`. In the event that a 
-#'   new field type is added to REDCap and `redcapAPI` isn't yet updated, 
+#'   new field type is added to REDCap and `redcapAPI` is not yet updated, 
 #'   the user may add additional values via `c(REDCAP_METADATA_FIELDTYPE, "new_type")`.
 #'   
 #' Validation types may be one of `REDCAP_METADATA_VALIDATION_TYPE` or 

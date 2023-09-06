@@ -117,24 +117,24 @@ recommended.}
 project settings to load via \code{importProjectInformation}.}
 
 \item{meta_data}{A \code{data.frame} for restoring metadata
-data via \code{importMetaData}. The API doesn't support deleting
+data via \code{importMetaData}. The API does not support deleting
 metadata, but an import replaces the existing metadata.}
 
 \item{mappings}{A \code{data.frame} for restoring instrument-event mappings
-via \code{importMappings}. The API doesn't support deleting
+via \code{importMappings}. The API does not support deleting
 mappings, but an import replaces the existing mappings.}
 
 \item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{\link[=importRepeatingInstrumentsEvents]{importRepeatingInstrumentsEvents()}}. The API doesn't support deleting
+configuration via \code{\link[=importRepeatingInstrumentsEvents]{importRepeatingInstrumentsEvents()}}. The API does not support deleting
 repeating instruments, but an import replaces the existing instruments.
 NOT YET IMPLEMENTED}
 
 \item{user_role_assignments}{A \code{data.frame} for restoring user-role
-assignments via \code{importUserRoleAssignments}. The API doesn't support deleting
+assignments via \code{importUserRoleAssignments}. The API does not support deleting
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 
 \item{dag_assignments}{A \code{data.frame} for restoring DAG
-assignments via \code{importDagAssignments}. The API doesn't support deleting
+assignments via \code{importDagAssignments}. The API does not support deleting
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 }
 \description{

@@ -114,7 +114,7 @@ letters must be lowercase (the function will coerce them to lower before
 checking for duplicate field names).
 
 Field types may be one of \code{REDCAP_METADATA_FIELDTYPE}. In the event that a
-new field type is added to REDCap and \code{redcapAPI} isn't yet updated,
+new field type is added to REDCap and \code{redcapAPI} is not yet updated,
 the user may add additional values via \code{c(REDCAP_METADATA_FIELDTYPE, "new_type")}.
 
 Validation types may be one of \code{REDCAP_METADATA_VALIDATION_TYPE} or

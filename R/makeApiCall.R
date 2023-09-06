@@ -16,7 +16,7 @@
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
-#'   the R package doesn't yet support (redcapAPI will always lag behind when 
+#'   the R package does not yet support (redcapAPI will always lag behind when 
 #'   REDCap adds new features). 
 #'   
 #'   The API call consists of two components: the "body" and the "config." 
@@ -190,7 +190,7 @@ makeApiCall <- function(rcon,
     }
     
     # Wait the designated time until trying again.
-    # when i = rcon$retries(), we've made all our attempts, we don't need to wait to exit the loop 
+    # when i = rcon$retries(), we've made all our attempts, we do not need to wait to exit the loop 
     if (i < rcon$retries()) { 
       Sys.sleep(rcon$retry_interval()[i])
     }
@@ -228,7 +228,7 @@ makeApiCall <- function(rcon,
     if (iteration < rcon$retries()){
       sprintf("Trying again in %s seconds. ", 
               rcon$retry_interval()[iteration])
-    } else { # when i = retries, we aren't actually going to try again. 
+    } else { # when i = retries, we are not actually going to try again. 
       ""
     }
   

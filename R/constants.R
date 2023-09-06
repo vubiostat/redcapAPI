@@ -40,7 +40,7 @@ FILE_IMPORT_EXPORT_EMPTY_FRAME <-
 # 
 # Explanation : https://stackoverflow.com/a/76020417/1017276
 # ^(.*?)___ : match anything at beginning non-greedily followed by ___ into 1st group
-#       ___ : after that, find the first case of ___ (the REDCap UI won't permit the user to use more than one consecutive _ in field names)
+#       ___ : after that, find the first case of ___ (the REDCap UI will not permit the user to use more than one consecutive _ in field names)
 #     (.*)$ : match anything after until end of string into 2nd group
 REGEX_CHECKBOX_FIELD_NAME <- "^(.*?)___(.*)$"
 
@@ -70,7 +70,7 @@ REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
 # [code1], [label1] | [code2], [label2]. It turns out that there are ways 
 # that users can define multiple choice fields using only the labels 
 # (via the metadata CSV import and the API will actually allow it, too). 
-# We have decided that we don't want to permit this through importMetaData
+# We have decided that we do not want to permit this through importMetaData
 # so a separate regex is needed for the import than we use for the export.
 # See issue 145.
 # Explanation - this one makes my head swim a bit, but I'll do my best. (BN)
@@ -110,7 +110,7 @@ REGEX_MULT_CHOICE <- "^(^[^\\|]+,[^\\|]*(?:\\|[^\\|]+,[^\\|]*)*$|^(?:[^|,]+\\|)+
 # Any of the three values may be missing, but the two pipes must be 
 # present.
 # This is fairly permissive, but it seems to match REDCap behaviors
-# REDCap doesn't actually restrict what characters can go between the pipes, 
+# REDCap does not actually restrict what characters can go between the pipes, 
 # although it produces weird results when you include a pipe within the labels.
 # Example:  this | and|or | that will produce labels "this", "and", and "or | that" in the UI.
 # Explanation

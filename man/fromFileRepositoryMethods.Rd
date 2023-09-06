@@ -137,7 +137,7 @@ exportFromFileRepository(rcon,
                          doc_id = 12345, 
                          dir = write_to_path)
                          
-# Export a file and create the target directory if it doesn't exist
+# Export a file and create the target directory if it does not exist
 exportFromFileRepository(rcon, 
                          doc_id = 12345, 
                          dir = write_to_path, 

@@ -161,7 +161,7 @@ importFileRepository.redcapApiConnection <- function(rcon,
   # At the top level, dirname([file]) returns "." and
   #                  basename([file]) returns either the filename or directory name
   # If the basename matches the name of a folder in DirList, then we can
-  #   determine that it is a folder and shouldn't be included in the FileList
+  #   determine that it is a folder and should not be included in the FileList
   FileList <-                    
     FileList[!(FileList$dirname == "." & 
                  FileList$name %in% DirList$name), ]

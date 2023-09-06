@@ -114,7 +114,7 @@ prepUserImportData <- function(data,
                               format = "%Y-%m-%d")
   }
   
-  # Remove fields that can't be updated
+  # Remove fields that cannot be updated
   
   fields_to_remove <- c("email", "lastname", "firstname", 
                         "data_access_group_id")

@@ -28,7 +28,7 @@
     error = function(e)
     {
       if(grepl("Could not resolve host",     e) ||
-         grepl("Couldn't connect to server", e))
+         grepl("Could not connect to server", e))
         stop("Unable to connect to url '",url,"'. ", e$message)
         
       if(grepl("403", e)) return(NULL)
@@ -150,7 +150,7 @@
   #############################################################################
  ## Find the best password function
 ## If rstudioapi is loaded and rstudio is running, then use that.
-## getOption('askpass') returns a function that doesn't work on MAC 
+## getOption('askpass') returns a function that does not work on MAC 
 ## when knitting from RStudio, ugh.
 .default_pass <- function()
 {
@@ -167,7 +167,7 @@
 #' Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
 #' If the keyring does not exist, it will ask for password to this keyring to use on
 #' later requests. Next it
-#' will ask for the API_KEYs specified in `connections`. If an API_KEY doesn't
+#' will ask for the API_KEYs specified in `connections`. If an API_KEY does not
 #' work, it will request again. On later executions it will use an open keyring
 #' to retrieve all API_KEYs or for a password if the keyring is currently
 #' locked.

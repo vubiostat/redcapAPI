@@ -337,7 +337,7 @@ print.redcapApiConnection <- function(x, ...){
 #'   Event Instrument mappings can be read, or a `data.frame`.
 #' @param repeat_instrument Either a `character` giving the file from which the 
 #'   Repeating Instruments and Events settings can be read, or a `data.frame`.
-#'   Note: The REDCap GUI doesn't offer a download file of these settings 
+#'   Note: The REDCap GUI does not offer a download file of these settings 
 #'   (at the time of this writing).
 #' @param users Either a `character` giving the file from which the 
 #'   User settings can be read, or a `data.frame`.

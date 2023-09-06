@@ -26,7 +26,7 @@ execute calls for new REDCap features that are not yet implemented.
 The intent of this function is to provide an approach to execute
 calls to the REDCap API that is both consistent and flexible. Importantly,
 this provides a framework for making calls to the API using features that
-the R package doesn't yet support (redcapAPI will always lag behind when
+the R package does not yet support (redcapAPI will always lag behind when
 REDCap adds new features).
 
 The API call consists of two components: the "body" and the "config."

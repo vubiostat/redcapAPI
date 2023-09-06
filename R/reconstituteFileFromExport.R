@@ -90,7 +90,7 @@ reconstituteFileFromExport <- function(response,
   }
   
   # Extract the filename --------------------------------------------
-  # Only extracted if a filename isn't provided.
+  # Only extracted if a filename is not provided.
   if (length(filename) == 0){
     filename <- gsub(pattern = "(^[[:print:]]+; name=|\")", 
                      replacement = "", 

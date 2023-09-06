@@ -28,8 +28,8 @@ determine if a project is classic or longitudinal without attempting to export
 the events.
 
 For this reason, it is often preferable to have these kinds of errors return
-\code{NULL} so that the program doesn't crash if it doesn't need to (one such
-instance where it doesn't need to crash is when \code{exportEvents} is called
+\code{NULL} so that the program does not crash if it does not need to (one such
+instance where it does not need to crash is when \code{exportEvents} is called
 within \code{exportRecords}; the \code{events} argument is irrelevant to a
 classic project and the error can safely be ignored.
 

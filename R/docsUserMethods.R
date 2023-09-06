@@ -79,7 +79,7 @@
 #' 
 #'   When importing via CSV, (as redcapAPI does by default) it appears that 
 #'   the form access rights are imported but may not always be reflected in 
-#'   the exported values. The form export rights don't appear to be imported
+#'   the exported values. The form export rights do not appear to be imported
 #'   when using the CSV format. We may be able to resolve this in the future
 #'   using a JSON format.
 #' 

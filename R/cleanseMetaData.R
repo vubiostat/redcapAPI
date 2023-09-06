@@ -48,7 +48,7 @@ cleanseMetaData <- function(meta_data_file, meta_data_clean,
   
   if (meta_data_clean == meta_data_file){
     coll$push(sprintf("%s %s", 
-                      "Sorry. I won't allow you to overwrite your file. ",
+                      "Sorry. I will not allow you to overwrite your file. ",
                       "Please use a different path for 'meta_data_clean."))
   }
   

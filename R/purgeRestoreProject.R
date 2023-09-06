@@ -26,13 +26,13 @@
 #'   purged from the project; or a `data.frame` for restoring events 
 #'   data via `importEvents`
 #' @param meta_data A `data.frame` for restoring metadata
-#'   data via `importMetaData`. The API doesn't support deleting 
+#'   data via `importMetaData`. The API does not support deleting 
 #'   metadata, but an import replaces the existing metadata.
 #' @param mappings A `data.frame` for restoring instrument-event mappings
-#'   via `importMappings`. The API doesn't support deleting 
+#'   via `importMappings`. The API does not support deleting 
 #'   mappings, but an import replaces the existing mappings.
 #' @param repeating_instruments A `data.frame` for restoring repeating instruments
-#'   configuration via [importRepeatingInstrumentsEvents()]. The API doesn't support deleting 
+#'   configuration via [importRepeatingInstrumentsEvents()]. The API does not support deleting 
 #'   repeating instruments, but an import replaces the existing instruments.
 #'   NOT YET IMPLEMENTED
 #' @param users Either `logical(1)` indicating if users data should be
@@ -42,13 +42,13 @@
 #'   purged from the project; or a `data.frame` for restoring user roles
 #'   data via `importUserRoles`. NOT YET IMPLEMENTED
 #' @param user_role_assignments A `data.frame` for restoring user-role 
-#'   assignments via `importUserRoleAssignments`. The API doesn't support deleting 
+#'   assignments via `importUserRoleAssignments`. The API does not support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
 #' @param dags Either `logical(1)` indicating if DAG data should be
 #'   purged from the project; or a `data.frame` for restoring DAGs 
 #'   data via `importDags`. NOT YET IMPLEMENTED
 #' @param dag_assignments A `data.frame` for restoring DAG 
-#'   assignments via `importDagAssignments`. The API doesn't support deleting 
+#'   assignments via `importDagAssignments`. The API does not support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
 #' @param records Either `logical(1)` indicating if records data should be
 #'   purged from the project; or a `data.frame` for restoring records

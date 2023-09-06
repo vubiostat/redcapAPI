@@ -70,7 +70,7 @@ exportFileRepository.redcapApiConnection <- function(rcon,
     checkmate::reportAssertions(coll)
   } 
   
-  # Create the directory if it doesn't exist ------------------------
+  # Create the directory if it does not exist ------------------------
   
   if (dir_create && !file.exists(dir)) {
     dir.create(dir, 

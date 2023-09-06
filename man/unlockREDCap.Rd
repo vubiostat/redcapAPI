@@ -41,7 +41,7 @@ connections are assigned into the specified \code{envir}.
 Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
 If the keyring does not exist, it will ask for password to this keyring to use on
 later requests. Next it
-will ask for the API_KEYs specified in \code{connections}. If an API_KEY doesn't
+will ask for the API_KEYs specified in \code{connections}. If an API_KEY does not
 work, it will request again. On later executions it will use an open keyring
 to retrieve all API_KEYs or for a password if the keyring is currently
 locked.

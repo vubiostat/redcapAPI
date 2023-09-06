@@ -117,7 +117,7 @@ deleteFiles.redcapApiConnection <- function(rcon,
   body <- body[lengths(body) > 0]
   
   #* Delete the file
-  #* The tryCatch here seems a little quirky.  My best understanding is that since the API isn't returning
+  #* The tryCatch here seems a little quirky.  My best understanding is that since the API is not returning
   #* anything into the 'content' attribute returned by POST, POST is casting an error.  Oddly, an error in this
   #* case, an error means the action was successfully performed.  The tryCatch call negotiates that oddity to
   #* get the desired result.
