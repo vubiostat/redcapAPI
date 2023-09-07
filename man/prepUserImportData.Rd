@@ -7,11 +7,7 @@
 prepUserImportData(data, rcon, consolidate = TRUE, user_role = FALSE)
 }
 \arguments{
-<<<<<<< HEAD
-\item{data}{\code{data.frame} that has the structure of
-=======
 \item{data}{\code{data.frame} with the structure of
->>>>>>> Issue-216-consolidateDocumentation
 \code{redcapAPI:::REDCAP_USER_STRUCTURE}. It may also have additional
 columns for the form and export access of each of the instruments.}
 
@@ -24,12 +20,6 @@ the consolidated values (as provided by the API export) are utilized.}
 \item{user_role}{\code{logical(1)} If \code{TRUE}, the code will
 treat the data as if it is being prepared for importing User Roles.}
 }
-<<<<<<< HEAD
-\description{
-Prepares a data frame for import via the API. Allows for
-data to be passed in either the raw format or the labelled data
-received from \code{exportUsers}.
-=======
 \value{
 Returns a \code{data.frame} with user settings that will be accepted by the
 API for import.
@@ -70,5 +60,4 @@ prepUserImportData(data = NewData,
 \seealso{
 \code{\link[=importUsers]{importUsers()}}, \cr
 \code{\link[=importUserRoles]{importUserRoles()}}
->>>>>>> Issue-216-consolidateDocumentation
 }

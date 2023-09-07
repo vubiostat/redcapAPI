@@ -23,11 +23,7 @@ checkbox codings are not retained in the suffixes of the field names
 in the exported records.  For example, if variable \code{chk} is a
 checkbox with a coding 'a_b, A and B', the field name in the data
 export becomes \code{chk___ab}.  The loss of the underscore causes
-<<<<<<< HEAD
-\code{fieldToVar} to fail as it can't match variable names to the
-=======
 \code{fieldToVar} to fail as it cannot match variable names to the
->>>>>>> Issue-216-consolidateDocumentation
 meta data.  \code{syncUnderscoreCodings} rectifies this problem by
 searching the suffixes and meta data for underscores.  If a
 discrepancy is found, the underscores are removed from the metadata
@@ -59,11 +55,7 @@ In retrospect, we realize that the way \code{syncUnderscoreCodings} is written
 is backward.  We should have altered the field names in the records
 data frame.  Any scripts that make use of \code{syncUnderscoreCodings} and were
 written prior to version 5.5.21 will fail because the underscores in the codings
-<<<<<<< HEAD
-will now be present where they weren't before.
-=======
 will now be present where they were not before.
->>>>>>> Issue-216-consolidateDocumentation
 
 For backward compatibility of \code{redcapAPI}, we continue to alter the codings
 in the meta data. We do not anticipate many problems, as most people do not use

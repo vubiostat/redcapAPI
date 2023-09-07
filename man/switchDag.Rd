@@ -29,31 +29,18 @@ group assignments will be refreshed.}
 
 \item{...}{Arguments to pass to other methods}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
-<<<<<<< HEAD
-\description{
-This method allows the current API user to switch
-(assign/reassign/unassign) their current Data Access Group assignment
-if they have been assigned to multiple DAGs via the DAG Switcher page
-in the project. Returns \code{TRUE} when the call is completed
-successfully.
-=======
 \value{
 Returns \code{TRUE} when the call is completed successfully.
 }
@@ -81,5 +68,4 @@ switchDag(rcon,
 \code{\link[=deleteDags]{deleteDags()}}, \cr
 \code{\link[=exportUserDagAssignments]{exportUserDagAssignments()}}, \cr
 \code{\link[=importUserDagAssignments]{importUserDagAssignments()}}
->>>>>>> Issue-216-consolidateDocumentation
 }

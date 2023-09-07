@@ -18,11 +18,7 @@ strict requirement.}
 
 \item{vars}{Optional character vector of variables to convert.  If left
 missing, all of the variables in \code{df} that are identified as
-<<<<<<< HEAD
-\code{checkbox} variables are relabelled.  See 'Details' for more about
-=======
 \code{checkbox} variables are relabeled.  See 'Details' for more about
->>>>>>> Issue-216-consolidateDocumentation
 identifying \code{checkbox} variables.}
 
 \item{old}{A character vector to be passed to \code{factor}.
@@ -36,19 +32,11 @@ order of the elements in \code{levels} and \code{labels},
 simply set this to \code{TRUE}.}
 }
 \description{
-<<<<<<< HEAD
-Rewrites the labelling of \code{checkbox} variables from
-Checked/Unchecked to Yes/No (or some other user-specified labelling).
-}
-\details{
-\code{checkbox} variables are \emph{not} identified using the metadata
-=======
 Rewrites the labeling of \code{checkbox} variables from
 Checked/Unchecked to Yes/No (or some other user specified labeling).
 }
 \details{
 \code{checkbox} variables are not identified using the metadata
->>>>>>> Issue-216-consolidateDocumentation
 from the REDCap database.  Instead, variables are scanned, and those
 variables in which every value is in \code{levels} are assumed to be
 \code{checkbox} variables.

@@ -39,13 +39,6 @@ importRecords(
 \code{"normal"} prevents blank fields from overwriting populated fields.
 \code{"overwrite"} causes blanks to overwrite data in the database.}
 
-<<<<<<< HEAD
-\item{returnContent}{Character string.  'count' returns the number of
-records imported; 'ids' returns the record ids that are imported;
-'nothing' returns no message; 'auto_ids' returns a list of pairs of all
-record IDs that were imported. If used when \code{force_auto_number = FALSE},
-the value will be changed to \code{'ids'}.}
-=======
 \item{returnContent}{\code{character(1)}.
 One of \code{c("count", "ids", "nothing", "auto_ids")}.
 'count' returns the number of records imported;
@@ -53,7 +46,6 @@ One of \code{c("count", "ids", "nothing", "auto_ids")}.
 'nothing' returns no message;
 'auto_ids' returns a list of pairs of all record IDs that were imported.
 If used when \code{force_auto_number = FALSE}, the value will be changed to \code{'ids'}.}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{returnData}{\code{logical(1)}. When \code{TRUE}, prevents the REDCap
 import and instead returns the data frame that would have been given
@@ -68,21 +60,6 @@ When \code{""}, the log is printed to the console.}
 
 \item{...}{Arguments to pass to other methods}
 
-<<<<<<< HEAD
-\item{force_auto_number}{\code{logical(1)} If record auto-numbering has been
-enabled in the project, it may be desirable to import records where each
-record's record name is automatically determined by REDCap (just as it
-does in the user interface). If this parameter is set to 'true', the
-record names provided in the request will not be used (although they
-are still required in order to associate multiple rows of data to an
-individual record in the request), but instead those records in the
-request will receive new record names during the import process.
-NOTE: To see how the provided record names get translated into new auto
-record names, the returnContent parameter should be set to 'auto_ids',
-which will return a record list similar to 'ids' value, but it will have
-the new record name followed by the provided record name in the request,
-in which the two are comma-delimited.}
-=======
 \item{force_auto_number}{\code{logical(1)}. If record auto-numbering has been
 enabled in the project, it may be desirable to import records where each
 record's record name is automatically determined by REDCap (just as it
@@ -93,7 +70,6 @@ individual record in the request); instead those records in the
 request will receive new record names during the import process.
 It is recommended that the user use \code{returnContent = "auto_ids"}
 when \code{force_auto_number = TRUE}}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{batch.size}{\code{integerish(1)}.  Specifies the number of subjects to be included
 in each batch of a batched export or import.  Non-positive numbers
@@ -105,13 +81,8 @@ See Details.}
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
@@ -136,18 +107,10 @@ existing records to a project.
 data before attempting the import.  Namely
 \enumerate{
 \item Check that all variables in \code{data} exist in the REDCap data dictionary.
-<<<<<<< HEAD
-\item Check that the study id variable exists
-\item Force the study id variable to the first position in the data frame (with a warning)
-\item Remove calculated fields (with a warning)
-\item Verify that REDCap date fields are represented in the data frame as
-either character, POSIXct, or Date class objects.
-=======
 \item Check that the record id variable exists
 \item Force the record id variable to the first position in the data frame (with a warning)
 \item Remove calculated fields (with a warning)
 \item Verify that REDCap date fields are represented in the data frame as either \code{character}, \code{POSIXct}, or \code{Date} class objects.
->>>>>>> Issue-216-consolidateDocumentation
 \item Determine if values are within their specified validation limits.
 }
 
@@ -182,35 +145,8 @@ importRecords(rcon,
               data = NewData, 
               logfile = "import-validation-notes.txt")      
 
-<<<<<<< HEAD
-The REDCap API is fairly restrictive about what it will accept as valid data for import.
-\code{importRecords} tries to simplify the process by allowing users to
-submit data in any form recognized by the data dictionary. It is then converted
-internally to the
-appropriate text format for import. This means, for example, that a radio button value
-where the code \code{1} is mapped to the label \code{Guitar} (defined in the user interface
-with "1, Guitar"), the user can provide
-either "1" or "Guitar" as a value and \code{importRecords} will translate it to the
-code that the API expects.
-
-While this provides a level of convenience for the user, it has some limitations when
-applied to checkbox values. When submitting checkbox values for import, it is strongly
-recommended that you submit either the code "0" (for unchecked), "1" (for checked), or the
-labels "Unchecked" and "Checked".
-
-In particular, when the checkbox labels are defined with a code or label that is "0" or "1"
-(for example, "0, checkbox_label" or "check_code, 0"), \code{importRecords} is unable to
-determine if a 0 indicates an unchecked box or if the zero is the label of a checked box.
-When encountering ambiguity, \code{importRecords} will always assume "0" represents an
-unchecked box and "1" represents a checked box.
-}
-
-\references{
-See the REDCap API documentation at your institution's REDCap documentation.
-=======
 } 
 
->>>>>>> Issue-216-consolidateDocumentation
 }
 \seealso{
 \code{\link[=exportRecords]{exportRecords()}}, \cr

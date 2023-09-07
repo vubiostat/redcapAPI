@@ -9,14 +9,9 @@ redcapError(x, error_handling)
 \arguments{
 \item{x}{Object returned by \code{\link[httr:POST]{httr::POST()}}.}
 
-<<<<<<< HEAD
-\item{error_handling}{Direction for how to handle errors.  May be either
-\code{"null"} or \code{"error"}. See Details.}
-=======
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
->>>>>>> Issue-216-consolidateDocumentation
 }
 \description{
 Determine the proper way to handle errors returned from the API.
@@ -31,29 +26,6 @@ doing so returns an error from the API that events cannot be exported for
 classic projects.  In REDCap versions earlier than 6.5.0, there is no way to
 determine if a project is classic or longitudinal without attempting to export
 the events.
-<<<<<<< HEAD
-
-For this reason, it is often preferable to have these kinds of errors return
-\code{NULL} so that the program doesn't crash if it doesn't need to (one such
-instance where it doesn't need to crash is when \code{exportEvents} is called
-within \code{exportRecords}; the \code{events} argument is irrelevant to a
-classic project and the error can safely be ignored.
-
-The other common type of error that does not need to be fatal is when a
-\code{redcapAPI} method is sent to a REDCap instance that does not support the
-method.  For example, the \code{exportVersion} method is not supported in
-REDCap instances earlier than 6.0.0.  In these cases, we may prefer not to cast
-a hard error.
-
-These two types of errors may be handled in one of two ways.  When the
-error handler is set to \code{"null"}, a \code{NULL} is returned.  When the
-error handler is set to \code{"error"}, the error is returned.  The option
-is set globally using \code{options(redcap_error_handler = "null")} and is
-set to \code{"null"} by default.
-}
-\section{Handled Errors}{
-=======
->>>>>>> Issue-216-consolidateDocumentation
 
 For this reason, it is often preferable to have these kinds of errors return
 \code{NULL} so that the program does not crash if it does not need to (one such

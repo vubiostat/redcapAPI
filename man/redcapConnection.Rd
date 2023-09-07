@@ -40,28 +40,14 @@ offlineConnection(
 \method{print}{redcapOfflineConnection}(x, ...)
 }
 \arguments{
-<<<<<<< HEAD
-\item{url}{URL for a REDCap database API.  Check your institution's REDCap
-documentation for this address.  Either \code{url} or \code{conn} must
-be specified.}
-=======
 \item{url}{\code{character(1)}. URL for the user's REDCap database API.}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{token}{\code{character(1)} REDCap API token}
 
-<<<<<<< HEAD
-\item{config}{A list to be passed to \code{httr::POST}.  This allows the
-user to set additional configurations for the API calls, such as
-certificates, ssl version, etc. For the majority of users, this does
-not need to be altered.  See Details for more about this argument's
-purpose and the \code{redcapAPI} wiki for specifics on its use.}
-=======
 \item{config}{A list to be passed to \code{\link[httr:POST]{httr::POST()}}.  This allows the
 user to set additional configurations for the API calls, such as
 certificates, SSL version, etc. For the majority of users, this does
 not need to be altered.}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{retries}{\code{integerish(1)}. Sets the number of attempts to make to the
 API if a timeout error is encountered. Must be a positive value.}
@@ -99,11 +85,7 @@ Event Instrument mappings can be read, or a \code{data.frame}.}
 
 \item{repeat_instrument}{Either a \code{character} giving the file from which the
 Repeating Instruments and Events settings can be read, or a \code{data.frame}.
-<<<<<<< HEAD
-Note: The REDCap GUI doesn't offer a download file of these settings
-=======
 Note: The REDCap GUI does not offer a download file of these settings
->>>>>>> Issue-216-consolidateDocumentation
 (at the time of this writing).}
 
 \item{users}{Either a \code{character} giving the file from which the
@@ -132,34 +114,6 @@ File Repository Listing can be read, or a \code{data.frame}.}
 
 \item{records}{Either a \code{character} giving the file from which the
 Records can be read, or a \code{data.frame}. This should be the raw
-<<<<<<< HEAD
-data as downloaded from the API, for instance. Using labelled or formatted
-data is likely to result in errors when passed to other functions.}
-}
-\description{
-Creates an object of class \code{redcapApiConnection} for
-using the REDCap API
-}
-\details{
-\code{redcapConnection} objects will retrieve and cache various forms of
-project information. This can make metadata, arms, dags, events, instruments, fieldnames,
-arm-event mappings, users, version, project information, fileRepository,
-and repeating instruments available
-directly from the \code{redcapConnection} object. Take note that
-the retrieval of these objects uses the default values of the respective
-export functions (excepting the file repository,
-which uses \code{recursive = TRUE}).
-
-For each of these objects, there are four methods that can be called from
-the \code{redcapConnection} object: the get method (called via
-\code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}),
-which returns a logical indicating if the metadata has been cached;
-the flush method (\code{rcon$flush_metadata}), which removes the cached value;
-and the refresh method (\code{rcon$refresh_metadata}), which replaces the
-current value with a new call to the API. There is also a \code{flush_all}
-and \code{refresh_all} method.
-
-=======
 data as downloaded from the API, for instance. Using labeled or formatted
 data is likely to result in errors when passed to other functions.}
 }
@@ -208,7 +162,6 @@ Information is cached for
 There is also a \code{flush_all} and \code{refresh_all} method that will purge
 the entire cache and refresh the entire cache, respectively.
 
->>>>>>> Issue-216-consolidateDocumentation
 The \code{redcapConnection} object also stores the user preferences for
 handling repeated attempts to call the API. In the event of a timeout
 error or server unavailability, these settings allow a system pause before
@@ -219,32 +172,8 @@ be altered at any time using the methods \code{rcon$set_retries(r)},
 The argument to these functions have the same requirements as the
 corresponding arguments to \code{redcapConnection}.
 
-<<<<<<< HEAD
-For convenience, you may consider using
-\code{options(redcap_api_url=[your URL here])} in your RProfile.
-To obtain an API token for a project, do the following:\cr
-Enter the 'User Rights' section of a project\cr
-Select a user\cr
-Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on
-configuring REDCap to use the API can be found at \url{https://github.com/vubiostat/redcapAPI/wiki}
-
-Tokens are specific to a project, and a token must be created for each
-project for which you wish to use the API.
-
-The \code{config} argument is passed to the \code{httr::POST} argument of
-the same name.  The most likely reason for using this argument is that the
-certificate files bundled in \code{httr} have fallen out of date.
-Hadley Wickham is pretty good about keeping those certificates up
-to date, so most of the time this problem can be resolved by updating
-\code{httr} to the most recent version.  If that doesn't work, a
-certificate file can be manually passed via the \code{config} argument.
-The \code{redcapAPI} wiki has a more detailed tutorial on how to
-find and pass an SSL certificate to the API call
-(\url{https://github.com/vubiostat/redcapAPI/wiki/Manually-Setting-an-SSL-Certificate-File}).
-=======
 Tokens are specific to a project, and a token must be created for each
 project for which the user wishes to use the API.
->>>>>>> Issue-216-consolidateDocumentation
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
 for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.

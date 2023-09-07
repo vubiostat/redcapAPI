@@ -78,13 +78,8 @@ to use in restoring the project.}
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
@@ -114,11 +109,7 @@ data via \code{importRecords}}
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all
 data elements from a project.}
 
-<<<<<<< HEAD
-\item{flush}{\code{logical(1)}. If \code{TRUE}, the all caches in the connection
-=======
 \item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
->>>>>>> Issue-216-consolidateDocumentation
 object will be flushed after completing the operation. This is highly
 recommended.}
 
@@ -126,26 +117,6 @@ recommended.}
 project settings to load via \code{importProjectInformation}.}
 
 \item{meta_data}{A \code{data.frame} for restoring metadata
-<<<<<<< HEAD
-data via \code{importMetaData}. The API doesn't support deleting
-metadata, but an import replaces the existing metadata.}
-
-\item{mappings}{A \code{data.frame} for restoring instrument-event mappings
-via \code{importMappings}. The API doesn't support deleting
-mappings, but an import replaces the existing mappings.}
-
-\item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
-configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting
-repeating instruments, but an import replaces the existing instruments.
-NOT YET IMPLEMENTED}
-
-\item{user_role_assignments}{A \code{data.frame} for restoring user role
-assignments via \code{importUserRoleAssignments}. The API doesn't support deleting
-assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
-
-\item{dag_assignments}{A \code{data.frame} for restoring DAG
-assignments via \code{importDagAssignments}. The API doesn't support deleting
-=======
 data via \code{importMetaData}. The API does not support deleting
 metadata, but an import replaces the existing metadata.}
 
@@ -164,7 +135,6 @@ assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTE
 
 \item{dag_assignments}{A \code{data.frame} for restoring DAG
 assignments via \code{importDagAssignments}. The API does not support deleting
->>>>>>> Issue-216-consolidateDocumentation
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 }
 \description{
@@ -215,22 +185,6 @@ purgeProject(rcon,
 # Restore a project
 restoreProject(rcon)
 
-<<<<<<< HEAD
-\itemize{
-\item{1. }{Update project information}
-\item{2. }{Import Arms Data}
-\item{3. }{Import Events Data}
-\item{4. }{Import Meta Data}
-\item{5. }{Import Mappings}
-\item{6. }{Import Repeating Instruments}
-\item{7. }{Import Users}
-\item{8. }{Import User Roles}
-\item{9. }{Import User Role Assignments}
-\item{10. }{Import Data Access Groups}
-\item{11. }{Import Data Access Group Assignments}
-\item{12. }{Import Records}
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }
 
 }
