@@ -58,16 +58,17 @@ contains project metadata (fields, forms, events, arms) and might
 optionally contain data to be imported as well. When not \code{NULL},
 all other arguments are ignored. See Details.}
 
-\item{...}{Additional arguments to be passed between methods.}
+\item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }

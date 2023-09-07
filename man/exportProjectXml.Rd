@@ -54,8 +54,8 @@ all fields are returned (unless \code{forms} is specified).}
 longitudinal database.  When \code{NULL}, all events are returned.}
 
 \item{survey}{\code{logical(1)}. When \code{TRUE} the survey identifier fields
-(e.g., "redcap_survey_identifier") or survey timestamp fields
-(e.g., form_name+"_timestamp") will be included in the export
+(e.g., \code{redcap_survey_identifier}) or survey timestamp fields
+(e.g., \verb{[form_name]_timestamp}) will be included in the export
 when surveys are utilized in the project.}
 
 \item{dag}{\code{logical(1)}. When \code{TRUE} the \code{redcap_data_access_group}
@@ -67,16 +67,17 @@ for all records in the project. Setting this option to \code{TRUE} can
 make the export very large and may prevent it from completing if the
 project contains many files or very large files.}
 
-\item{...}{Additional arguments to be passed between methods.}
+\item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
