@@ -1197,14 +1197,14 @@ test_that(
 )
 
 test_that(
-  "phone numbers of more than 10 digits produce a message",
+  "phone numbers of more than ten digits produce a message",
   {
     expect_message(
       validate_import_phone(c("555-555-5555-5", 
                               "555-555-5555-5555"), 
                             field_name = "phone", 
                             logfile = ""), 
-      "are not 10 digit phone numbers"
+      "are not ten digit phone numbers"
     )
   }
 )

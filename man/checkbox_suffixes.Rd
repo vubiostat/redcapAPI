@@ -13,7 +13,7 @@ checkbox_suffixes(fields, meta_data)
 }
 \description{
 Checkbox variables return one vector of data for each option defined
-  in the variable.  The variables are returned with the suffix \code{___[option]}.
-  \code{exportRecords} needs these suffixes in order to retrieve all of the 
-  variables and to apply the correct labels.
+in the variable.  The variables are returned with the suffix \verb{___[option]}.
+\code{exportRecords} needs these suffixes in order to retrieve all of the
+variables and to apply the correct labels.
 }

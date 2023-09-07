@@ -30,46 +30,77 @@ createFileRepositoryFolder(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{name}{\code{character(1)} The name of the folder. If a folder by 
+\item{name}{\code{character(1)} The name of the folder. If a folder by
 this name already exists, no action will be taken.}
 
-\item{folder_id}{\code{integerish(0/1)}. The ID of the parent folder. If
+\item{folder_id}{\code{integerish(0/1)}. The ID of the parent folder. When
 length is 0, the new folder is placed in the top-level.}
 
-\item{dag_id}{\code{integerish(0/1)} The ID of a data access group. If 
+\item{dag_id}{\code{integerish(0/1)} The ID of a data access group. When
 provided, access to the folder will be restricted to the DAG.}
 
-\item{role_id}{\code{integerish(0/1)} The ID of a role. If provided, 
+\item{role_id}{\code{integerish(0/1)} The ID of a role. When provided,
 access to the folder will be restricted to users with that role.}
 
-\item{...}{Additional arguments to be passed between methods}
+\item{...}{Arguments to pass to other methods}
 
-\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached 
+\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached
 File Repository data on \code{rcon} will be refreshed.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
+\value{
+Returns a data frame with the columns\tabular{ll}{
+    \tab  \cr
+   \code{folder_id} \tab The REDCap assigned ID value for the newly created folder. \cr
+   \code{name} \tab The name assigned to the folder by the user. \cr
+}
+}
 \description{
-Creates a folder in the file repository. This can be made
-  a subfolder of an existing folder, given the folder ID of the parent
-  folder.
+This method enables the user to create a folder in the
+file repository. The folder created may also be a subfolder of an
+existing folder.
 }
-\details{
-This method allows you to create a new folder in the File 
-  Repository. You may optionally provide the folder_id of the parent 
-  folder under which you wish this folder to be created. Providing a 
-  dag_id and/or role_id will allow you to restrict access to only users 
-  within a specific DAG (Data Access Group) or User Role, respectively.
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Create a folder in the top-level directory
+createFileRepositoryFolder(rcon, 
+                           name = "New Folder Name")
+                           
+# Create a folder in a subfolder
+createFileRepositoryFolder(rcon, 
+                           name = "New Folder Name", 
+                           folder_id = 12345)
+                           
+# Create a folder assigned to a Data Access Group
+createFileRepositoryFolder(rcon, 
+                           name = "New Folder Name", 
+                           dag_id = 678)
 }
-\author{
-Benjamin Nutter
+
+  
+}
+\seealso{
+\code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr
+\code{\link[=importToFileRepository]{importToFileRepository()}}, \cr
+\code{\link[=deleteFromFileRepository]{deleteFromFileRepository()}}, \cr
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=importFileRepository]{importFileRepository()}}, \cr
+\code{\link[=deleteFileRepository]{deleteFileRepository()}}, \cr
+\code{\link[=exportFileRepositoryListing]{exportFileRepositoryListing()}}
 }

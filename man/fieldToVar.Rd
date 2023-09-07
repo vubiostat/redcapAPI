@@ -17,10 +17,10 @@ fieldToVar(
 )
 }
 \arguments{
-\item{records}{A data frame of records returned by \code{exportRecords} 
+\item{records}{A data frame of records returned by \code{exportRecords}
 or \code{exportReports}}
 
-\item{meta_data}{A data frame giving the data dictionary, as returned 
+\item{meta_data}{A data frame giving the data dictionary, as returned
 by \code{exportMetaData}}
 
 \item{factors}{Logical, determines if checkbox, radio button, dropdown and yesno
@@ -31,10 +31,10 @@ variables are converted to factors}
 \item{checkboxLabels}{Logical, determines if checkbox variables are labeled as
 "Checked" or using the checkbox label.  Only applicable when \code{factors = TRUE}}
 
-\item{labels}{Logical.  Determines if the variable labels are applied to 
+\item{labels}{Logical.  Determines if the variable labels are applied to
 the data frame.}
 
-\item{handlers}{List, Specify type conversion overrides for specific REDCap field types. 
+\item{handlers}{List, Specify type conversion overrides for specific REDCap field types.
 E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the
 datetime ordering directive from the tail is dropped. The following field
 types are supported: date_, datetime_, datetime_seconds_, time_mm_ss, time,
@@ -50,9 +50,6 @@ Hmisc is installed.}
 Converts a field exported from REDCap into a valid R vector
 }
 \details{
-This function is called internally by \code{exportRecords} and 
-  \code{exportReports}.  it is not available to the user.
-}
-\author{
-Jeffrey Horner
+This function is called internally by \code{exportRecords} and
+\code{exportReports}.  it is not available to the user.
 }

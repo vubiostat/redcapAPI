@@ -22,7 +22,18 @@ stripUnicode(x)
 \item{ignore.case}{\code{logical(1)}, should cases be ignored when matching
 patterns? Defaults to \code{TRUE}.}
 }
+\value{
+\code{stripHTMLTags} returns a \code{character} vector.
+
+\code{stripUnicode} returns a \code{character} vector.
+}
 \description{
 These functions are utilities to clear undesired characters
 from REDCap output.
+}
+\examples{
+stripHTMLTags("<p>Text in a paragraph <b>tag</b> with bold formatting </p>")
+
+stripUnicode("\U00B5 = 0")
+
 }

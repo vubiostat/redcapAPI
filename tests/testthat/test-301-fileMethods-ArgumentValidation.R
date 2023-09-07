@@ -68,22 +68,22 @@ test_that(
                              event = NULL), 
                  "'dir': Must have length 1") 
     
-    # filePrefix is logical(1)
+    # file_prefix is logical(1)
     expect_error(exportFiles(rcon, 
                              record = 1, 
                              field = "field", 
                              dir = "dir", 
                              event = NULL, 
-                             filePrefix = c(TRUE, FALSE)), 
-                 "'filePrefix': Must have length 1")
+                             file_prefix = c(TRUE, FALSE)), 
+                 "'file_prefix': Must have length 1")
     
     expect_error(exportFiles(rcon, 
                              record = 1, 
                              field = "field", 
                              dir = "dir", 
                              event = NULL, 
-                             filePrefix = "TRUE"), 
-                 "'filePrefix': Must be of type 'logical'")
+                             file_prefix = "TRUE"), 
+                 "'file_prefix': Must be of type 'logical'")
     
     # repeat_instance is integerish(1)
     expect_error(exportFiles(rcon, 

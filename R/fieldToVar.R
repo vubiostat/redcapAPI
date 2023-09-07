@@ -4,19 +4,19 @@
 #' @title Convert a REDCap Data Field to an R Vector
 #' @description Converts a field exported from REDCap into a valid R vector
 #' 
-#' @param records A data frame of records returned by \code{exportRecords} 
-#'   or \code{exportReports}
+#' @param records A data frame of records returned by `exportRecords` 
+#'   or `exportReports`
 #' @param meta_data A data frame giving the data dictionary, as returned 
-#'   by \code{exportMetaData}
+#'   by `exportMetaData`
 #' @param factors Logical, determines if checkbox, radio button, dropdown and yesno
 #'   variables are converted to factors
 #' @param dates Logical, determines if date variables are converted to POSIXct format
 #' @param checkboxLabels Logical, determines if checkbox variables are labeled as
-#'   "Checked" or using the checkbox label.  Only applicable when \code{factors = TRUE}
+#'   "Checked" or using the checkbox label.  Only applicable when `factors = TRUE`
 #' @param labels Logical.  Determines if the variable labels are applied to 
 #'   the data frame.
 #' @param handlers List, Specify type conversion overrides for specific REDCap field types. 
-#'   E.g., \code{handlers=list(date_ = as.Date)}. For datetime specifications the
+#'   E.g., `handlers=list(date_ = as.Date)`. For datetime specifications the
 #'   datetime ordering directive from the tail is dropped. The following field
 #'   types are supported: date_, datetime_, datetime_seconds_, time_mm_ss, time,
 #'   float, number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
@@ -25,10 +25,9 @@
 #'   Hmisc is installed.
 #' @param ..., additional arguments that are ignored. 
 #'   
-#' @details This function is called internally by \code{exportRecords} and 
-#'   \code{exportReports}.  it is not available to the user.
+#' @details This function is called internally by `exportRecords` and 
+#'   `exportReports`.  it is not available to the user.
 #'   
-#' @author Jeffrey Horner
 fieldToVar <- function(records,
                        meta_data,
                        factors        = TRUE, 
@@ -73,7 +72,7 @@ fieldToVar <- function(records,
                            warning(w);
                            invokeRestart("muffleWarning")},
     {
-      #* If the variable isn't in the data dictionary (usually it's a field added by REDCap,
+      #* If the variable is not in the data dictionary (usually it's a field added by REDCap,
       #* such as redcap_event_name, instrument_complete, etc), give it a generic name to
       #* pass to switch.
       if (!length(field_type)) 

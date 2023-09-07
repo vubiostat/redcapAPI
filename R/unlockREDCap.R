@@ -28,7 +28,7 @@
     error = function(e)
     {
       if(grepl("Could not resolve host",     e) ||
-         grepl("Couldn't connect to server", e))
+         grepl("Could not connect to server", e))
         stop("Unable to connect to url '",url,"'. ", e$message)
         
       if(grepl("403", e)) return(NULL)
@@ -93,7 +93,7 @@
     args     <- list(...)
     args$key <- key
     args$url <- url
-    if(!is.null(config$args)) args <- modifyList(args, config$args)
+    if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
     do.call(.connectAndCheck, args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
@@ -150,7 +150,7 @@
   #############################################################################
  ## Find the best password function
 ## If rstudioapi is loaded and rstudio is running, then use that.
-## getOption('askpass') returns a function that doesn't work on MAC 
+## getOption('askpass') returns a function that does not work on MAC 
 ## when knitting from RStudio, ugh.
 .default_pass <- function()
 {
@@ -167,7 +167,7 @@
 #' Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
 #' If the keyring does not exist, it will ask for password to this keyring to use on
 #' later requests. Next it
-#' will ask for the API_KEYs specified in `connections`. If an API_KEY doesn't
+#' will ask for the API_KEYs specified in `connections`. If an API_KEY does not
 #' work, it will request again. On later executions it will use an open keyring
 #' to retrieve all API_KEYs or for a password if the keyring is currently
 #' locked.
@@ -205,15 +205,15 @@
 #'          it can be named anything one desires.
 #'          The name in the returned list is this name. 
 #' @param envir environment. The target environment for the connections. Defaults to NULL
-#'          which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
+#'          which returns the keys as a list. Use [globalenv()] to assign in the
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param url character. The url of one's institutional REDCap server api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
 #'          On MacOS it will use rstudioapi::askForPassword if available. 
-#' @param \dots Additional arguments passed to \code{\link{redcapConnection}}.
-#' @return If \code{envir} is NULL returns a list of opened connections. Otherwise
-#'         connections are assigned into the specified \code{envir}.
+#' @param \dots Additional arguments passed to [redcapConnection()].
+#' @return If `envir` is NULL returns a list of opened connections. Otherwise
+#'         connections are assigned into the specified `envir`.
 #' @importFrom getPass getPass
 #' @importFrom yaml read_yaml
 #' @importFrom keyring key_get

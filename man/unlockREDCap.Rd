@@ -16,7 +16,7 @@ unlockREDCap(
 \arguments{
 \item{connections}{character vector. A list of strings that define the
 connections with associated API_KEYs to load into environment. Each
-name should correspond to a REDCap project for traceability, but 
+name should correspond to a REDCap project for traceability, but
 it can be named anything one desires.
 The name in the returned list is this name.}
 
@@ -25,36 +25,36 @@ The name in the returned list is this name.}
 \item{keyring}{character. Potential keyring, not used by default.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
-which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
+which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
+\item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
 On MacOS it will use rstudioapi::askForPassword if available.}
 
-\item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
+\item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise
-        connections are assigned into the specified \code{envir}.
+connections are assigned into the specified \code{envir}.
 }
 \description{
 Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
 If the keyring does not exist, it will ask for password to this keyring to use on
 later requests. Next it
-will ask for the API_KEYs specified in `connections`. If an API_KEY doesn't
+will ask for the API_KEYs specified in \code{connections}. If an API_KEY does not
 work, it will request again. On later executions it will use an open keyring
 to retrieve all API_KEYs or for a password if the keyring is currently
 locked.
 }
 \details{
 If one forgets the password to this keyring, or wishes to start over:
-`keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")`
+\code{keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")}
 
-Consistent behavior requires `options(keyring_backend=keyring::backend_file)` to
-be set. It is recommended to place this in `~/.Rprofile`.
+Consistent behavior requires \code{options(keyring_backend=keyring::backend_file)} to
+be set. It is recommended to place this in \verb{~/.Rprofile}.
 
 For production servers where the password must be stored in a readable
-plain text file, it will search for `../<basename>.yml`. DO NOT USE
+plain text file, it will search for \verb{../<basename>.yml}. DO NOT USE
 this unless one is a sysadmin, as this defeats the security and purpose of
 a local encrypted file. The expected structure of this yaml file is
 as follows:
@@ -70,9 +70,9 @@ other-config-stuff3: blah blah
 }
 
 IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
-as this *is* writing the API_KEY to a local file in clear text because
+as this \emph{is} writing the API_KEY to a local file in clear text because
 connection objects contain the unlocked key in memory. Tips
-are provided in `vignette("redcapAPI-best-practices")`.
+are provided in \code{vignette("redcapAPI-best-practices")}.
 }
 \examples{
 \dontrun{

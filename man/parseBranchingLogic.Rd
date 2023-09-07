@@ -15,24 +15,33 @@ Returns a list of unevaluated expressions.
 }
 \description{
 Branching logic from the REDCap Data Dictionary is parsed into
-  R Code and returned as expressions.  These can be evaluated if desired
-  and allow the user to determine if missing values are truly missing or
-  not required because the branching logic prevented the variable from being
-  presented.
+R Code and returned as expressions.  These can be evaluated if desired
+and allow the user to determine if missing values are truly missing or
+not required because the branching logic prevented the variable from being
+presented.
 }
 \details{
-For a study, I was asked to identify which subjects had missing 
-  values so that remaining data could be collected.  The initial pass of 
-  \code{is.na} produced a lot of subjects missing values where there was no
-  need to collect data because they did not qualify for some variables in 
-  the branching logic.  Parsing the logic allowed me to determine which 
-  values we expected to be missing and narrow the search to just those 
-  subjects with legitimately missing values.
-  
-  The utility of this function is limited to simple logic where all of the
-  data exist within the same row. Any complex statements using events 
-  will result in a failure.
+For a study, I was asked to identify which subjects had missing
+values so that remaining data could be collected.  The initial pass of
+\code{is.na} produced a lot of subjects missing values where there was no
+need to collect data because they did not qualify for some variables in
+the branching logic.  Parsing the logic allowed me to determine which
+values we expected to be missing and narrow the search to just those
+subjects with legitimately missing values.
+
+The utility of this function is limited to simple logic where all of the
+data exist within the same row. Any complex statements using events
+will result in a failure.
 }
-\author{
-Benjamin Nutter
+\examples{
+\dontrun{
+parseBranchingLogic("[age] > 30")
+parseBranchingLogic("[dropdown_test] = 'd'")
+parseBranchingLogic(c("[age] > 30", 
+                      "[dropdown_test] = 'd'"))
+}
+
+}
+\seealso{
+\code{\link[=missingSummary]{missingSummary()}}
 }

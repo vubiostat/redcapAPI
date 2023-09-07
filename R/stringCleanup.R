@@ -4,11 +4,21 @@
 #' @description These functions are utilities to clear undesired characters
 #' from REDCap output.
 #' 
-#' @param x \code{character}, vector of content to be cleaned.
-#' @param tags \code{character}, vector of HTML tags to remove from \code{x}
-#' @param ignore.case \code{logical(1)}, should cases be ignored when matching
-#'   patterns? Defaults to \code{TRUE}.
+#' @param x `character`, vector of content to be cleaned.
+#' @param tags `character`, vector of HTML tags to remove from `x`
+#' @param ignore.case `logical(1)`, should cases be ignored when matching
+#'   patterns? Defaults to `TRUE`.
 #'   
+#' @return 
+#' `stripHTMLTags` returns a `character` vector.
+#' 
+#' `stripUnicode` returns a `character` vector.
+#' 
+#' @examples
+#' stripHTMLTags("<p>Text in a paragraph <b>tag</b> with bold formatting </p>")
+#' 
+#' stripUnicode("\U00B5 = 0")
+#' 
 #' @export
 
 stripHTMLTags <- function(x, 

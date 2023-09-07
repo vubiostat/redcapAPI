@@ -1,30 +1,5 @@
-#' @name importToFileRepository
-#' @title Import a Single File to the File Repository
-#' 
-#' @description This method allows you to import a single file into a 
-#'   project's File Repository. The file may be stored in a specific folder 
-#'   in the File Repository if a \code{folder_id} is provided.
-#'   
-#' @param rcon A redcap connection object.
-#' @param file \code{character(1)} A file on the local system to be imported
-#'   to the File Repository.
-#' @param folder_id \code{integerish(0/1)}. The ID of the folder into which 
-#'   the file is to be imported. If length is zero, it is imported to the 
-#'   top-level folder.
-#' @param ... Additional arguments to be passed between methods
-#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
-#'   File Repository data on \code{rcon} will be refreshed. 
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @author Benjamin Nutter
-#' 
+#' @describeIn fromFileRepositoryMethods Import a file to the file repository.
+#' @order 2
 #' @export
 
 importToFileRepository <- function(rcon, 
@@ -34,7 +9,8 @@ importToFileRepository <- function(rcon,
   UseMethod("importToFileRepository")
 }
 
-#' @rdname importToFileRepository
+#' @rdname fromFileRepositoryMethods
+#' @order 5
 #' @export
 
 importToFileRepository.redcapApiConnection <- function(rcon, 

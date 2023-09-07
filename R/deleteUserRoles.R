@@ -1,23 +1,5 @@
-#' @name deleteUserRoles
-#' @title Delete User Roles from a Project
-#' 
-#' @description This method allows you to delete User Roles from a project.
-#' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param user_roles \code{character} unique role names to be deleted from
-#'   the project. 
-#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached data will
-#'   be refreshed after the import.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn userRoleMethods Delete user roles from a project.
+#' @order 3
 #' @export
 
 deleteUserRoles <- function(rcon, 
@@ -26,7 +8,8 @@ deleteUserRoles <- function(rcon,
   UseMethod("deleteUserRoles")
 }
 
-#' @rdname deleteUserRoles
+#' @rdname userRoleMethods
+#' @order 6
 #' @export
 
 deleteUserRoles.redcapApiConnection <- function(rcon, 
