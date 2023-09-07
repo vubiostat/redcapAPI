@@ -54,6 +54,8 @@
 #'   that is cast to the `Hmisc::mChoice` class. Requires `Hmisc` 
 #'   to be loaded.
 #'   
+#' @inherit isZeroCodedCheckField sections
+#'   
 #' @seealso 
 #' ## Exporting records
 #' 

@@ -126,6 +126,36 @@ multiple choice class. It adds a column for a multiple choice checkbox
 that is cast to the \code{Hmisc::mChoice} class. Requires \code{Hmisc}
 to be loaded.
 }
+\section{Zero Coded Check Fields}{
+
+A zero-coded check field is a field of the REDCap type \code{checkbox} that has
+a coding definition of \verb{0, [label]}. When exported, the field names for
+these fields is \verb{[field_name]___0}. As in other checkbox fields, the
+raw data output returns binary values where 0 represent and unchecked
+box and 1 represents a checked box. For zero-coded checkboxes, then, a
+value of 1 indicates that 0 was selected.
+
+This coding rarely presents a problem when casting from raw values
+(as is done in \code{exportRecordsTyped}). However, casting from coded or
+labeled values can be problematic, as it can be difficult to determine
+if a \code{0} represents a checked or unchecked value. The situations in which
+casting may fail to produce the desired results are\tabular{lll}{
+   Code \tab Label \tab Result \cr
+   0 \tab anything other than "0" \tab Likely to fail when casting from coded values \cr
+   0 \tab 0 \tab Likely to fail when casting from coded or labeled values \cr
+}
+
+
+Because of the potential for miscast data, casting functions will issue
+a warning anytime a zero-coded check field is encountered. A separate
+warning is issued when a field is cast from coded or labeled values.
+
+When casting from raw or labeled values, it is strongly recommended that
+the function \code{\link[=castCheckForImport]{castCheckForImport()}} be used. This function permits the
+user to state explicitly which values should be recognized as checked,
+avoiding the ambiguity resulting from the coding.
+}
+
 \examples{
 \dontrun{
 # Using recastRecords after export
