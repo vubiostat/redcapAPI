@@ -7,9 +7,13 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
+#' @param record `character(1)` or `integerish(1)`. The record ID of a 
+#'   survey participant.
 #' @param instrument `character(1)`. The name of a survey instrument.
 #' @param event `character(1)` The event name of the event for which 
 #'   participant information should be exported. 
+#' @param repeat_instance `integerish(1)`. The repeat instance if the 
+#'   instrument is designated as a repeating instrument. Default value is `1`.
 #'   
 #' @return 
 #' 

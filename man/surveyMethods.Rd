@@ -75,10 +75,16 @@ exportSurveyReturnCode(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
+\item{record}{\code{character(1)} or \code{integerish(1)}. The record ID of a
+survey participant.}
+
 \item{instrument}{\code{character(1)}. The name of a survey instrument.}
 
 \item{event}{\code{character(1)} The event name of the event for which
 participant information should be exported.}
+
+\item{repeat_instance}{\code{integerish(1)}. The repeat instance if the
+instrument is designated as a repeating instrument. Default value is \code{1}.}
 
 \item{...}{Arguments to pass to other methods}
 
