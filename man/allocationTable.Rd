@@ -3,7 +3,6 @@
 \name{allocationTable}
 \alias{allocationTable}
 \alias{allocationTable.redcapApiConnection}
-\alias{makeChoices}
 \alias{allocationTable_offline}
 \title{Generate Allocation Tables for the Randomization Module}
 \usage{
@@ -36,8 +35,6 @@ allocationTable(
   weights = c(1, 1),
   ...
 )
-
-makeChoices(random_levels, block.size, weights)
 
 allocationTable_offline(
   meta_data,
@@ -101,9 +98,6 @@ not need to sum to 1.0.  In other words, \code{weights=c(3, 1)} can indicate a 3
 ratio.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{random_levels}{A vector of the randomization group level names.  Determined from the
-data dictionary.}
 
 \item{meta_data}{\code{character(1)}. For the offline method, a text string
 giving the location of the data dictionary downloaded from REDCap.}

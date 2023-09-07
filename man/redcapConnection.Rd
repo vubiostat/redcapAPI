@@ -123,22 +123,44 @@ used to access the database.
 }
 \details{
 \code{redcapConnection} objects will retrieve and cache various forms of
-project information. This can make metadata, arms, dags, events, instruments, fieldnames,
-arm-event mappings, users, version, project information, fileRepository,
-and repeating instruments available
-directly from the \code{redcapConnection} object. Take note that
-the retrieval of these objects uses the default values of the respective
-export functions (excepting the file repository,
-which uses \code{recursive = TRUE}).
+project information. This can make metadata, arms, dags, events, instruments,
+fieldnames, arm-event mappings, users, version, project information,
+fileRepository, and repeating instruments available directly from the
+\code{redcapConnection} object. The retrieval of these objects
+uses the default values of the respective export functions (excepting the
+file repository, which uses \code{recursive = TRUE}).
 
 For each of these objects, there are four methods that can be called from
-the \code{redcapConnection} object: the get method (called via
-\code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}),
-which returns a logical indicating if the metadata has been cached;
-the flush method (\code{rcon$flush_metadata}), which removes the cached value;
-and the refresh method (\code{rcon$refresh_metadata}), which replaces the
-current value with a new call to the API. There is also a \code{flush_all}
-and \code{refresh_all} method.
+the \code{redcapConnection} object:\tabular{lll}{
+   Function type \tab Purpose \tab Example \cr
+   \verb{[info_type]} \tab Returns the information from the connection object \tab \code{rcon$metadata()} \cr
+   \code{has_[info_type]} \tab Returns a boolean indicating if the information is cached \tab \code{rcon$has_metadata()} \cr
+   \code{flush_[info_type]} \tab Purges the information from the connection object \tab \code{rcon$flush_metadata()} \cr
+   \code{refresh_[info_type]} \tab Replaces the information with a new call to the API \tab \code{rcon$refresh_metadata()} \cr
+}
+
+
+Information is cached for
+\itemize{
+\item \code{metadata}
+\item \code{arms}
+\item \code{events}
+\item \code{instruments}
+\item \code{fieldnames}
+\item \code{mapping} (field-event mappings)
+\item \code{repeatInstrumentEvent}
+\item \code{users}
+\item \code{user_roles}
+\item \code{user_role_assignment}
+\item \code{dags}
+\item \code{dag_assignment}
+\item \code{projectInformation}
+\item \code{version}
+\item \code{fileRepository}
+}
+
+There is also a \code{flush_all} and \code{refresh_all} method that will purge
+the entire cache and refresh the entire cache, respectively.
 
 The \code{redcapConnection} object also stores the user preferences for
 handling repeated attempts to call the API. In the event of a timeout

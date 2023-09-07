@@ -394,9 +394,9 @@ allocationTable.redcapApiConnection <- function(rcon,
               weights = weights_orig))
 }
 
-#' @rdname allocationTable
-#' @param random_levels A vector of the randomization group level names.  Determined from the
-#'   data dictionary.
+# @rdname allocationTable
+# @param random_levels A vector of the randomization group level names.  Determined from the
+#   data dictionary.
 
 makeChoices <- function(random_levels, block.size, weights){
   group.size <- block.size * weights

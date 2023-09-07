@@ -24,22 +24,43 @@
 #'   
 #' @details
 #' `redcapConnection` objects will retrieve and cache various forms of 
-#' project information. This can make metadata, arms, dags, events, instruments, fieldnames, 
-#' arm-event mappings, users, version, project information, fileRepository,
-#' and repeating instruments available
-#' directly from the `redcapConnection` object. Take note that 
-#' the retrieval of these objects uses the default values of the respective
-#' export functions (excepting the file repository, 
-#' which uses `recursive = TRUE`). 
+#' project information. This can make metadata, arms, dags, events, instruments, 
+#' fieldnames, arm-event mappings, users, version, project information, 
+#' fileRepository, and repeating instruments available directly from the 
+#' `redcapConnection` object. The retrieval of these objects 
+#' uses the default values of the respective export functions (excepting the 
+#' file repository, which uses `recursive = TRUE`). 
 #' 
 #' For each of these objects, there are four methods that can be called from 
-#' the `redcapConnection` object: the get method (called via
-#' `rcon$metadata()`, for example); the has method (`rcon$has_metadata`), 
-#' which returns a logical indicating if the metadata has been cached; 
-#' the flush method (`rcon$flush_metadata`), which removes the cached value; 
-#' and the refresh method (`rcon$refresh_metadata`), which replaces the 
-#' current value with a new call to the API. There is also a `flush_all`
-#' and `refresh_all` method.
+#' the `redcapConnection` object: 
+#' 
+#' | Function type | Purpose | Example | 
+#' |-----------------------|-------------------------------|----------------|
+#' | `[info_type]`         | Returns the information from the connection object | `rcon$metadata()` |
+#' | `has_[info_type]`     | Returns a boolean indicating if the information is cached | `rcon$has_metadata()` |
+#' | `flush_[info_type]`   | Purges the information from the connection object | `rcon$flush_metadata()` | 
+#' | `refresh_[info_type]` | Replaces the information with a new call to the API | `rcon$refresh_metadata()` |
+#' 
+#' Information is cached for 
+#' 
+#' * `metadata`
+#' * `arms`
+#' * `events`
+#' * `instruments`
+#' * `fieldnames`
+#' * `mapping` (field-event mappings)
+#' * `repeatInstrumentEvent`
+#' * `users`
+#' * `user_roles`
+#' * `user_role_assignment`
+#' * `dags`
+#' * `dag_assignment`
+#' * `projectInformation`
+#' * `version`
+#' * `fileRepository`
+#' 
+#' There is also a `flush_all` and `refresh_all` method that will purge
+#' the entire cache and refresh the entire cache, respectively.
 #' 
 #' The `redcapConnection` object also stores the user preferences for 
 #' handling repeated attempts to call the API. In the event of a timeout 
