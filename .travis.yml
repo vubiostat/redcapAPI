@@ -1,0 +1,26 @@
+# Copied on 2014-01-06 from https://github.com/craigcitro/r-travis; validate this file at http://lint.travis-ci.org/
+# Sample .travis.yml for R projects.
+#
+# See README.md for instructions, or for more configuration options,
+# see the wiki:
+#   https://github.com/craigcitro/r-travis/wiki
+
+language: r
+warnings_are_errors: true
+sudo: setuid root
+
+before_install:
+  # Update old packages on Ubuntu: https://github.com/travis-ci/travis-ci/issues/6850
+  Rscript -e 'update.packages(ask = FALSE)'
+  
+env:
+ global:
+   - CRAN: http://cran.rstudio.com
+   - WARNINGS_ARE_ERRORS=1
+   - R_BUILD_ARGS=--no-manual
+   - R_CHECK_ARGS=--no-manual 
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
