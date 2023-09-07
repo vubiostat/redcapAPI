@@ -72,13 +72,19 @@ restoreProject(object, ...)
 \code{restoreProject.list}, where \code{object} is a list of data frames
 to use in restoring the project.}
 
-\item{...}{Arguments to pass to other methods.}
+\item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
 
+<<<<<<< HEAD
 \item{config}{\code{list} Additional configuration parameters to pass to
 \code{\link[httr]{POST}}. These are appended to any parameters in
+=======
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
+>>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
@@ -101,14 +107,18 @@ data via \code{importUserRoles}. NOT YET IMPLEMENTED}
 purged from the project; or a \code{data.frame} for restoring DAGs
 data via \code{importDags}. NOT YET IMPLEMENTED}
 
-\item{records}{Either \code{logical(1)} indicating if user roles data should be
-purged from the project; or a \code{data.frame} for restoring user roles
+\item{records}{Either \code{logical(1)} indicating if records data should be
+purged from the project; or a \code{data.frame} for restoring records
 data via \code{importRecords}}
 
 \item{purge_all}{\code{logical(1)}. A shortcut option to purge all
 data elements from a project.}
 
+<<<<<<< HEAD
 \item{flush}{\code{logical(1)}. If \code{TRUE}, the all caches in the connection
+=======
+\item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
+>>>>>>> Issue-216-consolidateDocumentation
 object will be flushed after completing the operation. This is highly
 recommended.}
 
@@ -116,6 +126,7 @@ recommended.}
 project settings to load via \code{importProjectInformation}.}
 
 \item{meta_data}{A \code{data.frame} for restoring metadata
+<<<<<<< HEAD
 data via \code{importMetaData}. The API doesn't support deleting
 metadata, but an import replaces the existing metadata.}
 
@@ -134,6 +145,26 @@ assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTE
 
 \item{dag_assignments}{A \code{data.frame} for restoring DAG
 assignments via \code{importDagAssignments}. The API doesn't support deleting
+=======
+data via \code{importMetaData}. The API does not support deleting
+metadata, but an import replaces the existing metadata.}
+
+\item{mappings}{A \code{data.frame} for restoring instrument-event mappings
+via \code{importMappings}. The API does not support deleting
+mappings, but an import replaces the existing mappings.}
+
+\item{repeating_instruments}{A \code{data.frame} for restoring repeating instruments
+configuration via \code{\link[=importRepeatingInstrumentsEvents]{importRepeatingInstrumentsEvents()}}. The API does not support deleting
+repeating instruments, but an import replaces the existing instruments.
+NOT YET IMPLEMENTED}
+
+\item{user_role_assignments}{A \code{data.frame} for restoring user-role
+assignments via \code{importUserRoleAssignments}. The API does not support deleting
+assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
+
+\item{dag_assignments}{A \code{data.frame} for restoring DAG
+assignments via \code{importDagAssignments}. The API does not support deleting
+>>>>>>> Issue-216-consolidateDocumentation
 assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.}
 }
 \description{
@@ -152,7 +183,39 @@ a project.
 When restoring a project, all arguments are optional. Any argument
 that is \code{NULL} will result in no import being made. The order of
 reconstructing the project is (purging data occurs in the reverse order):
+\enumerate{
+\item Update project information
+\item Import Arms Data
+\item Import Events Data
+\item Import Meta Data
+\item Import Mappings
+\item Import Repeating Instruments
+\item Import Users
+\item Import User Roles
+\item Import User-Role Assignments
+\item Import Data Access Groups
+\item Import Data Access Group Assignments
+\item Import Records
+}
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+# Preserve a project
+preserveProject(rcon)
 
+# Purge a project
+purgeProject(rcon, 
+             purge_all = TRUE)
+                
+# Restore a project
+restoreProject(rcon)
+
+<<<<<<< HEAD
 \itemize{
 \item{1. }{Update project information}
 \item{2. }{Import Arms Data}
@@ -166,5 +229,8 @@ reconstructing the project is (purging data occurs in the reverse order):
 \item{10. }{Import Data Access Groups}
 \item{11. }{Import Data Access Group Assignments}
 \item{12. }{Import Records}
+=======
+>>>>>>> Issue-216-consolidateDocumentation
 }
+
 }

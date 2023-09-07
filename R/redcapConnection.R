@@ -1,85 +1,82 @@
 #' @name redcapConnection
-#' 
 #' @title Connect to a REDCap Database
-#' @description Creates an object of class \code{redcapApiConnection} for 
-#' using the REDCap API 
 #' 
-#' @param url URL for a REDCap database API.  Check your institution's REDCap 
-#'   documentation for this address.  Either \code{url} or \code{conn} must 
-#'   be specified.
-#' @param token REDCap API token
-#' @param config A list to be passed to \code{httr::POST}.  This allows the 
+#' @description These methods enable the user to create a connection object
+#'   used to access the database. 
+#' 
+#' @param url `character(1)`. URL for the user's REDCap database API.  
+#' @param token `character(1)` REDCap API token
+#' @param config A list to be passed to [httr::POST()].  This allows the 
 #'   user to set additional configurations for the API calls, such as 
-#'   certificates, ssl version, etc. For the majority of users, this does 
-#'   not need to be altered.  See Details for more about this argument's 
-#'   purpose and the \code{redcapAPI} wiki for specifics on its use.
-#' @param retries \code{integerish(1)}. Sets the number of attempts to make to the
+#'   certificates, SSL version, etc. For the majority of users, this does 
+#'   not need to be altered.
+#' @param retries `integerish(1)`. Sets the number of attempts to make to the
 #'   API if a timeout error is encountered. Must be a positive value.
-#' @param retry_interval \code{numeric}. Sets the intervals (in seconds) at 
-#'   which retries are attempted. By default, set at a \code{2^r} where 
-#'   \code{r} is the \code{r}th retry (ie, 2, 4, 8, 16, ...). For fixed 
+#' @param retry_interval `numeric`. Sets the intervals (in seconds) at 
+#'   which retries are attempted. By default, set at a `2^r` where 
+#'   `r` is the `r`th retry (ie, 2, 4, 8, 16, ...). For fixed 
 #'   intervals, provide a single value. Values will be recycled to match
 #'   the number of retries.
-#' @param retry_quietly \code{logical(1)}. When \code{FALSE}, messages will 
-#'   be shown giving the status of the API calls. Defaults to \code{TRUE}.
-#' @param x \code{redcapConnection} object to be printed
+#' @param retry_quietly `logical(1)`. When `FALSE`, messages will 
+#'   be shown giving the status of the API calls. Defaults to `TRUE`.
+#' @param x `redcapConnection` object to be printed
 #' @param ... arguments to pass to other methods
 #'   
 #' @details
-#' \code{redcapConnection} objects will retrieve and cache various forms of 
-#' project information. This can make metadata, arms, dags, events, instruments, fieldnames, 
-#' arm-event mappings, users, version, project information, fileRepository,
-#' and repeating instruments available
-#' directly from the \code{redcapConnection} object. Take note that 
-#' the retrieval of these objects uses the default values of the respective
-#' export functions (excepting the file repository, 
-#' which uses \code{recursive = TRUE}). 
+#' `redcapConnection` objects will retrieve and cache various forms of 
+#' project information. This can make metadata, arms, dags, events, instruments, 
+#' fieldnames, arm-event mappings, users, version, project information, 
+#' fileRepository, and repeating instruments available directly from the 
+#' `redcapConnection` object. The retrieval of these objects 
+#' uses the default values of the respective export functions (excepting the 
+#' file repository, which uses `recursive = TRUE`). 
 #' 
 #' For each of these objects, there are four methods that can be called from 
-#' the \code{redcapConnection} object: the get method (called via
-#' \code{rcon$metadata()}, for example); the has method (\code{rcon$has_metadata}), 
-#' which returns a logical indicating if the metadata has been cached; 
-#' the flush method (\code{rcon$flush_metadata}), which removes the cached value; 
-#' and the refresh method (\code{rcon$refresh_metadata}), which replaces the 
-#' current value with a new call to the API. There is also a \code{flush_all}
-#' and \code{refresh_all} method.
+#' the `redcapConnection` object: 
 #' 
-#' The \code{redcapConnection} object also stores the user preferences for 
+#' | Function type | Purpose | Example | 
+#' |-----------------------|-------------------------------|----------------|
+#' | `[info_type]`         | Returns the information from the connection object | `rcon$metadata()` |
+#' | `has_[info_type]`     | Returns a boolean indicating if the information is cached | `rcon$has_metadata()` |
+#' | `flush_[info_type]`   | Purges the information from the connection object | `rcon$flush_metadata()` | 
+#' | `refresh_[info_type]` | Replaces the information with a new call to the API | `rcon$refresh_metadata()` |
+#' 
+#' Information is cached for 
+#' 
+#' * `metadata`
+#' * `arms`
+#' * `events`
+#' * `instruments`
+#' * `fieldnames`
+#' * `mapping` (field-event mappings)
+#' * `repeatInstrumentEvent`
+#' * `users`
+#' * `user_roles`
+#' * `user_role_assignment`
+#' * `dags`
+#' * `dag_assignment`
+#' * `projectInformation`
+#' * `version`
+#' * `fileRepository`
+#' 
+#' There is also a `flush_all` and `refresh_all` method that will purge
+#' the entire cache and refresh the entire cache, respectively.
+#' 
+#' The `redcapConnection` object also stores the user preferences for 
 #' handling repeated attempts to call the API. In the event of a timeout 
 #' error or server unavailability, these settings allow a system pause before
 #' attempting another API call. In the event all of the retries fail, the 
 #' error message of the last attempt will be returned. These settings may 
-#' be altered at any time using the methods \code{rcon$set_retries(r)}, 
-#' \code{rcon$set_retry_interval(ri)}, and \code{rcon$set_retry_quietly(rq)}. 
+#' be altered at any time using the methods `rcon$set_retries(r)`, 
+#' `rcon$set_retry_interval(ri)`, and `rcon$set_retry_quietly(rq)`. 
 #' The argument to these functions have the same requirements as the 
-#' corresponding arguments to \code{redcapConnection}.
-#' 
-#' For convenience, you may consider using 
-#' \code{options(redcap_api_url=[your URL here])} in your RProfile.
-#' To obtain an API token for a project, do the following:\cr
-#' Enter the 'User Rights' section of a project\cr
-#' Select a user\cr
-#' Check the box for 'API Data Export' or 'API Data Import,' as appropriate.  A full tutorial on 
-#' configuring REDCap to use the API can be found at \url{https://github.com/vubiostat/redcapAPI/wiki}
+#' corresponding arguments to `redcapConnection`.
 #' 
 #' Tokens are specific to a project, and a token must be created for each 
-#' project for which you wish to use the API.
+#' project for which the user wishes to use the API.
 #' 
-#' The \code{config} argument is passed to the \code{httr::POST} argument of 
-#' the same name.  The most likely reason for using this argument is that the 
-#' certificate files bundled in \code{httr} have fallen out of date.  
-#' Hadley Wickham is pretty good about keeping those certificates up 
-#' to date, so most of the time this problem can be resolved by updating 
-#' \code{httr} to the most recent version.  If that doesn't work, a 
-#' certificate file can be manually passed via the \code{config} argument.  
-#' The \code{redcapAPI} wiki has a more detailed tutorial on how to 
-#' find and pass an SSL certificate to the API call 
-#' (\url{https://github.com/vubiostat/redcapAPI/wiki/Manually-Setting-an-SSL-Certificate-File}).
-#' 
-#' Additional Curl option can be set in the \code{config} argument.  See the documentation
-#' for \code{httr::config} and \code{httr:httr_options} for more Curl options.
-#' 
-#' @author Jeffrey Horner
+#' Additional Curl option can be set in the `config` argument.  See the documentation
+#' for [httr::config()] and [httr::httr_options()] for more Curl options.
 #' 
 #' @examples
 #' \dontrun{
@@ -337,7 +334,7 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("Repeat Inst.         : %s", is_cached(x$has_repeatInstrumentEvent())),
       sprintf("Users                : %s", is_cached(x$has_users())), 
       sprintf("User Roles           : %s", is_cached(x$has_user_roles())),
-      sprintf("User Role Assignment : %s", is_cached(x$has_user_role_assignment())),
+      sprintf("User-Role Assignment : %s", is_cached(x$has_user_role_assignment())),
       sprintf("DAGs                 : %s", is_cached(x$has_dags())),
       sprintf("DAG Assignment       : %s", is_cached(x$has_dag_assignment())),
       sprintf("Project Info         : %s", is_cached(x$has_projectInformation())),
@@ -347,41 +344,41 @@ print.redcapApiConnection <- function(x, ...){
 }
 
 #' @rdname redcapConnection
-#' @param meta_data Either a \code{character} giving the file from which the 
-#'   metadata can be read, or a \code{data.frame}.
-#' @param arms Either a \code{character} giving the file from which the 
-#'   arms can be read, or a \code{data.frame}.
-#' @param events Either a \code{character} giving the file from which the 
-#'   events can be read, or a \code{data.frame}.
-#' @param instruments Either a \code{character} giving the file from which the 
-#'   instruments can be read, or a \code{data.frame}.
-#' @param field_names Either a \code{character} giving the file from which the 
-#'   field names can be read, or a \code{data.frame}.
-#' @param mapping Either a \code{character} giving the file from which the 
-#'   Event Instrument mappings can be read, or a \code{data.frame}.
-#' @param repeat_instrument Either a \code{character} giving the file from which the 
-#'   Repeating Instruments and Events settings can be read, or a \code{data.frame}.
-#'   Note: The REDCap GUI doesn't offer a download file of these settings 
+#' @param meta_data Either a `character` giving the file from which the 
+#'   metadata can be read, or a `data.frame`.
+#' @param arms Either a `character` giving the file from which the 
+#'   arms can be read, or a `data.frame`.
+#' @param events Either a `character` giving the file from which the 
+#'   events can be read, or a `data.frame`.
+#' @param instruments Either a `character` giving the file from which the 
+#'   instruments can be read, or a `data.frame`.
+#' @param field_names Either a `character` giving the file from which the 
+#'   field names can be read, or a `data.frame`.
+#' @param mapping Either a `character` giving the file from which the 
+#'   Event Instrument mappings can be read, or a `data.frame`.
+#' @param repeat_instrument Either a `character` giving the file from which the 
+#'   Repeating Instruments and Events settings can be read, or a `data.frame`.
+#'   Note: The REDCap GUI does not offer a download file of these settings 
 #'   (at the time of this writing).
-#' @param users Either a \code{character} giving the file from which the 
-#'   User settings can be read, or a \code{data.frame}.
-#' @param user_roles Either a \code{character} giving the file from which the
-#'   User Roles can be read, or a \code{data.frame}.
-#' @param user_role_assignment Either a \code{character} giving the file from which the
-#'   User Role Assigments can be read, or a \code{data.frame}. 
-#' @param dags Either a \code{character} giving the file from which the 
-#'   Data Access Groups can be read, or a \code{data.frame}.
-#' @param dag_assignment Either a \code{character} giving the file from which the
-#'   Data Access Group Assigments can be read, or a \code{data.frame}.
-#' @param project_info Either a \code{character} giving the file from which the 
-#'   Project Information can be read, or a \code{data.frame}.
-#' @param version Either a \code{character} giving the file from which the 
-#'   version can be read, or a \code{data.frame}.
-#' @param file_repo Either a \code{character} giving the file from which the 
-#'   File Repository Listing can be read, or a \code{data.frame}.
-#' @param records Either a \code{character} giving the file from which the 
-#'   Records can be read, or a \code{data.frame}. This should be the raw 
-#'   data as downloaded from the API, for instance. Using labelled or formatted
+#' @param users Either a `character` giving the file from which the 
+#'   User settings can be read, or a `data.frame`.
+#' @param user_roles Either a `character` giving the file from which the
+#'   User Roles can be read, or a `data.frame`.
+#' @param user_role_assignment Either a `character` giving the file from which the
+#'   User-Role Assignments can be read, or a `data.frame`. 
+#' @param dags Either a `character` giving the file from which the 
+#'   Data Access Groups can be read, or a `data.frame`.
+#' @param dag_assignment Either a `character` giving the file from which the
+#'   Data Access Group Assignments can be read, or a `data.frame`.
+#' @param project_info Either a `character` giving the file from which the 
+#'   Project Information can be read, or a `data.frame`.
+#' @param version Either a `character` giving the file from which the 
+#'   version can be read, or a `data.frame`.
+#' @param file_repo Either a `character` giving the file from which the 
+#'   File Repository Listing can be read, or a `data.frame`.
+#' @param records Either a `character` giving the file from which the 
+#'   Records can be read, or a `data.frame`. This should be the raw 
+#'   data as downloaded from the API, for instance. Using labeled or formatted
 #'   data is likely to result in errors when passed to other functions.
 #' @export
 
@@ -862,10 +859,10 @@ print.redcapOfflineConnection <- function(x, ...){
 
 .offlineConnection_readFile <- function(file){
   if (is.character(file)){
-    read.csv(file, 
-             na.strings = "", 
-             stringsAsFactors = FALSE, 
-             colClasses = "character")
+    utils::read.csv(file, 
+                    na.strings = "", 
+                    stringsAsFactors = FALSE, 
+                    colClasses = "character")
   } else {
     file
   }
@@ -910,9 +907,9 @@ print.redcapOfflineConnection <- function(x, ...){
 
 .offlineConnection_readMetaData <- function(file){
   if (is.character(file)){
-    MetaData <- read.csv(file, 
-                         na.strings = "", 
-                         stringsAsFactors = FALSE)
+    MetaData <- utils::read.csv(file, 
+                                na.strings = "", 
+                                stringsAsFactors = FALSE)
     
     names(MetaData) <- 
       ifelse(names(MetaData) %in% names(REDCAP_METADATA_API_UI_MAPPING), 

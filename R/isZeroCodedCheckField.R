@@ -1,15 +1,40 @@
 #' @name isZeroCodedCheckField
 #' @title Identify Check Fields with a Zero Coded Option
 #' 
-#' @description Check fields that have 0 as a coding option can confuse
+#' @description Check fields that have `0` as a coding option can confuse
 #'   certain data processing steps because it can be difficult to 
-#'   differentiate if a "0" value represents an unchecked or checked 
+#'   differentiate if a `0` value represents an unchecked or checked 
 #'   option. Identifying these fields is important to handling them
 #'   correctly.
 #'
-#' @param field_name \code{character(1)} The name of a field to be tested.
-#' @param field_names \code{character} vector of field names.
-#' @param x \code{atomic} object.
+#' @param field_name `character(1)` The name of a field to be tested.
+#' @param field_names `character` vector of field names.
+#' @param x `atomic` object.
+#' 
+#' @return
+#' `isZeroCodedCheckField` returns a `logical(1)`
+#' 
+#' `warnOfZeroCodedCheckCasting` has no return and issues a warning if the
+#'   field name appears to be zero-coded.
+#'   
+#' `warnZeroCodedFieldPresent` has no return and issues a warning if any 
+#'   of the fields passed appear to be zero-coded.
+#'   
+#' @examples
+#' \dontrun{
+#' isZeroCodedCheckField("check_field___x")
+#' 
+#' isZeroCodedCheckField("check_field___0")
+#' 
+#' 
+#' x <- factor(c(1, 0, 1, 0, 0), 
+#'             levels = 0:1)
+#' warnOfZeroCodedCheckCasting(field_name = "check_field___0", 
+#'                             x = x)
+#'                        
+#'  
+#' warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"))
+#' }
 
 isZeroCodedCheckField <- function(field_name){
   coll <- checkmate::makeAssertCollection()

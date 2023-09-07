@@ -7,6 +7,7 @@
 \alias{valRx}
 \alias{valChoice}
 \alias{valPhone}
+\alias{na_values}
 \alias{castLabel}
 \alias{castLabelCharacter}
 \alias{castCode}
@@ -26,7 +27,6 @@
 \alias{raw_cast}
 \alias{default_cast_no_factor}
 \alias{default_cast_character}
-\alias{na_values}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
 An object of class \code{list} of length 20.
@@ -43,6 +43,8 @@ valRx(rx)
 valChoice(x, field_name, coding)
 
 valPhone(x, field_name, coding)
+
+na_values(FUN)
 
 castLabel(x, field_name, coding)
 
@@ -81,8 +83,6 @@ raw_cast
 default_cast_no_factor
 
 default_cast_character
-
-na_values(FUN)
 }
 \arguments{
 \item{x}{\code{character}. A vector to check.}
@@ -96,6 +96,11 @@ coding.}
 
 \item{coding}{named \code{character} vector. The defined coding from the meta data.}
 
+<<<<<<< HEAD
+=======
+\item{FUN}{\code{function}. A function that takes a character vector.}
+
+>>>>>>> Issue-216-consolidateDocumentation
 \item{checked}{\code{character}. Values to recognize as checked in a
 checkbox field.}
 
@@ -104,8 +109,32 @@ denote a decimal.}
 
 \item{n_dec}{\code{integerish(1)}. The number of decimal places permitted
 by the field validation.}
-
-\item{FUN}{\code{function}. A function that takes a character vector.}
+}
+\value{
+Validation and casting functions return the objects indicated in the
+following table:\tabular{ll}{
+   Function Name \tab Object Type Returned \cr
+   \code{isNAOrBlank} \tab \code{logical} \cr
+   \code{valRx} \tab \code{logical} \cr
+   \code{valChoice} \tab \code{logical} \cr
+   \code{valPhone} \tab \code{logical} \cr
+   \code{castLabel} \tab \code{factor} \cr
+   \code{castLabelCharacter} \tab \code{character} \cr
+   \code{castCode} \tab \code{factor} \cr
+   \code{castCodeCharacter} \tab \code{character} \cr
+   \code{castRaw} \tab \code{character} \cr
+   \code{castChecked} \tab \code{factor} \cr
+   \code{castCheckedCharacter} \tab \code{character} \cr
+   \code{castCheckLabel} \tab \code{factor} \cr
+   \code{castCheckLabelCharacter} \tab \code{character} \cr
+   \code{castCheckCode} \tab \code{factor} \cr
+   \code{castCheckCodeCharacter} \tab \code{character} \cr
+   \code{castCheckForImport} \tab \code{numeric} \cr
+   \code{castDpNumeric} \tab \code{numeric} \cr
+   \code{castDpCharacter} \tab \code{character} \cr
+   \code{castTimeHHMM} \tab \code{character} \cr
+   \code{castTimeMMSS} \tab \code{character} \cr
+}
 }
 \description{
 This set of functions assists in validating that the content of
@@ -116,14 +145,18 @@ the end product.
 }
 \details{
 Functions passed to the \code{na}, \code{validation}, and
-\code{cast} parameter of \code{\link{exportRecordsTyped}} all take the form
-of \code{function(x, coding, field_name)}. \code{na} and \code{validation}
+\code{cast} parameter of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}} all take the form
+of \verb{function(x, coding, field_name)}. \code{na} and \code{validation}
 functions are expected to return a logical vector of the same length as the
 column processed. Helper routines
 are provided here for common cases to construct these functions.
+<<<<<<< HEAD
+=======
+\subsection{Validation Functions}{
+>>>>>>> Issue-216-consolidateDocumentation
 
 \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
-function for constructing \code{na} overrides in \code{\link{exportRecordsTyped}}.
+function for constructing \code{na} overrides in \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
 
 \code{valRx} constructs a validation function from a regular expression pattern.
 The function returns a TRUE/FALSE if the value matches the pattern.
@@ -136,12 +169,29 @@ matches one of the choices.
 phone numbers. It removes punctuation and spaces prior to validating
 with the regular expression.
 
+<<<<<<< HEAD
 \code{castLabel} constructs a casting function for multiple choice variables.
 The field will be cast to return the choice label (generally more human readable)
+=======
+\code{na_values} is a helper function to create a list of functions
+to test for NA based on field type. Useful for bulk override of
+NA detection for a project. The output can be directly passed to the \code{na}
+parameter of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
+}
+
+\subsection{Casting Functions}{
+
+\code{castLabel} constructs a casting function for multiple choice variables.
+The field will be cast to return the choice label (generally more human readable).
+\code{castLabelCharacter} is an equivalent casting function that returns
+a \code{character} vector instead of a \code{factor}.
+>>>>>>> Issue-216-consolidateDocumentation
 
 \code{castCode} constructs a casting function for multiple choice variables.
 Similar to \code{castLabel}, but the choice value is returned instead. The
 values are typically more compact and their meaning may not be obvious.
+\code{castCodeCharacter} is an equivalent casting function that retuns
+a \code{character} vector instead of a \code{factor}.
 
 \code{castRaw} constructs a casting function that returns the content
 from REDCap as it was received. It is functionally equivalent to \code{identity}.
@@ -149,11 +199,14 @@ For multiple choice variables, the result will be coerced to numeric, if possibl
 otherwise, the result is character vector.
 
 \code{castChecked} constructs a casting function for checkbox fields. It
-returns values in the form of Unchecked/Checked.
+returns values in the form of Unchecked/Checked. \code{castCheckedCharacter}
+is an equivalent casting function that returns a \code{character} vector
+instead of a \code{factor}.
 
 \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
 for checkbox fields. For both, unchecked variables are cast to an empty
 string (""). Checked variables are cast to the option label and option code,
+<<<<<<< HEAD
 respectively.
 
 \code{castCheckForImport} is a special case function to allow the user to
@@ -162,6 +215,18 @@ match are returned as 1 and all other values are returned as 0. This is
 motivated by the special case where the coding on a checkbox includes
 "0, Option". In the resulting field \code{checkbox___0}, a coded value
 of 0 actually implies the choice was selected. In order to perform an
+=======
+respectively. \code{castCheckLabelCharacter} and \code{castCheckCodeCharacter}
+are equivalent casting functions that returns a \code{character} vector
+instead of a \code{factor}.
+
+\code{castCheckForImport} is a special case function to allow the user to
+specify exactly which values are to be considered "Checked". Values that
+match are returned as \code{1} and all other values are returned as \code{0}. This is
+motivated by the special case where the coding on a checkbox includes
+"0, Option". In the resulting field \code{checkbox___0}, a coded value
+of \code{0} actually implies the choice was selected. In order to perform an
+>>>>>>> Issue-216-consolidateDocumentation
 import on such data, it is necessary to cast it using
 \code{castCheckForImport(c("0"))}.
 
@@ -182,6 +247,12 @@ appropriate usage when casting for one decimal place is
 \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to
 facilitate importing data. They convert time data into a character format
 that will pass the API requirements.
+<<<<<<< HEAD
+=======
+}
+
+\subsection{Casting Lists}{
+>>>>>>> Issue-216-consolidateDocumentation
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.
@@ -192,14 +263,28 @@ have been cast to factors will instead be cast to characters. It is
 provided for the user that prefers to work absent factors. The list
 \code{default_cast_character} is equivalent and is provided for those that
 prefer to describe their casting in terms of what the result is (and not
-what it isn't).
-
-\code{na_values} A helper function to create a list of functions
-to test for NA based on field type. Useful for bulk override of
-NA detection for a project. The output can be directly passed to the \code{na}
-parameter of \code{\link{exportRecordsTyped}}.
+what it is not).
 }
-\author{
-Shawn Garbett, Benjamin Nutter
+}
+\examples{
+\dontrun{
+# Make a custom function to give special treatment to a field.
+# In this function, the field "field_name_to_skip" will 
+# be cast using `castRaw`. All other fields will be cast 
+# using `castCode`
+customCastCode <- function(x, field_name, coding){
+  if (field_name == "field_name_to_skip"){
+    castRaw(x, field_name, coding)
+  } else {
+    castCode(x, field_name, coding)
+  }
+}
+}
+
+}
+\seealso{
+\code{\link[=fieldCastingFunctions]{fieldCastingFunctions()}}, \cr
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}
 }
 \keyword{datasets}

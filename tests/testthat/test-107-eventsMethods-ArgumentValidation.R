@@ -79,7 +79,7 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(importEvents("not an rcon", 
                               data = Events), 
-                 "'rcon': Must inherit from class 'redcapApiConnection'")
+                 "no applicable method for 'importEvents'")
   }
 )
 
@@ -172,7 +172,7 @@ test_that(
     local_reproducible_output(width = 200)
     
     expect_error(deleteEvents("not an rcon"), 
-                 "'rcon': Must inherit from class 'redcapApiConnection'")
+                 "no applicable method for 'deleteEvents'")
   }
 )
 

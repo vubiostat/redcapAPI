@@ -1,10 +1,10 @@
 #' @name Extraction
-#' @title Extraction and Assignment for \code{redcapFactor}s
+#' @title Extraction and Assignment for `redcapFactor`s
 #' 
-#' @description Extract elements and make assignments to \code{redcapFactor}s
+#' @description Extract elements and make assignments to `redcapFactor`s
 #' 
-#' @param x an object of class \code{redcapFactor}
-#' @param drop \code{logical}. If \code{TRUE}, unused levels are dropped.
+#' @param x an object of class `redcapFactor`
+#' @param drop `logical`. If `TRUE`, unused levels are dropped.
 #' @param ... additional arguments to pass to other methods
 #' 
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/redcapFactorFlip.R
 \name{redcapFactorFlip}
 \alias{redcapFactorFlip}
-\title{Convert REDCap factors between labelled and coded}
+\title{Convert REDCap factors between labeled and coded}
 \usage{
 redcapFactorFlip(v)
 }
@@ -12,16 +12,26 @@ dropdown, check, yesno, etc.}
 }
 \description{
 Factors exported from REDCap can be toggled between the coded
+<<<<<<< HEAD
 and labelled values with the use of the attributes assigned to the
+=======
+and labeled values with the use of the attributes assigned to the
+>>>>>>> Issue-216-consolidateDocumentation
 factors during export.
 }
 \details{
 Each factor type variable in REDCap is given the attributes
 \code{redcapLabels} and \code{redcapLevels}.  With these attached to the
+<<<<<<< HEAD
 vector, switching between the coded and labelled values can be done with
 ease.  This may be helpful when the coded value has importance,
 such as 0/1 for death, or if a yes is worth 6 points (instead of 1).
 }
 \author{
 Benjamin Nutter
+=======
+vector, switching between the coded and labeled values can be done with
+ease.  This may be helpful when the coded value has importance,
+such as 0/1 for death, or if a yes is worth six points (instead of one).
+>>>>>>> Issue-216-consolidateDocumentation
 }

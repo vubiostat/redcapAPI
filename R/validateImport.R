@@ -5,14 +5,14 @@
 #' @description Validates the variables in a data frame prior to attempting 
 #'   an import to REDCap
 #'   
-#' @param data \code{data.frame} being prepared for import to REDCap.
+#' @param data `data.frame` being prepared for import to REDCap.
 #' @param meta_data REDCap database meta data.
 #' @param logfile A character string giving the filepath to which the 
-#'   results of the validation are printed.  If \code{""}, the results 
+#'   results of the validation are printed.  If `""`, the results 
 #'   are printed in the console.
 #'   
 #' @details
-#' \code{validateImport} is called internally by \code{importRecords} and is 
+#' `validateImport` is called internally by `importRecords` and is 
 #' not available to the user.
 #' 
 #' Each variable is validated by matching they type of variable with the type 
@@ -31,8 +31,8 @@
 #' is found out of range are allowed to import and a message is printed 
 #' in the log.
 #' 
-#' ZIP codes are tested to see if they fit either the 5 digit or 
-#' 5 digit + 4 format.  When these conditions are not met, the data point is 
+#' ZIP codes are tested to see if they fit either the five digit or 
+#' five digit + four format.  When these conditions are not met, the data point is 
 #' deleted and a message printed in the log.
 #' 
 #' YesNo fields permit any of the values 'yes', 'no', '0', '1' to be imported 
@@ -51,27 +51,22 @@
 #' are not case-sensitive.
 #' 
 #' Checkbox fields require a value of "Checked", "Unchecked", "0", or "1".  
-#' These are currently case sensitive.  Values that do not match these are 
+#' These are currently case-sensitive.  Values that do not match these are 
 #' deleted with a warning printed in the log.
 #' 
-#' Phone numbers are required to be 10 digit numbers.  The phone number is 
-#' broken into three parts: 1) a 3 digit area code, 2) a 3 digit exchange code, 
-#' and 3) a 4 digit station code.  The exchange code must start with a number 
+#' Phone numbers are required to be ten digit numbers.  The phone number is 
+#' broken into three parts: 1) a three digit area code, 2) a three digit exchange code, 
+#' and 3) a four digit station code.  The exchange code must start with a number 
 #' from 2-9, followed by 0-8, and then any third digit.  
 #' The exchange code starts with a number from 2-9, followed by any two 
-#' digits. The station code is 4 digits with no restrictions.
+#' digits. The station code is four digits with no restrictions.
 #' 
 #' E-mail addresses are considered valid when they have three parts. The first 
 #' part comes before the @@ symbol, and may be number of characters from 
 #' a-z, A-Z, a period, underscore, percent, plus, or minus.  The second part
 #' comes after the @@, but before the period, and may consist of any 
 #' number of letters, numbers, periods, or dashes.  Finally, the string ends 
-#' with a period then anywhere from 2 to 6 letters.
-#' 
-#' @author Benjamin Nutter
-#' 
-#' @references
-#' See the REDCap Help and FAQ page's section on 'Text Validation Types'
+#' with a period then anywhere from two to six letters.
 #' 
 validateImport <- function(data, meta_data, logfile = "")
 {

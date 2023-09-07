@@ -1,22 +1,5 @@
-#' @name deleteUsers
-#' @title Delete REDCap Users from a Project
-#' 
-#' @description This method allows you to delete users from a project
-#' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param users \code{character} vector of unique user names to be deleted.
-#' @param refresh \code{logical(1)} If \code{TRUE}, the cached arms data will
-#'   be refreshed after the deletion.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn userMethods Remove users from a project.
+#' @order 3
 #' @export
 
 deleteUsers <- function(rcon, 
@@ -25,7 +8,8 @@ deleteUsers <- function(rcon,
   UseMethod("deleteUsers")
 }
 
-#' @rdname deleteUsers
+#' @rdname userMethods
+#' @order 6
 #' @export
 
 deleteUsers.redcapApiConnection <- function(rcon, 

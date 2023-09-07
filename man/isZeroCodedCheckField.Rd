@@ -19,10 +19,44 @@ warnZeroCodedFieldPresent(field_names)
 
 \item{field_names}{\code{character} vector of field names.}
 }
+<<<<<<< HEAD
 \description{
 Check fields that have 0 as a coding option can confuse
 certain data processing steps because it can be difficult to
 differentiate if a "0" value represents an unchecked or checked
 option. Identifying these fields is important to handling them
 correctly.
+=======
+\value{
+\code{isZeroCodedCheckField} returns a \code{logical(1)}
+
+\code{warnOfZeroCodedCheckCasting} has no return and issues a warning if the
+field name appears to be zero-coded.
+
+\code{warnZeroCodedFieldPresent} has no return and issues a warning if any
+of the fields passed appear to be zero-coded.
+}
+\description{
+Check fields that have \code{0} as a coding option can confuse
+certain data processing steps because it can be difficult to
+differentiate if a \code{0} value represents an unchecked or checked
+option. Identifying these fields is important to handling them
+correctly.
+}
+\examples{
+\dontrun{
+isZeroCodedCheckField("check_field___x")
+
+isZeroCodedCheckField("check_field___0")
+
+
+x <- factor(c(1, 0, 1, 0, 0), 
+            levels = 0:1)
+warnOfZeroCodedCheckCasting(field_name = "check_field___0", 
+                            x = x)
+                       
+ 
+warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"))
+}
+>>>>>>> Issue-216-consolidateDocumentation
 }

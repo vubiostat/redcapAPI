@@ -25,13 +25,13 @@ The name in the returned list is this name.}
 \item{keyring}{character. Potential keyring, not used by default.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
-which returns the keys as a list. Use \code{\link{globalenv}} to assign in the
+which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
 \item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
 On MacOS it will use rstudioapi::askForPassword if available.}
 
-\item{\dots}{Additional arguments passed to \code{\link{redcapConnection}}.}
+\item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise
@@ -41,7 +41,11 @@ connections are assigned into the specified \code{envir}.
 Opens a set of connections to REDcap from API_KEYs stored in an encrypted keyring.
 If the keyring does not exist, it will ask for password to this keyring to use on
 later requests. Next it
+<<<<<<< HEAD
 will ask for the API_KEYs specified in \code{connections}. If an API_KEY doesn't
+=======
+will ask for the API_KEYs specified in \code{connections}. If an API_KEY does not
+>>>>>>> Issue-216-consolidateDocumentation
 work, it will request again. On later executions it will use an open keyring
 to retrieve all API_KEYs or for a password if the keyring is currently
 locked.

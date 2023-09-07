@@ -1,27 +1,53 @@
 #' @name switchDag
 #' @title Switch Data Access Group Assignment for the Current User
 #' 
-#' @description This method allows the current API user to switch 
+#' @description This method enables the current API user to switch 
 #'   (assign/reassign/unassign) their current Data Access Group assignment 
 #'   if they have been assigned to multiple DAGs via the DAG Switcher page 
-#'   in the project. Returns \code{TRUE} when the call is completed
-#'   successfully.
+#'   in the project. 
 #'   
-#' @param rcon \code{redcapConnection} object.
-#' @param dag \code{character(1)} A unique data access group to which to 
-#'   assign the current user. Use \code{NA} to leave the user unassigned.
-#' @param refresh \code{logical(1)} If \code{TRUE}, the cached data access
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param dag `character(1)` A unique data access group to which to 
+#'   assign the current user. Use `NA` to leave the user unassigned.
+#' @param refresh `logical(1)` If `TRUE`, the cached data access
 #'   group assignments will be refreshed.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
+#' @return Returns `TRUE` when the call is completed successfully.
+#' 
+#' @seealso 
+#' [exportDags()],\cr
+#' [importDags()],\cr
+#' [deleteDags()], \cr
+#' [exportUserDagAssignments()], \cr
+#' [importUserDagAssignments()]
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'
+#' # Switch the current user to the DAG "Facility Two"
+#' switchDag(rcon, 
+#'           dag = "facility_two")
+#' }
+#' @usage NULL
+#' @order 0
+# dummy function to control the order of arguments in the help file.
+switchDagArgs <- function(rcon, 
+                          dag, 
+                          refresh, 
+                          ..., 
+                          error_handling, 
+                          config, 
+                          api_param){
+  NULL
+}
+
+#' @rdname switchDag
 #' @export
 
 switchDag <- function(rcon, 

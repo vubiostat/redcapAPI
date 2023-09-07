@@ -15,7 +15,7 @@ exportBulkRecords(
 )
 }
 \arguments{
-\item{rcon}{A named list of REDCap connection object as created by \code{\link{redcapConnection}}.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{forms}{A named list that is a subset of rcon's names. A specified \code{rcon}
 will provide a list of forms for repeated calls to \code{exportRecordsType}.
@@ -34,7 +34,7 @@ for storing variables.}
 
 \item{post}{A function that will run on all returned sets of Records.}
 
-\item{\dots}{Any additional variables to pass to \code{\link{exportRecordsTyped}}.}
+\item{\dots}{Any additional variables to pass to \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.}
 }
 \value{
 Will return a named list of the resulting records if \code{envir} is
@@ -42,7 +42,7 @@ NULL. Otherwise will assign them to the specified \code{envir}.
 }
 \description{
 Exports records from multiple REDCap Databases using
-multiple calls to \code{\link{exportRecordsTyped}}
+multiple calls to \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}
 }
 \examples{
 \dontrun{

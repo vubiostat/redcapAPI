@@ -42,7 +42,7 @@ redcapProjectInfo(
 \code{POSIXct} objects.}
 
 \item{label}{Logical.  If \code{TRUE}, the user form permissions are
-converted to labelled factors.}
+converted to labeled factors.}
 
 \item{meta_data}{Logical.  Indicates if the meta data (data dictionary)
 should be exported.}
@@ -69,5 +69,5 @@ API method not be available.}
 \description{
 The \code{redcapProjectInfo} function has been deprecated to avoid
 confusion with the API method now executed by \code{exportProjectInformation}.
-The replacement function is \code{\link{exportBundle}}.
+The replacement function is \code{\link[=exportBundle]{exportBundle()}}.
 }

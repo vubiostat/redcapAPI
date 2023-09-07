@@ -41,7 +41,7 @@ exportBundle(
 \code{POSIXct} objects.}
 
 \item{label}{Logical.  If \code{TRUE}, the user form permissions are
-converted to labelled factors.}
+converted to labeled factors.}
 
 \item{meta_data}{Logical.  Indicates if the meta data (data dictionary)
 should be exported.}
@@ -66,15 +66,19 @@ Only applicable in REDCap 6.0.0 and higher.}
 is returned to the workspace.}
 }
 \description{
+This function is deprecated and will be removed with the release of
+\code{redcapAPI} 3.0.0. It's functionality is built into caching of
+data onto the \code{redcapConnection} object.
+
 Several of the API calls return objects that can be used to perform
 various validations in \code{exportRecords}, \code{exportReports}, and other
-methods.  Using an export bundle allows you to call these methods once and
+methods.  Using an export bundle allows the user to call these methods once and
 store the result instead of issuing an additional call to the API each
 time a method is invoked.
 
-For example, if you are uploading several files to the API, without an
+For example, if the user is uploading several files to the API, without an
 export bundle, \code{importFiles} will utilize the \code{exportMetaData}
-on each call in order to perform validations.  Using a bundle allows you
+on each call in order to perform validations.  Using a bundle allows the user
 to download the meta data once and refer to it on every subsequent call
 that requires the data dictionary.
 }
@@ -83,7 +87,4 @@ The project information is stored in the option
 \code{redcap_project_info}.  If the project is not longitudinal, the
 events, arms, and event-form mappings elements will be assigned character
 vectors instead of data frames.
-}
-\author{
-Benjamin Nutter
 }

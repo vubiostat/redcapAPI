@@ -1,38 +1,5 @@
-#' @name importMappings
-#' @title Import Instrument Event Mapping
-#' 
-#' @description This method allows you to import Instrument-Event Mappings 
-#'   into a project (this corresponds to the 'Designate Instruments for 
-#'   My Events' page in the project).
-#' 
-#' NOTE: This only works for longitudinal projects.
-#'   
-#' @param rcon a \code{redcapConnection} object. 
-#' @param data \code{data.frame} with columns \code{arm_num}, 
-#'   \code{unique_event_name}, and \code{form}. See Details
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached mappings 
-#'   in the \code{rcon} object are refreshed after the import.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @details The \code{arm_num} variable will be compared against existing arms
-#'   in the project (via \code{rcon$arms()}. An error is returned if any of 
-#'   the arm numbers are not found in the project.
-#'   
-#' The \code{unique_event_name} must exist in \code{rcon$events()}. An error
-#' is returned if an value in the data doesn't match. 
-#' 
-#' The values of \code{form} must all match a form name in 
-#' \code{rcon$instruments()}. An error is returned if any values provided 
-#' do not match.
-#' 
+#' @describeIn mappingMethods Import instrument-event mappings to the project.
+#' @order 2
 #' @export
 
 importMappings <- function(rcon, 
@@ -42,7 +9,8 @@ importMappings <- function(rcon,
   UseMethod("importMappings")
 }
 
-#' @rdname importMappings
+#' @rdname mappingMethods
+#' @order 4
 #' @export
 
 importMappings.redcapApiConnection <- function(rcon, 

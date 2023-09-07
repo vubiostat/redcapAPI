@@ -7,12 +7,15 @@
 prepUserImportData(data, rcon, consolidate = TRUE, user_role = FALSE)
 }
 \arguments{
+<<<<<<< HEAD
 \item{data}{\code{data.frame} that has the structure of
+=======
+\item{data}{\code{data.frame} with the structure of
+>>>>>>> Issue-216-consolidateDocumentation
 \code{redcapAPI:::REDCAP_USER_STRUCTURE}. It may also have additional
 columns for the form and export access of each of the instruments.}
 
-\item{rcon}{\code{redcapConnection}. Used to determine the instruments
-in the project.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{consolidate}{\code{logical(1)} If \code{TRUE}, the form and data
 export access values will be read from the expanded columns. Otherwise,
@@ -21,8 +24,51 @@ the consolidated values (as provided by the API export) are utilized.}
 \item{user_role}{\code{logical(1)} If \code{TRUE}, the code will
 treat the data as if it is being prepared for importing User Roles.}
 }
+<<<<<<< HEAD
 \description{
 Prepares a data frame for import via the API. Allows for
 data to be passed in either the raw format or the labelled data
 received from \code{exportUsers}.
+=======
+\value{
+Returns a \code{data.frame} with user settings that will be accepted by the
+API for import.
+}
+\description{
+Prepares a data frame for import via the API. Allows for
+data to be passed in either the raw format or the labeled data
+received from \code{exportUsers}.
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+
+# Prep user data
+NewData <- data.frame(username = "target_user", 
+                      design = 1, 
+                      api_export = "Access", 
+                      api_import = "No Access", 
+                      surveys_enabled = 0)
+prepUserImportData(data = NewData, 
+                   rcon = rcon)
+                   
+# Prep user role data
+NewData <- data.frame(unique_role_name = "target_user", 
+                      design = 1, 
+                      api_export = "Access", 
+                      api_import = "No Access", 
+                      surveys_enabled = 0)
+prepUserImportData(data = NewData, 
+                   rcon = rcon)
+}
+
+}
+\seealso{
+\code{\link[=importUsers]{importUsers()}}, \cr
+\code{\link[=importUserRoles]{importUserRoles()}}
+>>>>>>> Issue-216-consolidateDocumentation
 }

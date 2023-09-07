@@ -1,31 +1,5 @@
-#' @name renameRecord
-#' @title Rename a Record in a Project
-#' 
-#' @description This method allows you to rename a record from a project 
-#'   in a single API request.
-#'   
-#' @param rcon A \code{redcapConnection} object. 
-#' @param record_name \code{character(1)} The name of an existing record 
-#'   in the project. Will also accept \code{numeric(1)} (which will be
-#'   coerced to a character).
-#' @param new_record_name \code{character(1)} The new name to give to the 
-#'   record. Will also accept \code{numeric(1)} (which will be coerced to 
-#'   a character).
-#' @param arm \code{character(1)} or \code{NULL}, an optional arm number. 
-#'   If \code{NULL}, then all records with same name across all arms on 
-#'   which it exists (if longitudinal with multiple arms) will be 
-#'   renamed to new record name, otherwise it will rename the record 
-#'   only in the specified arm.
-#' @param ... Arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'
+#' @describeIn recordsManagementMethods Rename an existing record.
+#' @order 2
 #' @export
 
 renameRecord <- function(rcon,
@@ -36,7 +10,8 @@ renameRecord <- function(rcon,
   UseMethod("renameRecord")
 }
 
-#' @rdname renameRecord
+#' @rdname recordsManagementMethods
+#' @order 4
 #' @export
 
 renameRecord.redcapApiConnection <- function(rcon, 

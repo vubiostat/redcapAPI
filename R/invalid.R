@@ -1,15 +1,13 @@
-#' @rdname invalidSummary
-#' @export
-#' 
+#' @name invalidSummary
 #' @title Helper functions for formatting validation failure report
-#' @description \code{\link{exportRecordsTyped}} may have an \code{invalid}
+#' 
+#' @description [exportRecordsTyped()] may have an `invalid`
 #' attribute if validations fail. This data has some routines which
 #' help locate the failing records.
 #'
-#' @param x The \code{invalid} class object.
-#' @param object The \code{invalid} class object.
+#' @param x The `invalid` class object.
+#' @param object The `invalid` class object.
 #' @param ... additional arguments to `print`
-#' @importFrom utils packageVersion
 #' 
 #' @examples
 #' \dontrun{
@@ -19,6 +17,8 @@
 #' 
 #' attr(rec, "invalid")
 #' }
+#' 
+#' @export
 format.invalid <- function(x, ...)
 {
   dt <- attr(x, "time")
@@ -32,7 +32,7 @@ format.invalid <- function(x, ...)
   paste0(
     "# Failed Validations from REDCap project '",  pt, "'\n\n",
     paste0(dt, "  \n"),
-    paste0("Package redcapAPI version ", packageVersion("redcapAPI"), "  \n"),
+    paste0("Package redcapAPI version ", utils::packageVersion("redcapAPI"), "  \n"),
     paste0("REDCap version ", vr, "  \n\n"),
     paste0(unlist(sapply(seq_along(x), function(i) {
       data <- x[[i]]

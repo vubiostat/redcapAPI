@@ -1,46 +1,5 @@
-#' @name importUserRoles
-#' @title Import User Roles for a REDCap Project
-#'
-#' @description This method allows you to import new user roles into a 
-#'   project while setting their privileges, or update the privileges of 
-#'   existing user roles in the project.
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param data A \code{data.frame} with the User Roles to import.
-#' @param consolidate \code{logical(1)} If \code{TRUE}, the form and data 
-#'   export access values will be read from the expanded columns. Otherwise, 
-#'   the consolidated values (as provided by the API export) are utilized.
-#' @param refresh \code{logical(1)}. If \code{TRUE}, the cached data will
-#'   be refreshed after the import.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @details When setting permissions for a user right project access fields (those
-#'   not related to forms or exports) are set as either 0 or 1 (or "No Access"
-#'   and "Access", respectively). The settings may be any of these four values.
-#'   
-#' For form access fields, the values must be one of 0, 2, 1, or 3 ("No Access", 
-#' "Read Only", "View records/responses and edit records (survey responses are read-only)", 
-#' or "Edit survey responses", respectively). 
-#' 
-#' Data export fields must be one of 0, 2, 3, or 1 ("No Access", "De-Identified", 
-#' "Remove Identifier Fields", "Full Data Set", respectively). 
-#' 
-#' The user data is passed through \code{prepUserImportData} before sending it
-#' to the API, so text values listed above may also be used and will be 
-#' converted to the numeric equivalent. 
-#' 
-#' It is also permissible to use a column for each form individually, as can
-#' be exported via \code{exportUsers}. With \code{consolidate = TRUE}, these 
-#' settings will be consolidated into the text string expected by the API.
-#' 
+#' @describeIn userRoleMethods Import user roles to a project.
+#' @order 2
 #' @export
 
 importUserRoles <- function(rcon, 
@@ -49,7 +8,8 @@ importUserRoles <- function(rcon,
   UseMethod("importUserRoles")
 }
 
-#' @rdname importUserRoles
+#' @rdname userRoleMethods
+#' @order 5
 #' @export
 
 importUserRoles.redcapApiConnection <- function(rcon, 

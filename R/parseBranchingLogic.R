@@ -9,11 +9,11 @@
 #'   presented.
 #'   
 #' @param l A vector of REDCap branching logic statements.  These are usually
-#'   passed as the vector \code{meta_data$branching_logic}.  
+#'   passed as the vector `meta_data$branching_logic`.  
 #'   
 #' @details For a study, I was asked to identify which subjects had missing 
 #'   values so that remaining data could be collected.  The initial pass of 
-#'   \code{is.na} produced a lot of subjects missing values where there was no
+#'   `is.na` produced a lot of subjects missing values where there was no
 #'   need to collect data because they did not qualify for some variables in 
 #'   the branching logic.  Parsing the logic allowed me to determine which 
 #'   values we expected to be missing and narrow the search to just those 
@@ -25,7 +25,15 @@
 #'   
 #' @return Returns a list of unevaluated expressions.
 #' 
-#' @author Benjamin Nutter
+#' @seealso [missingSummary()]
+#' 
+#' @examples
+#' \dontrun{
+#' parseBranchingLogic("[age] > 30")
+#' parseBranchingLogic("[dropdown_test] = 'd'")
+#' parseBranchingLogic(c("[age] > 30", 
+#'                       "[dropdown_test] = 'd'"))
+#' }
 #' 
 
 parseBranchingLogic <- function(l){

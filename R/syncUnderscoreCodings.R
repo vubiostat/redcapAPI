@@ -4,11 +4,11 @@
 #'   records field names.
 #' @description Due to a bug in the REDCap export module, underscores in 
 #'   checkbox codings are not retained in the suffixes of the field names 
-#'   in the exported records.  For example, if variable \code{chk} is a 
+#'   in the exported records.  For example, if variable `chk` is a 
 #'   checkbox with a coding 'a_b, A and B', the field name in the data 
-#'   export becomes \code{chk___ab}.  The loss of the underscore causes
-#'   \code{fieldToVar} to fail as it can't match variable names to the 
-#'   meta data.  \code{syncUnderscoreCodings} rectifies this problem by 
+#'   export becomes `chk___ab`.  The loss of the underscore causes
+#'   `fieldToVar` to fail as it cannot match variable names to the 
+#'   meta data.  `syncUnderscoreCodings` rectifies this problem by 
 #'   searching the suffixes and meta data for underscores.  If a 
 #'   discrepancy is found, the underscores are removed from the metadata 
 #'   codings, restoring harmony to the universe.  This bug was fixed in 
@@ -16,14 +16,14 @@
 #'   later versions.
 #'   
 #' @param records The data frame object returned from the API export 
-#'   prior to applying factors, labels, and dates via the \code{fieldToVar} 
+#'   prior to applying factors, labels, and dates via the `fieldToVar` 
 #'   function.
-#' @param meta_data Metadata export from \code{exportMetaData}
+#' @param meta_data Metadata export from `exportMetaData`
 #' @param export Logical.  Specifies if data are being synchronized for 
 #'   import or export
 #'
 #' @details 
-#' \code{syncUnderscoreCodings} performs a series of evaluations.  First, it 
+#' `syncUnderscoreCodings` performs a series of evaluations.  First, it 
 #' determines if any underscores are found  in the checkbox codings.  
 #' If none are found, the function terminates without changing anything.
 #' 
@@ -36,25 +36,23 @@
 #' meta data and the new meta data returned.
 #' 
 #' For data imports, the meta data are not altered and the 
-#' \code{checkbox_field_name_map} attribute is used to synchronize field 
+#' `checkbox_field_name_map` attribute is used to synchronize field 
 #' names to the meta data and the expectations of REDCap (for import, 
 #' REDCap expects the underscore codings to be used.
 #' 
 #' @section Backward Compatibility:
-#' In retrospect, we realize that the way \code{syncUnderscoreCodings} is written
-#' is backwards.  We should have altered the field names in the records
-#' data frame.  Any scripts that make use of \code{syncUnderscoreCodings} and were
+#' In retrospect, we realize that the way `syncUnderscoreCodings` is written
+#' is backward.  We should have altered the field names in the records
+#' data frame.  Any scripts that make use of `syncUnderscoreCodings` and were
 #' written prior to version 5.5.21 will fail because the underscores in the codings
-#' will now be present where they weren't before.  
+#' will now be present where they were not before.  
 #' 
-#' For backward compatibility of \code{redcapAPI}, we continue to alter the codings
-#' in the meta data. We do not anticipate many problems, as most people don't use
+#' For backward compatibility of `redcapAPI`, we continue to alter the codings
+#' in the meta data. We do not anticipate many problems, as most people do not use
 #' underscores in the checkbox codings
 #' 
-#' If your scripts were written under REDCap 5.5.21 or higher, you will have no backward
+#' If your scripts were written under REDCap 5.5.21 or higher, there will be no backward
 #' compatibility problems related to this issue.
-#' 
-#' @author Benjamin Nutter
 #' 
 
 syncUnderscoreCodings <- function(records, meta_data, export = TRUE){

@@ -1,110 +1,173 @@
 #' @name fieldValidationAndCasting
-#' @title Helper functions for \code{exportRecordsTyped} Validation and Casting
+#' @title Helper functions for `exportRecordsTyped` Validation and Casting
 #' @description This set of functions assists in validating that the content of 
 #'   fields coming from REDCap match the MetaData, allowing for a 
 #'   validation report to provided. The cast helpers allow for transforming
 #'   the REDCap data into R data types and allowing the user to customize 
 #'   the end product.
 #'   
-#' @param x \code{character}. A vector to check.
-#' @param rx \code{character}. The regular expression pattern to check.
-#' @param coding named \code{character} vector. The defined coding from the meta data.
-#' @param field_name \code{character(1)}. Name of the field(s)
-#' @param dec_symbol \code{character(1)}. The symbol in the field used to 
+#' @param x `character`. A vector to check.
+#' @param rx `character`. The regular expression pattern to check.
+#' @param coding named `character` vector. The defined coding from the meta data.
+#' @param field_name `character(1)`. Name of the field(s)
+#' @param dec_symbol `character(1)`. The symbol in the field used to 
 #'   denote a decimal. 
-#' @param n_dec \code{integerish(1)}. The number of decimal places permitted
+#' @param n_dec `integerish(1)`. The number of decimal places permitted
 #'   by the field validation. 
-#' @param checked \code{character}. Values to recognize as checked in a 
+#' @param checked `character`. Values to recognize as checked in a 
 #'   checkbox field.
-#' @param FUN \code{function}. A function that takes a character vector. 
+#' @param FUN `function`. A function that takes a character vector. 
 #' @param ... Consumes anything else passed to function. I.e., field_name and 
 #' coding.
 #'
-#' @details Functions passed to the \code{na}, \code{validation}, and
-#' \code{cast} parameter of \code{\link{exportRecordsTyped}} all take the form
-#' of \code{function(x, coding, field_name)}. \code{na} and \code{validation}
+#' @details Functions passed to the `na`, `validation`, and
+#' `cast` parameter of [exportRecordsTyped()] all take the form
+#' of `function(x, coding, field_name)`. `na` and `validation`
 #' functions are expected to return a logical vector of the same length as the
 #' column processed. Helper routines
 #' are provided here for common cases to construct these functions. 
 #' 
-#' \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
-#' function for constructing \code{na} overrides in \code{\link{exportRecordsTyped}}.
+#' ## Validation Functions
 #' 
-#' \code{valRx} constructs a validation function from a regular expression pattern. 
+#' `isNAorBlank` returns TRUE/FALSE if field is NA or blank. Helper
+#' function for constructing `na` overrides in [exportRecordsTyped()].
+#' 
+#' `valRx` constructs a validation function from a regular expression pattern. 
 #' The function returns a TRUE/FALSE if the value matches the pattern.
 #' 
-#' \code{valChoice} constructs a validation function from a set of choices 
+#' `valChoice` constructs a validation function from a set of choices 
 #' defined in the MetaData. The functions returns a TRUE/FALSE if the value
 #' matches one of the choices.
 #' 
-#' \code{valPhone} constructs a validation function for (North American) 
+#' `valPhone` constructs a validation function for (North American) 
 #'   phone numbers. It removes punctuation and spaces prior to validating
 #'   with the regular expression.
+#'   
+#' `na_values` is a helper function to create a list of functions
+#' to test for NA based on field type. Useful for bulk override of
+#' NA detection for a project. The output can be directly passed to the `na`
+#' parameter of [exportRecordsTyped()].
 #' 
-#' \code{castLabel} constructs a casting function for multiple choice variables. 
-#' The field will be cast to return the choice label (generally more human readable)
+#' ## Casting Functions
 #' 
-#' \code{castCode} constructs a casting function for multiple choice variables.
-#' Similar to \code{castLabel}, but the choice value is returned instead. The
+#' `castLabel` constructs a casting function for multiple choice variables. 
+#' The field will be cast to return the choice label (generally more human readable). 
+#' `castLabelCharacter` is an equivalent casting function that returns 
+#' a `character` vector instead of a `factor`.
+#' 
+#' `castCode` constructs a casting function for multiple choice variables.
+#' Similar to `castLabel`, but the choice value is returned instead. The
 #' values are typically more compact and their meaning may not be obvious.
+#' `castCodeCharacter` is an equivalent casting function that retuns
+#' a `character` vector instead of a `factor`.
 #' 
-#' \code{castRaw} constructs a casting function that returns the content
-#' from REDCap as it was received. It is functionally equivalent to \code{identity}. 
+#' `castRaw` constructs a casting function that returns the content
+#' from REDCap as it was received. It is functionally equivalent to `identity`. 
 #' For multiple choice variables, the result will be coerced to numeric, if possible; 
-#' otherwise, the result is character vector.
+#' otherwise, the result is character vector. 
 #' 
-#' \code{castChecked} constructs a casting function for checkbox fields. It
-#' returns values in the form of Unchecked/Checked.
+#' `castChecked` constructs a casting function for checkbox fields. It
+#' returns values in the form of Unchecked/Checked. `castCheckedCharacter`
+#' is an equivalent casting function that returns a `character` vector 
+#' instead of a `factor`.
 #' 
-#' \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
+#' `castCheckLabel` and `castCheckCode` also construct casting functions
 #' for checkbox fields. For both, unchecked variables are cast to an empty 
 #' string (""). Checked variables are cast to the option label and option code, 
-#' respectively.
+#' respectively. `castCheckLabelCharacter` and `castCheckCodeCharacter`
+#' are equivalent casting functions that returns a `character` vector 
+#' instead of a `factor`.
 #' 
-#' \code{castCheckForImport} is a special case function to allow the user to
+#' `castCheckForImport` is a special case function to allow the user to
 #' specify exactly which values are to be considered "Checked". Values that
-#' match are returned as 1 and all other values are returned as 0. This is
+#' match are returned as `1` and all other values are returned as `0`. This is
 #' motivated by the special case where the coding on a checkbox includes 
-#' "0, Option". In the resulting field \code{checkbox___0}, a coded value
-#' of 0 actually implies the choice was selected. In order to perform an 
+#' "0, Option". In the resulting field `checkbox___0`, a coded value
+#' of `0` actually implies the choice was selected. In order to perform an 
 #' import on such data, it is necessary to cast it using 
-#' \code{castCheckForImport(c("0"))}.
+#' `castCheckForImport(c("0"))`.
 #' 
-#' \code{castDpNumeric} is a casting function for fields that use the 
-#' \code{number_ndp_comma} field type (where \code{n} is the number of 
+#' `castDpNumeric` is a casting function for fields that use the 
+#' `number_ndp_comma` field type (where `n` is the number of 
 #' decimal places). This function will convert the values to numeric
 #' values for use in analysis. This is a function that returns the 
 #' appropriate casting function, thus the appropriate usage when using 
-#' the defaults is \code{cast = list(number_1dp_comma = castDpNumeric())}
+#' the defaults is `cast = list(number_1dp_comma = castDpNumeric())`
 #' (using the parentheses).
 #' 
-#' \code{castDpCharacter} is a casting function to return fields that use
-#' \code{number_ndp_comma} field types to character strings for import. This 
+#' `castDpCharacter` is a casting function to return fields that use
+#' `number_ndp_comma` field types to character strings for import. This 
 #' is a function that returns the appropriate casting function, thus the 
 #' appropriate usage when casting for one decimal place is 
-#' \code{cast = list(number_1dp_comma = castDpCharacter(1))}.
+#' `cast = list(number_1dp_comma = castDpCharacter(1))`.
 #' 
-#' \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to 
+#' `castTimeHHMM` and `castTimeMMSS` are casting functions to 
 #' facilitate importing data. They convert time data into a character format 
 #' that will pass the API requirements. 
 #' 
-#' \code{raw_cast} overrides all casting if passed as the \code{cast}
+#' 
+#' ## Casting Lists
+#' `raw_cast` overrides all casting if passed as the `cast`
 #' parameter.
 #' 
-#' \code{default_cast_no_factor} is a list of casting functions that matches
+#' `default_cast_no_factor` is a list of casting functions that matches
 #' all of the default casts but with the exception that any fields that would
 #' have been cast to factors will instead be cast to characters. It is 
 #' provided for the user that prefers to work absent factors. The list
-#' \code{default_cast_character} is equivalent and is provided for those that
+#' `default_cast_character` is equivalent and is provided for those that
 #' prefer to describe their casting in terms of what the result is (and not
-#' what it isn't).
+#' what it is not).
 #' 
-#' \code{na_values} A helper function to create a list of functions
-#' to test for NA based on field type. Useful for bulk override of
-#' NA detection for a project. The output can be directly passed to the \code{na}
-#' parameter of \code{\link{exportRecordsTyped}}.
 #' 
-#' @author Shawn Garbett, Benjamin Nutter
+#' @return 
+#' 
+#' Validation and casting functions return the objects indicated in the 
+#' following table:
+#' 
+#' | Function Name             | Object Type Returned |
+#' |---------------------------|----------------------| 
+#' | `isNAOrBlank`             | `logical`            |
+#' | `valRx`                   | `logical`            |
+#' | `valChoice`               | `logical`            |
+#' | `valPhone`                | `logical`            |
+#' | `castLabel`               | `factor`             |
+#' | `castLabelCharacter`      | `character`          |
+#' | `castCode`                | `factor`             |
+#' | `castCodeCharacter`       | `character`          |
+#' | `castRaw`                 | `character`          |
+#' | `castChecked`             | `factor`             |
+#' | `castCheckedCharacter`    | `character`          |
+#' | `castCheckLabel`          | `factor`             |
+#' | `castCheckLabelCharacter` | `character`          |
+#' | `castCheckCode`           | `factor`             |
+#' | `castCheckCodeCharacter`  | `character`          | 
+#' | `castCheckForImport`      | `numeric`            |
+#' | `castDpNumeric`           | `numeric`            |
+#' | `castDpCharacter`         | `character`          |
+#' | `castTimeHHMM`            | `character`          |
+#' | `castTimeMMSS`            | `character`          |
+#' 
+#' 
+#' @seealso 
+#' [fieldCastingFunctions()], \cr
+#' [exportRecordsTyped()], \cr
+#' [exportReportsTyped()]
+#' 
+#' @examples
+#' \dontrun{
+#' # Make a custom function to give special treatment to a field.
+#' # In this function, the field "field_name_to_skip" will 
+#' # be cast using `castRaw`. All other fields will be cast 
+#' # using `castCode`
+#' customCastCode <- function(x, field_name, coding){
+#'   if (field_name == "field_name_to_skip"){
+#'     castRaw(x, field_name, coding)
+#'   } else {
+#'     castCode(x, field_name, coding)
+#'   }
+#' }
+#' }
+#' 
 
 #####################################################################
 # Validation                                                     ####
@@ -127,6 +190,21 @@ valChoice <- function(x, field_name, coding) x %in% coding | x %in% names(coding
 valPhone <- function(x, field_name, coding){
   x <- gsub("[[:punct:][:space:]]", "", x)
   grepl(REGEX_PHONE, x)
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+na_values <- function(FUN)
+{
+  coll <- checkmate::makeAssertCollection()
+  checkmate::assert_function( x       = FUN,
+                              null.ok = FALSE,
+                              add     = coll)
+  checkmate::reportAssertions(coll)
+  
+  l <- lapply(FIELD_TYPES, function(f) FUN)
+  names(l) <- FIELD_TYPES
+  l
 }
 
 #####################################################################
@@ -266,7 +344,7 @@ castCheckForImport <- function(checked = c("Checked", "1")){
 
 # utility function returns the index of the codebook matching the 
 # content of the vector. Permits accurate matching without foreknowledge
-# of whether the data are coded or labelled.
+# of whether the data are coded or labeled.
 getCodingIndex <- function(x, coding){
   code_match <- match(as.character(x), coding)
   
@@ -284,19 +362,19 @@ getCheckedValue <- function(coding, field_name){
   # for instance, a checkbox with code 4-3, label produce variable name checkbox___4_3 
   this_code_index <- match(this_code, 
                            tolower(gsub("[[:punct:]]", "_", coding)))  
-
+  
   checked_value <- c(coding[this_code_index], 
                      names(coding)[this_code_index], 
                      "1", 
                      "Checked", 
                      "yes")
   
-  # When casting from raw, we don't want to consider "0" as checked 
+  # When casting from raw, we do not want to consider "0" as checked 
   # for zero coded fields.
   if (isZeroCodedCheckField(field_name)){
     checked_value <- checked_value[-1]
   } 
- 
+  
   checked_value
 }
 
@@ -424,7 +502,7 @@ default_cast_no_factor <- list(
 default_cast_character <- default_cast_no_factor
 
 #####################################################################
-# Unexported - default lists for exportRecordsTyped
+# Unexported - default lists for exportRecordsTyped              ####
 
 .default_validate <- list(
   date_              = valRx(REGEX_DATE),              # REGEX values defined in constants.R
@@ -542,6 +620,9 @@ default_cast_character <- default_cast_no_factor
   system                   = castRaw
 )
 
+#####################################################################
+# FIELD_TYPES constant                                           ####
+
 FIELD_TYPES <- c(
   "date_",          "datetime_",  "datetime_seconds_",  "time_mm_ss",
   "time_hh_mm_ss",  "time",       "float",              "number",
@@ -549,18 +630,5 @@ FIELD_TYPES <- c(
   "truefalse",      "checkbox",   "form_complete",      "select",
   "radio",          "dropdown",   "sql")
 
-#' @rdname fieldValidationAndCasting
-#' @export
-na_values <- function(FUN)
-{
-  coll <- checkmate::makeAssertCollection()
-  checkmate::assert_function( x       = FUN,
-                              null.ok = FALSE,
-                              add     = coll)
-  checkmate::reportAssertions(coll)
-  
-  l <- lapply(FIELD_TYPES, function(f) FUN)
-  names(l) <- FIELD_TYPES
-  l
-}
+
 

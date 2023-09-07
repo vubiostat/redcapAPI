@@ -9,12 +9,18 @@
 REDCap is a database development tool built on MySQL.  Visit
 \url{https://project-redcap.org} for more information.  REDCap
 provides an API through which data, the data dictionary, files, and
+<<<<<<< HEAD
 project information can be accessed.  The
 \code{redcapAPI} package facilitates the use of these functions and
+=======
+project information can be accessed.  The \code{redcapAPI} package
+facilitates the use of these functions and
+>>>>>>> Issue-216-consolidateDocumentation
 simplifies the work needed to prepare data for
 analysis.
 }
 \details{
+<<<<<<< HEAD
 As much as possible, I've tried to adequately document \code{redcapAPI}.
 Some topics did not seem well suited to documenting in the typical R
 help files.  Additional tips and discussion are available at the
@@ -48,6 +54,13 @@ development of the \code{REDCapR} package
 \code{httr} package--which improved the use
 of messages from the API--and to the idea of batching API calls to reduce
 the likelihood of servers timing out.
+=======
+The user should also refer to their institution's REDCap API
+documentation as a primary resource of what is available.  Different
+versions of REDCap support different features--the user's REDCap
+API documentation will address the features specific to their version
+of REDCap.
+>>>>>>> Issue-216-consolidateDocumentation
 }
 \seealso{
 Useful links:

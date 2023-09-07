@@ -8,16 +8,16 @@
 #'   characters are a result of copying and pasting text out of word 
 #'   processing programs.  The problematic characters are not necessarily 
 #'   visible and their exact location can be difficult to identify.  As 
-#'   a last resort, \code{cleanseMetaData} can read a meta data file 
+#'   a last resort, `cleanseMetaData` can read a meta data file 
 #'   downloaded through the user interface, purge it of any UTF-8 characters,
 #'   and write an alternate data dictionary that contains only ASCII 
 #'   characters.  
 #'   
-#' @param meta_data_file \code{character(1)} the path to a meta data file 
+#' @param meta_data_file `character(1)` the path to a meta data file 
 #'   that has been downloaded using the REDCap user interface.
-#' @param meta_data_clean \code{character(1)} the path of the file to which
+#' @param meta_data_clean `character(1)` the path of the file to which
 #'   the cleaned meta data will be written.
-#' @param overwrite \code{logical(1)} Permit the new file to overwrite an 
+#' @param overwrite `logical(1)` Permit the new file to overwrite an 
 #'   existing file.
 #'
 
@@ -48,7 +48,7 @@ cleanseMetaData <- function(meta_data_file, meta_data_clean,
   
   if (meta_data_clean == meta_data_file){
     coll$push(sprintf("%s %s", 
-                      "Sorry. I won't allow you to overwrite your file. ",
+                      "Sorry. I will not allow you to overwrite your file. ",
                       "Please use a different path for 'meta_data_clean."))
   }
   
