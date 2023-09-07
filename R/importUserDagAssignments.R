@@ -1,26 +1,6 @@
-#' @name importUserDagAssignments
-#' @title Import User DAG Assignments to a Project
-#' 
-#' @description This method allows you to assign users to any data access group.
-#' 
-#' NOTE: If you wish to modify an existing mapping, you must provide its 
-#' unique username and group name. If the 'redcap_data_access_group' column 
-#' is not provided, user will not assigned to any group. There should be only
-#' one record per username.
-#' 
-#' @param rcon A \code{redcapConnection} object. 
-#' @param data \code{data.frame} with the columns \code{username} and 
-#'   \code{redcap_data_access_group}.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+# Complete documentation in documentation.R
+#' @describeIn dagAssignmentMethods Import new or modified User-DAG Assignments.
+#' @order 2
 #' @export
 
 importUserDagAssignments <- function(rcon, 
@@ -29,7 +9,7 @@ importUserDagAssignments <- function(rcon,
   UseMethod("importUserDagAssignments")
 }
 
-#' @rdname importUserDagAssignments
+#' @rdname dagAssignmentMethods
 #' @export
 
 importUserDagAssignments.redcapApiConnection <- function(rcon,

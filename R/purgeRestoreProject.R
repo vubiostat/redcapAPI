@@ -2,7 +2,7 @@
 #' @title Purge and Restore Project Data
 #' 
 #' @description These functions are primarily intended to assist with testing
-#'   features of \code{redcapAPI}. Purging and restoring project data permits 
+#'   features of `redcapAPI`. Purging and restoring project data permits 
 #'   us to perform tests on different project structures without having to 
 #'   manage multiple projects or API tokens. 
 #'   
@@ -12,75 +12,89 @@
 #'   practice to back up your data and project structure before purging
 #'   a project. 
 #'   
-#' @param object,rcon A \code{redcapConnection} object. Except in 
-#'   \code{restoreProject.list}, where \code{object} is a list of data frames
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param object,rcon A `redcapConnection` object. Except in 
+#'   `restoreProject.list`, where `object` is a list of data frames
 #'   to use in restoring the project. 
-#' @param project_information \code{data.frame} for restoring data. Provides the 
-#'   project settings to load via \code{importProjectInformation}. 
-#' @param arms Either \code{logical(1)} indicating if arms data should be
-#'   purged from the project; or a \code{data.frame} for restoring arms 
-#'   data via \code{importArms}. 
-#' @param events Either \code{logical(1)} indicating if events data should be
-#'   purged from the project; or a \code{data.frame} for restoring events 
-#'   data via \code{importEvents}
-#' @param meta_data A \code{data.frame} for restoring metadata
-#'   data via \code{importMetaData}. The API doesn't support deleting 
+#' @param project_information `data.frame` for restoring data. Provides the 
+#'   project settings to load via `importProjectInformation`. 
+#' @param arms Either `logical(1)` indicating if arms data should be
+#'   purged from the project; or a `data.frame` for restoring arms 
+#'   data via `importArms`. 
+#' @param events Either `logical(1)` indicating if events data should be
+#'   purged from the project; or a `data.frame` for restoring events 
+#'   data via `importEvents`
+#' @param meta_data A `data.frame` for restoring metadata
+#'   data via `importMetaData`. The API does not support deleting 
 #'   metadata, but an import replaces the existing metadata.
-#' @param mappings A \code{data.frame} for restoring instrument-event mappings
-#'   via \code{importMappings}. The API doesn't support deleting 
+#' @param mappings A `data.frame` for restoring instrument-event mappings
+#'   via `importMappings`. The API does not support deleting 
 #'   mappings, but an import replaces the existing mappings.
-#' @param repeating_instruments A \code{data.frame} for restoring repeating instruments
-#'   configuration via \code{\link{importRepeatingInstrumentsEvents}}. The API doesn't support deleting 
+#' @param repeating_instruments A `data.frame` for restoring repeating instruments
+#'   configuration via [importRepeatingInstrumentsEvents()]. The API does not support deleting 
 #'   repeating instruments, but an import replaces the existing instruments.
 #'   NOT YET IMPLEMENTED
-#' @param users Either \code{logical(1)} indicating if users data should be
-#'   purged from the project; or a \code{data.frame} for restoring users 
-#'   data via \code{importUsers}. NOT YET IMPLEMENTED
-#' @param user_roles Either \code{logical(1)} indicating if user roles data should be
-#'   purged from the project; or a \code{data.frame} for restoring user roles
-#'   data via \code{importUserRoles}. NOT YET IMPLEMENTED
-#' @param user_role_assignments A \code{data.frame} for restoring user role 
-#'   assignments via \code{importUserRoleAssignments}. The API doesn't support deleting 
+#' @param users Either `logical(1)` indicating if users data should be
+#'   purged from the project; or a `data.frame` for restoring users 
+#'   data via `importUsers`. NOT YET IMPLEMENTED
+#' @param user_roles Either `logical(1)` indicating if user roles data should be
+#'   purged from the project; or a `data.frame` for restoring user roles
+#'   data via `importUserRoles`. NOT YET IMPLEMENTED
+#' @param user_role_assignments A `data.frame` for restoring user-role 
+#'   assignments via `importUserRoleAssignments`. The API does not support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
-#' @param dags Either \code{logical(1)} indicating if DAG data should be
-#'   purged from the project; or a \code{data.frame} for restoring DAGs 
-#'   data via \code{importDags}. NOT YET IMPLEMENTED
-#' @param dag_assignments A \code{data.frame} for restoring DAG 
-#'   assignments via \code{importDagAssignments}. The API doesn't support deleting 
+#' @param dags Either `logical(1)` indicating if DAG data should be
+#'   purged from the project; or a `data.frame` for restoring DAGs 
+#'   data via `importDags`. NOT YET IMPLEMENTED
+#' @param dag_assignments A `data.frame` for restoring DAG 
+#'   assignments via `importDagAssignments`. The API does not support deleting 
 #'   assignments, but an import replaces the existing assignments. NOT YET IMPLEMENTED.
-#' @param records Either \code{logical(1)} indicating if user roles data should be
-#'   purged from the project; or a \code{data.frame} for restoring user roles
-#'   data via \code{importRecords}
-#' @param purge_all \code{logical(1)}. A shortcut option to purge all 
+#' @param records Either `logical(1)` indicating if records data should be
+#'   purged from the project; or a `data.frame` for restoring records
+#'   data via `importRecords`
+#' @param purge_all `logical(1)`. A shortcut option to purge all 
 #'   data elements from a project.
-#' @param flush \code{logical(1)}. If \code{TRUE}, the all caches in the connection
+#' @param flush `logical(1)`. When `TRUE`, all caches in the connection
 #'   object will be flushed after completing the operation. This is highly 
 #'   recommended.
-#' @param ... Arguments to pass to other methods. 
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
 #'   
 #' @details When restoring a project, all arguments are optional. Any argument 
-#' that is \code{NULL} will result in no import being made. The order of 
+#' that is `NULL` will result in no import being made. The order of 
 #' reconstructing the project is (purging data occurs in the reverse order):
 #' 
-#' \itemize{
-#'  \item{1. }{Update project information}
-#'  \item{2. }{Import Arms Data}
-#'  \item{3. }{Import Events Data}
-#'  \item{4. }{Import Meta Data}
-#'  \item{5. }{Import Mappings}
-#'  \item{6. }{Import Repeating Instruments}
-#'  \item{7. }{Import Users}
-#'  \item{8. }{Import User Roles}
-#'  \item{9. }{Import User Role Assignments}
-#'  \item{10. }{Import Data Access Groups}
-#'  \item{11. }{Import Data Access Group Assignments}
-#'  \item{12. }{Import Records}
+#'  1. Update project information
+#'  2. Import Arms Data
+#'  3. Import Events Data
+#'  4. Import Meta Data
+#'  5. Import Mappings
+#'  6. Import Repeating Instruments
+#'  7. Import Users
+#'  8. Import User Roles
+#'  9. Import User-Role Assignments
+#'  10. Import Data Access Groups
+#'  11. Import Data Access Group Assignments
+#'  12. Import Records
+#'  
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' # Preserve a project
+#' preserveProject(rcon)
+#' 
+#' # Purge a project
+#' purgeProject(rcon, 
+#'              purge_all = TRUE)
+#'                 
+#' # Restore a project
+#' restoreProject(rcon)
+#' 
 #' }
+#' 
 
 
 #####################################################################

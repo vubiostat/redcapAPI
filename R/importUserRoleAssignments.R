@@ -1,30 +1,5 @@
-#' @name importUserRoleAssignments
-#' @title Import User-Role Assignments
-#' 
-#' @description This method allows you to assign users to any user role.
-#' 
-#' NOTE: If you wish to modify an existing mapping, you must provide its 
-#' unique username and role name. If the 'unique_role_name' column is not 
-#' provided, user will not assigned to any user role. 
-#' There should be only one record per username.
-#' 
-#' @param rcon A \code{redcapConnection} object. 
-#' @param data A \code{data.frame} with columns \code{username} and 
-#'   \code{unique_role_name}. Each \code{username} must be unique. 
-#'   Users without a \code{unique_role_name} will not be assigned to 
-#'   a user role.
-#' @param refresh \code{logical(1)}. When \code{TRUE}, the cached value
-#'   in \code{rcon} will be refreshed after the import.
-#' @param ... Arguments to be passed to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+#' @describeIn userRoleAssignmentMethods Import user-role assignments to a project.
+#' @order 2   
 #' @export
 
 importUserRoleAssignments <- function(rcon, 
@@ -33,7 +8,8 @@ importUserRoleAssignments <- function(rcon,
   UseMethod("importUserRoleAssignments")
 }
 
-#' @rdname importUserRoleAssignments
+#' @rdname userRoleAssignmentMethods
+#' @order 4
 #' @export
 
 importUserRoleAssignments.redcapApiConnection <- function(rcon, 

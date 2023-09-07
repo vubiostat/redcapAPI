@@ -27,7 +27,7 @@ test_that(
                   field = "file_upload_test",
                   event = "event_1_arm_1",
                   dir = temp_dir,
-                  filePrefix = TRUE),
+                  file_prefix = TRUE),
       "The file was saved to '.+1-event_1_arm_1-FileForImportExportTesting.txt"
     )
 
@@ -110,7 +110,7 @@ test_that(
                   event = "event_1_arm_1",
                   repeat_instance = 1,
                   dir = temp_dir,
-                  filePrefix = TRUE),
+                  file_prefix = TRUE),
       "The file was saved to '.+1-event_1_arm_1-FileForImportExportTesting.txt"
     )
 

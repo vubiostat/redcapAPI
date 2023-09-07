@@ -1,125 +1,106 @@
 #' @name importRecords
-#' @title Import Records to a REDCap Database
-#' 
-#' @description Imports records from a \code{data.frame} to a REDCap Database
+#' @title Import Records to a Project
 #'
-#' @param rcon A REDCap connection object as created by \code{redcapConnection}.
-#' @param data A \code{data.frame} to be imported to the REDCap project.
-#' @param overwrite_behavior \code{character}.  'normal' prevents blank
-#'   fields from overwriting populated fields.  'overwrite' causes blanks to
-#'   overwrite data in the REDCap database. For backward compatibility, 
-#'   also accepts \code{overwriteBehavior}.
-#' @param return_content \code{character}.  'count' returns the number of
-#'   records imported; 'ids' returns the record ids that are imported;
-#'   'nothing' returns no message; 'auto_ids' returns a list of pairs of all 
-#'   record IDs that were imported. If used when \code{force_auto_number = FALSE}, 
-#'   the value will be changed to \code{'ids'}.
-#'   For backward compatibility, also accespt \code{returnContent}.
-#' @param force_auto_number \code{logical(1)} If record auto-numbering has been
+#' @description These methods enable the user to import new records or update
+#'   existing records to a project. 
+#'   
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param data A `data.frame` to be imported to the project.
+#' @param overwriteBehavior `character(1)`. One of `c("normal", "overwrite")`. 
+#'   `"normal"` prevents blank fields from overwriting populated fields.  
+#'   `"overwrite"` causes blanks to overwrite data in the database.
+#' @param force_auto_number `logical(1)`. If record auto-numbering has been
 #'   enabled in the project, it may be desirable to import records where each 
 #'   record's record name is automatically determined by REDCap (just as it 
-#'   does in the user interface). If this parameter is set to 'true', the 
+#'   does in the user interface). When `TRUE`, the 
 #'   record names provided in the request will not be used (although they 
 #'   are still required in order to associate multiple rows of data to an 
-#'   individual record in the request), but instead those records in the 
+#'   individual record in the request); instead those records in the 
 #'   request will receive new record names during the import process. 
-#'   NOTE: To see how the provided record names get translated into new auto
-#'    record names, the returnContent parameter should be set to 'auto_ids', 
-#'    which will return a record list similar to 'ids' value, but it will have
-#'    the new record name followed by the provided record name in the request, 
-#'    in which the two are comma-delimited.
-#' @param batch_size Specifies size of batches.  A negative value
-#'   indicates no batching. For backward compatibility, will also accept
-#'   \code{batch.size}.
-#' @param ... Arguments to be passed to other methods.
-#' @param na  A named \code{list} of user specified functions to determine if the
-#'   data is NA. Passed to \code{castForImport}. This is useful when data is 
-#'   loaded that has coding for NA, e.g.
-#'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
-#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
-#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-#'   checkbox, form_complete, sql}. The function will be provided the variables
-#'   (x, field_name, coding). The function must return a vector of logicals
-#'   matching the input. It defaults to \code{\link{isNAorBlank}} for all
-#'   entries.
-#' @param validation A named \code{list} of user specified validation functions. 
-#'   Passed to \code{castForImport}. The 
-#'   same named keys are supported as the na argument. The function will be 
-#'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length. Helper functions to construct
-#'   these are \code{\link{valRx}} and \code{\link{valChoice}}. Only fields that
-#'   are not identified as NA will be passed to validation functions. 
-#' @param cast A named \code{list} of user specified class casting functions.
-#'   Passed to \code{castForImport}.  
-#'   Keys must correspond to a truncated REDCap field type, i.e.
-#'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
-#'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-#'   checkbox, form_complete, sql}. The function will be 
-#'   provided the variables (x, field_name, coding). 
-#'   See \code{\link{fieldValidationAndCasting}}
-#' @param skip_import \code{logical(1)}. When \code{TRUE}, the data validation
-#'   steps and casting will be performed, but the import will be skipped. 
-#'   This allows for evaluating what the validation and casting results are
-#'   for verification before the data on the server are impacted.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
+#'   It is recommended that the user use `returnContent = "auto_ids"`
+#'   when `force_auto_number = TRUE`
+#' @param returnContent `character(1)`.  
+#'   One of `c("count", "ids", "nothing", "auto_ids")`.
+#'   'count' returns the number of records imported; 
+#'   'ids' returns the record ids that are imported;
+#'   'nothing' returns no message; 
+#'   'auto_ids' returns a list of pairs of all record IDs that were imported. 
+#'   If used when `force_auto_number = FALSE`, the value will be changed to `'ids'`.
+#' @param returnData `logical(1)`. When `TRUE`, prevents the REDCap 
+#'   import and instead returns the data frame that would have been given
+#'   for import. This is sometimes helpful if the API import fails without
+#'   providing an informative message. The data frame can be written to a csv
+#'   and uploaded using the interactive tools to troubleshoot the
+#'   problem. 
+#' @param logfile `character(1)`. An optional filepath (preferably .txt) 
+#'   in which to print the log of errors and warnings about the data.
+#'   When `""`, the log is printed to the console. 
+#' @param batch.size `integerish(1)`.  Specifies the number of subjects to be included 
+#'   in each batch of a batched export or import.  Non-positive numbers 
+#'   export/import the entire operation in a single batch. 
+#'   Batching may be beneficial to prevent tying up smaller servers.  
+#'   See Details.
 #'
 #' @details
-#' A record of imports through the API is recorded in the Logging section
-#' of the project.
-#'
-#' \code{importRecords} prevents the most common import errors by testing the
+#' `importRecords` prevents the most common import errors by testing the
 #' data before attempting the import.  Namely
-#' \enumerate{
-#'   \item Check that all variables in \code{data} exist in the REDCap data dictionary.
-#'   \item Check that the study id variable exists
-#'   \item Force the study id variable to the first position in the data frame (with a warning)
-#'   \item Remove calculated fields (with a warning)
-#'   \item Verify that REDCap date fields are represented in the data frame as
-#'     either character, POSIXct, or Date class objects.
-#'   \item Determine if values are within their specified validation limits.
-#' }
-#'
-#' See the documentation for \code{\link{validateImport}} for detailed
-#' explanations of the validation.
 #' 
-#' @section Limitations:
+#' 1. Check that all variables in `data` exist in the REDCap data dictionary.
+#' 2. Check that the record id variable exists
+#' 3. Force the record id variable to the first position in the data frame (with a warning)
+#' 4. Remove calculated fields (with a warning)
+#' 5. Verify that REDCap date fields are represented in the data frame as either `character`, `POSIXct`, or `Date` class objects.
+#' 6. Determine if values are within their specified validation limits.
+#'
+#' See the documentation for [validateImport()] for detailed
+#' explanations of the validation. 
+#'  
+#' A 'batched' import is one where the export is performed over a series of 
+#' API calls rather than one large call.  For large projects on small servers, 
+#' this may prevent a single user from tying up the server and forcing others 
+#' to wait on a larger job.  
 #' 
-#' The REDCap API is fairly restrictive about what it will accept as valid data for import. 
-#' \code{importRecords} tries to simplify the process by allowing users to 
-#' submit data in any form recognized by the data dictionary. It is then converted
-#' internally to the 
-#' appropriate text format for import. This means, for example, that a radio button value
-#' where the code \code{1} is mapped to the label \code{Guitar} (defined in the user interface
-#' with "1, Guitar"), the user can provide
-#' either "1" or "Guitar" as a value and \code{importRecords} will translate it to the 
-#' code that the API expects. 
+#' @return
+#' `importRecords`, when `returnData = FALSE`, returns the content from the
+#'   API response designated by the `returnContent` argument. 
+#'   
+#' `importRecords`, when `returnData = TRUE`, returns the 
+#'   data frame that was internally prepared for import. This data frame has
+#'   values transformed from R objects to character values the API will 
+#'   accept. 
+#'
+#' @seealso 
+#' [exportRecords()], \cr
+#' [deleteRecords()], \cr
+#' [exportRecordsTyped()]
 #' 
-#' While this provides a level of convenience for the user, it has some limitations when
-#' applied to checkbox values. When submitting checkbox values for import, it is strongly 
-#' recommended that you submit either the code "0" (for unchecked), "1" (for checked), or the 
-#' labels "Unchecked" and "Checked". 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
 #' 
-#' In particular, when the checkbox labels are defined with a code or label that is "0" or "1"
-#' (for example, "0, checkbox_label" or "check_code, 0"), \code{importRecords} is unable to 
-#' determine if a 0 indicates an unchecked box or if the zero is the label of a checked box. 
-#' When encountering ambiguity, \code{importRecords} will always assume "0" represents an
-#' unchecked box and "1" represents a checked box.
-#'
-#' @author Benjamin Nutter\cr
-#' with thanks to Josh O'Brien and etb (see references)
-#'
-#' @references
-#' See the REDCap API documentation at your institution's REDCap documentation.
-#'
-#' @seealso \code{\link{validateImport}}
-#'
+#' # Import records
+#' NewData <- data.frame(record_id = c(1, 2, 3), 
+#'                       age = c(27, 43, 32), 
+#'                       date_of_visit = rep(Sys.Date(), 3))
+#' importRecords(rcon, 
+#'               data = NewData)
+#'               
+#'               
+#' # Import records and save validation info to a file
+#' NewData <- data.frame(record_id = c(1, 2, 3), 
+#'                       age = c(27, 43, 32), 
+#'                       date_of_visit = rep(Sys.Date(), 3))
+#' importRecords(rcon, 
+#'               data = NewData, 
+#'               logfile = "import-validation-notes.txt")      
+#' 
+#' } 
+#' 
 #' @export
 
 importRecords <- function(rcon, 
@@ -366,16 +347,72 @@ importRecords.redcapApiConnection <- function(rcon,
       return(redcapError(responses[[i]], error_handling))
     } 
   }
+}
+
+
+import_records_unbatched <- function(rcon, 
+                                     data, 
+                                     overwriteBehavior,
+                                     returnContent, 
+                                     force_auto_number,
+                                     config, 
+                                     api_param)
+{
+  out <- data_frame_to_string(data)
   
-  # Consolidate Responses
-  response_char <- vapply(responses,
-                          function(x) as.character(x), 
-                          character(1))
+  ## Reattach attributes
+  attributes(out) <- 
+    list("Content-Type" = structure(c("text/html", "utf-8"),
+                                    .Names = c("", "charset")))
   
-  switch(return_content, 
-         "count" = sum(vapply(response_char, as.numeric, numeric(1))), 
-         "nothing" = NULL,
-         do.call("rbind", lapply(response_char, 
-                                 function(rc) read.csv(text = rc, 
-                                                       stringsAsFactors = FALSE))))
+   ##################################################################
+  # Make API Body List
+  
+  body <- list(token = rcon$token, 
+               content = 'record', 
+               format = 'csv',
+               type = 'flat', 
+               overwriteBehavior = overwriteBehavior,
+               returnContent = returnContent,
+               returnFormat = 'csv', 
+               forceAutoNumber = tolower(force_auto_number),
+               data = out)
+  
+  body <- body[lengths(body) > 0]
+  
+   ##################################################################
+  # Call the API
+  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+  
+  if (response$status_code == "200"){
+    if (returnContent %in% c("ids", "auto_ids")){
+      utils::read.csv(text = as.character(response), 
+               na.strings = "", 
+               stringsAsFactors = FALSE)
+    } else {
+      as.character(response)
+    }
+  }
+  else 
+    redcapError(response, error_handling = "error")
+}
+
+#####################################################################
+# Unexported
+
+data_frame_to_string <- function(data)
+{
+  paste0(
+    utils::capture.output(
+      utils::write.table(data, 
+                         sep = ",",
+                         col.names = TRUE,
+                         row.names = FALSE,
+                         na = "")
+    ),
+    collapse = "\n"
+  )
 }

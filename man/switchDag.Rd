@@ -2,6 +2,7 @@
 % Please edit documentation in R/switchDag.R
 \name{switchDag}
 \alias{switchDag}
+\alias{switchDagArgs}
 \alias{switchDag.redcapApiConnection}
 \title{Switch Data Access Group Assignment for the Current User}
 \usage{
@@ -18,31 +19,53 @@ switchDag(rcon, dag, ...)
 )
 }
 \arguments{
-\item{rcon}{\code{redcapConnection} object.}
+\item{rcon}{A \code{redcapConnection} object.}
 
-\item{dag}{\code{character(1)} A unique data access group to which to 
+\item{dag}{\code{character(1)} A unique data access group to which to
 assign the current user. Use \code{NA} to leave the user unassigned.}
-
-\item{...}{Additional arguments to pass to other methods.}
 
 \item{refresh}{\code{logical(1)} If \code{TRUE}, the cached data access
 group assignments will be refreshed.}
 
-\item{error_handling}{An option for how to handle errors returned by the API.
-see \code{\link{redcapError}}}
+\item{...}{Arguments to pass to other methods}
 
-\item{config}{\code{list} Additional configuration parameters to pass to 
-\code{\link[httr]{POST}}. These are appended to any parameters in 
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
+
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
 \code{rcon$config}.}
 
-\item{api_param}{\code{list} Additional API parameters to pass into the
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
+\value{
+Returns \code{TRUE} when the call is completed successfully.
+}
 \description{
-This method allows the current API user to switch 
-  (assign/reassign/unassign) their current Data Access Group assignment 
-  if they have been assigned to multiple DAGs via the DAG Switcher page 
-  in the project. Returns \code{TRUE} when the call is completed
-  successfully.
+This method enables the current API user to switch
+(assign/reassign/unassign) their current Data Access Group assignment
+if they have been assigned to multiple DAGs via the DAG Switcher page
+in the project.
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+
+# Switch the current user to the DAG "Facility Two"
+switchDag(rcon, 
+          dag = "facility_two")
+}
+}
+\seealso{
+\code{\link[=exportDags]{exportDags()}},\cr
+\code{\link[=importDags]{importDags()}},\cr
+\code{\link[=deleteDags]{deleteDags()}}, \cr
+\code{\link[=exportUserDagAssignments]{exportUserDagAssignments()}}, \cr
+\code{\link[=importUserDagAssignments]{importUserDagAssignments()}}
 }

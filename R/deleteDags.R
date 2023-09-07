@@ -1,22 +1,6 @@
-#' @name deleteDags
-#' @title Delete Data Access Groups from a Project
-#' 
-#' @description This method allows you to delete DAGs from a project.
-#' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param dags \code{character} vector of names matching the \code{unique_group_name}.
-#' @param refresh \code{logical(1)}. When \code{TRUE}, cached event data will 
-#'   be refreshed after the import.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+# Complete documentation in documentation.R
+#' @describeIn dagMethods Delete Data Access Groups from a project.
+#' @order 3
 #' @export
 
 deleteDags <- function(rcon, 
@@ -25,7 +9,8 @@ deleteDags <- function(rcon,
   UseMethod("deleteDags")
 }
 
-#' @rdname deleteDags
+#' @rdname dagMethods
+#' @order 6
 #' @export
 
 deleteDags.redcapApiConnection <- function(rcon, 

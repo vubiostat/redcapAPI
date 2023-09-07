@@ -8,7 +8,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(exportUserRoles("not an rcon"), 
-                 "Must inherit from class 'redcapApiConnection'")
+                 "no applicable method for 'exportUserRoles'")
   }
 )
 

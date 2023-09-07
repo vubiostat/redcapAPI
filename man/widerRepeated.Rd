@@ -7,16 +7,39 @@
 widerRepeated(Records, rcon)
 }
 \arguments{
-\item{Records}{A \code{data.frame} containing the records from
-\code{\link{exportRecordsTyped}}}
+\item{Records}{\code{data.frame} containing the records from \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}}
 
-\item{rcon}{A REDCap connection object as created by \code{unlockREDCap}.}
+\item{rcon}{A \code{redcapConnection} object.}
 }
 \description{
 Converts a dataframe into wide format given a single REDCap form.
-This function assumes that the Records argument is the result of exportRecordsTyped,
-and that all empty values have been previously dropped. This will only widen dataframes 
-that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and 
-"redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned 
+This function assumes that the Records argument is the result of \code{exportRecordsTyped},
+and that all empty values have been previously dropped. This will only widen data frames
+that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and
+"redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned
 unchanged.
+}
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+Records <- exportRecordsTyped(rcon)
+
+widerRepeated(Records, rcon)
+}
+
+}
+\seealso{
+\subsection{Other post-processing functions}{
+
+\code{\link[=recastRecords]{recastRecords()}}, \cr
+\code{\link[=guessCast]{guessCast()}}, \cr
+\code{\link[=guessDate]{guessDate()}}, \cr
+\code{\link[=castForImport]{castForImport()}}, \cr
+\code{\link[=mChoiceCast]{mChoiceCast()}}, \cr
+\code{\link[=splitForms]{splitForms()}}
+}
 }

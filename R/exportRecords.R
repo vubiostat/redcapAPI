@@ -1,60 +1,5 @@
-#' @name exportRecords
-#' @title Export Records from a REDCap Project
-#' 
-#' @description This method allows you to export a set of records for a project.
-#'   Unlike \code{exportRecordsTyped}, this method is more closely 
-#'   aligned with the REDCap API interface and does returns all of 
-#'   its fields with class character.
-#'   
-#' @param rcon A \code{redcapConnection} object.
-#' @param records Optional \code{character} vector of record IDs to export.
-#' @param fields Optional \code{character} vector of fields to export. 
-#' @param forms Optional \code{character} vector of forms to export.
-#' @param events Optional \code{character} vector of events to export.
-#' @param raw_or_label One of \code{c("raw", "label")}. export the raw coded 
-#'   values or labels for the options of multiple choice fields
-#' @param raw_or_label_headers One of \code{c("raw", "label")}. export the 
-#'   variable field names (\code{"raw"}) or the labels (\code{"label"}).
-#' @param export_checkbox_label \code{logical(1)} specifies the format of 
-#'   checkbox field values specifically when exporting the data as labels 
-#'   (i.e., when \code{rawOrLabel = "label"}). When exporting labels, by 
-#'   default (\code{FALSE}), all checkboxes will either have a value 
-#'   'Checked' if they are checked or 'Unchecked' if not checked. 
-#'   But if \code{TRUE}, it will instead export the checkbox value as the 
-#'   checkbox option's label (e.g., 'Choice 1') if checked or it will be 
-#'   blank/empty (no value) if not checked.
-#' @param export_survey_fields \code{logical(1)} specifies whether or not to 
-#'   export the survey 
-#'   identifier field (e.g., 'redcap_survey_identifier') or survey timestamp 
-#'   fields (e.g., instrument+'_timestamp') when surveys are utilized in the 
-#'   project. 
-#' @param export_dags \code{logical(1)} specifies whether or not to export the 
-#'   'redcap_data_access_group' field when data access groups are 
-#'   utilized in the project.
-#' @param csv_delimiter \code{character}. One of 
-#'   \code{c(",", "\t", ";", "|", "^")}. Designates the delimiter for the CSV
-#'   file received from the API.
-#' @param batch_size \code{integerish(1)} (or \code{NULL}). If length \code{NULL},
-#'   all records are pulled. Otherwise, the records all pulled in batches of this size.
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @description Please be aware that Data Export user rights will be applied 
-#'   to this API request. For example, if you have 'No Access' data export 
-#'   rights in the project, then the API data export will fail and return an 
-#'   error. And if you have 'De-Identified' or 'Remove All Identifier Fields' 
-#'   data export rights, then some data fields *might* be removed and filtered 
-#'   out of the data set returned from the API. To make sure that no data is 
-#'   unnecessarily filtered out of your API request, you should have 
-#'   'Full Data Set' export rights in the project.
-#'   
+#' @describeIn recordsMethods Export records from a project.
+#' @order 1
 #' @export
 
 exportRecords <- function(rcon, 
@@ -62,7 +7,8 @@ exportRecords <- function(rcon,
   UseMethod("exportRecords")
 }
 
-#' @rdname exportRecords
+#' @rdname recordsMethods
+#' @order 4
 #' @export
 
 exportRecords.redcapApiConnection <- function(rcon, 

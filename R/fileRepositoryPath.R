@@ -1,16 +1,14 @@
 #' @name fileRepositoryPath
 #' @title Reconstruct the file repository path
 #' 
-#' @param doc_id \code{integerish(0/1)}. The document ID for which the 
-#'   file path should be returned. Only one of \code{doc_id} or 
-#'   \code{folder_id} should be specified.
-#' @param folder_id \code{integerish(0/1)}. The folder ID for which the 
-#'   file path should be returned. Only one of \code{doc_id} or 
-#'   \code{folder_id} should be specified.
-#' @param fileRepo \code{data.frame} with the file repository listing. 
-#'   Typically provided by \code{rcon$fileRepository()}
-#'   
-#' @author Benjamin Nutter
+#' @param doc_id `integerish(0/1)`. The document ID for which the 
+#'   file path should be returned. Only one of `doc_id` or 
+#'   `folder_id` should be specified.
+#' @param folder_id `integerish(0/1)`. The folder ID for which the 
+#'   file path should be returned. Only one of `doc_id` or 
+#'   `folder_id` should be specified.
+#' @param fileRepo `data.frame` with the file repository listing. 
+#'   Typically provided by `rcon$fileRepository()`
 
 fileRepositoryPath <- function(doc_id = numeric(0), 
                                folder_id = numeric(0), 
@@ -62,7 +60,7 @@ fileRepositoryPath <- function(doc_id = numeric(0),
     Path <- rbind(next_level, Path)
     parent_id <- Path$parent_folder[1]
     
-    # When the File Repository listing doesn't include the top-level, this
+    # When the File Repository listing does not include the top-level, this
     # loop will never terminate. This provides an escape which terminates if
     # the loop iterates more times than the we have folders in our 
     # Repository listing.

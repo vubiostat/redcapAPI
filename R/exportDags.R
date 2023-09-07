@@ -1,28 +1,14 @@
-#' @name exportDags
-#' @title Export Data Access Groups
-#' 
-#' @description Export the Data Access Groups (DAGs) associated with a project.
-#'   Returns a listing of the data access group, the unique name, and the
-#'   integer ID number.
-#'   
-#' @param rcon \code{redcapConnection} object
-#' @param ... Additional arguments to pass to other methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
+# Complete documentation in documentation.R
+#' @describeIn dagMethods Export Data Access Groups from a REDCap Project
+#' @order 1
 #' @export
 
 exportDags <- function(rcon, ...){
   UseMethod("exportDags")
 }
 
-#' @rdname exportDags
+#' @rdname dagMethods
+#' @order 4
 #' @export
 
 exportDags.redcapApiConnection <- function(rcon, 
@@ -72,7 +58,7 @@ exportDags.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
   
-  read.csv(text = as.character(response), 
-           na.strings = "",
-           stringsAsFactors = FALSE)
+  utils::read.csv(text = as.character(response), 
+                  na.strings = "",
+                  stringsAsFactors = FALSE)
 }

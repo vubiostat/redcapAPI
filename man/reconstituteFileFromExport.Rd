@@ -18,8 +18,8 @@ reconstituteFileFromExport(
 \item{dir}{\code{character(1)} A directory on the local file system into
 which the file will be saved.}
 
-\item{dir_create}{\code{logical(1)} If TRUE and the directory does not 
-exist, it will be created. Defaults to FALSE. 
+\item{dir_create}{\code{logical(1)} If TRUE and the directory does not
+exist, it will be created. Defaults to FALSE.
 If dir does not exist and create = FALSE, an error is thrown.}
 
 \item{file_prefix}{\code{character(1)} An optional prefix to prepend to
@@ -27,13 +27,34 @@ the file name. This may be desirable to explicitly associate files
 with a record and/or event.}
 
 \item{filename}{\code{character(0/1)} An optional filename. This is used
-in the case where a filename is being provided. It this has length 0, 
+in the case where a filename is being provided. It this has length 0,
 the filename will be extracted from the API response.}
 }
 \description{
 Converts the file from a \code{response} object and saves
-  it to the local file directory.
+it to the local file directory.
 }
-\author{
-Benjamin Nutter
+\examples{
+\dontrun{
+unlockREDCap(connections = c(rcon = "project_alias"), 
+             url = "your_redcap_url", 
+             keyring = "API_KEYs", 
+             envir = globalenv())
+             
+response <- makeApiCall(rcon, 
+                        body = list(content = 'file', 
+                        action = 'export', 
+                        record = '1', 
+                        field = 'file_upload_test', 
+                        event = 'event_1_arm_1'))
+reconstituteFileFromExport(response,  
+                           dir = tempdir())
+}  
+  
+}
+\seealso{
+\code{\link[=exportFiles]{exportFiles()}}, \cr
+\code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr
+\code{\link[=exportFileRepository]{exportFileRepository()}}, \cr
+\code{\link[=exportPdf]{exportPdf()}}
 }

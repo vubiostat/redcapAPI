@@ -4,31 +4,28 @@
 #' @title Report of Missing Values
 #' @description Returns a data frame of subject events with missing values. 
 #' 
-#' @param rcon A \code{redcapConnection} object.
-#' @param records \code{character(1)} A filename pointing to the raw records download from REDCap.
-#' @param meta_data \code{character(1)} A filename pointing to the data dictionary download from REDCap.
-#' @param excludeMissingForms \code{logical(1)} If all of the fields in a form are missing, would 
-#'   you like to assume that they are purposefully missing?  For instance, if
-#'   a patient did not experience an adverse event, the adverse event form would
-#'   contain no data and you would not want it in this report.
-#' @param ... Additional arguments to pass to other methods.  Currently ignored.
-#' @param fixed_fields \code{character} A vector of field names that will be used as 
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
+#' @param records `character(1)` A filename pointing to the raw records
+#'   download from REDCap.
+#' @param meta_data `character(1)` A filename pointing to the data dictionary 
+#'   download from REDCap.
+#' @param excludeMissingForms `logical(1)` When `TRUE`, forms where all 
+#'   fields are missing are assumed to be deliberately missing data and 
+#'   are excluded from the count of missing values. An example when this is
+#'   desirable is if a patient did not experience an adverse event; 
+#'   the adverse event form would contain no data and the empty fields
+#'   should not be considered missing data.
+#' @param fixed_fields `character` A vector of field names that will be used as 
 #'   the identifying fields in the output summary. This always includes the record
 #'   identifier (ie, the first field in the data dictionary). By default it 
-#'   also includes any fields identified in \code{REDCAP_SYSTEM_FIELDS}, which
+#'   also includes any fields identified in `REDCAP_SYSTEM_FIELDS`, which
 #'   are fields that REDCap adds to exports to identify arms, events, etc..
-#' @param exportRecordsArgs named \code{list} with arguments to pass to \code{exportRecords}. 
+#' @param exportRecordsArgs named `list`. Arguments to pass to `exportRecords`. 
 #'   This allows for testing specific forms, events, and/or records. Internally, any 
-#'   setting you make for \code{factors, labels, dates, survey}, or \code{dag} 
+#'   setting passed for `factors, labels, dates, survey`, or `dag` 
 #'   arguments will be ignored.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
 #'   
 #' @details The intention of this function is to generate a list of subject
 #'   events that are missing and could potentially be values that should have
@@ -36,8 +33,8 @@
 #'   
 #'   The branching logic from the data dictionary is parsed and translated into
 #'   and R expression.  When a field with branching logic passes the logical
-#'   statement, it is evaluated with \code{is.na}, otherwise, it is set to 
-#'   \code{FALSE} (non-missing, because there was never an opportunity to 
+#'   statement, it is evaluated with `is.na`, otherwise, it is set to 
+#'   `FALSE` (non-missing, because there was never an opportunity to 
 #'   provide a value).  The utility of this function is limited to simple 
 #'   logic where all of the
 #'   data exist within the same row. Any complex statements using events 
@@ -49,9 +46,20 @@
 #'   would contain meaningless missing values and could be excluded from the 
 #'   report.
 #'   
-#' @author Benjamin Nutter
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' # Generate a summary of missing values for the entire project
+#' missingSummary(rcon)
 #' 
-#' @importFrom utils read.csv
+#' # Generate a summary of missing values for a single form
+#' missingSummary(rcon, 
+#'                exportRecordsArgs = list(forms = "target_form"))
+#' }
 #' 
 #' @export
 
@@ -163,19 +171,20 @@ missingSummary_offline <- function(records,
                             len = 1, 
                             add = coll)
   
-  records_orig <- read.csv(records,
-                           stringsAsFactors=FALSE, 
-                           na.string="")
+  records_orig <- utils::read.csv(records,
+                                  stringsAsFactors=FALSE, 
+                                  na.string="")
   
-  meta_data <- read.csv(meta_data,
-                        col.names=c('field_name', 'form_name', 'section_header',
-                                    'field_type', 'field_label', 'select_choices_or_calculations',
-                                    'field_note', 'text_validation_type_or_show_slider_number',
-                                    'text_validation_min', 'text_validation_max', 'identifier',
-                                    'branching_logic', 'required_field', 'custom_alignment',
-                                    'question_number', 'matrix_group_name', 'matrix_ranking',
-                                    'field_annotation'),
-                        stringsAsFactors=FALSE)
+  meta_data <- 
+    utils::read.csv(meta_data,
+                    col.names=c('field_name', 'form_name', 'section_header',
+                                'field_type', 'field_label', 'select_choices_or_calculations',
+                                'field_note', 'text_validation_type_or_show_slider_number',
+                                'text_validation_min', 'text_validation_max', 'identifier',
+                                'branching_logic', 'required_field', 'custom_alignment',
+                                'question_number', 'matrix_group_name', 'matrix_ranking',
+                                'field_annotation'),
+                    stringsAsFactors=FALSE)
   meta_data <- meta_data[meta_data$field_type != "descriptive", ]
   
   logic <- parseBranchingLogic(meta_data$branching_logic)
@@ -227,7 +236,7 @@ missingSummary_offline <- function(records,
       # NOTE: in the result, TRUE means the value is missing
       #                      FALSE means the value is non-missing
       if (tmp_form == "_complete"){
-        # If we are here, we didn't find a matching form name. We will 
+        # If we are here, we did not find a matching form name. We will 
         # assume variables not on a form are always non-missing.
         records[[i]] <- rep(FALSE, nrow(records))
       }
@@ -293,7 +302,7 @@ missingSummary_offline <- function(records,
                                   })
     # If the `[form]_complete` field is missing, we set the missingness value of the 
     # record for fields on that value to FALSE, indicating that they are non-missing
-    # That is, we don't consider a value missing unless the form is marked either 'Complete' or 'Incomplete'
+    # That is, we do not consider a value missing unless the form is marked either 'Complete' or 'Incomplete'
     completeFormMissing <- unlist(completeFormMissing)
     if (!is.null(completeFormMissing)){
       records[i, completeFormMissing] <- FALSE    

@@ -2,17 +2,40 @@
 #' @title Transform Data Into Wide Format
 #' 
 #' @description Converts a dataframe into wide format given a single REDCap form.
-#' This function assumes that the Records argument is the result of exportRecordsTyped,
-#' and that all empty values have been previously dropped. This will only widen dataframes 
+#' This function assumes that the Records argument is the result of `exportRecordsTyped`,
+#' and that all empty values have been previously dropped. This will only widen data frames 
 #' that have a unique identification variable (e.g. 'record_id'), "redcap_event_name" and 
 #' "redcap_repeat_instrument" in the fields. Otherwise, the data passed in will be returned 
 #' unchanged.
 #'   
-#' @param Records A \code{data.frame} containing the records from
-#'        \code{\link{exportRecordsTyped}}
-#' @param rcon A REDCap connection object as created by \code{unlockREDCap}.
-#' @importFrom stats reshape
+#' @inheritParams common-rcon-arg
+#' @param Records `data.frame` containing the records from [exportRecordsTyped()]
+#'        
+#' @seealso 
+#' ## Other post-processing functions
+#' 
+#' [recastRecords()], \cr
+#' [guessCast()], \cr
+#' [guessDate()], \cr
+#' [castForImport()], \cr
+#' [mChoiceCast()], \cr
+#' [splitForms()]
+#' 
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' Records <- exportRecordsTyped(rcon)
+#' 
+#' widerRepeated(Records, rcon)
+#' }
+#' 
 #' @export
+
 widerRepeated <- function(Records, rcon)
 {
   idvar <- getProjectIdFields(rcon)
@@ -36,7 +59,7 @@ widerRepeated <- function(Records, rcon)
     if (length(unique(Records$redcap_repeat_instrument)) == 1) {
       # preserve column attributes
       Records <- data.frame(Records, check.names = FALSE)
-      RecordsWide <- reshape(
+      RecordsWide <- stats::reshape(
         data = Records,
         idvar = form_ids,
         timevar = "redcap_repeat_instance",

@@ -13,7 +13,11 @@ filterEmptyRow(data, rcon)
 }
 \description{
 Evaluates each row of a data frame for missingness. If all
-fields (excluding the identifying fields) are missing, the row is 
-removed from the data. For the purpose of this function, 
+fields (excluding the identifying fields) are missing, the row is
+removed from the data. For the purpose of this function,
 \code{redcap_data_access_group} is considered an identifying field.
+}
+\seealso{
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=exportReportsTyped]{exportReportsTyped()}}
 }

@@ -1,37 +1,5 @@
-#' @name importFileRepository
-#' @title Import a Folder and its Contents to the File Repository
-#' 
-#' @description This method allows you to import multiple files into a 
-#'   project's File Repository. The files may be stored in a specific folder 
-#'   in the File Repository if a \code{folder_id} is provided.
-#'   
-#' @param rcon A redcap connection object.
-#' @param dir \code{character(1)} A directory on the local system with the 
-#'   files to be imported to the File Repository.
-#' @param folder_id \code{integerish(0/1)}. The ID of the folder into which 
-#'   the file is to be imported. If length is zero, it is imported to the 
-#'   top-level folder.
-#' @param dag_id \code{integerish(0/1)} The ID of a data access group. If 
-#'   provided, access to the folder will be restricted to the DAG.
-#' @param role_id \code{integerish(0/1)} The ID of a role. If provided, 
-#'   access to the folder will be restricted to users with that role.
-#' @param recursive \code{logical(1)}. If \code{FALSE}, only the files in 
-#'   the immediate directory are loaded to the File Repository. If \code{TRUE}
-#'   subfolders and their contents will also be added. 
-#' @param ... Additional arguments to be passed between methods
-#' @param refresh \code{logical(1)} When \code{TRUE} (default), the cached 
-#'   File Repository data on \code{rcon} will be refreshed. 
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see \code{\link{redcapError}}
-#' @param config \code{list} Additional configuration parameters to pass to 
-#'   \code{\link[httr]{POST}}. These are appended to any parameters in 
-#'   \code{rcon$config}.
-#' @param api_param \code{list} Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by \code{redcapAPI}.
-#'   
-#' @author Benjamin Nutter
-#' 
+#' @describeIn fileRepositoryMethods Import multiple files to the File Repository.
+#' @order 2
 #' @export
 
 importFileRepository <- function(rcon, 
@@ -41,7 +9,8 @@ importFileRepository <- function(rcon,
   UseMethod("importFileRepository")
 }
 
-#' @rdname importFileRepository
+#' @rdname fileRepositoryMethods
+#' @order 5
 #' @export
 
 importFileRepository.redcapApiConnection <- function(rcon, 
@@ -192,7 +161,7 @@ importFileRepository.redcapApiConnection <- function(rcon,
   # At the top level, dirname([file]) returns "." and
   #                  basename([file]) returns either the filename or directory name
   # If the basename matches the name of a folder in DirList, then we can
-  #   determine that it is a folder and shouldn't be included in the FileList
+  #   determine that it is a folder and should not be included in the FileList
   FileList <-                    
     FileList[!(FileList$dirname == "." & 
                  FileList$name %in% DirList$name), ]
