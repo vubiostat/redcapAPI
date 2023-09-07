@@ -6,7 +6,9 @@
 #'   the project to another project, REDCap instance, or any other
 #'   CDISC ODM compliant database.
 #'   
-#' @param rcon A `redcapConnection` object.
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param file `character(1)` The file to which the XML export will be
 #'   saved. 
 #' @param return_metadata_only `logical(1)`. When `TRUE` (default)
@@ -19,8 +21,8 @@
 #' @param events A `character`. Vector of events to be returned from a 
 #'   longitudinal database.  When `NULL`, all events are returned. 
 #' @param survey `logical(1)`. When `TRUE` the survey identifier fields 
-#'   (e.g., "redcap_survey_identifier") or survey timestamp fields 
-#'   (e.g., form_name+"_timestamp") will be included in the export 
+#'   (e.g., `redcap_survey_identifier`) or survey timestamp fields 
+#'   (e.g., `[form_name]_timestamp`) will be included in the export 
 #'   when surveys are utilized in the project. 
 #' @param dag `logical(1)`. When `TRUE` the `redcap_data_access_group` 
 #'   field is exported when data access groups are utilized in the project. 
@@ -29,15 +31,6 @@
 #'   for all records in the project. Setting this option to `TRUE` can 
 #'   make the export very large and may prevent it from completing if the 
 #'   project contains many files or very large files.
-#' @param ... Additional arguments to be passed between methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see [redcapError()]
-#' @param config `list` Additional configuration parameters to pass to 
-#'   [httr::POST()]. These are appended to any parameters in 
-#'   `rcon$config`.
-#' @param api_param `list` Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by `redcapAPI`.
 #'   
 #' @details
 #' The entire project (all records, events, arms, instruments, 

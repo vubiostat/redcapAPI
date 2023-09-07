@@ -4,7 +4,9 @@
 #' @description These methods enable a user with a 64-character Super API
 #'   token to create a new REDCap project. 
 #'    
-#' @param rcon A `redcapConnection` object.
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
+#' @inheritParams common-api-args
 #' @param project_title `character(1)`. Title for the new project. 
 #' @param purpose `character`, one of 
 #'   `c("Practice/just for fun", "Other", "Research", "Quality Improvement", "Operational Support")`
@@ -21,15 +23,6 @@
 #'   contains project metadata (fields, forms, events, arms) and might 
 #'   optionally contain data to be imported as well. When not `NULL`, 
 #'   all other arguments are ignored. See Details. 
-#' @param ... Additional arguments to be passed between methods.
-#' @param error_handling An option for how to handle errors returned by the API.
-#'   see [redcapError()]
-#' @param config `list` Additional configuration parameters to pass to 
-#'   [httr::POST()]. These are appended to any parameters in 
-#'   `rcon$config`.
-#' @param api_param `list` Additional API parameters to pass into the
-#'   body of the API call. This provides users to execute calls with options
-#'   that may not otherwise be supported by `redcapAPI`.
 #'   
 #' @details
 #'   The user creating the project will automatically be added to the project as a
