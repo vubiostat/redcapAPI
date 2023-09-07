@@ -9,20 +9,15 @@ getProjectIdFields(rcon)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 }
-<<<<<<< HEAD
-=======
 \value{
 Returns a character vector with the field names that uniquely identify
 an experimental unit.
 }
->>>>>>> Issue-216-consolidateDocumentation
 \description{
 Returns a character vector listing the project ID fields.
 This will be at most a vector of length two. The first element will
 be the first field in the meta data. The second, if provided, will
 be the name of the secondary unique field specified in the project.
-<<<<<<< HEAD
-=======
 }
 \examples{
 \dontrun{
@@ -33,5 +28,4 @@ unlockREDCap(connections = c(rcon = "project_alias"),
              
 getProjectIdFields(rcon)
 }
->>>>>>> Issue-216-consolidateDocumentation
 }

@@ -12,20 +12,11 @@ will be performed.}
 
 \item{fun}{An assertion function to perform.}
 
-<<<<<<< HEAD
-\item{...}{Additional lists. Each argument provided is a named list of \code{assertion 
-  arguments}. The name of each element in a list should match the name of a
-\code{function argument}. \code{lower = list(var1 = 0, var2 = 10)} sets
-the \emph{assertion argument} \code{lower = 0} for \emph{function argument}
-\code{var1}; and sets the \emph{assertion argument} \code{lower = 10} for
-\code{function argument} \code{var2}. The \emph{massert arguments} in \code{...}
-=======
 \item{...}{Additional lists. Each argument provided is a named list of \verb{assertion  arguments}. The name of each element in a list should match the name of a
 \verb{function argument}. \code{lower = list(var1 = 0, var2 = 10)} sets
 the \emph{assertion argument} \code{lower = 0} for \emph{function argument}
 \code{var1}; and sets the \emph{assertion argument} \code{lower = 10} for
 \verb{function argument} \code{var2}. The \emph{massert arguments} in \code{...}
->>>>>>> Issue-216-consolidateDocumentation
 may themselves be named or unnamed.}
 
 \item{fixed}{A named list of arguments that are fixed across all assertions.}
@@ -43,10 +34,4 @@ to refer to arguments to \code{massert}
 Only one assert function may be utilized in each call to \code{massert}.
 This allows for all numeric variables to be checked in one call, all logical
 variables to be checked in a subsequent call, etc.
-<<<<<<< HEAD
-}
-\author{
-Benjamin Nutter
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }

@@ -34,19 +34,12 @@ missingSummary_offline(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-<<<<<<< HEAD
-\item{excludeMissingForms}{\code{logical(1)} If all of the fields in a form are missing, would
-you like to assume that they are purposefully missing?  For instance, if
-a patient did not experience an adverse event, the adverse event form would
-contain no data and you would not want it in this report.}
-=======
 \item{excludeMissingForms}{\code{logical(1)} When \code{TRUE}, forms where all
 fields are missing are assumed to be deliberately missing data and
 are excluded from the count of missing values. An example when this is
 desirable is if a patient did not experience an adverse event;
 the adverse event form would contain no data and the empty fields
 should not be considered missing data.}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{...}{Arguments to pass to other methods}
 
@@ -56,28 +49,17 @@ identifier (ie, the first field in the data dictionary). By default it
 also includes any fields identified in \code{REDCAP_SYSTEM_FIELDS}, which
 are fields that REDCap adds to exports to identify arms, events, etc..}
 
-<<<<<<< HEAD
-\item{exportRecordsArgs}{named \code{list} with arguments to pass to \code{exportRecords}.
-This allows for testing specific forms, events, and/or records. Internally, any
-setting you make for \code{factors, labels, dates, survey}, or \code{dag}
-=======
 \item{exportRecordsArgs}{named \code{list}. Arguments to pass to \code{exportRecords}.
 This allows for testing specific forms, events, and/or records. Internally, any
 setting passed for \verb{factors, labels, dates, survey}, or \code{dag}
->>>>>>> Issue-216-consolidateDocumentation
 arguments will be ignored.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the

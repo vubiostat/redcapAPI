@@ -96,11 +96,8 @@ coding.}
 
 \item{coding}{named \code{character} vector. The defined coding from the meta data.}
 
-<<<<<<< HEAD
-=======
 \item{FUN}{\code{function}. A function that takes a character vector.}
 
->>>>>>> Issue-216-consolidateDocumentation
 \item{checked}{\code{character}. Values to recognize as checked in a
 checkbox field.}
 
@@ -150,10 +147,7 @@ of \verb{function(x, coding, field_name)}. \code{na} and \code{validation}
 functions are expected to return a logical vector of the same length as the
 column processed. Helper routines
 are provided here for common cases to construct these functions.
-<<<<<<< HEAD
-=======
 \subsection{Validation Functions}{
->>>>>>> Issue-216-consolidateDocumentation
 
 \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
 function for constructing \code{na} overrides in \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
@@ -169,10 +163,6 @@ matches one of the choices.
 phone numbers. It removes punctuation and spaces prior to validating
 with the regular expression.
 
-<<<<<<< HEAD
-\code{castLabel} constructs a casting function for multiple choice variables.
-The field will be cast to return the choice label (generally more human readable)
-=======
 \code{na_values} is a helper function to create a list of functions
 to test for NA based on field type. Useful for bulk override of
 NA detection for a project. The output can be directly passed to the \code{na}
@@ -185,7 +175,6 @@ parameter of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
 The field will be cast to return the choice label (generally more human readable).
 \code{castLabelCharacter} is an equivalent casting function that returns
 a \code{character} vector instead of a \code{factor}.
->>>>>>> Issue-216-consolidateDocumentation
 
 \code{castCode} constructs a casting function for multiple choice variables.
 Similar to \code{castLabel}, but the choice value is returned instead. The
@@ -206,16 +195,6 @@ instead of a \code{factor}.
 \code{castCheckLabel} and \code{castCheckCode} also construct casting functions
 for checkbox fields. For both, unchecked variables are cast to an empty
 string (""). Checked variables are cast to the option label and option code,
-<<<<<<< HEAD
-respectively.
-
-\code{castCheckForImport} is a special case function to allow the user to
-specify exactly which values are to be considered "Checked". Values that
-match are returned as 1 and all other values are returned as 0. This is
-motivated by the special case where the coding on a checkbox includes
-"0, Option". In the resulting field \code{checkbox___0}, a coded value
-of 0 actually implies the choice was selected. In order to perform an
-=======
 respectively. \code{castCheckLabelCharacter} and \code{castCheckCodeCharacter}
 are equivalent casting functions that returns a \code{character} vector
 instead of a \code{factor}.
@@ -226,7 +205,6 @@ match are returned as \code{1} and all other values are returned as \code{0}. Th
 motivated by the special case where the coding on a checkbox includes
 "0, Option". In the resulting field \code{checkbox___0}, a coded value
 of \code{0} actually implies the choice was selected. In order to perform an
->>>>>>> Issue-216-consolidateDocumentation
 import on such data, it is necessary to cast it using
 \code{castCheckForImport(c("0"))}.
 
@@ -247,12 +225,9 @@ appropriate usage when casting for one decimal place is
 \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to
 facilitate importing data. They convert time data into a character format
 that will pass the API requirements.
-<<<<<<< HEAD
-=======
 }
 
 \subsection{Casting Lists}{
->>>>>>> Issue-216-consolidateDocumentation
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
 parameter.

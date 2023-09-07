@@ -33,14 +33,9 @@ exportLogging(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-<<<<<<< HEAD
-\item{logtype}{\code{character} with maximum length of 1. The log event types to export. By
-default, all event types are exported. Must be one of
-=======
 \item{logtype}{\code{character(0/1)}. The log event types to export.
 When the length is zero, all event types are exported. Otherwise, it
 must be one of
->>>>>>> Issue-216-consolidateDocumentation
 \code{c("export", "manage", "user", "record", "record_add", "record_edit", "record_delete", "lock_record", "page_view")}}
 
 \item{user}{\code{character(0/1)}. Users for whom to return logs. By default
@@ -49,17 +44,10 @@ logs for all users are returned.}
 \item{record}{\code{character(0/1)}. Record ID for which logs are to be returned.
 By default, logs are returned for all records.}
 
-<<<<<<< HEAD
-\item{dag}{\code{character} with maximum length of 1. Data access group ID for which to return logs.
-By default, logs are returned for all data access groups.}
-
-\item{beginTime}{\code{POSIXct} with maximum length 1. When given, only
-=======
 \item{dag}{\code{character(0/1)}. Data access group ID for which to return logs.
 By default, logs are returned for all data access groups.}
 
 \item{beginTime}{\code{POSIXct(0/1)}. When given, only
->>>>>>> Issue-216-consolidateDocumentation
 logs recorded after this time will be returned.}
 
 \item{endTime}{\code{POSIXct(0/1)}. When given, only logs
@@ -71,13 +59,8 @@ recorded before this time will be returned.}
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
@@ -95,15 +78,9 @@ Returns a data frame with columns\tabular{ll}{
 }
 }
 \description{
-<<<<<<< HEAD
-Export the logging (audit trail) of all changes made to
-a project, including data exports, data changes, project
-metadata changes, modification of user rights, etc.
-=======
 These methods enable to user to export the logging
 (audit trail) of all changes made to a project, including data exports,
 data changes, project metadata changes, modification of user rights, etc.
->>>>>>> Issue-216-consolidateDocumentation
 }
 \examples{
 \dontrun{

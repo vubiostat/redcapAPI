@@ -24,13 +24,8 @@ exportInstruments(rcon, ...)
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
@@ -48,28 +43,6 @@ Returns a data frame with the columns:\tabular{ll}{
 These methods enable the user to view the instruments defined
 in the project.
 }
-<<<<<<< HEAD
-\section{REDCap Version}{
-
-6.5.0 +
-
-
-5.8.2+
-}
-
-\section{REDCap API Documentation}{
-
-This function allows you to export a list of the data collection instruments
-for a project. This includes their unique instrument name as seen in the second
-column of the Data Dictionary, as well as each instrument's corresponding
-instrument label, which is seen on a project's left-hand menu when entering data.
-The instruments will be ordered according to their order in the project.
-}
-
-\section{Known REDCap Limitations}{
-
-None
-=======
 \examples{
 \dontrun{
 unlockREDCap(connections = c(rcon = "project_alias"), 
@@ -78,7 +51,6 @@ unlockREDCap(connections = c(rcon = "project_alias"),
              envir = globalenv())
  
 exportInstruments(rcon)
->>>>>>> Issue-216-consolidateDocumentation
 }
 
 }

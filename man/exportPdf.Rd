@@ -36,21 +36,12 @@ exportPdf(
 \item{dir}{\code{character(1)}. The directory into which the file
 should be saved.}
 
-<<<<<<< HEAD
-\item{filename}{\code{character(1)}. The base of the file name.  If
-\code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  If
-\code{record} has a value, it will be appended with \code{"_record_[record id].pdf"}}
-
-\item{record}{The record id for which forms should be downloaded.  May only
-have length 1. May be either \code{character} or \code{numeric}.}
-=======
 \item{filename}{\code{character(1)}. The base of the file name.  When
 \code{record = NULL}, it will be appended with \code{"_blank.pdf"}.  When
 \code{record} has a value, it will be appended with \code{"_record_[record id].pdf"}}
 
 \item{record}{\code{character(1)}, \code{integerish(1)}, or \code{NULL}.
 The record id for which forms should be downloaded.}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{events}{\code{character}. The events for which forms should be downloaded}
 
@@ -66,13 +57,8 @@ are downloaded. When \code{TRUE}, this overrides the \code{records} argument.}
 An option for how to handle errors returned by the API.
 see \code{\link[=redcapError]{redcapError()}}.}
 
-<<<<<<< HEAD
-\item{config}{\code{list} Additional configuration parameters to pass to
-\code{\link[httr]{POST}}. These are appended to any parameters in
-=======
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
->>>>>>> Issue-216-consolidateDocumentation
 \code{rcon$config}.}
 
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
@@ -85,16 +71,10 @@ computer, a message is displayed providing the location of the file
 on the system.
 }
 \description{
-<<<<<<< HEAD
-This function allows you to download PDF files of data collection
-instruments.  The download may be with or without collected data, and may
-return a single record, multiple records, or all records.
-=======
 These methods allow the user to download PDF files of
 data collection instruments.  The download may be with or without
 collected data; and may return a single record, multiple records,
 or all records.
->>>>>>> Issue-216-consolidateDocumentation
 }
 \details{
 These methods mimics the behavior of "Download PDF of Instruments" button on the
@@ -106,21 +86,6 @@ REDCap user interface. They permit the user to export a PDF file for:
 \item All instruments (with data from a single record)
 \item All instruments (with data from all records)
 }
-<<<<<<< HEAD
-\section{REDCap API Documentation}{
-
-This function allows you to export a PDF file for any of the following: 1) a
-single data collection instrument (blank), 2) all instruments (blank), 3) a
-single instrument (with data from a single record), 4) all instruments (with
-data from a single record), or 5) all instruments (with data from ALL records).
-This is the exact same PDF file that is downloadable from a project's data entry
-form in the web interface, and additionally, the user's privileges with regard to
-data exports will be applied here just like they are when downloading the PDF in
-the web interface (e.g., if they have de-identified data export rights, then it
-will remove data from certain fields in the PDF). If the user has "No Access" data
-export rights, they will not be able to use this method, and an error will be returned.
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }
 \seealso{
 \code{\link[=exportMetaData]{exportMetaData()}},\cr

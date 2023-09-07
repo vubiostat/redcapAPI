@@ -55,22 +55,6 @@ multiple choice field; no action will be taken on such fields.
 For this function, yes/no and true/false fields are considered
 multiple choice fields. Fields of class \code{mChoice} are quietly skipped.}
 
-<<<<<<< HEAD
-\item{cast}{A named \code{list} of user specified class casting functions.
-Keys must correspond to a truncated REDCap field type, i.e.
-{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
-number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql}. The function will be
-provided the variables (x, field_name, coding).
-See \code{\link{fieldValidationAndCasting}}}
-
-\item{suffix}{\code{character(1)}. An optional suffix to provide if
-the recoded variables should be returned as new columns. For example,
-if recoding a field \code{forklift_brand} and \code{suffix = "_labelled"},
-the result will have one column with the coded values
-(\code{forklift_brand}) and one column with the labelled values
-(\code{forklift_brand_labelled}).}
-=======
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
@@ -82,7 +66,6 @@ if recoding a field \code{forklift_brand} and \code{suffix = "_labeled"},
 the result will have one column with the coded values
 (\code{forklift_brand}) and one column with the labeled values
 (\code{forklift_brand_labeled}).}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
@@ -113,11 +96,7 @@ the data.}
 \description{
 The functions provided here allow for recasting fields
 after records have been exported. They generally have a similar
-<<<<<<< HEAD
-interface to the casting strategy of \code{\link{exportRecordsTyped}},
-=======
 interface to the casting strategy of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}},
->>>>>>> Issue-216-consolidateDocumentation
 though they may not each offer all the same options.
 }
 \details{
@@ -125,11 +104,7 @@ though they may not each offer all the same options.
 initially by the need to switch between codes and labels in multiple
 choice fields. Field types for which no casting function is specified will
 be returned with no changes. It will not attempt to validate the content
-<<<<<<< HEAD
-of fields; fields that can not be successfully cast will be quietly
-=======
 of fields; fields that cannot be successfully cast will be quietly
->>>>>>> Issue-216-consolidateDocumentation
 returned as missing values.
 
 \code{castForImport} is written with defaults that will return data

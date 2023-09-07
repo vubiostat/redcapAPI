@@ -14,27 +14,10 @@ vectorToApiBodyList(vector, parameter_name)
 \description{
 Converts an R vector to a list that will be suitable for
 \code{makeApiCall}.
-<<<<<<< HEAD
-}
-\section{Functional Requirements}{
-
-\enumerate{
-\item Return a named list.
-\item The name of each element in the list starts with the value of \code{parameter_name}
-\item Throw an error if \code{x} is not an atomic vector
-\item Throw an error if \code{parameter_name} is not a \code{character(1)}
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }
 \examples{
 \dontrun{
 vectorToApiBodyList(1:3, "records")
 }
 
-<<<<<<< HEAD
-\author{
-Benjamin Nutter with thanks to Philip Chase for showing me how
-these need to be formatted.
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }

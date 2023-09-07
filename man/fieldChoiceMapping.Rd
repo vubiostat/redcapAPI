@@ -13,15 +13,9 @@ fieldChoiceMapping(object, field_name, ...)
 \method{fieldChoiceMapping}{redcapApiConnection}(object, field_name, ...)
 }
 \arguments{
-<<<<<<< HEAD
-\item{object}{May be either a \code{character(1)} with the content of the
-field choices (i.e. \code{meta_data$select_choices_or_calculations}),
-or a \code{redcapConnection} object.}
-=======
 \item{object}{\code{redcapConnection} or \code{character(1)}. When \code{character}, is
 matches the format of the meta data field choices
 (i.e. \code{rcon$meta_data()$select_choices_or_calculations}).}
->>>>>>> Issue-216-consolidateDocumentation
 
 \item{field_name}{\code{character(1)} gives the field name for which to
 make the choice mapping.}
@@ -35,10 +29,4 @@ Returns a matrix with two columns, \code{choice_value} and \code{choice_label}
 Uses the string from the \code{select_choices_or_calculations}
 for the meta data to create a matrix of codes and their mapped
 labels.
-<<<<<<< HEAD
-}
-\author{
-Benjamin Nutter, Shawn Garbett
-=======
->>>>>>> Issue-216-consolidateDocumentation
 }
