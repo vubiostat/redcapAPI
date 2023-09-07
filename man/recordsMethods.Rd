@@ -58,72 +58,42 @@ exportReports(
 \item{report_id}{\code{integerish(1)}. Gives the report id of the desired report.
 This is located on the Report Builder page of the user interface.}
 
-\item{factors}{\code{logical(1)}.  When \code{TRUE}, multiple choice fields
-will be returned as factors. Otherwise, they are returned as
-character values. See 'Exporting Records'
-for more on how this interacts with the \code{checkboxLabels} argument.}
+\item{records}{\code{character} or \code{NULL}. Vector of record IDs to export.}
 
-\item{fields}{\code{character}. Fields to be returned.  When \code{NULL},
-all fields are returned.}
+\item{fields}{\code{character} or \code{NULL}. Vector of fields to export.}
 
-\item{forms}{\code{character}. Forms to be returned.  When \code{NULL},
-all forms are returned.}
+\item{forms}{\code{character} or \code{NULL}. Vector of forms to export.}
 
-\item{records}{\code{character} or \code{integerish}. Record ID's to be
-returned.  When \code{NULL}, all records are returned.}
+\item{events}{\code{character} or \code{NULL}. Vector of events to export.}
 
-\item{events}{\code{character}. Events to be returned from a
-longitudinal database.  When \code{NULL}, all events are returned.}
+\item{raw_or_label}{\code{character(1)}. One of \code{c("raw", "label")}.
+Export the raw coded values or labels for the options of multiple choice fields}
 
-\item{labels}{\code{logical(1)}. When \code{TRUE}, field labels are
-attached to each column as an attribute.}
+\item{raw_or_label_headers}{\code{character(1)}. One of \code{c("raw", "label")}.
+Export the variable field names (\code{"raw"}) or the labels (\code{"label"}).}
 
-\item{dates}{\code{logical(1)}. When \code{TRUE}, date variables are converted to
-\code{POSIXct} objects.}
+\item{export_checkbox_label}{\code{logical(1)}. Specifies the format of
+checkbox field values specifically when exporting the data as labels
+(i.e., when \code{rawOrLabel = "label"}). When exporting labels, by
+default (\code{FALSE}), all checkboxes will either have a value
+'Checked' if they are checked or 'Unchecked' if not checked.
+But if \code{TRUE}, it will instead export the checkbox value as the
+checkbox option's label (e.g., 'Choice 1') if checked or it will be
+blank/empty (no value) if not checked.}
 
-\item{drop}{\code{character}. An optional vector of REDCap field names to
-remove from the dataset. Ignored when \code{NULL}. Any fields in this
-argument that do not exist in the project will be ignored.}
+\item{export_survey_fields}{\code{logical(1)}. When \code{TRUE}, the survey identifier
+field (\code{redcap_survey_identifier}) and survey timestamp fields
+(\verb{[instrument]_timestamp}) will be exported.}
 
-\item{survey}{\code{logical(1)}. specifies whether or not to export the survey identifier field
-(\code{redcap_survey_identifier}) or survey timestamp fields
-(\verb{[form_name]_timestamp}) when surveys are utilized in the project.}
+\item{export_dags}{\code{logical(1)}. When \code{TRUE}, the Data Access Group
+identifier \code{redcap_data_access_group} will be exported.}
 
-\item{dag}{\code{logical(1)}. When \code{TRUE}, the system field
-\code{redcap_data_access_group} is included in the export.
-This option is only
-viable if the user whose token is being used to make the API request is
-not in a data access group. If the user is in a group, then this
-flag will revert to \code{FALSE}.}
+\item{batch_size}{\code{integerish(1)} (or \code{NULL}). When \code{NULL},
+all records are pulled. Otherwise, the records are pulled in batches of this size.}
 
-\item{checkboxLabels}{\code{logical(1)}. When \code{FALSE} labels are
-applied as "Unchecked"/"Checked".
-When \code{TRUE}, they are applied as \verb{""/[field_label]} where \verb{[field_label]}
-is the label assigned to the level in the data dictionary.}
-
-\item{form_complete_auto}{\code{logical(1)}. When \code{TRUE}
-(default), the \verb{[form]_complete} fields for any form
-from which at least one variable is requested will automatically
-be retrieved.  When \code{FALSE}, these fields must be
-explicitly requested.}
-
-\item{colClasses}{Named \code{character} vector. Column classes passed to
-\code{\link[utils:read.table]{utils::read.csv()}} calls.
-Useful to force the interpretation of a column in a specific type and
-avoid an unexpected recast.}
-
-\item{batch.size}{\code{integerish(1)}.  Specifies the number of subjects to be included
-in each batch of a batched export or import.  Non-positive numbers
-export/import the entire operation in a single batch.
-Batching may be beneficial to prevent tying up smaller servers.
-See Details.}
-
-\item{dataFile}{\code{character(1)}. Gives the location
-of the dataset downloaded from REDCap.  This should be the raw
-(unlabeled) data set.}
-
-\item{metaDataFile}{\code{character(1)}. Gives the location of the data dictionary
-downloaded from REDCap.}
+\item{csv_delimiter}{\code{character}. One of
+\code{c(",", "\\t", ";", "|", "^")}. Designates the delimiter for the CSV
+file received from the API.}
 
 \item{...}{Arguments to pass to other methods}
 
@@ -138,8 +108,6 @@ see \code{\link[=redcapError]{redcapError()}}.}
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
-
-\item{meta_data}{Deprecated version of \code{metaDataFile}.}
 }
 \value{
 \code{exportRecords} returns a data frame with the project data. The

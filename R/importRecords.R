@@ -7,8 +7,9 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param data A `data.frame` to be imported to the project.
-#' @param overwriteBehavior `character(1)`. One of `c("normal", "overwrite")`. 
+#' @inheritParams common-cast-args
+#' @param data `data.frame`. The data to be imported to the project.
+#' @param overwrite_behavior `character(1)`. One of `c("normal", "overwrite")`. 
 #'   `"normal"` prevents blank fields from overwriting populated fields.  
 #'   `"overwrite"` causes blanks to overwrite data in the database.
 #' @param force_auto_number `logical(1)`. If record auto-numbering has been
@@ -19,62 +20,42 @@
 #'   are still required in order to associate multiple rows of data to an 
 #'   individual record in the request); instead those records in the 
 #'   request will receive new record names during the import process. 
-#'   It is recommended that the user use `returnContent = "auto_ids"`
+#'   It is recommended that the user use `return_content = "auto_ids"`
 #'   when `force_auto_number = TRUE`
-#' @param returnContent `character(1)`.  
+#' @param return_content `character(1)`.  
 #'   One of `c("count", "ids", "nothing", "auto_ids")`.
 #'   'count' returns the number of records imported; 
 #'   'ids' returns the record ids that are imported;
 #'   'nothing' returns no message; 
 #'   'auto_ids' returns a list of pairs of all record IDs that were imported. 
 #'   If used when `force_auto_number = FALSE`, the value will be changed to `'ids'`.
-#' @param returnData `logical(1)`. When `TRUE`, prevents the REDCap 
-#'   import and instead returns the data frame that would have been given
-#'   for import. This is sometimes helpful if the API import fails without
-#'   providing an informative message. The data frame can be written to a csv
-#'   and uploaded using the interactive tools to troubleshoot the
-#'   problem. 
-#' @param logfile `character(1)`. An optional filepath (preferably .txt) 
-#'   in which to print the log of errors and warnings about the data.
-#'   When `""`, the log is printed to the console. 
-#' @param batch.size `integerish(1)`.  Specifies the number of subjects to be included 
+#' @param skip_import `logical(1)`. When `TRUE`, the data will undergo validation
+#'   and casting, but will not be sent to the project. This permits the user 
+#'   to obtain and review the data before attempting to import it.
+#' @param batch_size `integerish(1)`.  Specifies the number of subjects to be included 
 #'   in each batch of a batched export or import.  Non-positive numbers 
 #'   export/import the entire operation in a single batch. 
 #'   Batching may be beneficial to prevent tying up smaller servers.  
 #'   See Details.
 #'
 #' @details
-#' `importRecords` prevents the most common import errors by testing the
-#' data before attempting the import.  Namely
-#' 
-#' 1. Check that all variables in `data` exist in the REDCap data dictionary.
-#' 2. Check that the record id variable exists
-#' 3. Force the record id variable to the first position in the data frame (with a warning)
-#' 4. Remove calculated fields (with a warning)
-#' 5. Verify that REDCap date fields are represented in the data frame as either `character`, `POSIXct`, or `Date` class objects.
-#' 6. Determine if values are within their specified validation limits.
-#'
-#' See the documentation for [validateImport()] for detailed
-#' explanations of the validation. 
-#'  
 #' A 'batched' import is one where the export is performed over a series of 
 #' API calls rather than one large call.  For large projects on small servers, 
 #' this may prevent a single user from tying up the server and forcing others 
 #' to wait on a larger job.  
 #' 
 #' @return
-#' `importRecords`, when `returnData = FALSE`, returns the content from the
-#'   API response designated by the `returnContent` argument. 
-#'   
-#' `importRecords`, when `returnData = TRUE`, returns the 
-#'   data frame that was internally prepared for import. This data frame has
-#'   values transformed from R objects to character values the API will 
-#'   accept. 
+#' Returns a data frame with the data after having been passed through
+#' `castForImport`. 
+#' 
+#' The data frame has an attribute `return_content` that gives the content
+#' returned by the API.
 #'
 #' @seealso 
 #' [exportRecords()], \cr
 #' [deleteRecords()], \cr
-#' [exportRecordsTyped()]
+#' [exportRecordsTyped()], \cr
+#' [castForImport()]
 #' 
 #' @examples
 #' \dontrun{
@@ -91,13 +72,14 @@
 #'               data = NewData)
 #'               
 #'               
-#' # Import records and save validation info to a file
+#' # Import records using auto numbering
 #' NewData <- data.frame(record_id = c(1, 2, 3), 
 #'                       age = c(27, 43, 32), 
 #'                       date_of_visit = rep(Sys.Date(), 3))
 #' importRecords(rcon, 
-#'               data = NewData, 
-#'               logfile = "import-validation-notes.txt")      
+#'               data = NewData,
+#'               force_auto_number = TRUE)
+#'               
 #' 
 #' } 
 #' 
@@ -234,7 +216,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                                error_handling = error_handling, 
                                                api_param = api_param, 
                                                config = config)
-    
+
     switch(return_content, 
            "count" = message(sprintf("Records imported: %s", responses)), 
            "nothing" = NULL,
@@ -347,6 +329,17 @@ importRecords.redcapApiConnection <- function(rcon,
       return(redcapError(responses[[i]], error_handling))
     } 
   }
+  
+  response_char <- vapply(responses, 
+                          function(x) as.character(x), 
+                          character(1))
+  
+  switch(return_content, 
+         "count" = sum(vapply(response_char, as.numeric, numeric(1))), 
+         "nothing" = NULL, 
+         do.call("rbind", lapply(response_char, 
+                                 function(rc) utils::read.csv(text = rc, 
+                                                              stringsAsFactors = FALSE))))
 }
 
 

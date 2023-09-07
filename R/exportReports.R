@@ -103,7 +103,7 @@ exportReports.redcapApiConnection <- function(rcon,
                 error_handling = error_handling)
   }
   
-  read.csv(text = as.character(response), 
-           stringsAsFactors = FALSE, 
-           na.strings = "")
+  utils::read.csv(text = as.character(response), 
+                  stringsAsFactors = FALSE, 
+                  na.strings = "")
 }

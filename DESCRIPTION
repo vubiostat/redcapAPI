@@ -32,9 +32,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     checkmate,
-    chron,
     httr,
-    lubridate,
     keyring,
     getPass,
     yaml

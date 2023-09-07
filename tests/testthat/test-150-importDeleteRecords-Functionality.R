@@ -43,9 +43,9 @@ importMappings(rcon,
 test_that(
   "Import and Delete records", 
   {
-    expect_message(importRecords(rcon, 
-                                 data = ImportData), 
-                   "Records imported: 1")
+    expect_data_frame(importRecords(rcon, 
+                                    data = ImportData), 
+                      nrows = 1)
     
     expect_message(deleteRecords(rcon, 
                                  records = 1), 
@@ -100,16 +100,16 @@ test_that(
   "importRecords return_content", 
   {
     # Import new records returnContent = count returns count of records imported
-    expect_message(importRecords(rcon, 
-                                 data = ImportData, 
-                                 returnContent = "count"), 
-                   "Records imported: 1")
+    expect_data_frame(importRecords(rcon, 
+                                    data = ImportData, 
+                                    returnContent = "count"), 
+                      nrows = 1)
     
     # Import new records returnContent = ids returns IDs of records imported
-    ThisImport <- expect_message(importRecords(rcon, 
-                                               data = ImportData, 
-                                               return_content = "ids"), 
-                                 "Records imported: 1")
+    ThisImport <- expect_data_frame(importRecords(rcon, 
+                                                  data = ImportData, 
+                                                  return_content = "ids"), 
+                                    nrows = 1)
     expect_equal(attr(ThisImport, "return_content"), 
                  data.frame(id = 1))
     

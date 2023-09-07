@@ -291,9 +291,9 @@ test_that(
     importMetaData(rcon, NewMetaData)
     rcon$refresh_fieldnames()
     
-    importRecords(rcon, 
-                  data = data.frame(record_id = 1:4,
-                                    checkbox_zero___0 = c(0, 1, 0, 1)))
+    expect_warning(importRecords(rcon, 
+                                 data = data.frame(record_id = 1:4,
+                                                   checkbox_zero___0 = c(0, 1, 0, 1))))
     
     # Under default casting -----------------------------------------
     expect_warning(DefaultRecord <- exportRecordsTyped(rcon, 

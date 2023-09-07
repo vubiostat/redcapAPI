@@ -34,7 +34,19 @@ importRecords(
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{data}{A \code{data.frame} to be imported to the project.}
+\item{data}{\code{data.frame}. The data to be imported to the project.}
+
+\item{overwrite_behavior}{\code{character(1)}. One of \code{c("normal", "overwrite")}.
+\code{"normal"} prevents blank fields from overwriting populated fields.
+\code{"overwrite"} causes blanks to overwrite data in the database.}
+
+\item{return_content}{\code{character(1)}.
+One of \code{c("count", "ids", "nothing", "auto_ids")}.
+'count' returns the number of records imported;
+'ids' returns the record ids that are imported;
+'nothing' returns no message;
+'auto_ids' returns a list of pairs of all record IDs that were imported.
+If used when \code{force_auto_number = FALSE}, the value will be changed to \code{'ids'}.}
 
 \item{force_auto_number}{\code{logical(1)}. If record auto-numbering has been
 enabled in the project, it may be desirable to import records where each
@@ -44,10 +56,42 @@ record names provided in the request will not be used (although they
 are still required in order to associate multiple rows of data to an
 individual record in the request); instead those records in the
 request will receive new record names during the import process.
-It is recommended that the user use \code{returnContent = "auto_ids"}
+It is recommended that the user use \code{return_content = "auto_ids"}
 when \code{force_auto_number = TRUE}}
 
 \item{...}{Arguments to pass to other methods}
+
+\item{na}{A named \code{list} of user specified functions to determine if the
+data is NA. This is useful when data is loaded that has coding for NA, e.g.
+-5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
+{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
+checkbox, form_complete, sql}. The function will be provided the variables
+(x, field_name, coding). The function must return a vector of logicals
+matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
+entries.}
+
+\item{validation}{A named \code{list} of user specified validation functions. The
+same named keys are supported as the na argument. The function will be
+provided the variables (x, field_name, coding). The function must return a
+vector of logical matching the input length. Helper functions to construct
+these are \code{\link[=valRx]{valRx()}} and \code{\link[=valChoice]{valChoice()}}. Only fields that
+are not identified as NA will be passed to validation functions.}
+
+\item{cast}{A named \code{list} of user specified class casting functions. The
+same named keys are supported as the na argument. The function will be
+provided the variables (x, field_name, coding). The function must return a
+vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+
+\item{skip_import}{\code{logical(1)}. When \code{TRUE}, the data will undergo validation
+and casting, but will not be sent to the project. This permits the user
+to obtain and review the data before attempting to import it.}
+
+\item{batch_size}{\code{integerish(1)}.  Specifies the number of subjects to be included
+in each batch of a batched export or import.  Non-positive numbers
+export/import the entire operation in a single batch.
+Batching may be beneficial to prevent tying up smaller servers.
+See Details.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
@@ -60,64 +104,19 @@ see \code{\link[=redcapError]{redcapError()}}.}
 \item{api_param}{A named \code{list}. Additional API parameters to pass into the
 body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
-
-\item{overwriteBehavior}{\code{character(1)}. One of \code{c("normal", "overwrite")}.
-\code{"normal"} prevents blank fields from overwriting populated fields.
-\code{"overwrite"} causes blanks to overwrite data in the database.}
-
-\item{returnContent}{\code{character(1)}.
-One of \code{c("count", "ids", "nothing", "auto_ids")}.
-'count' returns the number of records imported;
-'ids' returns the record ids that are imported;
-'nothing' returns no message;
-'auto_ids' returns a list of pairs of all record IDs that were imported.
-If used when \code{force_auto_number = FALSE}, the value will be changed to \code{'ids'}.}
-
-\item{returnData}{\code{logical(1)}. When \code{TRUE}, prevents the REDCap
-import and instead returns the data frame that would have been given
-for import. This is sometimes helpful if the API import fails without
-providing an informative message. The data frame can be written to a csv
-and uploaded using the interactive tools to troubleshoot the
-problem.}
-
-\item{logfile}{\code{character(1)}. An optional filepath (preferably .txt)
-in which to print the log of errors and warnings about the data.
-When \code{""}, the log is printed to the console.}
-
-\item{batch.size}{\code{integerish(1)}.  Specifies the number of subjects to be included
-in each batch of a batched export or import.  Non-positive numbers
-export/import the entire operation in a single batch.
-Batching may be beneficial to prevent tying up smaller servers.
-See Details.}
 }
 \value{
-\code{importRecords}, when \code{returnData = FALSE}, returns the content from the
-API response designated by the \code{returnContent} argument.
+Returns a data frame with the data after having been passed through
+\code{castForImport}.
 
-\code{importRecords}, when \code{returnData = TRUE}, returns the
-data frame that was internally prepared for import. This data frame has
-values transformed from R objects to character values the API will
-accept.
+The data frame has an attribute \code{return_content} that gives the content
+returned by the API.
 }
 \description{
 These methods enable the user to import new records or update
 existing records to a project.
 }
 \details{
-\code{importRecords} prevents the most common import errors by testing the
-data before attempting the import.  Namely
-\enumerate{
-\item Check that all variables in \code{data} exist in the REDCap data dictionary.
-\item Check that the record id variable exists
-\item Force the record id variable to the first position in the data frame (with a warning)
-\item Remove calculated fields (with a warning)
-\item Verify that REDCap date fields are represented in the data frame as either \code{character}, \code{POSIXct}, or \code{Date} class objects.
-\item Determine if values are within their specified validation limits.
-}
-
-See the documentation for \code{\link[=validateImport]{validateImport()}} for detailed
-explanations of the validation.
-
 A 'batched' import is one where the export is performed over a series of
 API calls rather than one large call.  For large projects on small servers,
 this may prevent a single user from tying up the server and forcing others
@@ -138,13 +137,14 @@ importRecords(rcon,
               data = NewData)
               
               
-# Import records and save validation info to a file
+# Import records using auto numbering
 NewData <- data.frame(record_id = c(1, 2, 3), 
                       age = c(27, 43, 32), 
                       date_of_visit = rep(Sys.Date(), 3))
 importRecords(rcon, 
-              data = NewData, 
-              logfile = "import-validation-notes.txt")      
+              data = NewData,
+              force_auto_number = TRUE)
+              
 
 } 
 
@@ -152,5 +152,6 @@ importRecords(rcon,
 \seealso{
 \code{\link[=exportRecords]{exportRecords()}}, \cr
 \code{\link[=deleteRecords]{deleteRecords()}}, \cr
-\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}
+\code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
+\code{\link[=castForImport]{castForImport()}}
 }

@@ -9,58 +9,32 @@
 #' @inheritParams common-api-args
 #' @param report_id `integerish(1)`. Gives the report id of the desired report. 
 #'   This is located on the Report Builder page of the user interface.
-#' @param factors `logical(1)`.  When `TRUE`, multiple choice fields
-#'   will be returned as factors. Otherwise, they are returned as 
-#'   character values. See 'Exporting Records'
-#'   for more on how this interacts with the `checkboxLabels` argument.
-#' @param fields `character`. Fields to be returned.  When `NULL`, 
-#'   all fields are returned.
-#' @param forms `character`. Forms to be returned.  When `NULL`, 
-#'   all forms are returned.
-#' @param records `character` or `integerish`. Record ID's to be 
-#'   returned.  When `NULL`, all records are returned.
-#' @param events `character`. Events to be returned from a 
-#'   longitudinal database.  When `NULL`, all events are returned.
-#' @param labels `logical(1)`. When `TRUE`, field labels are 
-#'   attached to each column as an attribute.
-#' @param dates `logical(1)`. When `TRUE`, date variables are converted to
-#'   `POSIXct` objects.
-#' @param drop `character`. An optional vector of REDCap field names to 
-#'   remove from the dataset. Ignored when `NULL`. Any fields in this 
-#'   argument that do not exist in the project will be ignored.
-#' @param survey `logical(1)`. specifies whether or not to export the survey identifier field 
-#'   (`redcap_survey_identifier`) or survey timestamp fields 
-#'   (`[form_name]_timestamp`) when surveys are utilized in the project. 
-#' @param dag `logical(1)`. When `TRUE`, the system field 
-#'   `redcap_data_access_group` is included in the export. 
-#'   This option is only 
-#'   viable if the user whose token is being used to make the API request is 
-#'   not in a data access group. If the user is in a group, then this 
-#'   flag will revert to `FALSE`.
-#' @param checkboxLabels `logical(1)`. When `FALSE` labels are 
-#'   applied as "Unchecked"/"Checked".  
-#'   When `TRUE`, they are applied as `""/[field_label]` where `[field_label]` 
-#'   is the label assigned to the level in the data dictionary. 
-#' @param form_complete_auto `logical(1)`. When `TRUE` 
-#'   (default), the `[form]_complete` fields for any form 
-#'   from which at least one variable is requested will automatically
-#'   be retrieved.  When `FALSE`, these fields must be 
-#'   explicitly requested.   
-#' @param colClasses Named `character` vector. Column classes passed to 
-#'   [utils::read.csv()] calls. 
-#'   Useful to force the interpretation of a column in a specific type and 
-#'   avoid an unexpected recast.
-#' @param batch.size `integerish(1)`.  Specifies the number of subjects to be included 
-#'   in each batch of a batched export or import.  Non-positive numbers 
-#'   export/import the entire operation in a single batch. 
-#'   Batching may be beneficial to prevent tying up smaller servers.  
-#'   See Details.
-#' @param dataFile `character(1)`. Gives the location
-#'   of the dataset downloaded from REDCap.  This should be the raw
-#'   (unlabeled) data set.
-#' @param metaDataFile `character(1)`. Gives the location of the data dictionary 
-#'   downloaded from REDCap.
-#' @param meta_data Deprecated version of `metaDataFile`.
+#' @param records `character` or `NULL`. Vector of record IDs to export.
+#' @param fields `character` or `NULL`. Vector of fields to export. 
+#' @param forms `character` or `NULL`. Vector of forms to export.
+#' @param events `character` or `NULL`. Vector of events to export.
+#' @param raw_or_label `character(1)`. One of `c("raw", "label")`. 
+#'   Export the raw coded values or labels for the options of multiple choice fields
+#' @param raw_or_label_headers `character(1)`. One of `c("raw", "label")`. 
+#'   Export the variable field names (`"raw"`) or the labels (`"label"`).
+#' @param export_checkbox_label `logical(1)`. Specifies the format of 
+#'   checkbox field values specifically when exporting the data as labels 
+#'   (i.e., when `rawOrLabel = "label"`). When exporting labels, by 
+#'   default (`FALSE`), all checkboxes will either have a value 
+#'   'Checked' if they are checked or 'Unchecked' if not checked. 
+#'   But if `TRUE`, it will instead export the checkbox value as the 
+#'   checkbox option's label (e.g., 'Choice 1') if checked or it will be 
+#'   blank/empty (no value) if not checked.
+#' @param export_survey_fields `logical(1)`. When `TRUE`, the survey identifier
+#'   field (`redcap_survey_identifier`) and survey timestamp fields 
+#'   (`[instrument]_timestamp`) will be exported.
+#' @param export_dags `logical(1)`. When `TRUE`, the Data Access Group 
+#'   identifier `redcap_data_access_group` will be exported.
+#' @param csv_delimiter `character`. One of 
+#'   `c(",", "\t", ";", "|", "^")`. Designates the delimiter for the CSV
+#'   file received from the API.
+#' @param batch_size `integerish(1)` (or `NULL`). When `NULL`,
+#'   all records are pulled. Otherwise, the records are pulled in batches of this size.
 #'   
 #' @details
 #' It is unnecessary to include `"redcap_event_name"`` in the fields argument.  
@@ -154,22 +128,17 @@
 
 recordsMethods <- function(rcon,
                            report_id,
-                           factors, 
+                           records,
                            fields, 
                            forms, 
-                           records, 
                            events, 
-                           labels, 
-                           dates, 
-                           drop, 
-                           survey, 
-                           dag, 
-                           checkboxLabels, 
-                           form_complete_auto,
-                           colClasses,
-                           batch.size,
-                           dataFile, 
-                           metaDataFile,
+                           raw_or_label, 
+                           raw_or_label_headers, 
+                           export_checkbox_label, 
+                           export_survey_fields, 
+                           export_dags, 
+                           batch_size,
+                           csv_delimiter,
                            ..., 
                            error_handling, 
                            config, 
