@@ -1,1 +1,0 @@
-# FIXME: Tests for invalid summaries printing
