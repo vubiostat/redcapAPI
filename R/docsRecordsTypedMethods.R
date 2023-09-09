@@ -130,7 +130,8 @@
 #' 
 #' ## Field validations and casting
 #' 
-#' [fieldValidationAndCasting()] 
+#' [fieldValidationAndCasting()], \cr
+#' [reviewInvalidRecords()]
 #' 
 #' ## Post-processing functionality
 #' 

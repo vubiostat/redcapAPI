@@ -21,9 +21,11 @@
 #' 
 #' This coding rarely presents a problem when casting from raw values 
 #' (as is done in `exportRecordsTyped`). However, casting from coded or 
-#' labeled values can be problematic, as it can be difficult to determine 
-#' if a `0` represents a checked or unchecked value. The situations in which
-#' casting may fail to produce the desired results are 
+#' labeled values can be problematic, as it In this case, it becomes 
+#' indeterminate from context if the intent of `0` is 'false' or the coded 
+#' value '0' ('true') ... 
+#' 
+#' The situations in which casting may fail to produce the desired results are 
 #' 
 #' | Code | Label | Result | 
 #' |------|-------|--------|
@@ -34,7 +36,7 @@
 #' a warning anytime a zero-coded check field is encountered. A separate 
 #' warning is issued when a field is cast from coded or labeled values. 
 #' 
-#' When casting from raw or labeled values, it is strongly recommended that 
+#' When casting from coded or labeled values, it is strongly recommended that 
 #' the function [castCheckForImport()] be used. This function permits the 
 #' user to state explicitly which values should be recognized as checked, 
 #' avoiding the ambiguity resulting from the coding.

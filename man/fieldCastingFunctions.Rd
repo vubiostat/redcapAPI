@@ -111,14 +111,16 @@ returned as missing values.
 in a format ready to be imported to a project via \code{importRecords}.
 All fields are returned as character vectors. If any values fail to
 validation check, are report is returned as an attribute named \code{invalid}.
+This attribute may be retrieved using \code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}.
 These are then set to \code{NA}, which will be imported as blanks through
 the API.
 
 \code{guessCast} is a helper function to make a guess at casting uncast
 columns. It will do a type cast if a validation is met above
 a threshold ratio of non-NA records. It modifies the existing
-\code{invalid} attribute to reflect the cast. \code{guessDate} is
-a special cast of \code{guessCast} that has defaults set for casting
+\code{invalid} attribute to reflect the cast.
+This attribute may be retrieved using \code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}.
+\code{guessDate} is a special cast of \code{guessCast} that has defaults set for casting
 a date field.
 
 \code{mChoiceCast} is a helper function that adds the \code{Hmisc::mChoice}
@@ -137,9 +139,11 @@ value of 1 indicates that 0 was selected.
 
 This coding rarely presents a problem when casting from raw values
 (as is done in \code{exportRecordsTyped}). However, casting from coded or
-labeled values can be problematic, as it can be difficult to determine
-if a \code{0} represents a checked or unchecked value. The situations in which
-casting may fail to produce the desired results are\tabular{lll}{
+labeled values can be problematic, as it In this case, it becomes
+indeterminate from context if the intent of \code{0} is 'false' or the coded
+value '0' ('true') ...
+
+The situations in which casting may fail to produce the desired results are\tabular{lll}{
    Code \tab Label \tab Result \cr
    0 \tab anything other than "0" \tab Likely to fail when casting from coded values \cr
    0 \tab 0 \tab Likely to fail when casting from coded or labeled values \cr
@@ -150,7 +154,7 @@ Because of the potential for miscast data, casting functions will issue
 a warning anytime a zero-coded check field is encountered. A separate
 warning is issued when a field is cast from coded or labeled values.
 
-When casting from raw or labeled values, it is strongly recommended that
+When casting from coded or labeled values, it is strongly recommended that
 the function \code{\link[=castCheckForImport]{castCheckForImport()}} be used. This function permits the
 user to state explicitly which values should be recognized as checked,
 avoiding the ambiguity resulting from the coding.
@@ -199,7 +203,8 @@ exportRecordsTyped(rcon) |>
 
 \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
 \code{\link[=exportReportsTyped]{exportReportsTyped()}}, \cr
-\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
+\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}, \cr
+\code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}
 }
 
 \subsection{Other Post Processing Functions}{

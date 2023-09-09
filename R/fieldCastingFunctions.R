@@ -39,14 +39,16 @@
 #'   in a format ready to be imported to a project via `importRecords`. 
 #'   All fields are returned as character vectors. If any values fail to
 #'   validation check, are report is returned as an attribute named `invalid`. 
+#'   This attribute may be retrieved using [reviewInvalidRecords()].
 #'   These are then set to `NA`, which will be imported as blanks through
 #'   the API. 
 #'   
 #'   `guessCast` is a helper function to make a guess at casting uncast 
 #'   columns. It will do a type cast if a validation is met above
 #'   a threshold ratio of non-NA records. It modifies the existing
-#'   `invalid` attribute to reflect the cast. `guessDate` is 
-#'   a special cast of `guessCast` that has defaults set for casting
+#'   `invalid` attribute to reflect the cast. 
+#'   This attribute may be retrieved using [reviewInvalidRecords()].
+#'   `guessDate` is a special cast of `guessCast` that has defaults set for casting
 #'   a date field.
 #'   
 #'   `mChoiceCast` is a helper function that adds the `Hmisc::mChoice` 
@@ -61,7 +63,8 @@
 #' 
 #' [exportRecordsTyped()], \cr
 #' [exportReportsTyped()], \cr
-#' [fieldValidationAndCasting()]
+#' [fieldValidationAndCasting()], \cr
+#' [reviewInvalidRecords()]
 #' 
 #' ## Other Post Processing Functions
 #' 
@@ -884,27 +887,45 @@ mChoiceCast <- function(data,
   
   id_field <- rcon$metadata()$field_name[1]
   
-  attr(Records, "invalid") <-
-    do.call(rbind, lapply(seq_along(Raw), function(i)
-    {
-      sel <- selector[,i]
-      if(any(sel))
-      {
-        data.frame(row=seq_len(nrow(Raw))[sel],
-                   record_id=if(id_field %in% colnames(Raw)) Raw[sel, id_field] else NA,
-                   field_name=field_names[i],
-                   field_type=field_types[i],
-                   value=Raw[sel, i])
-      } else NULL
-    }))
-  if(!is.null(attr(Records, "invalid")))
-  {
-    class(attr(Records, "invalid")) <- c("invalid", "data.frame")
-    attr(attr(Records, "invalid"), "time") <- format(Sys.Date(), "%c")  
-    attr(attr(Records, "invalid"), "version") <- rcon$version()
-    attr(attr(Records, "invalid"), "project") <- rcon$projectInfo()$project_title
-    warning("Some records failed validation. See 'invalid' attr.")
+  Invalid <- 
+    do.call(rbind, 
+            lapply(seq_along(Raw), 
+                   function(i)
+                   {
+                     sel <- selector[,i]
+                     if (any(sel))
+                     {
+                       data.frame(row = seq_len(nrow(Raw))[sel],
+                                  record_id = if(id_field %in% colnames(Raw)) Raw[sel, id_field] else NA,
+                                  field_name = field_names[i],
+                                  field_type = field_types[i],
+                                  value = Raw[sel, i], 
+                                  stringsAsFactors = FALSE)
+                     } else NULL
+                   }
+            )
+    )
+  
+  if (is.null(Invalid)){
+    Invalid <- data.frame(row = numeric(0), 
+                          record_id = character(0), 
+                          field_name = character(0), 
+                          field_type = character(0), 
+                          value = character(0), 
+                          stringsAsFactors = FALSE)
   }
+  
+  class(Invalid) <- c("invalid", "data.frame")
+  attr(Invalid, "time") <- format(Sys.Date(), "%c")
+  attr(Invalid, "version") <- rcon$version()
+  attr(Invalid, "project") <- rcon$projectInfo()$project_title
+    
+  if (nrow(Invalid) > 0)
+  {
+    warning("Some records failed validation. Use `reviewInvalidRecords` to review the failures.")
+  }
+  
+  attr(Records, "invalid") <- Invalid
   
   Records
 }
