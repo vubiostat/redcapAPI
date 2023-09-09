@@ -11,7 +11,7 @@
 #' @param field_names `character` vector of field names.
 #' @param x `atomic` object.
 #' 
-#' @section Zero Coded Check Fields:
+#' @section Zero-Coded Check Fields:
 #' A zero-coded check field is a field of the REDCap type `checkbox` that has
 #' a coding definition of `0, [label]`. When exported, the field names for
 #' these fields is `[field_name]___0`. As in other checkbox fields, the 
@@ -100,7 +100,7 @@ warnOfZeroCodedCheckCasting <- function(field_name, x){
   if (isZeroCodedCheckField(field_name) &&
       is.factor(x) &&
       any(levels(x) %in% "0")){
-    warning(sprintf("Zero-coded check field `%s` may not have been cast correctly.", 
+    warning(sprintf("Zero-coded check field `%s` may not have been cast correctly. See `?exportRecordsTyped`, Zero-Coded Check Fields.", 
                     field_name))
   }
 }
@@ -121,7 +121,7 @@ warnZeroCodedFieldPresent <- function(field_names){
                                logical(1))
   if (any(lgl_zero_coded)){
     zero_coded <- field_names[lgl_zero_coded]
-    warning(sprintf("Zero-coded check fields found. Verify that casting is correct for %s", 
+    warning(sprintf("Zero-coded check fields found. Verify that casting is correct for %s. See `?exportRecordsTyped`, Zero-Coded Check Fields.", 
                     paste0(zero_coded, collapse = ", ")))
   }
 }
