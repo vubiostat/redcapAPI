@@ -169,6 +169,17 @@ test_that(
     sapply(c(1:2), function(i) expect_true(!i %in% inv$row))
     sapply(3:5, function(i) expect_true(i %in% inv$row))
     
+    # Get the invalid attribute using reviewInvalidRecords
+    
+    inv <- reviewInvalidRecords(recV)
+    expect_true(!is.null(inv))
+    expect_equal(unique(inv$value), "7")
+    expect_data_frame(inv)
+    expect_equal(names(inv), 
+                 c("row", "record_id", "field_name", "field_type", "value"))
+    sapply(c(1:2), function(i) expect_true(!i %in% inv$row))
+    sapply(3:5, function(i) expect_true(i %in% inv$row))
+    
     
     # Validation report where the id_field is present has the correct number of columns
     recV <- expect_warning(
