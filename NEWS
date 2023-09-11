@@ -23,6 +23,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Documentation has been standardized. Related methods are now documented in the same
 help file. 
 * Add several functions for exporting Survey links and return codes
+* Replaced depricated function with_mock with with_mocked_bindings
 
 ## 2.7.5
 
