@@ -304,12 +304,14 @@ test_that(
     m <- mock(TRUE)
     n <- mock(TRUE)
 
-    with_mock(
+    with_mocked_bindings(
+      {
+        x <- unlockREDCap(
+          c(rcon="George"), url, keyring="API_KEYs",
+          passwordFUN=passwordFUN)
+      },
       key_set_with_value = m,
-      .connectAndCheck = n,
-      x <- unlockREDCap(
-        c(rcon="George"), url, keyring="API_KEYs",
-        passwordFUN=passwordFUN)
+      .connectAndCheck = n
     )
 
     expect_true("rcon" %in% names(x))
