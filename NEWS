@@ -22,6 +22,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Added `default_cast_no_factor`, a list of casting functions that may be used to cast fields without casting any fields to factors.  It comes with an equivalent alias `default_cast_character`.
 * Documentation has been standardized. Related methods are now documented in the same
 help file. 
+* Add several functions for exporting Survey links and return codes
+* Replaced depricated function with_mock with with_mocked_bindings
 
 ## 2.7.5
 

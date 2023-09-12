@@ -1,4 +1,4 @@
-context("Export Records Functionality with Surveys")
+context("Export Survey Return Code Functionality")
 
 # There is no way to designate a form to be a survey via the API.
 # Thus, testing that survey related fields are downloaded would require

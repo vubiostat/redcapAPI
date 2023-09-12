@@ -114,6 +114,8 @@
 #' as `cast=list(_date=as.Date))`. See [fieldValidationAndCasting()]
 #' for a full listing of package provided cast functions. 
 #' 
+#' @inherit isZeroCodedCheckField sections
+#' 
 #' @return
 #' `exportRecordsTyped` returns a data frame with the formatted data.
 #' 
@@ -128,7 +130,8 @@
 #' 
 #' ## Field validations and casting
 #' 
-#' [fieldValidationAndCasting()] 
+#' [fieldValidationAndCasting()], \cr
+#' [reviewInvalidRecords()]
 #' 
 #' ## Post-processing functionality
 #' 
