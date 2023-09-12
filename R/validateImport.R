@@ -73,7 +73,7 @@ validateImport <- function(data, meta_data, logfile = "")
   coll <- checkmate::makeAssertCollection()
   
   # Validating e-mail addresses taken from
-  # \url{http://www.regular-expressions.info/email.html}
+  # \url{https://www.regular-expressions.info/email.html}
   
   checkmate::assert_data_frame(x = data,
                                add = coll)
