@@ -7,9 +7,13 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
+#' @param record `character(1)` or `integerish(1)`. The record ID of a 
+#'   survey participant.
 #' @param instrument `character(1)`. The name of a survey instrument.
 #' @param event `character(1)` The event name of the event for which 
 #'   participant information should be exported. 
+#' @param repeat_instance `integerish(1)`. The repeat instance if the 
+#'   instrument is designated as a repeating instrument. Default value is `1`.
 #'   
 #' @return 
 #' 
@@ -28,6 +32,15 @@
 #' | `survey_link`        | The participant's survey link. | 
 #' | `survey_queue_link`  | The participants' survey queue link. |
 #' 
+#' `exportSurveyLink` returns a `character(1)` giving the link for the user
+#' to access the survey form. 
+#' 
+#' `exportSurveyQueueLink` returns a `character(1)` giving the survey queue
+#' link for the user. 
+#' 
+#' `exportSurveyReturnCode` returns a `character(1)` giving the survey return
+#' code for the user. 
+#' 
 #' @examples
 #' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
@@ -44,14 +57,29 @@
 #'                          instrument = "survey_form", 
 #'                          event = "event_1_arm_1")
 #'                          
+#' # Export survey link
+#' exportSurveyLink(rcon, 
+#'                  record = 1, 
+#'                  instrument = "survey_form")
+#'                  
+#' # Export survey queue link
+#' exportSurveyQueueLink(rcon, 
+#'                       record = 1)
+#'                       
+#' # Export survey return code
+#' exportSurveyReturnCode(rcon, 
+#'                        user = 1, 
+#'                        instrument = "survey_form")
 #' }
-#' 
+#'
 #' @usage NULL
 #' @order 0
 
-surveyMethods <- function(rcon, 
+surveyMethods <- function(rcon,
+                          record,
                           instrument, 
                           event, 
+                          repeat_instance,
                           ..., 
                           error_handling, 
                           config, 

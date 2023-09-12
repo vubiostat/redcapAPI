@@ -111,14 +111,16 @@ returned as missing values.
 in a format ready to be imported to a project via \code{importRecords}.
 All fields are returned as character vectors. If any values fail to
 validation check, are report is returned as an attribute named \code{invalid}.
+This attribute may be retrieved using \code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}.
 These are then set to \code{NA}, which will be imported as blanks through
 the API.
 
 \code{guessCast} is a helper function to make a guess at casting uncast
 columns. It will do a type cast if a validation is met above
 a threshold ratio of non-NA records. It modifies the existing
-\code{invalid} attribute to reflect the cast. \code{guessDate} is
-a special cast of \code{guessCast} that has defaults set for casting
+\code{invalid} attribute to reflect the cast.
+This attribute may be retrieved using \code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}.
+\code{guessDate} is a special cast of \code{guessCast} that has defaults set for casting
 a date field.
 
 \code{mChoiceCast} is a helper function that adds the \code{Hmisc::mChoice}
@@ -126,6 +128,38 @@ multiple choice class. It adds a column for a multiple choice checkbox
 that is cast to the \code{Hmisc::mChoice} class. Requires \code{Hmisc}
 to be loaded.
 }
+\section{Zero Coded Check Fields}{
+
+A zero-coded check field is a field of the REDCap type \code{checkbox} that has
+a coding definition of \verb{0, [label]}. When exported, the field names for
+these fields is \verb{[field_name]___0}. As in other checkbox fields, the
+raw data output returns binary values where 0 represent and unchecked
+box and 1 represents a checked box. For zero-coded checkboxes, then, a
+value of 1 indicates that 0 was selected.
+
+This coding rarely presents a problem when casting from raw values
+(as is done in \code{exportRecordsTyped}). However, casting from coded or
+labeled values can be problematic, as it In this case, it becomes
+indeterminate from context if the intent of \code{0} is 'false' or the coded
+value '0' ('true') ...
+
+The situations in which casting may fail to produce the desired results are\tabular{lll}{
+   Code \tab Label \tab Result \cr
+   0 \tab anything other than "0" \tab Likely to fail when casting from coded values \cr
+   0 \tab 0 \tab Likely to fail when casting from coded or labeled values \cr
+}
+
+
+Because of the potential for miscast data, casting functions will issue
+a warning anytime a zero-coded check field is encountered. A separate
+warning is issued when a field is cast from coded or labeled values.
+
+When casting from coded or labeled values, it is strongly recommended that
+the function \code{\link[=castCheckForImport]{castCheckForImport()}} be used. This function permits the
+user to state explicitly which values should be recognized as checked,
+avoiding the ambiguity resulting from the coding.
+}
+
 \examples{
 \dontrun{
 # Using recastRecords after export
@@ -169,7 +203,8 @@ exportRecordsTyped(rcon) |>
 
 \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}, \cr
 \code{\link[=exportReportsTyped]{exportReportsTyped()}}, \cr
-\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}
+\code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}, \cr
+\code{\link[=reviewInvalidRecords]{reviewInvalidRecords()}}
 }
 
 \subsection{Other Post Processing Functions}{

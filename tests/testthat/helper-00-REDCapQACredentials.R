@@ -25,7 +25,3 @@ conns <- unlockREDCap(
   c(rcon ="TestRedcapAPI"), 
   url=url, keyring='API_KEYs', 
   envir=globalenv())
-
-
-
-

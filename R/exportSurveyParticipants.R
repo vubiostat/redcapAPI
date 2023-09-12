@@ -43,7 +43,8 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
-                                        add = coll)
+                                        add = coll, 
+                                        .var.name = "error_handling")
   
   checkmate::assert_list(x = config, 
                          names = "named", 
@@ -59,9 +60,11 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
                            choices = rcon$instruments()$instrument_name, 
                            add = coll)
   
-  checkmate::assert_subset(x = event, 
-                           choices = rcon$events()$unique_event_name, 
-                           add = coll)
+  if (!is.null(event)){
+    checkmate::assert_subset(x = event, 
+                             choices = rcon$events()$unique_event_name, 
+                             add = coll)
+  }
   
   checkmate::reportAssertions(coll)
   

@@ -1,4 +1,4 @@
-context("Export Typed Records with Surveys Functionality")
+context("Export Survey Queue Link Functionality")
 
 # There is no way to designate a form to be a survey via the API.
 # Thus, testing that survey related fields are downloaded would require
