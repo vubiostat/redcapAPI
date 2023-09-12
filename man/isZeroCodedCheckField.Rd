@@ -35,7 +35,7 @@ differentiate if a \code{0} value represents an unchecked or checked
 option. Identifying these fields is important to handling them
 correctly.
 }
-\section{Zero Coded Check Fields}{
+\section{Zero-Coded Check Fields}{
 
 A zero-coded check field is a field of the REDCap type \code{checkbox} that has
 a coding definition of \verb{0, [label]}. When exported, the field names for
