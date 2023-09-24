@@ -1,7 +1,7 @@
 
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11826.png)](http://dx.doi.org/10.5281/zenodo.11826)
-![](http://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11826.png)](https://dx.doi.org/10.5281/zenodo.11826)
+![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
 
 redcapAPI
 ======
@@ -46,7 +46,7 @@ These two calls will handle most analysis requests. To truly understand all thes
 The research community owes a big thanks to [Benjamin Nutter](https://github.com/nutterb/redcapAPI)
 for his years of service keeping this package current.
 
-The package `redcapAPI` is an R interface to REDCap (http://www.project-redcap.org/), originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
+The package `redcapAPI` is an R interface to REDCap (https://www.projectredcap.org/), originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
 
 Please read the documentation on your institutions REDCap installation.
 

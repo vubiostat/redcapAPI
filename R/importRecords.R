@@ -284,7 +284,7 @@ importRecords.redcapApiConnection <- function(rcon,
   #** Format the data for REDCap import
   #** Thanks go to:
   #**   https://github.com/etb/my-R-code/blob/master/R-pull-and-push-from-and-to-REDCap.R
-  #**   http://stackoverflow.com/questions/12393004/parsing-back-to-messy-api-strcuture/12435389#12435389
+  #**   https://stackoverflow.com/questions/12393004/parsing-back-to-messy-api-strcuture/12435389#12435389
   
   if (batch.size > 0)
   {

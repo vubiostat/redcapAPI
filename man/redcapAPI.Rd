@@ -7,7 +7,7 @@
 \title{Access data, meta data, and files from REDCap using the API}
 \description{
 REDCap is a database development tool built on MySQL.  Visit
-\url{https://project-redcap.org} for more information.  REDCap
+\url{https://projectredcap.org} for more information.  REDCap
 provides an API through which data, the data dictionary, files, and
 project information can be accessed.  The \code{redcapAPI} package
 facilitates the use of these functions and
@@ -24,7 +24,7 @@ of REDCap.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/vubiostat/redcapAPI,https://projectredcap.org}
+  \item \url{https://github.com/vubiostat/redcapAPI}
   \item Report bugs at \url{https://github.com/vubiostat/redcapAPI/issues}
 }
 

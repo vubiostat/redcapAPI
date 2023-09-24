@@ -41,7 +41,7 @@ Imports:
     yaml
 LazyLoad: yes
 Suggests: testthat (>= 3.0.0), Hmisc, rstudioapi, mockery
-URL: https://github.com/vubiostat/redcapAPI,https://projectredcap.org
+URL: https://github.com/vubiostat/redcapAPI
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
