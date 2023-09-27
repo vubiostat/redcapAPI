@@ -51,6 +51,18 @@ REDCAP_SYSTEM_FIELDS <- c("redcap_event_name",
                           "redcap_repeat_instrument", 
                           "redcap_repeat_instance")
 
+#' @rdname redcapDataStructures
+#' @export
+
+# These are the purposes that can be used when using 
+# createRedcapProject
+
+REDCAP_PROJECT_PURPOSE <- c("Practice/just for fun", 
+                            "Other", 
+                            "Research", 
+                            "Quality Improvement", 
+                            "Operational Support")
+
 # Arms --------------------------------------------------------------
 # Arms - Data Frame Structure
 
