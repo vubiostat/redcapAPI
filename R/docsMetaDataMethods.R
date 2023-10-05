@@ -76,8 +76,7 @@
 #' | `field_annotation`               | Contains annotations such as units of measures. Also contains action tags. |
 #'
 #' 
-#' `importMetaData` has no return and displays a message indicating 
-#'   the number of fields that were imported.
+#' `importMetaData` invisibly returns the number of fields that were imported.
 #' 
 #' @seealso 
 #' [exportFieldNames()],\cr

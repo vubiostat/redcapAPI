@@ -135,8 +135,6 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   response <- as.character(response)
   
-  message(sprintf("Fields Imported: %s", response))
-  
   if (refresh){
     if (rcon$has_metadata()){
       rcon$refresh_metadata()
@@ -146,6 +144,8 @@ importMetaData.redcapApiConnection <- function(rcon,
       rcon$refresh_instruments()
     }
   }
+  
+  invisible(as.character(response))
 }
 
 #####################################################################
