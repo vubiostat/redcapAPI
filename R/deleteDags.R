@@ -85,6 +85,5 @@ deleteDags.redcapApiConnection <- function(rcon,
     rcon$refresh_dags()
   }
   
-  message(sprintf("DAGs deleted: %s", 
-                  as.character(response)))
+  invisible(as.character(response))
 }
