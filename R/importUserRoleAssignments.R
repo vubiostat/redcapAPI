@@ -112,6 +112,5 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
     rcon$refresh_users()
   }
   
-  message(sprintf("User-Role Assignments Added/Updated: %s", 
-                  as.character(response)))
+  invisible(as.character(response))
 }
