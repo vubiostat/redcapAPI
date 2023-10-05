@@ -121,9 +121,6 @@ exportFileRepository.redcapApiConnection <- function(rcon,
     } # end if/else
   } # end for
   
-  message(sprintf("%s folders have been created", 
-                  n_folder_created))
-  
   do.call("rbind", ExportedFiles)
 } 
 
