@@ -32,7 +32,7 @@ importFiles.redcapApiConnection <- function(rcon,
   if (is.numeric(record)) record <- as.character(record)
   
    ##################################################################
-  # Argumetn Validation
+  # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
   
@@ -162,5 +162,5 @@ importFiles.redcapApiConnection <- function(rcon,
   if (response$status_code != "200") 
     redcapError(response, error_handling)
   else 
-    message("The file was successfully uploaded")
+    invisible(TRUE)
 }

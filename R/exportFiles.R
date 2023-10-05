@@ -156,7 +156,6 @@ exportFiles.redcapApiConnection <- function(rcon,
                                            dir_create = FALSE, 
                                            file_prefix = prefix)
   
-  message(sprintf("The file was saved to '%s'", 
-                  file.path(file_saved$directory, 
-                            file_saved$filename)))
+  invisible(file.path(file_saved$directory, 
+                      file_saved$filename))
 }
