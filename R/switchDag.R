@@ -14,7 +14,8 @@
 #' @param refresh `logical(1)` If `TRUE`, the cached data access
 #'   group assignments will be refreshed.
 #'   
-#' @return Returns `TRUE` when the call is completed successfully.
+#' @return Invisibly returns `TRUE` when the call is completed successfully.
+#'   Otherwise an error is thrown.
 #' 
 #' @seealso 
 #' [exportDags()],\cr
@@ -136,5 +137,5 @@ switchDag.redcapApiConnection <- function(rcon,
     message(as.character(response))
   }
   
-  success
+  invisible(success)
 }
