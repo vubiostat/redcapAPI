@@ -34,9 +34,8 @@
 #'
 #'
 #' @return 
-#' `exportPdf` has no return. After saving the file to the local 
-#' computer, a message is displayed providing the location of the file
-#' on the system.
+#' `exportPdf` invisibly returns the location on the local system 
+#'   to whihc the files is saved.
 #'
 #' @seealso
 #' [exportMetaData()],\cr
@@ -185,6 +184,6 @@ exportPdf.redcapApiConnection <- function(rcon,
                              file_prefix = "", 
                              filename = filename)
   
-  message("The file was saved to '", file.path(dir, filename), "'")
+  invisible(file.path(dir, filename))
 }
   
