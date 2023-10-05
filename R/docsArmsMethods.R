@@ -44,11 +44,9 @@
 #' | `arm_num` | The ID number for the arm in the project. | 
 #' | `name`    | The display name of the arm.              |
 #' 
-#' `importArms` has no return and prints a message indicating the 
-#'   number of arms imported.
+#' `importArms` invisibly returns the number of arms imported.
 #'   
-#' `deleteArms` has no return and prints a message indicating the
-#'   number of arms deleted.
+#' `deleteArms` invisibly returns the number of arms deleted.
 #'   
 #' @examples
 #' \dontrun{
