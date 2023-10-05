@@ -25,8 +25,7 @@
 #' | `username` | The unique user name for each user in the project. | 
 #' | `redcap_data_access_group` | The unique Data Access Group name to which the user is assigned. |
 #' 
-#' `importUserDagAssignments` has no return and prints a message indicating the number 
-#'   of assignments imported.
+#' `importUserDagAssignments` invisibly returns the number of assignments imported.
 #'   
 #' @seealso 
 #' [exportDags()],\cr

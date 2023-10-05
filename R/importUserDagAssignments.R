@@ -104,6 +104,5 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  message(sprintf("User-DAG Assignments Added/Modified: %s", 
-                  as.character(response)))
+  invisible(as.character(response))
 }
