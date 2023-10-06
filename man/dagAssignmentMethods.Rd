@@ -59,8 +59,7 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importUserDagAssignments} has no return and prints a message indicating the number
-of assignments imported.
+\code{importUserDagAssignments} invisibly returns the number of assignments imported.
 }
 \description{
 These methods enable the user to export existing assignments

@@ -6,41 +6,38 @@ test_that(
   "import, export, and delete a file in a longitudinal project",
   {
     local_reproducible_output(width = 200)
-    expect_message(
+    expect_true(
       importFiles(rcon,
                   file = local_file,
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
                   overwrite = FALSE,
-                  repeat_instance = NULL),
-      "The file was successfully uploaded"
+                  repeat_instance = NULL)
     )
 
 
     temp_dir <- tempdir()
 
     # Export the file
-    expect_message(
-      exportFiles(rcon,
-                  record = "1",
-                  field = "file_upload_test",
-                  event = "event_1_arm_1",
-                  dir = temp_dir,
-                  file_prefix = TRUE),
-      "The file was saved to '.+1-event_1_arm_1-FileForImportExportTesting.txt"
-    )
+    save_to <- exportFiles(rcon,
+                           record = "1",
+                           field = "file_upload_test",
+                           event = "event_1_arm_1",
+                           dir = temp_dir,
+                           file_prefix = TRUE)
+    expect_true(grepl(".+1-event_1_arm_1-FileForImportExportTesting.txt", 
+                      save_to))
 
     # And now import it again with an overwrite
-    expect_message(
+    expect_true(
       importFiles(rcon,
                   file = local_file,
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
                   overwrite = TRUE,
-                  repeat_instance = NULL),
-      "The file was successfully uploaded"
+                  repeat_instance = NULL)
     )
 
     # Attempt an import without overwrite = TRUE. Results in error
@@ -56,12 +53,11 @@ test_that(
     )
 
     # Delete the file
-    expect_message(
+    expect_true(
       deleteFiles(rcon,
                   record = "1",
                   field = "file_upload_test",
-                  event = "event_1_arm_1"),
-      "The file was successfully deleted"
+                  event = "event_1_arm_1")
     )
   }
 )
@@ -88,42 +84,41 @@ test_that(
   "import, export, and delete a file in a longitudinal project",
   {
     local_reproducible_output(width = 200)
-    expect_message(
+    expect_true(
       importFiles(rcon,
                   file = local_file,
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
                   overwrite = FALSE,
-                  repeat_instance = 1),
-      "The file was successfully uploaded"
+                  repeat_instance = 1)
     )
 
 
     temp_dir <- tempdir()
 
     # Export the file
-    expect_message(
-      exportFiles(rcon,
-                  record = "1",
-                  field = "file_upload_test",
-                  event = "event_1_arm_1",
-                  repeat_instance = 1,
-                  dir = temp_dir,
-                  file_prefix = TRUE),
-      "The file was saved to '.+1-event_1_arm_1-FileForImportExportTesting.txt"
+    save_to <- exportFiles(rcon,
+                           record = "1",
+                           field = "file_upload_test",
+                           event = "event_1_arm_1",
+                           repeat_instance = 1,
+                           dir = temp_dir,
+                           file_prefix = TRUE)
+    expect_true(
+      grepl(".+1-event_1_arm_1-FileForImportExportTesting.txt", 
+            save_to)
     )
 
     # And now import it again with an overwrite
-    expect_message(
+    expect_true(
       importFiles(rcon,
                   file = local_file,
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
                   overwrite = TRUE,
-                  repeat_instance = 1),
-      "The file was successfully uploaded"
+                  repeat_instance = 1)
     )
 
     # Attempt an import without overwrite = TRUE. Results in error
@@ -139,13 +134,12 @@ test_that(
     )
 
     # Delete the file
-    expect_message(
+    expect_true(
       deleteFiles(rcon,
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
-                  repeate_instance = 1),
-      "The file was successfully deleted"
+                  repeate_instance = 1)
     )
   }
 )

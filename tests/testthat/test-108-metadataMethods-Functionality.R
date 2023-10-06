@@ -12,10 +12,9 @@ test_that(
     
     orig_instrument <- unique(MetaData$form_name)
     
-    expect_message(importMetaData(rcon = rcon, 
-                                  data = MetaData), 
-                   sprintf("Fields Imported: %s", 
-                           nrow(MetaData)))
+    n_imported <- importMetaData(rcon = rcon, 
+                                 data = MetaData)
+    expect_equal(n_imported, as.character(nrow(MetaData)))
     
     
     expect_data_frame(rcon$metadata(), 
@@ -28,10 +27,10 @@ test_that(
     NextMetaData <- MetaData[1:10, ]
     
     # Verify behaviors under refresh = FALSE
-    expect_message(importMetaData(rcon, 
-                                  NextMetaData, 
-                                  refresh = FALSE), 
-                   "Fields Imported: 10")
+    n_imported <- importMetaData(rcon, 
+                                 NextMetaData, 
+                                 refresh = FALSE)
+    expect_equal(n_imported, "10")
     
     expect_data_frame(rcon$metadata(), 
                       nrows = nrow(MetaData))

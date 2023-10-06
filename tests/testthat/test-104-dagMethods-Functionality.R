@@ -33,6 +33,6 @@ test_that(
     n_deleted <- deleteDags(rcon, 
                             deleted_groups)
     expect_equal(n_deleted, 
-                 as.character(length(delted_groups))) 
+                 as.character(length(deleted_groups))) 
   }
 )
