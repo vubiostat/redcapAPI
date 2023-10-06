@@ -199,7 +199,7 @@ constructLinkToRedcapForm.redcapOfflineConnection <- function(rcon,
                                                 record_id, 
                                                 event_id){
   url <- sprintf("%s/redcap_v%s/DataEntry/index.php?pid=%s&page=%s&id=%s", 
-                 dirname(url), 
+                 sub("/api(/|)$", "", url), 
                  version, 
                  project_id, 
                  form_name, 
