@@ -34,7 +34,8 @@ offlineConnection(
   project_info = NULL,
   version = NULL,
   file_repo = NULL,
-  records = NULL
+  records = NULL,
+  url = NULL
 )
 
 \method{print}{redcapOfflineConnection}(x, ...)

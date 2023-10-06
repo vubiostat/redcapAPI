@@ -397,7 +397,8 @@ offlineConnection <- function(meta_data = NULL,
                               project_info = NULL, 
                               version = NULL, 
                               file_repo = NULL,
-                              records = NULL){
+                              records = NULL, 
+                              url = NULL){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -563,6 +564,11 @@ offlineConnection <- function(meta_data = NULL,
     add = coll
   )
   
+  checkmate::assert_character(x = url, 
+                              len = 1, 
+                              null.ok = TRUE,
+                              add = coll)
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -703,7 +709,7 @@ offlineConnection <- function(meta_data = NULL,
   # Redcap Connection object                                     ####
   rc <- 
     list(
-      url = NULL, 
+      url = url, 
       token = NULL, 
       config = NULL, 
       

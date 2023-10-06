@@ -932,12 +932,10 @@ mChoiceCast <- function(data,
                           stringsAsFactors = FALSE)
   } else {
     Invalid$link_to_form <- 
-      mapply(constructLinkToRedcapForm, 
-             form_name = Invalid$form_name, 
-             record_id = Invalid$record_id, 
-             event_id = Invalid$event_id, 
-             MoreArgs = list(rcon = rcon), 
-             SIMPLIFY = TRUE)
+      constructLinkToRedcapForm(rcon, 
+                                form_name = Invalid$form_name, 
+                                record_id = Invalid$record_id,
+                                event_id = Invalid$event_id)
   }
   
   
