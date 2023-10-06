@@ -78,7 +78,7 @@ deleteArms.redcapApiConnection <- function(rcon,
     
     if (response$status_code != 200) return(redcapError(response, error_handling))
   } else {
-    response <- ""
+    response <- "0"
   }
   
   if (refresh && rcon$has_arms()){
