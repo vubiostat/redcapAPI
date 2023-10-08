@@ -105,10 +105,10 @@ Data Access Groups can be read, or a \code{data.frame}.}
 Data Access Group Assignments can be read, or a \code{data.frame}.}
 
 \item{project_info}{Either a \code{character} giving the file from which the
-Project Information can be read, or a \code{data.frame}.}
+Project Information can be read, or a \code{data.frame}. See Details.}
 
 \item{version}{Either a \code{character} giving the file from which the
-version can be read, or a \code{data.frame}.}
+version can be read, or a \code{data.frame}. See Details.}
 
 \item{file_repo}{Either a \code{character} giving the file from which the
 File Repository Listing can be read, or a \code{data.frame}.}
@@ -178,6 +178,16 @@ project for which the user wishes to use the API.
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
 for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.
+
+When validating data for \code{offlineRedcapConnection} objects,
+links to invalid data forms will not work if the user does not provide
+the \code{url}, \code{version}, \code{project_info}, and \code{events} arguments (if the
+project is longitudinal). For the \code{project_info}, the values \code{project_id}
+and \code{is_longitudinal} are required. The user may be able to provide
+as little as \verb{project_info = data.frame(project_id = [id], is_longitudinal = [0/1])}.
+The user should be aware that the REDCap User Interface download for
+events does not include the event ID. To include the event ID, the user
+must construct a data frame to pass to \code{offlineConnection}.
 }
 \examples{
 \dontrun{

@@ -29,10 +29,32 @@ as a numeric value, it will be coerced to character.}
 
 \item{...}{Arguments to pass to other methods}
 }
+\value{
+Returns a character vector the same length of \code{form_name}.
+}
 \description{
 Uses information from the project and a record to link to
 the form on which a data element is recorded. This is intended to be used
 within the report of invalid results when exporting or importing
 records. It should be noted that when importing records, the records
 may not yet exist and the links may not work.
+}
+\details{
+Constructing a link to a REDCap form requires knowledge of the
+following:
+\itemize{
+\item The REDCap instance url (usually 'redcap.institution.domain').
+\item The REDCap instance version number.
+\item The REDCap project ID number
+\item The record ID
+\item The form name
+\item The event ID number (if the project is longitudinal).
+}
+
+If any of these items in unknown, a missing value will be returned. For
+\code{redcapOfflineConnection}s, the user will need to provide the version
+number, the project information, and the events (if the project
+is longitudinal) as part of the call to \code{offlineConnection}. Note that
+the REDCap User Interface does not include the event ID number with the
+file download for events.
 }

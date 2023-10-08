@@ -18,6 +18,25 @@
 #'   `NULL` or `NA` (`NA` support is permitted to assist with vectorization). 
 #'   For longitudinal projects, the ID of the unique event. If passed
 #'   as a numeric value, it will be coerced to character. 
+#'   
+#' @details Constructing a link to a REDCap form requires knowledge of the 
+#'   following:
+#'   
+#' * The REDCap instance url (usually 'redcap.institution.domain'). 
+#' * The REDCap instance version number. 
+#' * The REDCap project ID number
+#' * The record ID
+#' * The form name
+#' * The event ID number (if the project is longitudinal). 
+#' 
+#' If any of these items in unknown, a missing value will be returned. For
+#' `redcapOfflineConnection`s, the user will need to provide the version 
+#' number, the project information, and the events (if the project 
+#' is longitudinal) as part of the call to `offlineConnection`. Note that 
+#' the REDCap User Interface does not include the event ID number with the 
+#' file download for events. 
+#' 
+#' @return Returns a character vector the same length of `form_name`. 
 
 constructLinkToRedcapForm <- function(rcon, 
                                       form_name, 
@@ -161,10 +180,10 @@ constructLinkToRedcapForm.redcapOfflineConnection <- function(rcon,
     return(rep(NA_character_, length(form_name)))
   }
   
-  if (is.na(event_id)){
+  if (any(is.na(event_id))){
     if (is.null(rcon$projectInformation())){
       warning("Project information is not stored on the offlineConnection object. Links to REDCap forms will not work as desired if the project is longitudinal")
-    } else if (rcon$projectInformation()$is_longitundal == 1){
+    } else if (isTRUE(rcon$projectInformation()$is_longitundal == 1)){
       warning("Event ID not provided for a longitudinal project. Links to REDCap forms will not work as desired.")
     }
   }

@@ -907,14 +907,15 @@ mChoiceCast <- function(data,
                      sel <- selector[,i]
                      if (any(sel))
                      {
-                       data.frame(row = seq_len(nrow(Raw))[sel],
+                       df <- data.frame(row = seq_len(nrow(Raw))[sel],
                                   record_id = if(id_field %in% colnames(Raw)) Raw[sel, id_field] else NA,
                                   field_name = field_names[i],
                                   form_name = form_names[i],
                                   field_type = field_types[i],
-                                  event_id = event_id[sel],
+                                  event_id = if (is.null(event_id)) NA_character_ else event_id[sel],
                                   value = Raw[sel, i],
                                   stringsAsFactors = FALSE)
+                       df
                      } else NULL
                    }
             )

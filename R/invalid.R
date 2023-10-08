@@ -28,10 +28,12 @@ format.invalid <- function(x, ...)
   if(is.null(vr)) vr <- "offline"
   if(is.null(pt)) pt <- "offline"
   
-  x <- split(x, x$field_name)
-  link_to_redcap <- ifelse(is.na(data$link_to_form), 
+  x$link_to_redcap <- ifelse(is.na(x$link_to_form), 
                            "(link unavailable)", 
-                           sprintf("[link](%s)", data$link_to_form))
+                           sprintf("[link](%s)", x$link_to_form))
+
+  x <- split(x, x$field_name)
+  
   paste0(
     "# Failed Validations from REDCap project '",  pt, "'\n\n",
     paste0(dt, "  \n"),
@@ -41,7 +43,7 @@ format.invalid <- function(x, ...)
       data <- x[[i]]
       c(paste0("* Field[",data$field_type[1], "] '", names(x)[i], "' on form '", data$form_name[1], "' has ", nrow(data), " failure", ifelse(nrow(data) > 1, "s", "")),
         if("record_id" %in% names(data) && !is.na(data$record_id[1])) 
-           paste0("  * Row ", data$row, ", Record Id '", data$record_id, "', Value '", data$value, "' ", link_to_redcap) else
+           paste0("  * Row ", data$row, ", Record Id '", data$record_id, "', Value '", data$value, "' ", data$link_to_redcap) else
            paste0("  * Row ", data$row, ", Value '", data$value, "'")
       )
     })), collapse="\n"),
