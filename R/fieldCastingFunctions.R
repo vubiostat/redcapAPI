@@ -888,8 +888,9 @@ mChoiceCast <- function(data,
   id_field <- rcon$metadata()$field_name[1]
   
   MD <- rcon$metadata()
-  form_names <- MD$form_name[match(field_names, MD$field_name)]
-  
+  base_names <- sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", field_names, perl = TRUE)
+  form_names <- MD$form_name[match(base_names, MD$field_name)]
+
   event_id <- 
     if ("redcap_event_name" %in% names(Raw)){
       event_index <- match(Raw$redcap_event_name, 
