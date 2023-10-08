@@ -39,3 +39,4 @@ record_id,redcap_event_name,redcap_repeat_instrument,redcap_repeat_instance,redc
 19,event_1_arm_1,files_notes_descriptions,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 20,event_1_arm_1,,,,0,,0,eu@ea.org,id,"(555) 555-4036","ea commodo reprehenderit ex",34860,0,2023-08-14,2023-07-02,2024-03-25,"2023-08-02 12:18","2024-02-24 09:48","2024-03-28 09:56","2023-05-21 23:42:00","2023-06-05 00:15:00","2023-06-05 00:15:00",16:15,44:02,0,55,"40,2",74.7,"35,07",56.35,15.45994172,0,11,9,64,0,1,1,0,2,b,1,1,0,,,,,30,42,72,900,0,"Tests if we can detect multiple missing values.     Desired result: missing values for the non-checkbox prerequisites and the evaluation fields that have no branching logic.",,0,0,0,0,,,,,0,0,0,,,,,,,,0,,,0
 20,event_1_arm_1,files_notes_descriptions,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
