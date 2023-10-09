@@ -107,8 +107,7 @@ Data Access Group Assignments can be read, or a \code{data.frame}.}
 \item{project_info}{Either a \code{character} giving the file from which the
 Project Information can be read, or a \code{data.frame}. See Details.}
 
-\item{version}{Either a \code{character} giving the file from which the
-version can be read, or a \code{data.frame}. See Details.}
+\item{version}{\code{character(1)} giving the instance's REDCap version number.}
 
 \item{file_repo}{Either a \code{character} giving the file from which the
 File Repository Listing can be read, or a \code{data.frame}.}

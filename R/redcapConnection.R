@@ -383,8 +383,7 @@ print.redcapApiConnection <- function(x, ...){
 #'   Data Access Group Assignments can be read, or a `data.frame`.
 #' @param project_info Either a `character` giving the file from which the 
 #'   Project Information can be read, or a `data.frame`. See Details.
-#' @param version Either a `character` giving the file from which the 
-#'   version can be read, or a `data.frame`. See Details.
+#' @param version `character(1)` giving the instance's REDCap version number.
 #' @param file_repo Either a `character` giving the file from which the 
 #'   File Repository Listing can be read, or a `data.frame`.
 #' @param records Either a `character` giving the file from which the 
@@ -546,15 +545,10 @@ offlineConnection <- function(meta_data = NULL,
     add = coll
   )
   
-  checkmate::assert(
-    checkmate::check_character(x = version, 
-                               len = 1, 
-                               null.ok = TRUE), 
-    checkmate::check_data_frame(x = version, 
-                                null.ok = TRUE), 
-    .var.name = "version", 
-    add = coll
-  )
+  checkmate::assert_character(x = version, 
+                              len = 1, 
+                              null.ok = TRUE, 
+                              add = coll)
   
   checkmate::assert(
     checkmate::check_character(x = file_repo, 
