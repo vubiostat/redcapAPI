@@ -60,3 +60,90 @@ test_that(
                       nrows = 0)
   }
 )
+
+
+# Validation failures and their links
+
+
+offline_files <- test_path("testdata/offlineConnectionFiles")
+test_that(
+  "Invalid data is reported, links not generated with no event IDs", 
+  {
+    rcon_off <- 
+      expect_warning(
+        offlineConnection(
+          meta_data = file.path(offline_files, "TestRedcapAPI_DataDictionary.csv"), 
+          records = file.path(offline_files, "TestRedcapAPI_Records.csv"), 
+          events = file.path(offline_files, "TestRedcapAPI_Events.csv"),
+          project_info = data.frame(project_id = rcon$projectInformation()$project_id, 
+                                    is_longitudinal = 1), 
+          url = url, 
+          version = rcon$version()
+        )
+      )
+    
+    Records <- expect_warning(exportRecordsTyped(rcon_off, 
+                                                 cast = list(system = as.character)), 
+                              "Some records failed validation")
+    
+    Inv <- reviewInvalidRecords(Records)
+    
+    expect_equal(Inv$link_to_form, 
+                 c(NA_character_, NA_character_))
+  }
+)
+
+test_that(
+  "Invalid data is reported, links generated with event IDs provided", 
+  {    
+    Evt <- rcon_off$events()
+    Evt$event_id <- rcon$events()$event_id
+    
+    rcon_off <- 
+      expect_warning(
+        offlineConnection(
+          meta_data = file.path(offline_files, "TestRedcapAPI_DataDictionary.csv"), 
+          records = file.path(offline_files, "TestRedcapAPI_Records.csv"), 
+          events = Evt,
+          project_info = data.frame(project_id = rcon$projectInformation()$project_id, 
+                                    is_longitudinal = 1), 
+          url = url, 
+          version = rcon$version()
+        )
+      )
+    
+    Records <- expect_warning(exportRecordsTyped(rcon_off, 
+                                                 cast = list(system = as.character)), 
+                              "Some records failed validation")
+    
+    Inv <- reviewInvalidRecords(Records)
+    
+    expect_character(Inv$link_to_form)
+  }
+)
+    
+test_that(
+  "Invalid data is reported, links not generated without the version number", 
+  {    
+    rcon_off <- 
+      expect_warning(
+        offlineConnection(
+          meta_data = file.path(offline_files, "TestRedcapAPI_DataDictionary.csv"), 
+          records = file.path(offline_files, "TestRedcapAPI_Records.csv"), 
+          events = Evt,
+          project_info = data.frame(project_id = rcon$projectInformation()$project_id, 
+                                    is_longitudinal = 1), 
+          url = url
+        )
+      )
+    
+    Records <- expect_warning(exportRecordsTyped(rcon_off, 
+                                                 cast = list(system = as.character)), 
+                              "Version number not stored")
+    
+    Inv <- reviewInvalidRecords(Records)
+    
+    expect_equal(Inv$link_to_form, 
+                 c(NA_character_, NA_character_))
+  }
+)

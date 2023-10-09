@@ -484,7 +484,7 @@ test_that(
     file <- file.path(filedir, "TestRedcapAPI_DAGs.csv")
     
     roff <- 
-      expect_warning(offlineConnection(dags = file))
+      offlineConnection(dags = file)
     
     expect_true(roff$has_dags())
   }
@@ -513,7 +513,7 @@ test_that(
 # test_that(
 #   "Version loads using a file from the UI", 
 #   {
-#     # There is no file that can be dowloaded from the UI
+#     # There is no file that can be downloaded from the UI
 #   }
 # )
 
