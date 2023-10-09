@@ -29,15 +29,19 @@ test_that(
     NewInfo <- data.frame(project_pi_lastname = "Not Garbett", 
                           display_today_now_button = 0)
     
-    expect_message(importProjectInformation(rcon, 
-                                            NewInfo), 
-                   "Fields updated: 2")
+    n_imported <- importProjectInformation(rcon, 
+                                            NewInfo)
+    expect_equal(n_imported, "2")
     
+    n_imported <- importProjectInformation(rcon, 
+                                           NewInfo)
+    expect_equal(n_imported, "2")
     
     # cleanup 
-    expect_message(importProjectInformation(rcon, 
-                                            CurrentInfo), 
-                   "Fields updated: 18")
+    
+    n_imported <- importProjectInformation(rcon, 
+                                           CurrentInfo)
+    expect_equal(n_imported, "18")
   }
 )
 

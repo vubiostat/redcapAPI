@@ -66,8 +66,8 @@ that may not otherwise be supported by \code{redcapAPI}.}
 determined by looking up the highest record ID number in the
 project and incrementing it by 1.
 
-\code{renameRecord} return a logical value that indicates if the
-operation was successful.
+\code{renameRecord} invisibly returns a logical value that indicates if the
+operation was successful. Otherwise, an error is thrown.
 }
 \description{
 These methods enable the user to get the next record name

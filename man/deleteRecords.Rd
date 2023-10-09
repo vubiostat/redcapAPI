@@ -45,7 +45,7 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{deleteRecords} returns a character value giving the number of records deleted.
+\code{deleteRecords} invisibly returns a character value giving the number of records deleted.
 }
 \description{
 These methods enable the user to delete records from a project.

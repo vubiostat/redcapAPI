@@ -76,11 +76,10 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
   
-  message(sprintf("Rows imported: %s", 
-                  as.character(response)))
-  
   if (refresh && rcon$has_repeatInstrumentEvent()){
     rcon$refresh_projectInformation()
     rcon$refresh_repeatInstrumentEvent()
   }
+  
+  invisible(as.character(response))
 }

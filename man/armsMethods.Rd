@@ -87,11 +87,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importArms} has no return and prints a message indicating the
-number of arms imported.
+\code{importArms} invisibly returns the number of arms imported.
 
-\code{deleteArms} has no return and prints a message indicating the
-number of arms deleted.
+\code{deleteArms} invisibly returns the number of arms deleted.
 }
 \description{
 These methods enable the user to export the current arms

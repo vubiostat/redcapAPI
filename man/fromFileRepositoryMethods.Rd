@@ -94,16 +94,6 @@ with the columns:\tabular{ll}{
    \code{directory} \tab The directory in which the file is saved. \cr
    \code{filename} \tab The name of the saved file. \cr
 }
-
-
-Additionally, \code{exportFromFileRepository} displays a message
-with the file path to which the file was saved on the local computer.
-
-\code{importToFileRepository} displays a message with the path in the
-file repository to which the file is imported.
-
-\code{deleteFromFileRepository} displays a message with the path on the
-file repostiory from which the file was deleted.
 }
 \description{
 These methods enable the user to export, import, or delete

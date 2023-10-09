@@ -137,11 +137,9 @@ Form access rights columns have the naming pattern \verb{[form_name]_access}
 and the form export rights columns have the naming pattern
 \verb{[form_name]_export_access}.
 
-\code{importUsers} has no return value and displays a message indicating how
-many users were added or modified.
+\code{importUsers} invisibly returns the number of users that were added or modified.
 
-\code{deleteUsers} has no return value and displays a message indicating how
-many users were deleted.
+\code{deleteUsers} invisibly returns the number of users that were deleted.
 }
 \description{
 These methods enable the user to add and remove users from

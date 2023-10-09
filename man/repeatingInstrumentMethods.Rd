@@ -66,8 +66,7 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importRepeatingInstrumentsEvents} has no return and displays a message
-describing the number of rows imported.
+\code{importRepeatingInstrumentsEvents} invisibly returns the number of rows imported.
 }
 \description{
 These methods enable the user to export the existing

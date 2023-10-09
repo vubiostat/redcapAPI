@@ -132,6 +132,6 @@ deleteFiles.redcapApiConnection <- function(rcon,
   if (response$status_code != "200")
     redcapError(response, error_handling)
   else 
-    message("The file was successfully deleted")
+    invisible(TRUE)
   
 }

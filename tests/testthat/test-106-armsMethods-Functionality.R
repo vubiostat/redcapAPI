@@ -35,9 +35,9 @@ test_that(
   "deleteArms returns a message indicating no arms deleted.", 
   {
     local_reproducible_output(width = 200)
-    expect_message(deleteArms(rcon, 
-                              arms = rcon$arms()$arm_num), 
-                   "Arms Deleted: None")
+    n_deleted <- deleteArms(rcon, 
+                            arms = rcon$arms()$arm_num) 
+    expect_equal(n_deleted, "0")
     rcon$flush_arms()
   }
 )
@@ -57,15 +57,15 @@ test_that(
   "Import arms into a empty project.", 
   {
     # Import the arms
-    expect_message(importArms(rcon, 
-                              data = Arms), 
-                   "Arms imported: 3")
+    n_imported <- importArms(rcon, 
+                             data = Arms)
+    expect_equal(n_imported, "3")
     
     # backward compatibility with data
 
-    expect_message(importArms(rcon, 
-                              arms_data = Arms), 
-                   "Arms imported: 3")
+    n_imported <- importArms(rcon, 
+                             arms_data = Arms)
+    expect_equal(n_imported, "3")
     
     rcon$refresh_projectInformation()
     expect_equal(rcon$projectInformation()$is_longitudinal, 
@@ -76,9 +76,9 @@ test_that(
                  REDCAP_ARMS_STRUCTURE)
     
     # Now let's import the events. This should make the project longitudinal
-    expect_message(importEvents(rcon, 
-                                data = Events), 
-                   "Events imported: 3")
+    n_imported <- importEvents(rcon, 
+                               data = Events)
+    expect_equal(n_imported, "3")
     
     rcon$refresh_projectInformation()
     
@@ -96,9 +96,9 @@ test_that(
     # Now let's enable the longitudinal study and make sure we can 
     # get the arms and events out.
     
-    expect_message(importProjectInformation(rcon, 
-                                            data.frame(is_longitudinal = 1)), 
-                   "Fields updated: 1")
+    n_imported <- importProjectInformation(rcon, 
+                                           data.frame(is_longitudinal = 1))
+    expect_equal(n_imported, "1")
     
     expect_equal(exportArms(rcon), 
                  Arms)
@@ -137,13 +137,13 @@ test_that(
     }
     
     # To be considered 'longitudinal', both arms and events must be defined.
-    expect_message(importArms(rcon, 
-                              data = Arms), 
-                   "Arms imported: 3")
+    n_imported <- importArms(rcon, 
+                             data = Arms)
+    expect_equal(n_imported, "3")
     
-    expect_message(importEvents(rcon, 
-                                data = Events), 
-                   "Events imported: 3")
+    n_imported <- importEvents(rcon, 
+                               data = Events)
+    expect_equal(n_imported, "3")
     
     rcon$refresh_projectInformation()
     
@@ -158,9 +158,9 @@ test_that(
     rcon$refresh_arms()
     
     # delete the Arms
-    expect_message(deleteArms(rcon, 
-                              arms = 1:3), 
-                   "Arms Deleted: 1, 2, 3")
+    n_deleted <- deleteArms(rcon, 
+                            arms = 1:3)
+    expect_equal(n_deleted, "3")
     
     rcon$refresh_projectInformation()
     
@@ -183,13 +183,13 @@ test_that(
                  0)
     
     # To be considered 'longitudinal', both arms and events must be defined.
-    expect_message(importArms(rcon, 
-                              data = Arms), 
-                   "Arms imported: 3")
+    n_imported <- importArms(rcon, 
+                             data = Arms)
+    expect_equal(n_imported, "3")
     
-    expect_message(importEvents(rcon, 
-                                data = Events), 
-                   "Events imported: 3")
+    n_imported <- importEvents(rcon, 
+                               data = Events)
+    expect_equal(n_imported, "3")
     
     rcon$refresh_projectInformation()
     
@@ -197,14 +197,14 @@ test_that(
                  Arms)
     
     # we will need to upload events for the new arms too
-    expect_message(importArms(rcon, 
-                              data = Arms2, 
-                              override = TRUE), 
-                   "Arms imported: 2")
+    n_imported <- importArms(rcon, 
+                             data = Arms2, 
+                             override = TRUE)
+    expect_equal(n_imported, "2")
     
-    expect_message(importEvents(rcon, 
-                                data = Events2), 
-                   "Events imported: 2")
+    n_imported <- importEvents(rcon, 
+                               data = Events2)
+    expect_equal(n_imported, "2")
     
     rcon$refresh_projectInformation()
     
@@ -215,8 +215,8 @@ test_that(
     
     # Now Clean up from the test
     rcon$refresh_arms()
-    expect_message(deleteArms(rcon, arms = 10:11), 
-                   "Arms Deleted: 10, 11")
+    n_deleted <- deleteArms(rcon, arms = 10:11)
+    expect_equal(n_deleted, "2")
   }
 )
 
@@ -232,13 +232,13 @@ test_that(
                  0)
     
     # To be considered 'longitudinal', both arms and events must be defined.
-    expect_message(importArms(rcon, 
-                              data = Arms), 
-                   "Arms imported: 3")
+    n_imported <- importArms(rcon, 
+                             data = Arms)
+    expect_equal(n_imported, "3")
     
-    expect_message(importEvents(rcon, 
-                                data = Events), 
-                   "Events imported: 3")
+    n_imported <- importEvents(rcon, 
+                               data = Events)
+    expect_equal(n_imported, "3")
     
     rcon$refresh_projectInformation()
     
@@ -246,13 +246,13 @@ test_that(
                  Arms)
     
     # import the additional arms
-    expect_message(importArms(rcon, 
-                              data = Arms2), 
-                   "Arms imported: 2")
+    n_imported <- importArms(rcon, 
+                             data = Arms2)
+    expect_equal(n_imported, "2")
     
-    expect_message(importEvents(rcon, 
-                                data = Events2), 
-                   "Events imported: 2")
+    n_imported <- importEvents(rcon, 
+                               data = Events2)
+    expect_equal(n_imported, "2")
     
     rcon$refresh_projectInformation()
     
@@ -264,18 +264,18 @@ test_that(
     
     # Delete only arms 3 and 10
     
-    expect_message(deleteArms(rcon, 
-                              arms = c(3, 10)), 
-                   "Arms Deleted: 3, 10")
+    n_deleted <- deleteArms(rcon, 
+                            arms = c(3, 10))
+    expect_equal(n_deleted, "2")
     
     expect_data_frame(exportArms(rcon), 
                       nrows = 3, 
                       ncols = 2)
     
     # clean up
-    expect_message(deleteArms(rcon, 
-                              arms = c(1, 2, 11)), 
-                   "Arms Deleted: 1, 2, 11")
+    n_deleted <- deleteArms(rcon, 
+                            arms = c(1, 2, 11))
+    expect_equal(n_deleted, "3")
     
     importProjectInformation(rcon, 
                              data = data.frame(is_longitudinal = 0))

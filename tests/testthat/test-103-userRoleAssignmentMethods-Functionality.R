@@ -33,9 +33,9 @@ test_that(
                  unique_role_name = the_role,
                  stringsAsFactors = FALSE)
 
-    expect_message(importUserRoleAssignments(rcon,
-                                             data = ImportAssignmentTest),
-                   "User-Role Assignments Added/Updated: 1")
+    n_imported <- importUserRoleAssignments(rcon,
+                                            data = ImportAssignmentTest)
+    expect_equal(n_imported, "1")
 
     CompareFrame <- rcon$user_role_assignment()
     CompareFrame <- CompareFrame[CompareFrame$username == the_user, ]
@@ -48,17 +48,17 @@ test_that(
                  unique_role_name = NA_character_,
                  stringsAsFactors = FALSE)
     
-    expect_message(importUserRoleAssignments(rcon, 
-                                             data = ImportAssignmentTest),
-                   "User-Role Assignments Added/Updated: 1")
+    n_imported <- importUserRoleAssignments(rcon, 
+                                             data = ImportAssignmentTest)
+    expect_equal(n_imported, "1")
     
     CompareFrame <- rcon$user_role_assignment()
     CompareFrame <- CompareFrame[CompareFrame$username == the_user, ]
     
     expect_true(is.na(CompareFrame$unique_role_name))
 
-    expect_message(deleteUserRoles(rcon, the_role), 
-                   "User Roles Deleted: 1")
+    n_deleted <- deleteUserRoles(rcon, the_role)
+    expect_equal(n_deleted, "1")
   }
 )
 
