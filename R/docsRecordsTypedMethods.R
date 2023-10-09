@@ -51,6 +51,16 @@
 #' This is made available for instances where the API cannot be accessed for 
 #' some reason (such as waiting for API approval from the REDCap administrator).
 #' 
+#' When validating data for `offlineRedcapConnection` objects, 
+#' links to invalid data forms will not work if the user does not provide
+#' the `url`, `version`, `project_info`, and `events` arguments (if the 
+#' project is longitudinal). For the `project_info`, the values `project_id`
+#' and `is_longitudinal` are required. The user may be able to provide
+#' as little as `project_info = data.frame(project_id = [id], is_longitudinal = [0/1])`.
+#' The user should be aware that the REDCap User Interface download for 
+#' events does not include the event ID. To include the event ID, the user
+#' must construct a data frame to pass to `offlineConnection`.
+#' 
 #' ## Record Identifier Fields 
 #' 
 #' In all calls, the project's ID fields will be included--there is no option

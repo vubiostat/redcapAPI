@@ -165,7 +165,7 @@ test_that(
     expect_equal(unique(inv$value), "7")
     expect_data_frame(inv)
     expect_equal(names(inv), 
-                 c("row", "record_id", "field_name", "field_type", "value"))
+                 c("row", "record_id", "field_name", "form_name", "field_type", "event_id", "value", "link_to_form"))
     sapply(c(1:2), function(i) expect_true(!i %in% inv$row))
     sapply(3:5, function(i) expect_true(i %in% inv$row))
     
@@ -176,7 +176,7 @@ test_that(
     expect_equal(unique(inv$value), "7")
     expect_data_frame(inv)
     expect_equal(names(inv), 
-                 c("row", "record_id", "field_name", "field_type", "value"))
+                 c("row", "record_id", "field_name", "form_name", "field_type", "event_id", "value", "link_to_form"))
     sapply(c(1:2), function(i) expect_true(!i %in% inv$row))
     sapply(3:5, function(i) expect_true(i %in% inv$row))
     
@@ -194,7 +194,8 @@ test_that(
     expect_equal(unique(inv$value), "7")
     expect_data_frame(inv)
     expect_equal(names(inv), 
-                 c("row", "record_id", "field_name", "field_type", "value"))
+                 c("row", "record_id", "field_name", "form_name", "field_type", 
+                   "event_id", "value", "link_to_form"))
   }
 )
 
