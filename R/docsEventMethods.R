@@ -61,11 +61,9 @@
 #'  | offset_min         | The number of days before the `days_offset` during which the event may occur. This field is only provided when the scheduling module is enabled. |
 #'  | offset_max         | The number of days before the `days_offset` during which the event may occur. This field is only provided when  the scheduling module is enabled. |
 #' 
-#' `importEvents` has no return and prints a message indicating how many
-#'   events were added or modified.
+#' `importEvents` invisibly returns the number of events added or modified.
 #'   
-#' `deleteEvents` has no return and prints a message indicating how many
-#'   events were deleted.
+#' `deleteEvents` invisibly returns the number of events deleted.
 #'   
 #' @seealso 
 #' [exportMappings()], \cr

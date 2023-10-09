@@ -92,8 +92,7 @@ documented here, but the most commonly used within \code{redcapAPI} are
 }
 
 
-\code{importMetaData} has no return and displays a message indicating
-the number of fields that were imported.
+\code{importMetaData} invisibly returns the number of fields that were imported.
 }
 \description{
 These methods provide the user access to a REDCap project's

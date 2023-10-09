@@ -94,9 +94,9 @@ importMappings.redcapApiConnection <- function(rcon,
     redcapError(response, error_handling)
   } 
   
-  message("Mappings imported: ", as.character(response))
-  
   if (refresh && rcon$has_mapping()){
     rcon$refresh_mapping()
   }
+  
+  invisible(as.character(response))
 }

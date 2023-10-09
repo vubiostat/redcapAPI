@@ -84,8 +84,6 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  message(sprintf("File deleted: %s", file_path))
-  
   # Refresh the cached File Repository ------------------------------
   if (refresh && rcon$has_fileRepository()){
     rcon$refresh_fileRepository()

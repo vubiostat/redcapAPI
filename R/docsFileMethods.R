@@ -34,14 +34,14 @@
 #' may be appended as a prefix.
 #' 
 #' @return 
-#' `exportFiles` has no return and displays a message with file path to
-#'   which the exported file was saved.
+#' `exportFiles` insibile returns the file path to which the exported 
+#'   file was saved.
 #'   
-#' `importFiles` has no return and displays a message indicating whether
-#'   the import was successful.
+#' `importFiles` invisibly returns `TRUE` when successful, or throws an 
+#'   error if the import failed.
 #'
-#' `deleteFiles` has no return and displays a message indicating whether
-#'   the file was successfully deleted from the project.
+#' `deleteFiles` invisible returns `TRUE` when successful, or throws an
+#'   error if the deletion failed.
 #'   
 #' @examples
 #' \dontrun{

@@ -29,6 +29,7 @@
 #' | `unique_event_name` | The unique event name to which the instrument is assigned.    | 
 #' | `form`              | The REDCap assigned instrument name mapped to the event.      |
 #' 
+#' `importMappings` invisible returns the number of mappings added or edited.
 #' 
 #' @seealso 
 #' [exportFieldNames()],\cr

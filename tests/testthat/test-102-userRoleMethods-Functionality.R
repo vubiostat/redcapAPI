@@ -10,9 +10,9 @@ test_that(
                           user_rights = 1)
   
     
-    expect_message(importUserRoles(rcon, 
-                                   data = NewRole), 
-                   "User Roles Added/Modified: 1")
+    n_imported <- importUserRoles(rcon, 
+                                  data = NewRole)
+    expect_equal(n_imported, "1")
     
     # Verify that the user role was updated. 
     UserRoles <- exportUserRoles(rcon)
@@ -38,9 +38,9 @@ test_that(
                              design = 1, 
                              reports = 1)
     
-    expect_message(importUserRoles(rcon, 
-                                   data = UpdateRole), 
-                   "User Roles Added/Modified: 1")
+    n_imported <- importUserRoles(rcon, 
+                                  data = UpdateRole)
+    expect_equal(n_imported, "1")
     
     UserRoles <- exportUserRoles(rcon)
     
@@ -53,7 +53,8 @@ test_that(
     rcon$user_roles()
     nroles <- nrow(rcon$user_roles())
     # Cleanup by deleting the user role
-    expect_message(deleteUserRoles(rcon, UserRoles$unique_role_name[1]), 
-                   sprintf("User Roles Deleted: %s", nroles))
+    n_deleted <- deleteUserRoles(rcon, 
+                                 UserRoles$unique_role_name[1])
+    expect_equal(n_deleted, "1")
   }
 )

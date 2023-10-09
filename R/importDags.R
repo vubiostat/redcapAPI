@@ -95,6 +95,5 @@ importDags.redcapApiConnection <- function(rcon,
     rcon$refresh_dags()
   }
   
-  message(sprintf("DAGs imported: %s", 
-                  as.character(response)))
+  invisible(as.character(response))
 }

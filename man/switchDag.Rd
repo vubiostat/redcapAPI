@@ -42,7 +42,8 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-Returns \code{TRUE} when the call is completed successfully.
+Invisibly returns \code{TRUE} when the call is completed successfully.
+Otherwise an error is thrown.
 }
 \description{
 This method enables the current API user to switch

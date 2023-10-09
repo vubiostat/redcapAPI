@@ -33,15 +33,6 @@
 #' | `directory` | The directory in which the file is saved. | 
 #' | `filename`  | The name of the saved file.               |
 #'
-#' 
-#' Additionally, `exportFromFileRepository` displays a message 
-#'   with the file path to which the file was saved on the local computer. 
-#' 
-#' `importToFileRepository` displays a message with the path in the
-#'   file repository to which the file is imported. 
-#'   
-#' `deleteFromFileRepository` displays a message with the path on the
-#'   file repostiory from which the file was deleted.
 #'   
 #' @seealso
 #' [exportFileRepository()], \cr

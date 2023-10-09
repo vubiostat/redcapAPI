@@ -86,5 +86,5 @@ deleteUsers.redcapApiConnection <- function(rcon,
     rcon$refresh_users()
   }
   
-  message(sprintf("Users Deleted: %s", as.character(response)))
+  invisible(as.character(response))
 }

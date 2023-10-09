@@ -86,5 +86,5 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
     rcon$refresh_user_roles()
   }
   
-  message(sprintf("User Roles Deleted: %s", as.character(response)))
+  invisible(as.character(response))
 }

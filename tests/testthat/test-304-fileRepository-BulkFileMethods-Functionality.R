@@ -87,11 +87,10 @@ test_that(
                          dir_create = TRUE,
                          recursive = TRUE)
     
-    expect_message(Deleted <- deleteFileRepository(rcon, 
-                                                   folder_id = 0, 
-                                                   recursive = TRUE, 
-                                                   confirm = "yes"), 
-                   "File deleted[:]")
+    Deleted <- deleteFileRepository(rcon, 
+                                    folder_id = 0, 
+                                    recursive = TRUE, 
+                                    confirm = "yes")
     
     expect_data_frame(Deleted, 
                       ncols = 4)
