@@ -88,6 +88,9 @@
 #' events does not include the event ID. To include the event ID, the user
 #' must construct a data frame to pass to `offlineConnection`.
 #' 
+#' @seealso 
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
+#' 
 #' 
 #' @examples
 #' \dontrun{

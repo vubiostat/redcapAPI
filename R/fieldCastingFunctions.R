@@ -70,6 +70,10 @@
 #' 
 #' [splitForms()], \cr
 #' [widerRepeated()]
+#' 
+#' ## Vignettes
+#' 
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
 #'   
 #'   
 #' @examples

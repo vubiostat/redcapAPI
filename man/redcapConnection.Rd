@@ -209,3 +209,6 @@ rcon$has_fieldnames()
 }
 
 }
+\seealso{
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+}
