@@ -77,13 +77,17 @@ deleteArms.redcapApiConnection <- function(rcon,
                             config = config)
     
     if (response$status_code != 200) return(redcapError(response, error_handling))
+  } else {
+    response <- "0"
   }
-  
-  message(sprintf("Arms Deleted: %s", 
-                  if (length(arms) > 0) paste0(arms, collapse = ", ") else "None."))
   
   if (refresh && rcon$has_arms()){
     rcon$refresh_arms()
+    # Changes to arms can impact events and if the project is 
+    # still considered longitudinal
+    rcon$refresh_events() 
     rcon$refresh_projectInformation()
   }
+  
+  invisible(as.character(response))
 }

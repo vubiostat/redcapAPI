@@ -86,8 +86,7 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importProjectInformation} has no return and displays a message
-indicating the number of fields updated.
+\code{importProjectInformation} invisibly returns the number of fields updated.
 }
 \description{
 These methods enable the user to export or update project

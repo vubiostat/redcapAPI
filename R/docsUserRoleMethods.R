@@ -60,11 +60,10 @@
 #' and the form export rights columns have the naming pattern
 #' `[form_name]_export_access`.
 #' 
-#' `importUserRoles` has no return value and displays a message indicating how
-#' many users were added or modified.
+#' `importUserRoles` invisibly returns the number of user roles that were 
+#'   added or modified.
 #' 
-#' `deleteUserRoles` has no return value and displays a message indicating how 
-#' many users were deleted.
+#' `deleteUserRoles` invisibly returns the number of user roles that were deleted.
 #' 
 #' @examples
 #' \dontrun{

@@ -12,19 +12,18 @@ test_that(
     }
     
     # Import a user
-    expect_message(importUsers(rcon, 
-                               data = data.frame(username = EXPENDABLE_USER)), 
-                   "Users Added/Modified: 1")
-    
+    n_imported <- importUsers(rcon, 
+                              data = data.frame(username = EXPENDABLE_USER))
+    expect_equal(n_imported, "1")
     # Verify the user was added
     expect_true(EXPENDABLE_USER %in% rcon$users()$username)
     
     # Modify the user permissions
     
-    expect_message(importUsers(rcon, 
-                               data = data.frame(username = EXPENDABLE_USER, 
-                                                 alerts = 1)), 
-                   "Users Added/Modified: 1")
+    n_imported <- importUsers(rcon, 
+                              data = data.frame(username = EXPENDABLE_USER, 
+                                                alerts = 1)) 
+    expect_equal(n_imported, "1")
     
     Users <- exportUsers(rcon)
     Users <- Users[rcon$users()$username %in% EXPENDABLE_USER, ]
@@ -166,8 +165,8 @@ test_that(
             "User tests without an expendable user could have negative consequences and are not run.")
 
     # Clean Up
-    expect_message(deleteUsers(rcon, 
-                               users = EXPENDABLE_USER), 
-                   "Users Deleted: 1")
+    n_deleted <- deleteUsers(rcon, 
+                               users = EXPENDABLE_USER) 
+    expect_equal(n_deleted, "1")
   }
 )

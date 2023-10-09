@@ -88,7 +88,6 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   
   file_path <- file.path(fileRepositoryPath(folder_id = folder_id, 
                                             fileRepo = fileRepo))
-  message(sprintf("File saved to: %s", file_path))
   
   data.frame(directory = dirname(file_path), 
              filename = basename(file), 

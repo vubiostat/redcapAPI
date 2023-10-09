@@ -78,8 +78,7 @@
 #' | `bypass_branching_erase_field_prompt` | Boolean value indicating if the box for "Prevent branching logic from hiding fields that have values" has been checked under "Additional Customizations."
 #'
 #' 
-#' `importProjectInformation` has no return and displays a message 
-#'   indicating the number of fields updated.
+#' `importProjectInformation` invisibly returns the number of fields updated.
 #' 
 #' @examples
 #' \dontrun{

@@ -96,11 +96,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importEvents} has no return and prints a message indicating how many
-events were added or modified.
+\code{importEvents} invisibly returns the number of events added or modified.
 
-\code{deleteEvents} has no return and prints a message indicating how many
-events were deleted.
+\code{deleteEvents} invisibly returns the number of events deleted.
 }
 \description{
 These methods enable the user to export event settings,

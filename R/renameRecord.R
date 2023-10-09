@@ -88,5 +88,5 @@ renameRecord.redcapApiConnection <- function(rcon,
                 error_handling = error_handling)
   }
   
-  as.character(response) == "1"
+  invisible(as.character(response) == "1")
 }

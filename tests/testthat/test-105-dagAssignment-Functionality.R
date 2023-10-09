@@ -24,9 +24,9 @@ test_that(
                                redcap_data_access_group = rcon$dags()$unique_group_name, 
                                stringsAsFactors = FALSE)
     
-    expect_message(importUserDagAssignments(rcon, 
-                                            data = AddDagAssign), 
-                   "User-DAG Assignments Added/Modified: 1")
+    n_imported <- importUserDagAssignments(rcon, 
+                                           data = AddDagAssign)
+    expect_equal(n_imported, "1")
     
     # Get the assignments and check the values
     CurrentDag <- exportUserDagAssignments(rcon)
@@ -46,9 +46,9 @@ test_that(
                               redcap_data_access_group = NA_character_, 
                               stringsAsFactors = FALSE)
     
-    expect_message(importUserDagAssignments(rcon, 
-                                            data = UnassignDag), 
-                   "User-DAG Assignments Added/Modified: 1")
+    n_imported <- importUserDagAssignments(rcon, 
+                                           data = UnassignDag)
+    expect_equal(n_imported, "1")
     
     deleteDags(rcon, 
                dags = rcon$dags()$unique_group_name)

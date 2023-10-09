@@ -16,7 +16,7 @@
 #'   the specified arm.  
 #' 
 #' @return
-#' `deleteRecords` returns a character value giving the number of records deleted.
+#' `deleteRecords` invisibly returns a character value giving the number of records deleted.
 #' 
 #' @seealso 
 #' [exportRecords()], \cr
@@ -123,5 +123,5 @@ deleteRecords.redcapApiConnection <- function(rcon,
     return(redcapError(response, error_handling))
   } 
   
-  as.character(response)
+  invisible(as.character(response))
 }

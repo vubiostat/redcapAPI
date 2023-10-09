@@ -83,12 +83,11 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
   
-  message(sprintf("Fields updated: %s", 
-                  as.character(response)))
-  
   if (refresh && rcon$has_projectInformation()){
     rcon$refresh_projectInformation()
   }
+  
+  invisible(as.character(response))
 }
 
 #####################################################################

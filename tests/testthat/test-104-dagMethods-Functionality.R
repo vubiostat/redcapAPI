@@ -6,9 +6,9 @@ test_that(
     NewDag <- data.frame(data_access_group_name = c("Testing DAG 1", "Testing DAG 2"),
                          unique_group_name = rep(NA_character_, 2))
     
-    expect_message(importDags(rcon, 
-                              data = NewDag), 
-                   "DAGs imported: 2")
+    n_imported <- importDags(rcon, 
+                             data = NewDag)
+    expect_equal(n_imported, "2")
     
     StoredDag <- exportDags(rcon)
     
@@ -22,15 +22,17 @@ test_that(
     ChangeDag <- StoredDag[1, ]
     ChangeDag$data_access_group_name <- "A different name"
     
-    expect_message(importDags(rcon, 
-                              data = ChangeDag), 
-                   "DAGs imported: 1")
+    n_imported <- importDags(rcon, 
+                             data = ChangeDag)
+    expect_equal(n_imported, "1")
     
     expect_true("A different name" %in% rcon$dags()$data_access_group_name)
     expect_true("a_different_name" %in% rcon$dags()$unique_group_name)
     
-    expect_message(deleteDags(rcon, 
-                              rcon$dags()$unique_group_name), 
-                   "DAGs deleted")
+    deleted_groups <- rcon$dags()$unique_group_name
+    n_deleted <- deleteDags(rcon, 
+                            deleted_groups)
+    expect_equal(n_deleted, 
+                 as.character(length(deleted_groups))) 
   }
 )

@@ -22,8 +22,8 @@
 #'   determined by looking up the highest record ID number in the 
 #'   project and incrementing it by 1. 
 #'
-#' `renameRecord` return a logical value that indicates if the 
-#'   operation was successful.
+#' `renameRecord` invisibly returns a logical value that indicates if the 
+#'   operation was successful. Otherwise, an error is thrown.
 #'   
 #'   
 #'   

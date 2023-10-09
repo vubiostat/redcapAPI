@@ -79,11 +79,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
 }
 
 
-\code{importDags} has no return, but will print a message indicating the
-number of Data Access Groups imported.
+\code{importDags} invisibly returns the number of Data Access Groups imported.
 
-\code{deleteDags} has no return, but will print a message indicating the
-number of Data Access Groups deleted.
+\code{deleteDags} invisibly returns the number of Data Access Groups deleted.
 }
 \description{
 These methods enable the user to export existing Data Access Groups,
