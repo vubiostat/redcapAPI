@@ -30,11 +30,9 @@
 #' | `unique_group_name`      | The internal unique group name.                    |
 #' | `data_access_group_id`   | The internal numeric identifier.                   |
 #' 
-#' `importDags` has no return, but will print a message indicating the
-#' number of Data Access Groups imported. 
+#' `importDags` invisibly returns the number of Data Access Groups imported. 
 #' 
-#' `deleteDags` has no return, but will print a message indicating the
-#' number of Data Access Groups deleted.
+#' `deleteDags` invisibly returns the number of Data Access Groups deleted.
 #' 
 #'
 #' @seealso

@@ -78,6 +78,17 @@
 #' Additional Curl option can be set in the `config` argument.  See the documentation
 #' for [httr::config()] and [httr::httr_options()] for more Curl options.
 #' 
+#' When validating data for `offlineRedcapConnection` objects, 
+#' links to invalid data forms will not work if the user does not provide
+#' the `url`, `version`, `project_info`, and `events` arguments (if the 
+#' project is longitudinal). For the `project_info`, the values `project_id`
+#' and `is_longitudinal` are required. The user may be able to provide
+#' as little as `project_info = data.frame(project_id = [id], is_longitudinal = [0/1])`.
+#' The user should be aware that the REDCap User Interface download for 
+#' events does not include the event ID. To include the event ID, the user
+#' must construct a data frame to pass to `offlineConnection`.
+#' 
+#' 
 #' @examples
 #' \dontrun{
 #' rcon <- redcapConnection(url=[YOUR_REDCAP_URL], token=[API_TOKEN])
@@ -371,15 +382,16 @@ print.redcapApiConnection <- function(x, ...){
 #' @param dag_assignment Either a `character` giving the file from which the
 #'   Data Access Group Assignments can be read, or a `data.frame`.
 #' @param project_info Either a `character` giving the file from which the 
-#'   Project Information can be read, or a `data.frame`.
+#'   Project Information can be read, or a `data.frame`. See Details.
 #' @param version Either a `character` giving the file from which the 
-#'   version can be read, or a `data.frame`.
+#'   version can be read, or a `data.frame`. See Details.
 #' @param file_repo Either a `character` giving the file from which the 
 #'   File Repository Listing can be read, or a `data.frame`.
 #' @param records Either a `character` giving the file from which the 
 #'   Records can be read, or a `data.frame`. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labeled or formatted
 #'   data is likely to result in errors when passed to other functions.
+#'   
 #' @export
 
 offlineConnection <- function(meta_data = NULL, 
@@ -397,7 +409,8 @@ offlineConnection <- function(meta_data = NULL,
                               project_info = NULL, 
                               version = NULL, 
                               file_repo = NULL,
-                              records = NULL){
+                              records = NULL, 
+                              url = NULL){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -563,6 +576,11 @@ offlineConnection <- function(meta_data = NULL,
     add = coll
   )
   
+  checkmate::assert_character(x = url, 
+                              len = 1, 
+                              null.ok = TRUE,
+                              add = coll)
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -703,7 +721,7 @@ offlineConnection <- function(meta_data = NULL,
   # Redcap Connection object                                     ####
   rc <- 
     list(
-      url = NULL, 
+      url = url, 
       token = NULL, 
       config = NULL, 
       

@@ -66,9 +66,8 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportPdf} has no return. After saving the file to the local
-computer, a message is displayed providing the location of the file
-on the system.
+\code{exportPdf} invisibly returns the location on the local system
+to whihc the files is saved.
 }
 \description{
 These methods allow the user to download PDF files of

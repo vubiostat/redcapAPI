@@ -65,6 +65,9 @@ that may not otherwise be supported by \code{redcapAPI}.}
    \code{unique_event_name} \tab The unique event name to which the instrument is assigned. \cr
    \code{form} \tab The REDCap assigned instrument name mapped to the event. \cr
 }
+
+
+\code{importMappings} invisible returns the number of mappings added or edited.
 }
 \description{
 These methods enable the user to export and add/modify the

@@ -23,6 +23,9 @@
 #' | `unique_role_name`   | The unique role name to which the user is assigned.  |
 #' | `data_access_group`  | The Data Access Group to which the user is assigned. |
 #' 
+#' `importUserRoleAssignments` invisibly returns the number of user roles 
+#'   assignments added or modified.
+#' 
 #' @examples
 #' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 

@@ -115,17 +115,16 @@ test_that(
     ArmOneMapping <- Mapping[Mapping$arm_num == 1, ]
 
     # Import a subset of mappings
-    expect_message(importMappings(rcon,
-                                  ArmOneMapping),
-                   sprintf("Mappings imported: %s", nrow(ArmOneMapping)))
+    n_imported <- importMappings(rcon,
+                                 ArmOneMapping)
+    expect_equal(n_imported, as.character(nrow(ArmOneMapping)))
 
     expect_equal(ArmOneMapping,
                  rcon$mapping())
 
-    expect_message(importMappings(rcon,
-                                  Mapping,
-                                  refresh = FALSE),
-                   sprintf("Mappings imported: %s", nrow(Mapping)))
+    importMappings(rcon,
+                   Mapping,
+                   refresh = FALSE)
 
     expect_data_frame(rcon$mapping(),
                       nrows = nrow(ArmOneMapping))
@@ -143,54 +142,69 @@ test_that(
 test_that(
   "Blank data collection sheet",
   {
-    expect_message(exportPdf(rcon,
-                             dir = tempdir(),
-                             events = "event_1_arm_1",
-                             instruments = "multiple_choice"),
-                   "The file was saved to.+blank.pdf")
+    temp_dir <- tempdir()
+    save_to <- exportPdf(rcon,
+                         dir = temp_dir,
+                         events = "event_1_arm_1",
+                         instruments = "multiple_choice")
+    expect_equal(save_to, 
+                 file.path(temp_dir, 
+                           "redcap_forms_download_blank.pdf"))
   }
 )
 
 test_that(
   "Download all instrument forms (blank)",
   {
-    expect_message(exportPdf(rcon,
-                             dir = tempdir(),
-                             events = "event_1_arm_1"),
-                   "The file was saved to.+blank.pdf")
+    temp_dir <- tempdir()
+    save_to <- exportPdf(rcon,
+                         dir = temp_dir,
+                         events = "event_1_arm_1")
+    expect_equal(save_to, 
+                 file.path(temp_dir, 
+                           "redcap_forms_download_blank.pdf"))
   }
 )
 
 test_that(
   "exportPdf export the instrument PDF for a record",
   {
-    expect_message(exportPdf(rcon,
-                             dir = tempdir(),
-                             record = 1,
-                             events = "event_1_arm_1",
-                             instruments = "multiple_choice"),
-                   "The file was saved to.+record[_]1.pdf")
+    temp_dir <- tempdir()
+    save_to <- exportPdf(rcon,
+                         dir = temp_dir,
+                         record = 1,
+                         events = "event_1_arm_1",
+                         instruments = "multiple_choice")
+    expect_equal(save_to, 
+                 file.path(temp_dir, 
+                           "redcap_forms_download_record_1.pdf"))
   }
 )
 
 test_that(
   "exportPdf export all instruments for a record",
   {
-    expect_message(exportPdf(rcon,
-                             dir = tempdir(),
-                             record = 1,
-                             events = "event_1_arm_1"),
-                   "The file was saved to.+record[_]1.pdf")
+    temp_dir <- tempdir()
+    save_to <- exportPdf(rcon,
+                         dir = temp_dir,
+                         record = 1,
+                         events = "event_1_arm_1")
+    expect_equal(save_to, 
+                 file.path(temp_dir, 
+                           "redcap_forms_download_record_1.pdf"))
   }
 )
 
 test_that(
   "all instruments with data from all records",
   {
-    expect_message(exportPdf(rcon,
-                             dir = tempdir(),
-                             all_records = TRUE),
-                   "The file was saved to.+all[_]records.pdf")
+    temp_dir <- tempdir()
+    save_to <- exportPdf(rcon,
+                         dir = temp_dir,
+                         all_records = TRUE)
+    expect_equal(save_to, 
+                 file.path(temp_dir, 
+                           "redcap_forms_download_all_records.pdf"))
   }
 )
 

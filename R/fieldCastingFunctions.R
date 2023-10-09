@@ -887,6 +887,19 @@ mChoiceCast <- function(data,
   
   id_field <- rcon$metadata()$field_name[1]
   
+  MD <- rcon$metadata()
+  base_names <- sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", field_names, perl = TRUE)
+  form_names <- MD$form_name[match(base_names, MD$field_name)]
+
+  event_id <- 
+    if ("redcap_event_name" %in% names(Raw)){
+      event_index <- match(Raw$redcap_event_name, 
+                           rcon$events()$unique_event_name)
+      rcon$events()$event_id[event_index]
+    } else {
+      rep(NA_real_, nrow(Raw))
+    }
+  
   Invalid <- 
     do.call(rbind, 
             lapply(seq_along(Raw), 
@@ -895,12 +908,15 @@ mChoiceCast <- function(data,
                      sel <- selector[,i]
                      if (any(sel))
                      {
-                       data.frame(row = seq_len(nrow(Raw))[sel],
+                       df <- data.frame(row = seq_len(nrow(Raw))[sel],
                                   record_id = if(id_field %in% colnames(Raw)) Raw[sel, id_field] else NA,
                                   field_name = field_names[i],
+                                  form_name = form_names[i],
                                   field_type = field_types[i],
-                                  value = Raw[sel, i], 
+                                  event_id = if (is.null(event_id)) NA_character_ else event_id[sel],
+                                  value = Raw[sel, i],
                                   stringsAsFactors = FALSE)
+                       df
                      } else NULL
                    }
             )
@@ -910,10 +926,21 @@ mChoiceCast <- function(data,
     Invalid <- data.frame(row = numeric(0), 
                           record_id = character(0), 
                           field_name = character(0), 
+                          form_name = character(0),
                           field_type = character(0), 
+                          event_id = numeric(0),
                           value = character(0), 
+                          link_to_form = character(0),
                           stringsAsFactors = FALSE)
+  } else {
+    Invalid$link_to_form <- 
+      constructLinkToRedcapForm(rcon, 
+                                form_name = Invalid$form_name, 
+                                record_id = Invalid$record_id,
+                                event_id = Invalid$event_id)
   }
+  
+  
   
   class(Invalid) <- c("invalid", "data.frame")
   attr(Invalid, "time") <- format(Sys.Date(), "%c")

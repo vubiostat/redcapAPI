@@ -35,18 +35,24 @@
 #'   Deleted files will remain in the recycling bin for up to 30 days. 
 #'   
 #' @return 
-#' `exportFileRepository` and `importFileRepository` display messages 
-#' giving the directory to which files were saved to the local machine and 
-#' File Repository, respectively. They also return a data frame with the columns: 
+#' `exportFileRepository` returns a data frame with the locations to which 
+#' the files were saved on the local system. It has the columns: 
 #' 
 #' |             |                                           |
 #' |-------------|-------------------------------------------|
 #' | `directory` | The directory in which the file is saved. | 
 #' | `filename`  |  The name of the saved file.              |
 #' 
-#' `deleteFileRepository` displays a message giving the files that were 
-#' deleted from the File Repository. It also returns a data frame with the 
-#' columns:
+#' `importFileRepository` returns a data frame with the locations to which 
+#' the files were saved on the local system. It has the columns: 
+#' 
+#' |             |                                           |
+#' |-------------|-------------------------------------------|
+#' | `directory` | The directory in which the file is saved. | 
+#' | `filename`  |  The name of the saved file.              |
+#' 
+#' `deleteFileRepository` returns a data frame listing the files that 
+#'   were deleted from the file repository. It has the columns:
 #' 
 #' |                |                                                                           |
 #' |----------------|---------------------------------------------------------------------------|

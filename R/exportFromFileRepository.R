@@ -90,9 +90,5 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                                              dir = dir, 
                                              dir_create = dir_create)
   
-  message(sprintf("File Saved: %s", 
-                  file.path(ExportedFile$directory, 
-                            ExportedFile$filename)))
-  
   ExportedFile
 }

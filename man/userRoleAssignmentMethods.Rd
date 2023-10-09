@@ -63,6 +63,10 @@ that may not otherwise be supported by \code{redcapAPI}.}
    \code{unique_role_name} \tab The unique role name to which the user is assigned. \cr
    \code{data_access_group} \tab The Data Access Group to which the user is assigned. \cr
 }
+
+
+\code{importUserRoleAssignments} invisibly returns the number of user roles
+assignments added or modified.
 }
 \description{
 These methods enable the user to export the user-role

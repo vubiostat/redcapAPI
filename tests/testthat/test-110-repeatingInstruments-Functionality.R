@@ -53,9 +53,9 @@ test_that(
     Repeat <- data.frame(event_name = "event_1_arm_1", 
                          form_name = "repeating_instrument")
     
-    expect_message(importRepeatingInstrumentsEvents(rcon, 
-                                                    data = Repeat), 
-                   "Rows imported: 1")
+    n_imported <- importRepeatingInstrumentsEvents(rcon, 
+                                                   data = Repeat)
+    expect_equal(n_imported, "1")
     
     rcon$refresh_projectInformation()
     rcon$refresh_repeatInstrumentEvent()
@@ -70,9 +70,9 @@ test_that(
     
     
     # Now let's back out the changes
-    expect_message(importRepeatingInstrumentsEvents(rcon, 
-                                                    REDCAP_REPEAT_INSTRUMENT_STRUCTURE), 
-                   "Rows imported: 0")
+    n_imported <- importRepeatingInstrumentsEvents(rcon, 
+                                                   REDCAP_REPEAT_INSTRUMENT_STRUCTURE)
+    expect_equal(n_imported, "0")
   
     expect_data_frame(exportRepeatingInstrumentsEvents(rcon), 
                       nrows = 0)

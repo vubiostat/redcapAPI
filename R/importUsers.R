@@ -115,7 +115,7 @@ importUsers.redcapApiConnection <- function(rcon,
     rcon$refresh_users()
   }
   
-  message(sprintf("Users Added/Modified: %s", as.character(response)))
+  invisible(as.character(response))
 }
 
 

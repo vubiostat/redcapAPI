@@ -35,8 +35,7 @@
 #' | `form_name`         | The form name, as given in the second column of the Meta Data | 
 #' | `custom_form_label` | A custom display string for the repeating instrument/event    |
 #' 
-#' `importRepeatingInstrumentsEvents` has no return and displays a message
-#' describing the number of rows imported.
+#' `importRepeatingInstrumentsEvents` invisibly returns the number of rows imported.
 #' 
 #' @examples
 #' \dontrun{

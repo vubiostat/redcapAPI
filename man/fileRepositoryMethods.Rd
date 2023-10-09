@@ -108,18 +108,24 @@ body of the API call. This provides users to execute calls with options
 that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
-\code{exportFileRepository} and \code{importFileRepository} display messages
-giving the directory to which files were saved to the local machine and
-File Repository, respectively. They also return a data frame with the columns:\tabular{ll}{
+\code{exportFileRepository} returns a data frame with the locations to which
+the files were saved on the local system. It has the columns:\tabular{ll}{
     \tab  \cr
    \code{directory} \tab The directory in which the file is saved. \cr
    \code{filename} \tab The name of the saved file. \cr
 }
 
 
-\code{deleteFileRepository} displays a message giving the files that were
-deleted from the File Repository. It also returns a data frame with the
-columns:\tabular{ll}{
+\code{importFileRepository} returns a data frame with the locations to which
+the files were saved on the local system. It has the columns:\tabular{ll}{
+    \tab  \cr
+   \code{directory} \tab The directory in which the file is saved. \cr
+   \code{filename} \tab The name of the saved file. \cr
+}
+
+
+\code{deleteFileRepository} returns a data frame listing the files that
+were deleted from the file repository. It has the columns:\tabular{ll}{
     \tab  \cr
    \code{folder_id} \tab The REDCap assigned ID number for the folder. This will be \code{NA} for files. \cr
    \code{doc_id} \tab The REDCap assigned ID number for the file. \cr
