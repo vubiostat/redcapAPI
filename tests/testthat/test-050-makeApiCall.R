@@ -1,11 +1,50 @@
 context("makeApiCall Argument Validation")
 
+library(mockery)
+library(curl)
+
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
 # is ubiquitous throughout the package. If we break it, it's bound
 # to pop up in other tests.
 
 # Test .makeApiCall_validateResponse
+
+h <- new_handle(timeout = 1L)
+goodVersionPOST <- structure(list(url = "https://redcap.vanderbilt.edu/api/", status_code = 200L, 
+    headers = structure(list(date = "Mon, 09 Oct 2023 20:24:57 GMT", 
+        expires = "0", `cache-control` = "no-store, no-cache, must-revalidate", 
+        pragma = "no-cache", `x-xss-protection` = "1; mode=block", 
+        `x-content-type-options` = "nosniff", `access-control-allow-origin` = "*", 
+        `strict-transport-security` = "max-age=31536000", `redcap-random-text` = "weFkyMRUge5eZCiWyRT7dXCybPGz9DAKTUsW5kqa2u2", 
+        `content-encoding` = "gzip", vary = "Accept-Encoding", 
+        `content-type` = "text/csv; charset=utf-8", `transfer-encoding` = "chunked"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 200L, version = "HTTP/1.1", 
+        headers = structure(list(date = "Mon, 09 Oct 2023 20:24:57 GMT", 
+            expires = "0", `cache-control` = "no-store, no-cache, must-revalidate", 
+            pragma = "no-cache", `x-xss-protection` = "1; mode=block", 
+            `x-content-type-options` = "nosniff", `access-control-allow-origin` = "*", 
+            `strict-transport-security` = "max-age=31536000", 
+            `redcap-random-text` = "hardyharhar", 
+            `content-encoding` = "gzip", vary = "Accept-Encoding", 
+            `content-type` = "text/csv; charset=utf-8", `transfer-encoding` = "chunked"), class = c("insensitive", 
+        "list")))), cookies = structure(list(domain = c("#HttpOnly_redcap.vanderbilt.edu", 
+    "redcap.vanderbilt.edu"), flag = c(FALSE, FALSE), path = c("/", 
+    "/"), secure = c(TRUE, FALSE), expiration = structure(c(Inf, 
+    Inf), class = c("POSIXct", "POSIXt")), name = c("BIGipServer~legacy_services~redcap_443", 
+    "babble"), value = c("babble", "secrets"
+    )), row.names = c(NA, -2L), class = "data.frame"), content = as.raw(c(0x31, 
+    0x33, 0x2e, 0x31, 0x30, 0x2e, 0x33)), date = structure(1696883097, class = c("POSIXct", 
+    "POSIXt"), tzone = "GMT"), times = c(redirect = 0, namelookup = 0.001079, 
+    connect = 0.022278, pretransfer = 0.119255, starttransfer = 0.119258, 
+    total = 0.445047), request = structure(list(method = "POST", 
+        url = "https://redcap.vanderbilt.edu/api/", headers = c(Accept = "application/json, text/xml, application/xml, */*"), 
+        fields = list(token = "DIDNTSAYTHEMAGICWORD", 
+            content = "version", format = "csv"), options = list(
+            useragent = "libcurl/7.81.0 r-curl/5.0.2 httr/1.4.7", 
+            timeout_ms = 3e+05, post = TRUE), auth_token = NULL, 
+        output = structure(list(), class = c("write_memory", 
+        "write_function"))), class = "request"), handle = h), class = "response")
 
 test_that(
   ".makeApiCall_isRetryEligible returns appropriate logical values", 
@@ -38,6 +77,26 @@ test_that(
 )
 
 test_that(
+  "makeApiCall deals with curl timeouts",
+  {
+    e <- structure(list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
+                        call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", 
+                                                 handle = h)), class = c("simpleError", "error", "condition"
+                                                 ))
+    
+    x <- 1
+    stub(makeApiCall, "httr::POST", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    
+    response <- makeApiCall(rcon, 
+                            body = list(content = "version", 
+                                        format = "csv"))
+    
+    expect_true(response$status==200)
+  }
+)
+
+test_that(
   ".makeApiCall_retryMessage gives appropriate messages", 
   {
     response <- makeApiCall(rcon, 
@@ -65,7 +124,6 @@ test_that(
     
     expect_error(redcapError(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
-  
     
     response$content <- charToRaw("Timeout was reached: [redcap.vanderbilt.edu] SSL connection timeout")
     
