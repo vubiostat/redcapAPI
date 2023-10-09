@@ -471,7 +471,7 @@ test_that(
     file <- file.path(filedir, "TestRedcapAPI_UserRoleAssignments.csv")
     
     roff <- 
-        offlineConnection(user_role_assignment = file)
+        expect_warning(offlineConnection(user_role_assignment = file))
     
     expect_true(roff$has_user_role_assignment())
   }
