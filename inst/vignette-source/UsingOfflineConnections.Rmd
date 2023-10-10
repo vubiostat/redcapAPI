@@ -6,16 +6,18 @@ output: pdf_document
 
 # Introduction
 
-The `redcapAPI` package works best when the user has permission to export and import data via the REDCap API. This requires the user to be added to a project, granted API permissions by the project owner, an API token requested, and the REDCap Administrator approving the API token request. There are many reasons why any one of these steps my not be completed which may leave the user without access to the API. 
+The `redcapAPI` package works best when the user has permission to export and import data via the REDCap API. This requires that the user to be added to a project, granted API permissions by the project owner, an API token requested, and that the request be approved by the REDCap Administrator. There are many reasons why any one of these steps my not be completed which may leave the user without access to the API. 
 
-"Offline connections" are a tool designed to provide the user with at least a subset the functionality available to API users. Most prominently, `exportRecordsTyped` has a method for offline connections that allows offline users to prepare data for analysis just as they would if an API connection were available. Instead of exporting the various data and meta data elements via the API, the offline connection is constructed using the comma separate value (CSV) files that may be downloaded from the REDCap user interface. 
+"Offline connections" are a tool designed to provide the user with at least a subset of the functionality available to API users. Most prominently, `exportRecordsTyped` has a method for offline connections that allows offline users to prepare data for analysis just as they would if an API connection were available. Instead of exporting the various data and meta data elements via the API, the offline connection is constructed using the comma separate value (CSV) files that are downloaded from the REDCap user interface. 
 
 # Basic Offline Connections
 
 Offline connections are most commonly made using the CSV downloads from the REDCap project. In order to utilize `exportRecordsTyped`, the two essential downloads are the raw data and the data dictionary. For the best results, the data should be the raw, unlabeled data. Once these two files are downloaded, the offline connection is made by passing the file paths to the `offlineConnection` function. The `redcapAPI` package includes a set of files that may be used for demonstration. 
 
 ```{r}
-suppressPackageStartupMessages(library(redcapAPI))
+suppressPackageStartupMessages({
+  library(redcapAPI)
+})
 
 offline_file_dir <- system.file("extdata/offlineConnectionFiles", 
                                 package = "redcapAPI")
@@ -62,7 +64,7 @@ The REDCap version number can be found at the bottom of the list of projects on 
 
 Events data can be downloaded from the REDCap user interface after opening the "My Projects" page, clicking on "Define My Events", and then selecting the "Dowload events (CSV)" option from the "Upload or Download" drop down.
 
-Unfortunately, the events data downloaded from the user interface does not contain the event IDs, which are necessary if links to invalid data forms are desired. If the user wishes to have functional links, they will need to manually provide the event IDs. A data frame constructed in the following manner would be suitable to pass to `offlineConnection`.
+Unfortunately, the events data downloaded from the user interface does not contain the event IDs, which are necessary if links to invalid data forms are desired. If the user wishes to have functional links, they will need to manually provide the event IDs (these can be looked up from the "Define My Events" page). A data frame constructed in the following manner would be suitable to pass to `offlineConnection`.
 
 ```{r}
 event_data <- 
@@ -87,7 +89,7 @@ project_info <- data.frame(project_id = 167509,
                            is_longitudinal = 1)
 ```
 
-With all of these components in place, the offline connection can now be created with improved functionality. The warnings issued by this call indicate that not all of the fields permitted by the event data and the project information data have been provided. This is acceptable in this instance. `offlineConnection` tends to be pretty noisy about these types of issues; it has no way to know what the project configuration is and so chooses to draw the user's attention to potential issues quite liberally. 
+With all of these components in place, the offline connection can now be created with improved functionality. The warnings issued by this call indicate that not all of the fields the _could_ be part of the event and project information data have been provided. This is acceptable in this instance. `offlineConnection` is noisy about these types of issues since it cannot make assumptions about the project configuration or how the user intends to utilize the object. 
 
 ```{r}
 off_con <- offlineConnection(meta_data = metadata_file, 
@@ -110,7 +112,7 @@ reviewInvalidRecords(Records)
 
 # Casting Records for Import
 
-Offline connections may also be used to prepare data for import, even if the data wll not be imported using the API. For this type of casting, the offline connection only needs the data dictionary. To illustrate, the `Records` object previously prepared may not be prepared for import. After executing `castForImport`, the resulting data frame can be written to a CSV file and uploaded to the project via the REDCap user interface.
+Offline connections may also be used to prepare data for import, even if the data will not be imported using the API. For this type of casting, the offline connection only needs the data dictionary. To illustrate, the `Records` object previously prepared may not be prepared for import. After executing `castForImport`, the resulting data frame can be written to a CSV file and uploaded to the project via the REDCap user interface.
 
 ```{r}
 off_con <- offlineConnection(meta_data = metadata_file)
@@ -121,4 +123,4 @@ ForImport <- castForImport(Records,
 
 # Conclusion
 
-Offline connections are an additional tool for managing REDCap data within R when the user does not have permission to use the API. The most anticipated use of offline connections is to give the user access to `exportRecordsTyped`. Without permission to use the API, the user should be prepared to manually look up project information in order to use the full power of `redcapAPI`. 
+Offline connections are an additional tool for managing REDCap data within R when the user does not have permission to use the API. The most anticipated use of offline connections is to give the user access to `exportRecordsTyped` or `castForImport`. Without permission to use the API, the user should be prepared to manually look up project information in order to use the full power of `redcapAPI`. 
