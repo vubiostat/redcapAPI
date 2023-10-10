@@ -13,8 +13,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.8.1
 
 * New functions for project management: createRedcapProject, exportProjectXml
+* Reports of data failing validation checks now include a link to the form with the failing data.
 * Major cleanup to remove messages on successful function execution. Many return values are changed to be consistent and be TRUE/FALSE if possible.
-
 
 ## 2.8.0
 

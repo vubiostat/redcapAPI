@@ -96,7 +96,8 @@ test_that(
 test_that(
   "Invalid data is reported, links generated with event IDs provided", 
   {    
-    Evt <- rcon_off$events()
+    Evt <- read.csv(file.path(offline_files, "TestRedcapAPI_Events.csv"),
+                    stringsAsFactors = FALSE)
     Evt$event_id <- rcon$events()$event_id
     
     rcon_off <- 
@@ -124,7 +125,11 @@ test_that(
     
 test_that(
   "Invalid data is reported, links not generated without the version number", 
-  {    
+  {   
+    Evt <- read.csv(file.path(offline_files, "TestRedcapAPI_Events.csv"),
+                    stringsAsFactors = FALSE)
+    Evt$event_id <- rcon$events()$event_id
+    
     rcon_off <- 
       expect_warning(
         offlineConnection(
