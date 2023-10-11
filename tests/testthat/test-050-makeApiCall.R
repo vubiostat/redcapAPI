@@ -42,7 +42,7 @@ test_that(
 )
 
 test_that(
-  "makeApiCall handles from curl timeout with translated error",
+  "makeApiCall handles curl timeout with translated error",
   {
     h <- new_handle(timeout = 1L)
     e <- structure(
