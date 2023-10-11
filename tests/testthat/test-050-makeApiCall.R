@@ -42,7 +42,32 @@ test_that(
 )
 
 test_that(
-  "makeApiCall deals with curl timeouts",
+  "makeApiCall handles from curl timeout with translated error",
+  {
+    h <- new_handle(timeout = 1L)
+    e <- structure(
+      list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
+           call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", handle = h)
+      ),
+      class = c("simpleError", "error", "condition")
+    )
+    
+    rcon$set_retries(1)
+    x <- 1
+    stub(makeApiCall, "httr::POST", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    
+    response <- makeApiCall(rcon, 
+                            body = list(content = "version", 
+                                        format = "csv"))
+    
+    expect_error(redcapError(response, "A network error has occurred"))
+    rcon$set_retries(5)
+  }
+)
+
+test_that(
+  "makeApiCall recovers from curl timeout gracefully",
   {
     h <- new_handle(timeout = 1L)
     goodVersionPOST <- structure(
