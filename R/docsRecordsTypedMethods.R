@@ -153,6 +153,10 @@
 #' [splitForms()], \cr
 #' [widerRepeated()]
 #' 
+#' ## Vignettes
+#' 
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
+#' 
 #' @examples
 #' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
