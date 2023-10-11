@@ -111,3 +111,6 @@ missingSummary(rcon,
 }
 
 }
+\seealso{
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+}

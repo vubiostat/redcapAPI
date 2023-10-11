@@ -159,12 +159,34 @@ makeApiCall <- function(rcon,
   # Functional Code -------------------------------------------------
   
   for (i in seq_len(rcon$retries())){
-    response <-   
-      httr::POST(url = rcon$url, 
-                 body = c(list(token = rcon$token), 
-                          body),
-                 config = c(rcon$config, 
-                            config))
+    response <-
+      tryCatch(
+      {
+        httr::POST(url = rcon$url, 
+                   body = c(list(token = rcon$token), 
+                            body),
+                   config = c(rcon$config, 
+                              config))
+      },
+      error=function(e)
+      {
+        if(grepl("Timeout was reached", e$message))
+        {
+          structure(
+            list(
+              status_code=408L,
+              content=charToRaw(e$message),
+              headers=structure(
+                list('Content-Type'="text/csv; charset=utf-8"),
+                class = c("insensitive", "list")
+              )
+            ),
+            class="response")
+        } else
+        {
+          stop(e)
+        }
+      })
     
     httr_config <- getOption("httr_config")
     if(!is.null(httr_config)                     &&
