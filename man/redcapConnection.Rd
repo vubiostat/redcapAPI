@@ -107,8 +107,7 @@ Data Access Group Assignments can be read, or a \code{data.frame}.}
 \item{project_info}{Either a \code{character} giving the file from which the
 Project Information can be read, or a \code{data.frame}. See Details.}
 
-\item{version}{Either a \code{character} giving the file from which the
-version can be read, or a \code{data.frame}. See Details.}
+\item{version}{\code{character(1)} giving the instance's REDCap version number.}
 
 \item{file_repo}{Either a \code{character} giving the file from which the
 File Repository Listing can be read, or a \code{data.frame}.}
@@ -124,10 +123,8 @@ used to access the database.
 }
 \details{
 \code{redcapConnection} objects will retrieve and cache various forms of
-project information. This can make metadata, arms, dags, events, instruments,
-fieldnames, arm-event mappings, users, version, project information,
-fileRepository, and repeating instruments available directly from the
-\code{redcapConnection} object. The retrieval of these objects
+project information. This can make metadata, arms, events, etc. available
+directly from the \code{redcapConnection} object. The retrieval of these objects
 uses the default values of the respective export functions (excepting the
 file repository, which uses \code{recursive = TRUE}).
 
@@ -162,8 +159,9 @@ Information is cached for
 
 There is also a \code{flush_all} and \code{refresh_all} method that will purge
 the entire cache and refresh the entire cache, respectively.
+\subsection{Specific to API Connections}{
 
-The \code{redcapConnection} object also stores the user preferences for
+The \code{redcapApiConnection} object also stores the user preferences for
 handling repeated attempts to call the API. In the event of a timeout
 error or server unavailability, these settings allow a system pause before
 attempting another API call. In the event all of the retries fail, the
@@ -178,23 +176,41 @@ project for which the user wishes to use the API.
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
 for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.
+}
 
-When validating data for \code{offlineRedcapConnection} objects,
-links to invalid data forms will not work if the user does not provide
-the \code{url}, \code{version}, \code{project_info}, and \code{events} arguments (if the
-project is longitudinal). For the \code{project_info}, the values \code{project_id}
-and \code{is_longitudinal} are required. The user may be able to provide
-as little as \verb{project_info = data.frame(project_id = [id], is_longitudinal = [0/1])}.
-The user should be aware that the REDCap User Interface download for
-events does not include the event ID. To include the event ID, the user
-must construct a data frame to pass to \code{offlineConnection}.
+\subsection{Specific to Offline Connections}{
+
+"Offline connections" are a tool designed to provide the users without
+API privileges with at least a subset of the functionality available to
+API users. The offline connections are typically constructed from the
+comma separated value (CSV) files downloaded from the REDCap user
+interface. Alternatively, data frames may be provided with the
+necessary data.
+
+Not all of the components of an offline connection are needed for most
+operations. Rather, the object was built to accept the same components
+available to the \code{redcapApiConnection} in order to provide a consistent
+interface and simplify future development.
+
+The meta data will be required for nearly all operations. For
+validating and casting data, the \code{records} data must be provided, and
+works best if the data are the raw, unlabeled data downloaded from the
+REDCap user interface.
+
+Other components that may prove useful when casting records are the
+url, version, events (if the project is longitudinal), and a subset
+of the project information. The user is encouraged to review the
+vignette for working with offline connections for more details.
+
+With offline connections, the refresh methods have an important difference.
+The user may pass the refresh method a file path or data frame which
+will be used to replace the existing component. See examples.
+}
 }
 \examples{
 \dontrun{
-rcon <- redcapConnection(url=[YOUR_REDCAP_URL], token=[API_TOKEN])
-
-options(redcap_api_url=[YOUR_REDCAP_URL])
-rcon <- redcapConnection(token=[API_TOKEN])
+rcon <- redcapConnection(url = [YOUR_REDCAP_URL], 
+                         token = [API_TOKEN])
 
 exportRecords(rcon)
 
@@ -207,6 +223,34 @@ rcon$fieldnames()
 # remove a cached value for fieldnames
 rcon$flush_fieldnames()
 rcon$has_fieldnames()
+
+
+# Using offline connections
+
+meta_data_file <- "path/to/meta_data_file.csv"
+records_file <- "path/to/records_file.csv"
+events_file <- "path/to/events_file.csv"
+
+ProjectInfo <- data.frame(project_id = 12345, 
+                          is_longitudinal = 1)
+
+off_conn <- offlineConnection(meta_data = meta_data_file, 
+                              records = records_file,
+                              project_info = ProjectInfo, 
+                              version = [YOUR_REDCAP_VERSION_NUMBER], 
+                              url = [YOUR_REDCAP_URL])
+                              
+off_conn$metadata()
+off_conn$records()
+off_conn$projectInformation()
+off_conn$version()
+
+# Add or replace the data in the events component.
+off_conn$refresh_events(events_file)
+off_conn$events()
 }
 
+}
+\seealso{
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
 }
