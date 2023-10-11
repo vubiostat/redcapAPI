@@ -132,7 +132,8 @@ exportFiles.redcapApiConnection <- function(rcon,
                returnFormat = 'csv',
                record = record,
                field = field, 
-               event = event)
+               event = event, 
+               repeat_instance = repeat_instance)
   
   body <- body[lengths(body) > 0]
   
