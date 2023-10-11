@@ -212,9 +212,4 @@ exportRecordsTyped(rcon) |>
 \code{\link[=splitForms]{splitForms()}}, \cr
 \code{\link[=widerRepeated]{widerRepeated()}}
 }
-
-\subsection{Vignettes}{
-
-\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
-}
 }

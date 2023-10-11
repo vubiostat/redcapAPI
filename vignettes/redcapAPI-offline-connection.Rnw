@@ -1,8 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{redcapAPI Offline Connections}
-%\VignetteKeywords{REDCap}
-%\VignettePackage{redcapAPI}
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{precompiled-offline-connection.pdf}
-\end{document}

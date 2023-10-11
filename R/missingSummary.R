@@ -46,9 +46,6 @@
 #'   would contain meaningless missing values and could be excluded from the 
 #'   report.
 #'   
-#' @seealso 
-#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
-#'   
 #' @examples
 #' \dontrun{
 #' unlockREDCap(connections = c(rcon = "project_alias"), 
