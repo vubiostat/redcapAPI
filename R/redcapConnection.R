@@ -89,8 +89,8 @@
 #' 
 #' Not all of the components of an offline connection are needed for most 
 #' operations. Rather, the object was built to accept the same components
-#' available to the `redcapApiConnection` to simplify development and 
-#' simplify future development.
+#' available to the `redcapApiConnection` in order to provide a consistent
+#' interface and simplify future development.
 #' 
 #' The meta data will be required for nearly all operations. For 
 #' validating and casting data, the `records` data must be provided, and 

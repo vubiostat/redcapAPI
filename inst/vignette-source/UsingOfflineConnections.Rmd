@@ -89,7 +89,7 @@ project_info <- data.frame(project_id = 167509,
                            is_longitudinal = 1)
 ```
 
-With all of these components in place, the offline connection can now be created with improved functionality. The warnings issued by this call indicate that not all of the fields the _could_ be part of the event and project information data have been provided. This is acceptable in this instance. `offlineConnection` is noisy about these types of issues since it cannot make assumptions about the project configuration or how the user intends to utilize the object. 
+With all of these components in place, the offline connection can now be created with improved functionality. The warnings issued by this call indicate that not all of the fields that _could_ be part of the event and project information data have been provided. This is acceptable in this instance. `offlineConnection` is noisy about these types of issues since it cannot make assumptions about the project configuration or how the user intends to utilize the object. 
 
 ```{r}
 off_con <- offlineConnection(meta_data = metadata_file, 
