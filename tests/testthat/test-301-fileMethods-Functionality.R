@@ -139,7 +139,68 @@ test_that(
                   record = "1",
                   field = "file_upload_test",
                   event = "event_1_arm_1",
-                  repeate_instance = 1)
+                  repeat_instance = 1)
     )
+    
+    lapply(list.files(temp_dir), 
+           unlink)
+  }
+)
+
+test_that(
+  "Files imported/exported from repeat instances > 1", 
+  {
+    temp_file <- tempfile(fileext = ".txt")
+    file.copy(local_file, temp_file)
+    
+    expect_true(importFiles(rcon, 
+                            file = local_file, 
+                            record = "1", 
+                            field = "file_upload_test", 
+                            event = "event_1_arm_1", 
+                            repeat_instance = 1))
+    
+    expect_true(importFiles(rcon, 
+                            file = temp_file, 
+                            record = "1", 
+                            field = "file_upload_test", 
+                            event = "event_1_arm_1", 
+                            repeat_instance = 2))
+    
+    target_dir <- tempdir()
+    
+    file1 <- exportFiles(rcon, 
+                         record = "1", 
+                         field = "file_upload_test", 
+                         event = "event_1_arm_1", 
+                         dir = target_dir, 
+                         repeat_instance = 1)
+    expect_true(file.exists(file1))
+    expect_true(grepl("FileForImportExportTesting.txt", file1))
+    
+    file2 <- exportFiles(rcon, 
+                         record = "1", 
+                         field = "file_upload_test", 
+                         event = "event_1_arm_1", 
+                         dir = target_dir, 
+                         repeat_instance = 2)
+    
+    expect_true(file.exists(file2))
+    expect_true(grepl(basename(temp_file), file2))
+    
+    expect_true(deleteFiles(rcon, 
+                            record = "1", 
+                            field = "file_upload_test", 
+                            event = "event_1_arm_1", 
+                            repeat_instance = 1))
+    
+    expect_true(deleteFiles(rcon, 
+                            record = "1", 
+                            field = "file_upload_test", 
+                            event = "event_1_arm_1", 
+                            repeat_instance = 2))
+    
+    # clean up
+    unlink(temp_file)
   }
 )
