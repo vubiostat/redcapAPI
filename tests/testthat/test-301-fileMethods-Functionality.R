@@ -141,6 +141,9 @@ test_that(
                   event = "event_1_arm_1",
                   repeat_instance = 1)
     )
+    
+    lapply(list.files(temp_dir), 
+           unlink)
   }
 )
 
@@ -196,5 +199,8 @@ test_that(
                             field = "file_upload_test", 
                             event = "event_1_arm_1", 
                             repeat_instance = 2))
+    
+    # clean up
+    unlink(temp_file)
   }
 )
