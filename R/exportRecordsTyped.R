@@ -71,7 +71,8 @@ exportRecordsTyped.redcapApiConnection <-
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             coll        = coll)
+                                             coll        = coll,
+                                             ...)
   
   checkmate::assert_logical(x = survey, 
                             len = 1, 
@@ -270,7 +271,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             coll = coll)
+                                             coll = coll,
+                                             ...)
   
   checkmate::reportAssertions(coll)
   
@@ -391,7 +393,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        validation, 
                                                        cast, 
                                                        assignment,
-                                                       coll){
+                                                       coll,
+                                                       ...){
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
@@ -434,7 +437,12 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                          types = "function",
                          add = coll)
   
-
+  add_args <- names(list(...))
+  if("labels" %in% add_args ||
+     "dates"  %in% add_args)
+  {
+    warning("The 'labels' and 'dates' flags passed to exportRecordsTyped are ignored.\nSee documentation for exportRecordsTyped 'cast' argument.\nAlternatively read the vignette(\"redcapAPI-best-practices\") for in depth explanation.")
+  }
 }
 
 
