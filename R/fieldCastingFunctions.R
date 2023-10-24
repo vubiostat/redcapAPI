@@ -471,10 +471,14 @@ mChoiceCast <- function(data,
   }
   
   # if drop_fields is FALSE, keep suffixed field, else if drop_fields is TRUE (default) remove suffixed field
-  if (drop_fields == FALSE) {
-    data
-  } else {
+  if (drop_fields)
+  {
+    attrs <- names(attributes(data))[!names(attributes(data)) %in% c("names", "class", "row.names")]
+    preserve <- lapply(attrs, function(x) attr(data, x))
+    names(preserve) <- attrs
+
     data <- data[, !names(data) %in% fields_to_drop]
+    for(i in attrs) attr(data, i) <- preserve[[i]]
   }
   
   data
