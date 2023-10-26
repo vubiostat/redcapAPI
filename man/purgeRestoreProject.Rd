@@ -2,8 +2,6 @@
 % Please edit documentation in R/purgeRestoreProject.R
 \name{purgeRestoreProject}
 \alias{purgeRestoreProject}
-\alias{preserveProject}
-\alias{preserveProject.redcapApiConnection}
 \alias{purgeProject}
 \alias{purgeProject.redcapApiConnection}
 \alias{restoreProject}
@@ -11,15 +9,6 @@
 \alias{restoreProject.list}
 \title{Purge and Restore Project Data}
 \usage{
-preserveProject(object, ...)
-
-\method{preserveProject}{redcapApiConnection}(
-  object,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
-)
-
 purgeProject(object, ...)
 
 \method{purgeProject}{redcapApiConnection}(
@@ -74,14 +63,6 @@ to use in restoring the project.}
 
 \item{...}{Arguments to pass to other methods}
 
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
 purged from the project; or a \code{data.frame} for restoring arms
 data via \code{importArms}.}
@@ -112,6 +93,14 @@ data elements from a project.}
 \item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
 object will be flushed after completing the operation. This is highly
 recommended.}
+
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
+
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
+\code{rcon$config}.}
 
 \item{project_information}{\code{data.frame} for restoring data. Provides the
 project settings to load via \code{importProjectInformation}.}
