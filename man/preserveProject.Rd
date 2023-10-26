@@ -116,7 +116,9 @@ need to work using offline connections. If given a \code{list}, it
 must be in the format returned by \code{preserveProject}. If given a
 \code{character}, it must be the directory in which the CSV files were
 saved by \code{preserveProject}. If any of the file names have been changed,
-\code{readPreservedProject} will fail to execute.
+\code{readPreservedProject} will fail to execute. Refer to
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+for more details.
 }
 \examples{
 \dontrun{
@@ -164,6 +166,7 @@ off_con <-
   
 }
 \seealso{
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")},\cr
 \code{\link[=offlineConnection]{offlineConnection()}} \cr
 \cr
 \code{\link[=purgeProject]{purgeProject()}}, \cr

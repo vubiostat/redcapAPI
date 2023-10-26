@@ -252,5 +252,8 @@ off_conn$events()
 
 }
 \seealso{
-\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}\cr
+\cr
+To prepare data for an offline user, see \code{\link[=preserveProject]{preserveProject()}} and
+\code{\link[=readPreservedProject]{readPreservedProject()}}.
 }

@@ -44,7 +44,9 @@
 #'   must be in the format returned by `preserveProject`. If given a 
 #'   `character`, it must be the directory in which the CSV files were 
 #'   saved by `preserveProject`. If any of the file names have been changed, 
-#'   `readPreservedProject` will fail to execute.
+#'   `readPreservedProject` will fail to execute. Refer to 
+#'   `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
+#'   for more details.
 #'   
 #' @return
 #' ## `preserveProject
@@ -72,6 +74,7 @@
 #' Returns a `redcapOfflineConnection` object.
 #'   
 #' @seealso
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`,\cr
 #' [offlineConnection()] \cr
 #' \cr
 #' [purgeProject()], \cr
