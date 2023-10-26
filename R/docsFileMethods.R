@@ -29,12 +29,15 @@
 #'   
 #' @details These functions only export, import, or delete a single file.
 #' 
-#' When exporting, the file cannot be changed; whatever name exists in 
+#' When exporting, the file name cannot be changed; whatever name exists in 
 #' REDCap is the name that will be used. The record ID and event name 
 #' may be appended as a prefix.
 #' 
+#' @seealso
+#' [exportFilesMultiple()]
+#' 
 #' @return 
-#' `exportFiles` insibile returns the file path to which the exported 
+#' `exportFiles` invisibly returns the file path to which the exported 
 #'   file was saved.
 #'   
 #' `importFiles` invisibly returns `TRUE` when successful, or throws an 
