@@ -8,6 +8,7 @@
 #'   
 #' @inheritParams common-rcon-arg
 #' @inheritParams redcapConnection
+#' @inheritParams common-api-args
 #' @param x `list` or `character`. If a `list`, the list returned (or saved)
 #'   by `preserveProject`. If `character`, the directory to which the 
 #'   CSV files are saved by `preserveProject`.
@@ -260,9 +261,9 @@ preserveProject.redcapApiConnection <- function(rcon,
                          rcon$projectInformation()$project_id, 
                          names(RedcapList)[i])
     
-    write.csv(x = RedcapList[[i]], 
-              file = file.path(dir, file_name), 
-              row.names = FALSE)
+    utils::write.csv(x = RedcapList[[i]], 
+                     file = file.path(dir, file_name), 
+                     row.names = FALSE)
   }
 }
 
@@ -270,7 +271,7 @@ preserveProject.redcapApiConnection <- function(rcon,
 #' @export
 
 readPreservedProject <- function(x, ...){
-  UseMethod("readPreserveProject")
+  UseMethod("readPreservedProject")
 }
 
 #' @rdname preserveProject
@@ -311,9 +312,9 @@ readPreservedProject.list <- function(x, ...,
                     mapping = x$mappings,
                     repeat_instrument = x$repeat_instruments,
                     users = x$users, 
-                    user_Roles = x$user_roles,
+                    user_roles = x$user_roles,
                     dags = x$dags, 
-                    dag_assignments = x$dag_assignments,
+                    dag_assignment = x$dag_assignments,
                     records = x$records, 
                     project_info = x$project_information,
                     version = version, 
@@ -349,11 +350,11 @@ readPreservedProject.character <- function(x,
     arms = .rPP_getFileName(files, "arms"), 
     events = .rPP_getFileName(files, "events"),
     mapping = .rPP_getFileName(files, "mappings"), 
-    repeat_instruments = .rPP_getFileName(files, "repeating_instruments"), 
+    repeat_instrument = .rPP_getFileName(files, "repeating_instruments"), 
     users = .rPP_getFileName(files, "users"), 
     user_roles = .rPP_getFileName(files, "user_roles"), 
     dags = .rPP_getFileName(files, "dags"),
-    dag_assignments = .rPP_getFileName(files, "dag_assignments"), 
+    dag_assignment = .rPP_getFileName(files, "dag_assignments"), 
     records = .rPP_getFileName(files, "records"), 
     version = version, 
     url = url

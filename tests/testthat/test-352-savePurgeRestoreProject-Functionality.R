@@ -54,6 +54,13 @@ test_that(
       })
     })
     
+    expect_no_error({
+      suppressWarnings({
+        off_con <- 
+          readPreservedProject(RedcapList)
+      })
+    })
+    
     unlink(rdata_file)
     unlink(temp_dir)
   }
@@ -94,6 +101,13 @@ test_that(
                             mapping = csv_files[5], 
                             records = csv_files[12], 
                             project_info = csv_files[1])
+      })
+    })
+    
+    expect_no_error({
+      suppressWarnings({
+        off_con <- 
+          readPreservedProject(temp_dir)
       })
     })
     

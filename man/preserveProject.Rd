@@ -45,6 +45,10 @@ objects (or files) will be saved. Must be provided if \code{save_as} is not
 create the directory at \code{dir} if it does not already exist. When \code{FALSE},
 and the directory does not exist, an error is returned.}
 
+\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
+An option for how to handle errors returned by the API.
+see \code{\link[=redcapError]{redcapError()}}.}
+
 \item{config}{A list to be passed to \code{\link[httr:POST]{httr::POST()}}.  This allows the
 user to set additional configurations for the API calls, such as
 certificates, SSL version, etc. For the majority of users, this does
@@ -163,5 +167,5 @@ off_con <-
 \code{\link[=offlineConnection]{offlineConnection()}} \cr
 \cr
 \code{\link[=purgeProject]{purgeProject()}}, \cr
-\code{\link[=preserveProject]{preserveProject()}}
+\code{\link[=restoreProject]{restoreProject()}}
 }
