@@ -7,8 +7,37 @@ test_that(
   "preserveProject argument validations", 
   {
     local_reproducible_output(width = 200)
+    temp_dir <- tempdir()
+    
     expect_error(preserveProject("not rcon"), 
                  "no applicable method for 'preserveProject'")
+    
+    expect_error(preserveProject(rcon, 
+                                 save_as = "xls", 
+                                 dir = temp_dir), 
+                 "Variable 'save_as': Must be element of set")
+    
+    expect_error(preserveProject(rcon, 
+                                 save_as = "Rdata"), 
+                 "\"dir\" is missing")
+    
+    expect_error(preserveProject(rcon, 
+                                 save_as = "csv", 
+                                 dir = "not-a-dir", 
+                                 dir_create = FALSE), 
+                 "'dir': Directory")
+    
+    expect_error(preserveProject(rcon, 
+                                 save_as = "csv", 
+                                 dir = temp_dir, 
+                                 dir_create = "TRUE"), 
+                 "'dir_create': Must be of type 'logical'")
+    
+    expect_error(preserveProject(rcon, 
+                                 save_as = "csv", 
+                                 dir = temp_dir, 
+                                 dir_create = c(TRUE, FALSE)), 
+                 "'dir_create': Must have length 1")
   }
 )
 
