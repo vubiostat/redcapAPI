@@ -107,7 +107,10 @@
 #' will be used to replace the existing component. See examples. 
 #' 
 #' @seealso 
-#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`\cr
+#' \cr
+#' To prepare data for an offline user, see [preserveProject()] and 
+#' [readPreservedProject()].
 #' 
 #' 
 #' @examples
