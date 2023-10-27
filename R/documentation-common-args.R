@@ -42,9 +42,9 @@ NULL
 #'   -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 #'   {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 #'   number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-#'   checkbox, form_complete, sql}. The function will be provided the variables
-#'   (x, field_name, coding). The function must return a vector of logicals
-#'   matching the input. It defaults to [isNAorBlank()] for all
+#'   checkbox, form_complete, sql, system}. The function will be provided the 
+#'   variables (x, field_name, coding). The function must return a vector of 
+#'   logicals matching the input. It defaults to [isNAorBlank()] for all
 #'   entries.
 #' @param validation A named `list` of user specified validation functions. The 
 #'   same named keys are supported as the na argument. The function will be 

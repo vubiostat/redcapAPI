@@ -120,9 +120,9 @@ data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql}. The function will be provided the variables
-(x, field_name, coding). The function must return a vector of logicals
-matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
+checkbox, form_complete, sql, system}. The function will be provided the
+variables (x, field_name, coding). The function must return a vector of
+logicals matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
 
 \item{validation}{A named \code{list} of user specified validation functions. The
@@ -190,7 +190,7 @@ as little as \verb{project_info = data.frame(project_id = [id], is_longitudinal 
 The user should be aware that the REDCap User Interface download for
 events does not include the event ID. To include the event ID, the user
 must construct a data frame to pass to \code{offlineConnection}.
-\subsection{Record Identifier Fields}{
+\subsection{Record Identifier (System) Fields}{
 
 In all calls, the project's ID fields will be included--there is no option
 provided to prevent this. Additionally, if the project has a secondary
@@ -208,6 +208,11 @@ some post-processing functions that operate on repeating instrument data.
 The combination of the project ID field, secondary unique field, and the
 system fields are what uniquely identify an experimental unit. In nearly
 all cases, it is desirable to have them all included.
+
+System fields are cast to labelled values by default. They may be cast
+to their coded values using the override \code{cast = list(system = castRaw)}.
+The fields affected by the \code{system} override are \code{redcap_event_name},
+\code{redcap_repeat_instrument}, and \code{redcap_data_access_group}.
 }
 
 \subsection{Record Batching}{

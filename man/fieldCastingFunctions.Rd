@@ -72,9 +72,9 @@ data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
 {date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql}. The function will be provided the variables
-(x, field_name, coding). The function must return a vector of logicals
-matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
+checkbox, form_complete, sql, system}. The function will be provided the
+variables (x, field_name, coding). The function must return a vector of
+logicals matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
 
 \item{validation}{A named \code{list} of user specified validation functions. The
