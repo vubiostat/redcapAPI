@@ -509,10 +509,6 @@ test_that(
     
     expect_true(identical(Unbatched, Batched))
     
-    deleteRecords(rcon, 
-                  records = "1",
-                  api_param = list(event = "event_2_arm_1"))
-    
     deleteEvents(rcon, 
                  events = "event_2_arm_1")
     
