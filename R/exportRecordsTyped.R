@@ -657,13 +657,14 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   if (length(records) == 0)
   {
     target_field <- rcon$metadata()$field_name[1]
+
     record_response <- makeApiCall(rcon, 
                                    body = c(list(content = "record", 
                                                  format = "csv", 
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
-    
+ 
     if (record_response$status_code != 200){
       redcapError(record_response, 
                    error_handling = error_handling)
@@ -678,9 +679,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                stringsAsFactors = FALSE, 
                                na.strings = "", 
                                sep = csv_delimiter)
-    records <- records[[target_field]]
+    records <- unique(records[[target_field]])
   }
-  
+
   # group is a vector of integers where each integer is repeated up to 
   # batch_size times. Used to separate records into a list where
   # each element has a maximum length of batch_size
