@@ -16,6 +16,11 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Additional timeout trap for request retry strategy. 
 * Reports of data failing validation checks now include a link to the form with the failing data.
 * Major cleanup to remove messages on successful function execution. Many return values are changed to be consistent and be TRUE/FALSE if possible.
+* Bug fix: The repeat_instance argument of exportFiles is now included in the API call.
+* New Vignette: vignette("redcapAPI-offline-connection")
+* Adds `exportFilesMultiple` to facilitate exporting multiple files in a familiar interface.
+* Bug fix: Batching records no longer has the potential to produce duplicated records when a record ID has data in multiple events. (See Issue 262)
+* Extends `preserveProject` and adds `readPreservedProject` to assist with preparing data for offline users.
 
 ## 2.8.0
 
@@ -27,10 +32,9 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Added renameRecord function.
 * Fixed issue with preserving missing values in preparing checkbox fields for import
 * Added `default_cast_no_factor`, a list of casting functions that may be used to cast fields without casting any fields to factors.  It comes with an equivalent alias `default_cast_character`.
-* Documentation has been standardized. Related methods are now documented in the same
-help file. 
+* Documentation has been standardized. Related methods are now documented in the same help file. 
 * Add several functions for exporting Survey links and return codes
-* Replaced depricated function with_mock with with_mocked_bindings
+* Replaced deprecated function with_mock with with_mocked_bindings
 
 ## 2.7.5
 

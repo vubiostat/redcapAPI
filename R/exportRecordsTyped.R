@@ -71,7 +71,8 @@ exportRecordsTyped.redcapApiConnection <-
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             coll        = coll)
+                                             coll        = coll,
+                                             ...)
   
   checkmate::assert_logical(x = survey, 
                             len = 1, 
@@ -270,7 +271,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                              validation  = validation, 
                                              cast        = cast, 
                                              assignment  = assignment,
-                                             coll = coll)
+                                             coll = coll,
+                                             ...)
   
   checkmate::reportAssertions(coll)
   
@@ -391,7 +393,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        validation, 
                                                        cast, 
                                                        assignment,
-                                                       coll){
+                                                       coll,
+                                                       ...){
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
@@ -434,7 +437,12 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                          types = "function",
                          add = coll)
   
-
+  add_args <- names(list(...))
+  if("labels" %in% add_args ||
+     "dates"  %in% add_args)
+  {
+    warning("The 'labels' and 'dates' flags passed to exportRecordsTyped are ignored.\nSee documentation for exportRecordsTyped 'cast' argument.\nAlternatively read the vignette(\"redcapAPI-best-practices\") for in depth explanation.")
+  }
 }
 
 
@@ -649,13 +657,14 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   if (length(records) == 0)
   {
     target_field <- rcon$metadata()$field_name[1]
+
     record_response <- makeApiCall(rcon, 
                                    body = c(list(content = "record", 
                                                  format = "csv", 
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
-    
+ 
     if (record_response$status_code != 200){
       redcapError(record_response, 
                    error_handling = error_handling)
@@ -670,9 +679,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                stringsAsFactors = FALSE, 
                                na.strings = "", 
                                sep = csv_delimiter)
-    records <- records[[target_field]]
+    records <- unique(records[[target_field]])
   }
-  
+
   # group is a vector of integers where each integer is repeated up to 
   # batch_size times. Used to separate records into a list where
   # each element has a maximum length of batch_size

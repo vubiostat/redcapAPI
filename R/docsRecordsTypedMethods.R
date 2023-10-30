@@ -61,7 +61,7 @@
 #' events does not include the event ID. To include the event ID, the user
 #' must construct a data frame to pass to `offlineConnection`.
 #' 
-#' ## Record Identifier Fields 
+#' ## Record Identifier (System) Fields 
 #' 
 #' In all calls, the project's ID fields will be included--there is no option
 #' provided to prevent this. Additionally, if the project has a secondary
@@ -79,6 +79,11 @@
 #' The combination of the project ID field, secondary unique field, and the
 #' system fields are what uniquely identify an experimental unit. In nearly 
 #' all cases, it is desirable to have them all included.
+#' 
+#' System fields are cast to labelled values by default. They may be cast 
+#' to their coded values using the override `cast = list(system = castRaw)`.
+#' The fields affected by the `system` override are `redcap_event_name`, 
+#' `redcap_repeat_instrument`, and `redcap_data_access_group`.
 #' 
 #' 
 #' ## Record Batching

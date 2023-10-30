@@ -231,7 +231,7 @@ test_that(
 )
 
 #####################################################################
-# Export for a single record                                     ###f
+# Export for a single record                                     ####
 
 test_that(
   "Export succeeds for a single record", 
@@ -474,3 +474,39 @@ test_that(
   }
 )
 
+
+#####################################################################
+# Batching with multiple events                                  ####
+
+test_that(
+  "Batching behaves correctly when records have data in multiple events", 
+  {
+    importEvents(rcon, 
+                 data = data.frame(event_name = "Event 2", 
+                                   arm_num = 1))
+    
+    OrigMapping <- rcon$mapping()
+    
+    NewMapping <- OrigMapping
+    NewMapping$unique_event_name <- "event_2_arm_1"
+    NewMapping <- cbind(OrigMapping, NewMapping)
+    
+    importMappings(rcon, data = NewMapping)
+    
+    importRecords(rcon, 
+                  data = data.frame(record_id = 1, 
+                                    redcap_event_name = "event_2_arm_1"))
+    
+    Unbatched <- exportRecordsTyped(rcon)
+    
+    Batched <- exportRecordsTyped(rcon, batch_size = 1)
+    
+    expect_true(identical(Unbatched, Batched))
+    
+    deleteEvents(rcon, 
+                 events = "event_2_arm_1")
+    
+    importMappings(rcon, 
+                   OrigMapping)
+  }
+)

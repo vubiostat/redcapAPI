@@ -27,6 +27,17 @@ test_that(
   }
 )
 
+test_that(
+  "mChoice does not drop additional attributes",
+  {
+    rec <- exportRecordsTyped(rcon)
+    attr(rec, "something") <- "wicked"
+    rec <- mChoiceCast(rec, rcon, style="coded")
+    
+    expect_equal(attr(rec, "something"), "wicked")
+  }
+)
+
 
 test_that(
   "mChoice defaults to labelled",
@@ -90,3 +101,4 @@ test_that(
     expect_warning(rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, "labelled"), "Hmisc")
   }
 )
+
