@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Casting Data}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{precompiled-casting-data.pdf}
+\end{document}

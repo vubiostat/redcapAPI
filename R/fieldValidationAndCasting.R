@@ -153,6 +153,10 @@
 #' [exportRecordsTyped()], \cr
 #' [exportReportsTyped()]
 #' 
+#' ## Vignettes
+#' 
+#' `vignette("redcapAPI-casting-data", package = "redcapAPI")`
+#' 
 #' @examples
 #' \dontrun{
 #' # Make a custom function to give special treatment to a field.
