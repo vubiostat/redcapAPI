@@ -1,5 +1,5 @@
 ---
-title: "Preparing Data with `exportRecordsTyped`"
+title: "Casting Data with `exportRecordsTyped`"
 subtitle: "and Frequently Asked Questions"
 date: "`r Sys.Date()`"
 toc: true
@@ -15,110 +15,154 @@ The addition of `exportRecordsTyped` opened a great deal of flexibility and pote
 2. Field Validation
 3. Casting Data
 
-This document organizes discussion of these phases in the reverse order, reflecting the frequency of which questions are received regarding each phase. Throughout the document, examples are made using the Quality Assurance project used for testing `redcapAPI`.
+This document will focus on casting data and customizing casting to fit the user's preferences. 
 
-```{r, result = 'hide'}
+```{r, result = 'hide', message = FALSE, warning = FALSE}
 library(redcapAPI)
 url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
 
-unlockREDCap(c(rcon = "TestRedcapAPI"), 
+unlockREDCap(c(rcon = "Sandbox"), 
              envir = .GlobalEnv,
              keyring = "API_KEYs", 
              url = url)
 ```
 
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+ExistingProject <- preserveProject(rcon)
+purgeProject(rcon, purge_all= TRUE)
+load("data/CastingVignetteData.Rdata")
+
+importArms(rcon, Arms)
+importEvents(rcon, Events)
+importMetaData(rcon, MetaData)
+importRecords(rcon, Records)
+```
+
 \clearpage
 # Casting Data
 
-The default casting parameters were chosen with consideration for what is believed to be the most frequently desired results. The default casting list is shown in the appendix. It is inevitable that the circumstances of a particular project will necessitate customization. Furthermore, the decisions regarding default casting are inherently opinionated, and some users will prefer different castings. This section will discuss how to customize casting for field types as well as how to customize the casting of a single field. 
+The default casting functions were chosen with consideration for what is believed to be the most frequently desired results (the default casting list is shown in the appendix). It is inevitable that the circumstances of a particular project will necessitate customization. Furthermore, the decisions regarding default casting are inherently opinionated, and some users will prefer different castings. This section will discuss how to customize casting for field types as well as how to customize the casting of a single field. 
 
 A full listing of the casting functions provided by `redcapAPI` are listed in the "Value" section of `?fieldValidationAndCasting`. 
 
 ## Customizing a Field Type Casting
 
-Using the `cast` argument, the user may issue alternative casting instructions for any of the supported field types. In the following call, any fields having the type `date_` will be cast using the `as.Date()` function. Meanwhile, all other field types will be cast using the default casting list.
-
-```{r, eval = FALSE}
-exportRecordsTyped(rcon, 
-                   cast = list(date_ = as.Date()))
-```
-
-Radio button and drop down fields are field type where users frequently need a value different than the default. In most cases, the user desires that these fields be cast to their coded values instead of the labeled values. Compare the results of these two commands:
+Using the `cast` argument, the user may issue alternative casting instructions for any of the supported field types (listed in the appendix). In the following call, any fields having the type `date_` will be cast using the `as.Date()` function instead of `as.POSIXct()`. Meanwhile, all other field types will be cast using the default casting list.
 
 ```{r}
-# Returns a factor with levels "Green", "Blue", and "Lavender"
-Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = "dropdown_test")
-Rec["dropdown_test"]
+#####################################################################
+# Demonstrate default casting behavior
+Rec <- exportRecordsTyped(rcon,
+                          fields = c("date_example"))
+class(Rec$date_example)
 
-# Returns a factor with levels "1", "2", and "3"
-Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3,
-                          fields = "dropdown_test", 
-                          cast = list(dropdown = castCode))
-Rec["dropdown_test"]
 
-# Returns a character value of the labeled values
-Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = "dropdown_test", 
-                          cast = list(dropdown = castLabelCharacter))
-Rec["dropdown_test"]
+#####################################################################
+# Demonstrate casting with as.Date()
+Rec <- exportRecordsTyped(rcon,
+                          fields = c("date_example"), 
+                          cast = list(date_ = as.Date))
+class(Rec$date_example)
 ```
 
-It is also permissible to use self-made functions in casting. Consider the scenario where it is necessary to multiply a numeric field by 3 when performing the export. This may be accomplished by first defining a function then passing it to the override for the `number` field type.
+Radio button and drop down fields are field types where users frequently need a value different than the default. In most cases, the user desires that these fields be cast to their coded values instead of the labeled values. Compare the results of these three commands:
+
+```{r}
+#####################################################################
+# Returns a factor with levels "Balalaika", "Ukulele", "Banjo", "Guitar"
+Rec <- exportRecordsTyped(rcon, 
+                          fields = c("radio_example"))
+Rec$radio_example
+class(Rec$radio_example)
+
+
+
+#####################################################################
+# Returns a factor with levels "3", "4", "5", "6"
+Rec <- exportRecordsTyped(rcon, 
+                          fields = "radio_example", 
+                          cast = list(radio = castCode))
+Rec$radio_example
+class(Rec$radio_example)
+
+
+
+#####################################################################
+# Returns a character value of the labeled values
+Rec <- exportRecordsTyped(rcon, 
+                          fields = "radio_example", 
+                          cast = list(radio = castLabelCharacter))
+Rec$radio_example
+class(Rec$radio_example)
+```
+
+## Customizing Field Casting with User-Made Functions
+
+It is also permissible to use user-made functions in casting. Consider the scenario where it is necessary to multiply a numeric field by 3 when performing the export. This may be accomplished by first defining a function then passing it to the override for the `number` field type.
 
 Custom functions should have the arguments `x`, `field_name`, and `coding`. These arguments are necessary, even if they will not be used by the function. 
 
 ```{r}
 multiply3 <- function(x, field_name, coding) as.numeric(x) * 3
 
+#####################################################################
 # Return the actual values from the project
 Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = "number_test")
-Rec["number_test"]
+                          fields = c("radio_example", 
+                                     "number_example"))
+Rec
 
+
+
+#####################################################################
 # Return the values with the custom casting function
 Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = "number_test", 
+                          fields = c("radio_example", 
+                                     "number_example"), 
                           cast = list(number = multiply3))
-Rec["number_test"]
+Rec
 ```
 
 It should be noted that applying a custom function in this way would impact all of the fields of type "number". It would be rare that such an outcome is desirable. These custom functions can also be written in a manner that impacts only one specific field. 
 
 ## Customizing a Casting for a Single Field
 
-User-written functions used in casting overrides must contain the arguments `x`, `field_name`, and `coding`, even if these arguments are not intended to be used by the function. Their inclusion, however, makes it possible to write casting overrides that target only a specific field. In the previous section, a function was written that multiplied every field with the field type "number" by three during the export. By adding an `if` statement, a test can be performed against the field name and modifications can be applied only to the targeted field.
+User-written functions used in casting overrides must contain the arguments `x`, `field_name`, and `coding`, even if these arguments are not intended to be used by the function. Their inclusion, however, makes it possible to write casting overrides that target only a specific field. In this example, a function is written that rounds `number_example` to two decimal places, but other "number" fields are cast using the default function. By adding an `if` statement, a test can be performed against the field name and modifications can be applied only to the targeted field.
 
 ```{r}
-multiply3_one_field <- function(x, field_name, coding){
+round2_one_field <- function(x, field_name, coding){
   x <- as.numeric(x)
-  if (field_name == "number_test") x * 3 # multiply target field by 3
-  else x                                 # return other fields unaltered
+  if (field_name == "number_example") round(x, 2) # round to two decimal places
+  else x                                          # return other fields unaltered
 }
 
-Rec <- 
-  exportRecordsTyped(rcon, 
-                     records = 1:3, 
-                     fields = c("number_test", "prereq_number"))
-Rec[c("number_test", "prereq_number")]
-
+#####################################################################
+# Default casting behavior
 Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          cast = list(number = multiply3_one_field),
-                          fields = c("number_test", "prereq_number"))
-Rec[c("number_test", "prereq_number")]
+                          fields = c("number_example", 
+                                     "number_example_duplicate"), 
+                          drop_fields = "redcap_event_name")
+Rec
+
+
+
+#####################################################################
+# Use the user-defined function for casting
+Rec <- exportRecordsTyped(rcon, 
+                          fields = c("number_example", 
+                                     "number_example_duplicate"), 
+                          drop_fields = "redcap_event_name",
+                          cast = list(number = round2_one_field))
+Rec
 ```
 
-Radio buttons and drop down fields are, again, field types where such customization is frequently needed. Consider the case of a drop down field where the coded values have special meaning, such as the numeric values of the coding represent numeric scores toward a composite quality of life index. However, other drop down fields in the project are desired to return the labeled values for categorical analysis. A user-defined function can be written to accommodate this scenario.
+Radio buttons and drop down fields are, again, field types where such customization is frequently needed. Consider the case of a radio button field where the coded values have special meaning. However, other radio button fields in the project are desired to return the labeled values for categorical analysis. A user-defined function can be written to accommodate this scenario.
+
+In this example, the `radio_example` labels identify an stringed instrument, and the coding indicates the number of strings on that instrument. The user is able to single out `radio_example` to return numeric values in the following manner:
 
 ```{r}
 special_cast_radio <- function(x, field_name, coding){
-  if (field_name %in% "prereq_radio"){
+  if (field_name %in% "radio_example"){
     as.numeric(x)                    # Cast target field as numeric
   } else {
     castLabel(x, field_name, coding) # still uses the default for 
@@ -126,25 +170,25 @@ special_cast_radio <- function(x, field_name, coding){
   }
 }
 
+#####################################################################
 # Using the default casting
 Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = c("radio_test", "prereq_radio"))
-Rec[c("radio_test", "prereq_radio")]
+                          fields = c("radio_example", 
+                                     "radio_example_duplicate"), 
+                          drop_fields = "redcap_event_name")
+Rec
 
+
+
+#####################################################################
 # Use the user-defined function to change casting of one field
 Rec <- exportRecordsTyped(rcon, 
-                          records = 1:3, 
-                          fields = c("radio_test", "prereq_radio"), 
+                          fields = c("radio_example", 
+                                     "radio_example_duplicate"), 
+                          drop_fields = "redcap_event_name", 
                           cast = list(radio = special_cast_radio))
-Rec[c("radio_test", "prereq_radio")]
+Rec
 ```
-
-\clearpage
-# Field Validation
-
-\clearpage
-# Missing Value Detection
 
 \clearpage
 ```{r, child = 'FAQ.Rmd'}
@@ -213,4 +257,15 @@ Rec[c("radio_test", "prereq_radio")]
   sql                      = NA, 
   system                   = castLabel
 )
+```
+
+```{r, echo = FALSE, message = FALSE, results = 'hide', error = TRUE}
+purgeProject(rcon, purge_all = TRUE)
+importProjectInformation(rcon, ExistingProject$project_information)
+importArms(rcon, ExistingProject$arms)
+importEvents(rcon, ExistingProject$events)
+importMetaData(rcon, ExistingProject$meta_data)
+importMappings(rcon, ExistingProject$mappings)
+importRepeatingInstrumentsEvents(rcon, ExistingProject$repeating_instruments)
+importRecords(rcon, ExistingProject$records)
 ```

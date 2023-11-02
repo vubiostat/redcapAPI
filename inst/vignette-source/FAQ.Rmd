@@ -11,7 +11,7 @@ exportRecordsTyped(rcon,
                    cast = default_cast_character)
 
 exportRecordsTyped(rcon, 
-                   cast = default_ast_no_factor)
+                   cast = default_cast_no_factor)
 ```
 
 Aside from not casting factors, all other settings in this list are identical to the default casting.
