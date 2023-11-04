@@ -43,7 +43,7 @@ Missing data detection operates in a similar manner to casting data (see `vignet
 
 ## Default Detection Behavior
 
-When testing fields for missing values, all field types are tested using the `isNAOrBlank` function. This function identifies two values as missing data
+When testing fields for missing values, all field types are tested using the `isNAorBlank` function. This function identifies two values as missing data
 
 * The R missing value `NA`
 * Empty strings, i.e. `""`
@@ -125,13 +125,15 @@ Rec
 
 # Frequently Asked Questions
 
+## Change the Default Missing Data Detection for All Field Types
+
 _How do I change the default missing data detection for all field types?_
 
 `redcapAPI` has an obscure function that will create a list of overrides for every field type. Use the `na_values` function to create the override list as illustrated below. (Yes, `na_values` takes a function as an argument)
 
 ```{r}
 customMissingDetection <- function(x, ...){
-  is.na(x) | x == "" | x %in% c("-98", "-99")
+  is.na(x) | x == "" | x %in% c(-98, -99)
 }
 
 Rec <- exportRecordsTyped(rcon,
@@ -146,7 +148,7 @@ Rec
 \clearpage
 # Appendix
 
-## Casting Field Types
+## Missing Data Detection Field Types
 
 * `calc`: Calculated fields.
 * `checkbox`: Checkbox fields.
