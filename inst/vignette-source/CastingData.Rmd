@@ -140,8 +140,7 @@ round2_one_field <- function(x, field_name, coding){
 # Default casting behavior
 Rec <- exportRecordsTyped(rcon, 
                           fields = c("number_example", 
-                                     "number_example_duplicate"), 
-                          drop_fields = "redcap_event_name")
+                                     "number_example_duplicate"))
 Rec
 
 
@@ -151,7 +150,6 @@ Rec
 Rec <- exportRecordsTyped(rcon, 
                           fields = c("number_example", 
                                      "number_example_duplicate"), 
-                          drop_fields = "redcap_event_name",
                           cast = list(number = round2_one_field))
 Rec
 ```
@@ -174,8 +172,7 @@ special_cast_radio <- function(x, field_name, coding){
 # Using the default casting
 Rec <- exportRecordsTyped(rcon, 
                           fields = c("radio_example", 
-                                     "radio_example_duplicate"), 
-                          drop_fields = "redcap_event_name")
+                                     "radio_example_duplicate"))
 Rec
 
 
@@ -185,9 +182,67 @@ Rec
 Rec <- exportRecordsTyped(rcon, 
                           fields = c("radio_example", 
                                      "radio_example_duplicate"), 
-                          drop_fields = "redcap_event_name", 
                           cast = list(radio = special_cast_radio))
 Rec
+```
+
+While all of the examples so far have focused on alternate casting for a single type, the user is not restricted to only one type. The user may designate alternate castings for as many types as they choose.
+
+```{r}
+Rec <- exportRecordsTyped(rcon, 
+                          fields = c("date_example", 
+                                     "radio_example", 
+                                     "number_example"), 
+                          cast = list(date_ = as.Date, 
+                                      radio = special_cast_radio, 
+                                      number = round2_one_field))
+Rec[c("record_id", "date_example", "radio_example", "number_example")]
+```
+
+\clearpage
+
+# Defining Custom Casting Lists
+
+The default casting list is populated with functions that are expected to meet the needs of most analyses. Users may have different preferences they wish to apply on a regular basis, and typing out their customizations to every call could be burdensome and time consuming. An option for expediting casting preferences is to save the preferred casting list as an object that can be retrieved for regular use. 
+
+The user may define objects within a script, such as
+
+```{r, eval = FALSE}
+round2_one_field <- function(x, field_name, coding){
+  x <- as.numeric(x)
+  if (field_name == "number_example") round(x, 2) # round to two decimal places
+  else x                                          # return other fields unaltered
+}
+
+special_cast_radio <- function(x, field_name, coding){
+  if (field_name %in% "radio_example"){
+    as.numeric(x)                    # Cast target field as numeric
+  } else {
+    castLabel(x, field_name, coding) # still uses the default for 
+                                     # the non-targeted fields
+  }
+}
+
+preferred_casting <- list(date_ = as.Date, 
+                          number = round2_one_field, 
+                          radio = special_cast_radio)
+```
+
+It is important to note that the user need not specify a casting function for each type. Any types not specified in `preferred_casting` will utilize the default casting function. 
+
+Some options for retrieving the `preferred_casting` list include:
+
+1. Save the code in a script and run it using `source`. 
+2. Save the objects from a script to a `.Rdata` file and add them to the environment using `load`.
+3. Include the list as part of an internally used package.
+4. Save the objects to the user's `.Rprofile`.
+
+If the user were to choose to use `source` to load the objects, utilization of the preferred casting list would look like
+
+```{r, eval = FALSE}
+source("path/to/casting_source.R")
+Rec <- exportRecordsTyped(rcon, 
+                          casting = preferred_casting)
 ```
 
 \clearpage
