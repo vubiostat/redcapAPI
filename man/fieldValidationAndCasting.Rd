@@ -263,7 +263,9 @@ customCastCode <- function(x, field_name, coding){
 \code{\link[=exportReportsTyped]{exportReportsTyped()}}
 \subsection{Vignettes}{
 
-\code{vignette("redcapAPI-casting-data", package = "redcapAPI")}
+\code{vignette("redcapAPI-casting-data")}\cr
+\code{vignette("redcapAPI-missing-data-detection")}\cr
+\verb{vignette("redcapAPI-data-validation)}
 }
 }
 \keyword{datasets}

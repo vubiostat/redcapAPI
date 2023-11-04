@@ -382,7 +382,9 @@ exportRecordsTyped(rcon_off)
 
 \subsection{Vignettes}{
 
-\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}\cr
-\code{vignette("redcapAPI-casting-data", package = "redcapAPI")}
+\code{vignette("redcapAPI-offline-connection")}\cr
+\code{vignette("redcapAPI-casting-data")}\cr
+\code{vignette("redcapAPI-missing-data-detection")}\cr
+\verb{vignette("redcapAPI-data-validation)}
 }
 }
