@@ -278,6 +278,30 @@ Rec <- exportRecordsTyped(rcon,
 * `truefalse`: True - False fields.
 * `yesno`: Yes - No fields.
 
+\clearpage
+## Casting Functions Provided by `redcapAPI`
+
+| Function Name             | Object Type Returned |
+|---------------------------|----------------------| 
+| `castLabel`               | `factor`             |
+| `castLabelCharacter`      | `character`          |
+| `castCode`                | `factor`             |
+| `castCodeCharacter`       | `character`          |
+| `castRaw`                 | `character`          |
+| `castChecked`             | `factor`             |
+| `castCheckedCharacter`    | `character`          |
+| `castCheckLabel`          | `factor`             |
+| `castCheckLabelCharacter` | `character`          |
+| `castCheckCode`           | `factor`             |
+| `castCheckCodeCharacter`  | `character`          | 
+| `castCheckForImport`      | `numeric`            |
+| `castDpNumeric`           | `numeric`            |
+| `castDpCharacter`         | `character`          |
+| `castTimeHHMM`            | `character`          |
+| `castTimeMMSS`            | `character`          |
+| `castLogical`             | `logical`            |
+
+\clearpage
 ## Default Casting List
 
 ```{r, eval = FALSE}
