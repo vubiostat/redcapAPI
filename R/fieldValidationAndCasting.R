@@ -105,6 +105,11 @@
 #' facilitate importing data. They convert time data into a character format 
 #' that will pass the API requirements. 
 #' 
+#' `castLogical` is a casting function that returns a logical vector for 
+#' common, binary-type responses. It is well suited to changing true/false, 
+#' yes/no, and checkbox fields into logical vectors, as it returns `TRUE` if
+#' the value is one of `c("1", "true", "yes")` and returns `FALSE` otherwise.
+#' 
 #' 
 #' ## Casting Lists
 #' `raw_cast` overrides all casting if passed as the `cast`
@@ -146,6 +151,7 @@
 #' | `castDpCharacter`         | `character`          |
 #' | `castTimeHHMM`            | `character`          |
 #' | `castTimeMMSS`            | `character`          |
+#' | `castLogical`             | `logical`            |
 #' 
 #' 
 #' @seealso 
@@ -439,6 +445,16 @@ castTimeMMSS <- function(x, field_name, coding){
   time <- lapply(time, function(t) utils::tail(t, 2))
   time <- vapply(time, paste0, character(1), collapse = ":")
   x[!is.na(x)] <- time
+  x
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castLogical <- function(x, field_name, coding){
+  is_na <- is.na(x)
+  x <- x %in% c("1", "true", "yes")
+  x[is_na] <- NA
   x
 }
 
