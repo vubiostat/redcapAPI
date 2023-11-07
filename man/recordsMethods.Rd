@@ -144,7 +144,7 @@ be retrieved.  When \code{FALSE}, these fields must be
 explicitly requested.}
 
 \item{colClasses}{Named \code{character} vector. Column classes passed to
-\code{\link[utils:read.csv]{utils::read.csv()}} calls.
+\code{\link[utils:read.table]{utils::read.csv()}} calls.
 Useful to force the interpretation of a column in a specific type and
 avoid an unexpected recast.}
 

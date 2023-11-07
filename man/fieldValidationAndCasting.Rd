@@ -24,6 +24,7 @@
 \alias{castDpCharacter}
 \alias{castTimeHHMM}
 \alias{castTimeMMSS}
+\alias{castLogical}
 \alias{raw_cast}
 \alias{default_cast_no_factor}
 \alias{default_cast_character}
@@ -78,6 +79,8 @@ castTimeHHMM(x, field_name, coding)
 
 castTimeMMSS(x, field_name, coding)
 
+castLogical(x, field_name, coding)
+
 raw_cast
 
 default_cast_no_factor
@@ -131,6 +134,7 @@ following table:\tabular{ll}{
    \code{castDpCharacter} \tab \code{character} \cr
    \code{castTimeHHMM} \tab \code{character} \cr
    \code{castTimeMMSS} \tab \code{character} \cr
+   \code{castLogical} \tab \code{logical} \cr
 }
 }
 \description{
@@ -225,6 +229,11 @@ appropriate usage when casting for one decimal place is
 \code{castTimeHHMM} and \code{castTimeMMSS} are casting functions to
 facilitate importing data. They convert time data into a character format
 that will pass the API requirements.
+
+\code{castLogical} is a casting function that returns a logical vector for
+common, binary-type responses. It is well suited to changing true/false,
+yes/no, and checkbox fields into logical vectors, as it returns \code{TRUE} if
+the value is one of \code{c("1", "true", "yes")} and returns \code{FALSE} otherwise.
 }
 
 \subsection{Casting Lists}{
