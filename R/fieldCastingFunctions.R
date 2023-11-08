@@ -669,7 +669,7 @@ mChoiceCast <- function(data,
     codings[[i]] <-
       if (is.na(codebook[i])){
         if (field_types[i] == "bioportal"){
-          rcon$bioportal()[[field_names[i] ]]
+          rcon$externalCoding()[[field_names[i] ]]
         } else {
           NA_character_
         }

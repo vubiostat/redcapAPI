@@ -1,47 +1,61 @@
-#' @name exportBioportalCoding
-#' @title Export Codebook Mapping for BioPortal Fields
+#' @name exportExternalCoding
+#' @title Export Codebook Mappings for Fields with External Dependencies
 #' 
 #' @description These methods enable `redcapAPI` to obtain a mapping of 
-#'   codes and associated labels for BioPortal fields. 
-#'   BioPortal fields are text fields that have enabled the 
-#'   BioPortal Ontology Service Validation. The mapping between coded and 
-#'   labeled values is not exported with the meta data for these fields. 
-#'   Due to their size, it is impractical to attempt to maintain these tables
-#'   within `redcapAPI`.
+#'   codes and associated labels for fields that have external dependencies. 
+#'   The fields include SQL fields (dependent on another project) or 
+#'   fields that utilize the BioPortal Ontology modules.
 #'   
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @inheritParams recordsTypedMethods
 #' 
-#' @details The methods operate by executing two API calls to export first the 
-#'   coded values and then the labeled values of BioPortal fields. The 
-#'   two exports are then used to generate the code-label mappings for use 
-#'   in casting data. 
+#' @details These methods operate by executing two API calls to export first the 
+#'   coded values and then the labeled values of fields with external 
+#'   dependencies. The two exports are then used to generate the code-label 
+#'   mappings for use in casting data.
+#'   
+#'   Fields of type `sql` are dropdown fields that are populated by a SQL 
+#'   query to another project. 
+#'   
+#'   Fields of type `bioportal` are text fields that have the BioPortal 
+#'   Ontology module enabled as the validation method.
 #'   
 #' @return
-#' Returns a named list. Each element is in the list is named for the field
-#'   it maps. The elements are named vectors where the name is the label
-#'   of the BioPortal field and the value is the code.
+#' Returns a named list of named character vectors. 
+#' 
+#' Each element is in the list is named for the field it maps. 
+#' 
+#' The character vectors are name-value pairs where the name is the labeled 
+#' data and the value is the coded data.
+#' 
+#' @examples
+#' \dontrun{
+#' unlockREDCap(connections = c(rcon = "project_alias"), 
+#'              url = "your_redcap_url", 
+#'              keyring = "API_KEYs", 
+#'              envir = globalenv())
+#'              
+#' exportExternalCoding(rcon)
+#' }
 #'   
-#' @export
 
-exportBioportalCoding <- function(rcon, 
-                                  fields, 
-                                  ...){
-  UseMethod("exportBioportalCoding")
+exportExternalCoding <- function(rcon, 
+                                 fields, 
+                                 ...){
+  UseMethod("exportExternalCoding")
 }
 
 #' @rdname exportBioportalCoding
-#' @export
 
-exportBioportalCoding.redcapApiConnection <- function(rcon, 
-                                                      fields = NULL, 
-                                                      ..., 
-                                                      batch_size = 1000, 
-                                                      error_handling = getOption("redcap_error_handling"), 
-                                                      config = list(), 
-                                                      api_param = list()){
+exportExternalCoding.redcapApiConnection <- function(rcon, 
+                                                     fields         = NULL, 
+                                                     ..., 
+                                                     batch_size     = 1000, 
+                                                     error_handling = getOption("redcap_error_handling"), 
+                                                     config         = list(), 
+                                                     api_param      = list()){
   ###################################################################
   # Argument Validation                                          ####
   
@@ -88,15 +102,16 @@ exportBioportalCoding.redcapApiConnection <- function(rcon,
   # Functionality                                                ####
 
   MetaData <- rcon$metadata()
-  bioportal_fields <- 
+  external_fields <- 
     MetaData$field_name[grepl("BIOPORTAL", 
                               MetaData$select_choices_or_calculations, 
-                              ignore.case = TRUE)]
+                              ignore.case = TRUE) | 
+                          MetaData$field_type == "sql"]
   
   if (is.null(fields)){
-    fields <- bioportal_fields
+    fields <- external_fields
   } else {
-    fields <- fields[fields %in% bioportal_fields]
+    fields <- fields[fields %in% external_fields]
   }
   
   if (length(fields) == 0){
@@ -132,8 +147,8 @@ exportBioportalCoding.redcapApiConnection <- function(rcon,
                                        batch_size = batch_size, 
                                        error_handling = error_handling)
   
-  BioPortal <- vector("list", length(fields))
-  names(BioPortal) <- fields
+  External <- vector("list", length(fields))
+  names(External) <- fields
   
   for (f in fields){
     ThisCode <- data.frame(code = Code[[f]], 
@@ -145,8 +160,8 @@ exportBioportalCoding.redcapApiConnection <- function(rcon,
     mapping <- ThisCode$code
     names(mapping) <- ThisCode$label
     
-    BioPortal[[f]] <- mapping
+    External[[f]] <- mapping
   }
   
-  BioPortal
+  External
 }
