@@ -268,6 +268,23 @@ test_that(
   }
 )
 
+test_that(
+  "caching of externalCoding", 
+  {
+    rcon$flush_all()
+    expect_false(rcon$has_externalCoding())
+    
+    rcon$externalCoding()
+    expect_true(rcon$has_externalCoding())
+    
+    rcon$flush_externalCoding()
+    expect_false(rcon$has_externalCoding())
+    
+    rcon$refresh_externalCoding()
+    expect_true(rcon$has_externalCoding())
+  }
+)
+
 
 
 

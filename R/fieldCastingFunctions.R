@@ -495,8 +495,10 @@ mChoiceCast <- function(data,
                          cast             = NULL, 
                          assignment       = NULL, 
                          default_cast     = .default_cast, 
-                         default_validate = .default_validate){
-  
+                         default_validate = .default_validate, 
+                         batch_size       = NULL){
+  # batch_size will be passed to rcon$externalCoding() if batch_size was passed to the executing function
+  #                              This occurs in .castRecords_getCodings
   # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
   warnZeroCodedFieldPresent(names(Raw))
   
@@ -525,7 +527,8 @@ mChoiceCast <- function(data,
                                      field_map   = field_map, 
                                      field_names = field_names, 
                                      field_types = field_types, 
-                                     code_check  = TRUE)
+                                     code_check  = TRUE, 
+                                     batch_size  = batch_size)
   
   ###################################################################
   # Common provided args for na / validate functions             ####
@@ -646,7 +649,8 @@ mChoiceCast <- function(data,
                                     field_map = field_map, 
                                     field_names = field_names, 
                                     field_types = field_types, 
-                                    code_check = FALSE){
+                                    code_check = FALSE, 
+                                    batch_size = NULL){
   # code_check is not needed in exportRecordsTyped
   # in recastData, however, we need a codebook for checkboxes
   codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
@@ -669,7 +673,10 @@ mChoiceCast <- function(data,
     codings[[i]] <-
       if (is.na(codebook[i])){
         if (field_types[i] == "bioportal"){
-          rcon$externalCoding()[[field_names[i] ]]
+          ext_code <- rcon$externalCoding(batch_size = batch_size)[[field_names[i] ]]
+          if (is.null(ext_code)){
+            ext_code <- NA_character_
+          }
         } else {
           NA_character_
         }

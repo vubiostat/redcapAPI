@@ -375,7 +375,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                cast             = cast, 
                assignment       = assignment, 
                default_cast     = .default_cast, 
-               default_validate = .default_validate)
+               default_validate = .default_validate, 
+               batch_size       = batch_size)
 }
 
 

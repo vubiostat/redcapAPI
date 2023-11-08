@@ -47,7 +47,8 @@ exportExternalCoding <- function(rcon,
   UseMethod("exportExternalCoding")
 }
 
-#' @rdname exportBioportalCoding
+#' @rdname exportExternalCoding
+#' @export
 
 exportExternalCoding.redcapApiConnection <- function(rcon, 
                                                      fields         = NULL, 

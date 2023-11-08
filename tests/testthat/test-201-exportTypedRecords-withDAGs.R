@@ -10,7 +10,8 @@ ImportData <- castForImport(ImportData,
                             cast = list(number_1dp = as.numeric, 
                                         number_2dp = as.numeric, 
                                         number_1dp_comma_decimal = as.numeric, 
-                                        number_2dp_comma_decimal = as.numeric))
+                                        number_2dp_comma_decimal = as.numeric, 
+                                        bioportal = as.character))
 
 #####################################################################
 # Create DAGs to use in testing                                  ####

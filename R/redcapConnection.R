@@ -222,7 +222,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                   length.out = rtry)
   rtry_q <- retry_quietly
   
-  getter <- function(export){
+  getter <- function(export, ...){
     switch(export, 
            "metadata" = exportMetaData(rc), 
            "arm" = exportArms(rc), 
@@ -239,7 +239,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "dagAssign" = exportUserDagAssignments(rc),
            "userRole" = exportUserRoles(rc),
            "userRoleAssign" = exportUserRoleAssignments(rc),
-           "externalCoding" = exportExternalCoding(rc),
+           "externalCoding" = exportExternalCoding(rc, ...),
            NULL)
   }
   
@@ -324,10 +324,10 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_dag_assignment = function() this_dag_assign <<- NULL, 
       refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
       
-      externalCoding = function() {if (is.null(this_ec)) this_ec <<- getter("externalCoding"); this_ec}, 
+      externalCoding = function(...) {if (is.null(this_ec)) this_ec <<- getter("externalCoding", ...); this_ec}, 
       has_externalCoding = function() !is.null(this_ec), 
       flush_externalCoding = function() this_ec <<- NULL, 
-      refresh_externalCoding = function() this_bec <<- getter("externalCoding"),
+      refresh_externalCoding = function(...) this_ec <<- getter("externalCoding", ...),
       
       flush_all = function(){ 
         this_metadata <<- 
