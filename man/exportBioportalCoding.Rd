@@ -11,7 +11,7 @@ exportBioportalCoding(rcon, fields, ...)
   rcon,
   fields = NULL,
   ...,
-  batch_size = NULL,
+  batch_size = 1000,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()

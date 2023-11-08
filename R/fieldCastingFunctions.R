@@ -668,7 +668,11 @@ mChoiceCast <- function(data,
   for (i in seq_along(codings)){
     codings[[i]] <-
       if (is.na(codebook[i])){
-        NA_character_
+        if (field_types[i] == "bioportal"){
+          rcon$bioportal()[[field_names[i] ]]
+        } else {
+          NA_character_
+        }
       } else {
         this_mapping <- fieldChoiceMapping(object = codebook[i],
                                            field_name = field_names[i])
@@ -676,12 +680,6 @@ mChoiceCast <- function(data,
         names(this_coding) <- this_mapping[, 2]
         this_coding
       }
-  }
-  
-  for (i in seq_along(rcon$bioportal())){
-    w <- which(field_types == "bioportal")[i]
-    codings[[ w ]] <- 
-      rcon$bioportal()[[field_names[w] ]]
   }
   
   codings

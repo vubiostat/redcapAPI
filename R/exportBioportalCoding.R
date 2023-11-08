@@ -24,6 +24,7 @@
 #'   it maps. The elements are named vectors where the name is the label
 #'   of the BioPortal field and the value is the code.
 #'   
+#' @export
 
 exportBioportalCoding <- function(rcon, 
                                   fields, 
@@ -139,7 +140,8 @@ exportBioportalCoding.redcapApiConnection <- function(rcon,
                            label = Label[[f]], 
                            stringsAsFactors = FALSE)
     ThisCode <- ThisCode[!duplicated(ThisCode), ]
-    
+    ThisCode <- ThisCode[!is.na(ThisCode$code), ]
+
     mapping <- ThisCode$code
     names(mapping) <- ThisCode$label
     
