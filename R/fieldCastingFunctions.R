@@ -595,9 +595,11 @@ mChoiceCast <- function(data,
                                        field_map,
                                        field_bases, 
                                        field_text_types){
-  
+
   field_types <- rcon$metadata()$field_type[field_map]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
+  
+  choices <- rcon$metadata()$select_choices_or_calculations[field_map]
   
   # autocomplete was added to the text_validation... column for
   # dropdown menus with the autocomplete feature.
@@ -627,6 +629,15 @@ mChoiceCast <- function(data,
           sum(field_bases %in% "redcap_data_access_group"))
   }
   
+  if (inherits(rcon, "offlineConnection")){
+    if (any(grepl("BIOPORTAL", choices, ignore.case = TRUE))){
+      warning("Casting for 'bioportal' fields in not yet supported for offlineConnections.")
+    }
+  } else {
+    field_types[field_types == "text" & 
+                  grepl("BIOPORTAL", choices, ignore.case = TRUE)] <- "bioportal"
+  }
+  
   field_types
 }
 
@@ -642,6 +653,7 @@ mChoiceCast <- function(data,
   codebook[! field_types %in% c("select", "radio", "dropdown", if (code_check) "checkbox" else character(0))] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codebook[field_types == "yesno"] <- "0, No | 1, Yes"
+  
   
   system_field <- which(field_names %in% c("redcap_event_name", 
                                            "redcap_data_access_group", 
@@ -665,6 +677,13 @@ mChoiceCast <- function(data,
         this_coding
       }
   }
+  
+  for (i in seq_along(rcon$bioportal())){
+    w <- which(field_types == "bioportal")[i]
+    codings[[ w ]] <- 
+      rcon$bioportal()[[field_names[w] ]]
+  }
+  
   codings
 }
 

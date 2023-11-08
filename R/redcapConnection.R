@@ -56,9 +56,13 @@
 #' * `projectInformation`
 #' * `version`
 #' * `fileRepository`
+#' * `bioportal`
 #' 
 #' There is also a `flush_all` and `refresh_all` method that will purge
 #' the entire cache and refresh the entire cache, respectively.
+#' 
+#' The `bioportal` elements relate to the code-label mappings of text fields 
+#' with the BioPortal validation enabled. 
 #' 
 #' ## Specific to API Connections
 #' 
@@ -210,6 +214,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_dag_assign <- NULL
   this_user_role <- NULL
   this_user_role_assign <- NULL
+  this_bioportal <- NULL
   
   rtry <- retries
   rtry_int <- rep(retry_interval, 
@@ -233,6 +238,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "dagAssign" = exportUserDagAssignments(rc),
            "userRole" = exportUserRoles(rc),
            "userRoleAssign" = exportUserRoleAssignments(rc),
+           "bioportal" = exportBioportalCoding(rc),
            NULL)
   }
   
@@ -317,6 +323,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_dag_assignment = function() this_dag_assign <<- NULL, 
       refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
       
+      bioportal = function() {if (is.null(this_bioportal)) this_bioportal <<- getter("bioportal"); this_bioportal}, 
+      has_bioportal = function() !is.null(this_bioportal), 
+      flush_bioportal = function() this_bioportal <<- NULL, 
+      refresh_bioportal = function() this_bioportal <<- getter("bioportal"),
+      
       flush_all = function(){ 
         this_metadata <<- 
           this_arm <<- this_event <<- 
@@ -325,7 +336,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
           this_user <<- this_user_role <<- this_user_role_assign <<-
           this_dag <<- this_dag_assign <<-
           this_project <<- this_version <<-
-          this_fileRepository <<-  
+          this_fileRepository <<- 
+          this_bioportal <<-
           NULL}, 
       
       refresh_all = function(){
@@ -343,6 +355,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_project <<- getter("project")
         this_version <<- getter("version")
         this_fileRepository <<- getter("fileRepo")
+        this_bioportal <<- getter("bioportal")
         
       },
       
