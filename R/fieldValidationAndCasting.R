@@ -514,7 +514,7 @@ default_cast_no_factor <- list(
   select                   = castLabelCharacter,
   radio                    = castLabelCharacter,
   dropdown                 = castLabelCharacter,
-  sql                      = NA, 
+  sql                      = castLabelCharacter, 
   system                   = castLabelCharacter
 )
 
@@ -572,7 +572,7 @@ default_cast_character <- default_cast_no_factor
   select                   = castLabel,
   radio                    = castLabel,
   dropdown                 = castLabel,
-  sql                      = NA, 
+  sql                      = castLabel, 
   system                   = castLabel
 )
 
@@ -607,7 +607,7 @@ default_cast_character <- default_cast_no_factor
   phone                    = valPhone,
   zipcode                  = valRx(REGEX_ZIPCODE),
   slider                   = valRx(REGEX_NUMBER),
-  sql                      = NA # This requires a bit more effort !?
+  sql                      = NA
 )
 
 .default_cast_import <- list(
@@ -638,7 +638,7 @@ default_cast_character <- default_cast_no_factor
   phone                    = as.character,
   zipcode                  = as.character, 
   slider                   = as.numeric,
-  sql                      = NA, 
+  sql                      = castCode, 
   system                   = castRaw
 )
 

@@ -254,6 +254,7 @@ Rec <- exportRecordsTyped(rcon,
 
 ## Casting Field Types
 
+* `bioportal`: Text fields that are validated using the BioPortal Ontology service.
 * `calc`: Calculated fields.
 * `checkbox`: Checkbox fields.
 * `date_`: Text fields with the "Date" validation type. 
@@ -333,8 +334,9 @@ Rec <- exportRecordsTyped(rcon,
   select                   = castLabel,
   radio                    = castLabel,
   dropdown                 = castLabel,
-  sql                      = NA, 
-  system                   = castLabel
+  sql                      = castLabel, 
+  system                   = castLabel, 
+  bioportal                = castLabel
 )
 ```
 
