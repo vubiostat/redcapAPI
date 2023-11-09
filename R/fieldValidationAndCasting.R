@@ -515,7 +515,7 @@ default_cast_no_factor <- list(
   select                   = castLabelCharacter,
   radio                    = castLabelCharacter,
   dropdown                 = castLabelCharacter,
-  sql                      = castLabelCharacter, 
+  sql                      = NA, 
   system                   = castLabelCharacter, 
   bioportal                = castLabelCharacter
 )
@@ -574,7 +574,7 @@ default_cast_character <- default_cast_no_factor
   select                   = castLabel,
   radio                    = castLabel,
   dropdown                 = castLabel,
-  sql                      = castLabel, 
+  sql                      = NA, 
   system                   = castLabel,
   bioportal                = castLabel
 )
@@ -641,7 +641,7 @@ default_cast_character <- default_cast_no_factor
   phone                    = as.character,
   zipcode                  = as.character, 
   slider                   = as.numeric,
-  sql                      = castCode, 
+  sql                      = NA, 
   system                   = castRaw,
   bioportal                = castCodeCharacter
 )
