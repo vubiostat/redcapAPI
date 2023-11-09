@@ -25,6 +25,7 @@ ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name,
                                            length.out = nrow(ImportData))
 
 importRecords(rcon, ImportData)
+rcon$flush_externalCoding()
 
 #####################################################################
 # Export Data Access Groups

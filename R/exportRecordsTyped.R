@@ -217,7 +217,7 @@ exportRecordsTyped.redcapApiConnection <-
     unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
   }
-  
+
   # See fieldCastingFunctions.R for definition of .castRecords
   .castRecords(Raw              = Raw, 
                Records          = NULL,
@@ -376,7 +376,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                assignment       = assignment, 
                default_cast     = .default_cast, 
                default_validate = .default_validate, 
-               batch_size       = batch_size)
+               batch_size       = NULL)
 }
 
 

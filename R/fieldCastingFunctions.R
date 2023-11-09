@@ -529,21 +529,21 @@ mChoiceCast <- function(data,
                                      field_types = field_types, 
                                      code_check  = TRUE, 
                                      batch_size  = batch_size)
-  
+
   ###################################################################
   # Common provided args for na / validate functions             ####
   args <- lapply(seq_along(Raw),
                  function(x) list(x          = Raw[[x]],
                                   field_name = field_names[x],
                                   coding     = codings[[x]]))
-  
+
   ###################################################################
   # Locate NA's                                                  ####
   nas <- .castRecords_getNas(na             = na, 
                              field_types    = field_types, 
                              args           = args, 
                              correct_length = nrow(Raw))
-  
+
   ###################################################################
   # Run Validation Functions                                     ####
   
@@ -554,7 +554,7 @@ mChoiceCast <- function(data,
                                args             = args, 
                                correct_length   = nrow(Raw), 
                                default_validate = default_validate)
-  
+
   ###################################################################
   # Type Casting                                                 ####
   
@@ -567,7 +567,7 @@ mChoiceCast <- function(data,
                              codings      = codings, 
                              field_names  = field_names, 
                              default_cast = default_cast)
-  
+
   ###################################################################
   # Handle Attributes assignments on columns,                    ####
   Records <- .castRecords_attributeAssignment(Records     = Records, 
@@ -677,6 +677,7 @@ mChoiceCast <- function(data,
           if (is.null(ext_code)){
             ext_code <- NA_character_
           }
+          ext_code
         } else {
           NA_character_
         }
@@ -848,6 +849,7 @@ mChoiceCast <- function(data,
       x <- Raw[[i]]
       x[ nas[,i] | !validations[,i] ] <- NA
       typecast <- cast[[ field_types[i] ]]
+
       if(is.function(typecast))
         Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
     }

@@ -128,25 +128,47 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
   
   body <- body[lengths(body) > 0]
   
-  Code <- .exportRecordsTyped_Batched(rcon = rcon, 
-                                      body = body, 
-                                      records = NULL, 
-                                      config = config, 
-                                      api_param = api_param, 
-                                      csv_delimiter = ",", 
-                                      batch_size = batch_size, 
-                                      error_handling = error_handling)
+  Code <- 
+    if (!is.null(batch_size)){
+      .exportRecordsTyped_Batched(rcon = rcon, 
+                                  body = body, 
+                                  records = NULL, 
+                                  config = config, 
+                                  api_param = api_param, 
+                                  csv_delimiter = ",", 
+                                  batch_size = batch_size, 
+                                  error_handling = error_handling)
+    } else {
+      .exportRecordsTyped_Unbatched(rcon = rcon, 
+                                    body = body, 
+                                    records = NULL, 
+                                    config = config, 
+                                    api_param = api_param,
+                                    csv_delimiter = ",", 
+                                    error_handling = error_handling)
+    }
   
   body$rawOrLabel <- "label"
   
-  Label <- .exportRecordsTyped_Batched(rcon = rcon, 
-                                       body = body, 
-                                       records = NULL, 
-                                       config = config, 
-                                       api_param = api_param, 
-                                       csv_delimiter = ",", 
-                                       batch_size = batch_size, 
-                                       error_handling = error_handling)
+  Label <- 
+    if (!is.null(batch_size)){
+      .exportRecordsTyped_Batched(rcon = rcon, 
+                                  body = body, 
+                                  records = NULL, 
+                                  config = config, 
+                                  api_param = api_param, 
+                                  csv_delimiter = ",", 
+                                  batch_size = batch_size, 
+                                  error_handling = error_handling)
+    } else {
+      .exportRecordsTyped_Unbatched(rcon = rcon, 
+                                    body = body, 
+                                    records = NULL, 
+                                    config = config, 
+                                    api_param = api_param,
+                                    csv_delimiter = ",", 
+                                    error_handling = error_handling)
+    }
   
   External <- vector("list", length(fields))
   names(External) <- fields
