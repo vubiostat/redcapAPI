@@ -675,7 +675,7 @@ mChoiceCast <- function(data,
   for (i in seq_along(codings)){
     codings[[i]] <-
       if (is.na(codebook[i])){
-        if (field_types[i] %in% c("bioportal", "sql")){
+        if (field_types[i] == "bioportal"){
           ext_code <- rcon$externalCoding(batch_size = batch_size)[[field_names[i] ]]
           if (is.null(ext_code)){
             ext_code <- NA_character_
