@@ -155,10 +155,15 @@ Information is cached for
 \item \code{projectInformation}
 \item \code{version}
 \item \code{fileRepository}
+\item \code{externalCoding}
 }
 
 There is also a \code{flush_all} and \code{refresh_all} method that will purge
 the entire cache and refresh the entire cache, respectively.
+
+The \code{externalCoding} elements relate to the code-label mappings of text fields
+with the external validation types (such as \code{sql} fields or text fields
+with BioPortal Ontology modules enabled).
 \subsection{Specific to API Connections}{
 
 The \code{redcapApiConnection} object also stores the user preferences for

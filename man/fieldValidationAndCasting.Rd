@@ -29,11 +29,11 @@
 \alias{default_cast_character}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
-An object of class \code{list} of length 20.
+An object of class \code{list} of length 21.
 
-An object of class \code{list} of length 24.
+An object of class \code{list} of length 25.
 
-An object of class \code{list} of length 24.
+An object of class \code{list} of length 25.
 }
 \usage{
 isNAorBlank(x, ...)
