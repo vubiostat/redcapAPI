@@ -56,9 +56,14 @@
 #' * `projectInformation`
 #' * `version`
 #' * `fileRepository`
+#' * `externalCoding`
 #' 
 #' There is also a `flush_all` and `refresh_all` method that will purge
 #' the entire cache and refresh the entire cache, respectively.
+#' 
+#' The `externalCoding` elements relate to the code-label mappings of text fields 
+#' with the external validation types (such as `sql` fields or text fields 
+#' with BioPortal Ontology modules enabled). 
 #' 
 #' ## Specific to API Connections
 #' 
@@ -215,13 +220,14 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   this_dag_assign <- NULL
   this_user_role <- NULL
   this_user_role_assign <- NULL
+  this_ec <- NULL #external coding
   
   rtry <- retries
   rtry_int <- rep(retry_interval, 
                   length.out = rtry)
   rtry_q <- retry_quietly
   
-  getter <- function(export){
+  getter <- function(export, ...){
     switch(export, 
            "metadata" = exportMetaData(rc), 
            "arm" = exportArms(rc), 
@@ -238,6 +244,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
            "dagAssign" = exportUserDagAssignments(rc),
            "userRole" = exportUserRoles(rc),
            "userRoleAssign" = exportUserRoleAssignments(rc),
+           "externalCoding" = exportExternalCoding(rc, ...),
            NULL)
   }
   
@@ -322,6 +329,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       flush_dag_assignment = function() this_dag_assign <<- NULL, 
       refresh_dag_assignment = function() this_dag_assign <<- getter("dagAssign"),
       
+      externalCoding = function(...) {if (is.null(this_ec)) this_ec <<- getter("externalCoding", ...); this_ec}, 
+      has_externalCoding = function() !is.null(this_ec), 
+      flush_externalCoding = function() this_ec <<- NULL, 
+      refresh_externalCoding = function(...) this_ec <<- getter("externalCoding", ...),
+      
       flush_all = function(){ 
         this_metadata <<- 
           this_arm <<- this_event <<- 
@@ -330,7 +342,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
           this_user <<- this_user_role <<- this_user_role_assign <<-
           this_dag <<- this_dag_assign <<-
           this_project <<- this_version <<-
-          this_fileRepository <<-  
+          this_fileRepository <<- 
+          this_ec <<-
           NULL}, 
       
       refresh_all = function(){
@@ -348,6 +361,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
         this_project <<- getter("project")
         this_version <<- getter("version")
         this_fileRepository <<- getter("fileRepo")
+        this_ec <<- getter("externalCoding")
         
       },
       

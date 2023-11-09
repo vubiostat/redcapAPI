@@ -484,7 +484,8 @@ raw_cast <- list(
   radio              = NA,
   dropdown           = NA,
   sql                = NA, 
-  system             = NA
+  system             = NA, 
+  bioportal          = NA
 )
 
 #' @rdname fieldValidationAndCasting
@@ -515,7 +516,8 @@ default_cast_no_factor <- list(
   radio                    = castLabelCharacter,
   dropdown                 = castLabelCharacter,
   sql                      = castLabelCharacter, 
-  system                   = castLabelCharacter
+  system                   = castLabelCharacter, 
+  bioportal                = castLabelCharacter
 )
 
 #' @rdname fieldValidationAndCasting
@@ -573,7 +575,8 @@ default_cast_character <- default_cast_no_factor
   radio                    = castLabel,
   dropdown                 = castLabel,
   sql                      = castLabel, 
-  system                   = castLabel
+  system                   = castLabel,
+  bioportal                = castLabel
 )
 
 #####################################################################
@@ -639,7 +642,8 @@ default_cast_character <- default_cast_no_factor
   zipcode                  = as.character, 
   slider                   = as.numeric,
   sql                      = castCode, 
-  system                   = castRaw
+  system                   = castRaw,
+  bioportal                = castCodeCharacter
 )
 
 #####################################################################
@@ -650,7 +654,8 @@ FIELD_TYPES <- c(
   "time_hh_mm_ss",  "time",       "float",              "number",
   "calc",           "int",        "integer",            "yesno",
   "truefalse",      "checkbox",   "form_complete",      "select",
-  "radio",          "dropdown",   "sql")
+  "radio",          "dropdown",   "sql",                "system", 
+  "bioportal")
 
 
 

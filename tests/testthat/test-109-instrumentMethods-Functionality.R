@@ -58,7 +58,8 @@ RecordToImport <- castForImport(RecordToImport, rcon,
                                 cast = list(number_1dp = as.numeric, 
                                             number_2dp = as.numeric, 
                                             number_1dp_comma_decimal = as.numeric, 
-                                            number_2dp_comma_decimal = as.numeric))
+                                            number_2dp_comma_decimal = as.numeric, 
+                                            bioportal = as.character))
 importRecords(rcon, 
               data = RecordToImport)
 

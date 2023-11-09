@@ -498,8 +498,10 @@ mChoiceCast <- function(data,
                          cast             = NULL, 
                          assignment       = NULL, 
                          default_cast     = .default_cast, 
-                         default_validate = .default_validate){
-  
+                         default_validate = .default_validate, 
+                         batch_size       = NULL){
+  # batch_size will be passed to rcon$externalCoding() if batch_size was passed to the executing function
+  #                              This occurs in .castRecords_getCodings
   # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
   warnZeroCodedFieldPresent(names(Raw))
   
@@ -528,22 +530,23 @@ mChoiceCast <- function(data,
                                      field_map   = field_map, 
                                      field_names = field_names, 
                                      field_types = field_types, 
-                                     code_check  = TRUE)
-  
+                                     code_check  = TRUE, 
+                                     batch_size  = batch_size)
+
   ###################################################################
   # Common provided args for na / validate functions             ####
   args <- lapply(seq_along(Raw),
                  function(x) list(x          = Raw[[x]],
                                   field_name = field_names[x],
                                   coding     = codings[[x]]))
-  
+
   ###################################################################
   # Locate NA's                                                  ####
   nas <- .castRecords_getNas(na             = na, 
                              field_types    = field_types, 
                              args           = args, 
                              correct_length = nrow(Raw))
-  
+
   ###################################################################
   # Run Validation Functions                                     ####
   
@@ -554,7 +557,7 @@ mChoiceCast <- function(data,
                                args             = args, 
                                correct_length   = nrow(Raw), 
                                default_validate = default_validate)
-  
+
   ###################################################################
   # Type Casting                                                 ####
   
@@ -567,7 +570,7 @@ mChoiceCast <- function(data,
                              codings      = codings, 
                              field_names  = field_names, 
                              default_cast = default_cast)
-  
+
   ###################################################################
   # Handle Attributes assignments on columns,                    ####
   Records <- .castRecords_attributeAssignment(Records     = Records, 
@@ -598,9 +601,11 @@ mChoiceCast <- function(data,
                                        field_map,
                                        field_bases, 
                                        field_text_types){
-  
+
   field_types <- rcon$metadata()$field_type[field_map]
   field_types[grepl("_complete$", field_bases)] <- "form_complete"
+  
+  choices <- rcon$metadata()$select_choices_or_calculations[field_map]
   
   # autocomplete was added to the text_validation... column for
   # dropdown menus with the autocomplete feature.
@@ -630,6 +635,15 @@ mChoiceCast <- function(data,
           sum(field_bases %in% "redcap_data_access_group"))
   }
   
+  if (inherits(rcon, "offlineConnection")){
+    if (any(grepl("BIOPORTAL", choices, ignore.case = TRUE))){
+      warning("Casting for 'bioportal' fields in not yet supported for offlineConnections.")
+    }
+  } else {
+    field_types[field_types == "text" & 
+                  grepl("BIOPORTAL", choices, ignore.case = TRUE)] <- "bioportal"
+  }
+  
   field_types
 }
 
@@ -638,13 +652,15 @@ mChoiceCast <- function(data,
                                     field_map = field_map, 
                                     field_names = field_names, 
                                     field_types = field_types, 
-                                    code_check = FALSE){
+                                    code_check = FALSE, 
+                                    batch_size = NULL){
   # code_check is not needed in exportRecordsTyped
   # in recastData, however, we need a codebook for checkboxes
   codebook <- rcon$metadata()$select_choices_or_calculations[field_map]
   codebook[! field_types %in% c("select", "radio", "dropdown", if (code_check) "checkbox" else character(0))] <- NA
   codebook[field_types == "form_complete"] <- "0, Incomplete | 1, Unverified | 2, Complete"
   codebook[field_types == "yesno"] <- "0, No | 1, Yes"
+  
   
   system_field <- which(field_names %in% c("redcap_event_name", 
                                            "redcap_data_access_group", 
@@ -659,7 +675,15 @@ mChoiceCast <- function(data,
   for (i in seq_along(codings)){
     codings[[i]] <-
       if (is.na(codebook[i])){
-        NA_character_
+        if (field_types[i] == "bioportal"){
+          ext_code <- rcon$externalCoding(batch_size = batch_size)[[field_names[i] ]]
+          if (is.null(ext_code)){
+            ext_code <- NA_character_
+          }
+          ext_code
+        } else {
+          NA_character_
+        }
       } else {
         this_mapping <- fieldChoiceMapping(object = codebook[i],
                                            field_name = field_names[i])
@@ -668,6 +692,7 @@ mChoiceCast <- function(data,
         this_coding
       }
   }
+  
   codings
 }
 
@@ -827,6 +852,7 @@ mChoiceCast <- function(data,
       x <- Raw[[i]]
       x[ nas[,i] | !validations[,i] ] <- NA
       typecast <- cast[[ field_types[i] ]]
+
       if(is.function(typecast))
         Records[[i]] <- typecast(x, field_name=field_names[i], coding=codings[[i]])
     }

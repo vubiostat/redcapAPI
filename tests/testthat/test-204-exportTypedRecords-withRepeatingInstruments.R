@@ -33,9 +33,11 @@ ImportData <- castForImport(test_redcapAPI_Data,
                             cast = list(number_1dp = as.numeric,
                                         number_2dp = as.numeric,
                                         number_1dp_comma_decimal = as.numeric,
-                                        number_2dp_comma_decimal = as.numeric))
+                                        number_2dp_comma_decimal = as.numeric, 
+                                        bioportal = as.character))
 
 importRecords(rcon, ImportData)
+rcon$flush_externalCoding()
 
 #######################################################################
 # Export Records with Repeating Instruments                        ####
