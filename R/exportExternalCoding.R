@@ -119,56 +119,15 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
     return(list())
   }
   
-  body <- c(list(content = "record", 
-                 format = "csv", 
-                 returnFormat = "csv", 
-                 type = "flat", 
-                 rawOrLabel = "raw"), 
-            vectorToApiBodyList(fields, "fields"))
+  Code <- exportRecords(rcon, 
+                        fields = fields, 
+                        raw_or_label = "raw", 
+                        batch_size = batch_size)
   
-  body <- body[lengths(body) > 0]
-  
-  Code <- 
-    if (!is.null(batch_size)){
-      .exportRecordsTyped_Batched(rcon = rcon, 
-                                  body = body, 
-                                  records = NULL, 
-                                  config = config, 
-                                  api_param = api_param, 
-                                  csv_delimiter = ",", 
-                                  batch_size = batch_size, 
-                                  error_handling = error_handling)
-    } else {
-      .exportRecordsTyped_Unbatched(rcon = rcon, 
-                                    body = body, 
-                                    records = NULL, 
-                                    config = config, 
-                                    api_param = api_param,
-                                    csv_delimiter = ",", 
-                                    error_handling = error_handling)
-    }
-  
-  body$rawOrLabel <- "label"
-  
-  Label <- 
-    if (!is.null(batch_size)){
-      .exportRecordsTyped_Batched(rcon = rcon, 
-                                  body = body, 
-                                  records = NULL, 
-                                  config = config, 
-                                  api_param = api_param, 
-                                  csv_delimiter = ",", 
-                                  batch_size = batch_size, 
-                                  error_handling = error_handling)
-    } else {
-      .exportRecordsTyped_Unbatched(rcon = rcon, 
-                                    body = body, 
-                                    records = NULL, 
-                                    config = config, 
-                                    api_param = api_param,
-                                    csv_delimiter = ",", 
-                                    error_handling = error_handling)
-    }
+  Label <- exportRecords(rcon, 
+                         fields = fields, 
+                         raw_or_label = "label", 
+                         batch_size = batch_size)
   
   External <- vector("list", length(fields))
   names(External) <- fields

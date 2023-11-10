@@ -47,9 +47,9 @@ test_that(
                                     data = ImportData), 
                       nrows = 1)
     
-    expect_message(deleteRecords(rcon, 
-                                 records = 1), 
-                   "Records deleted: 1")
+    expect_equal(deleteRecords(rcon, 
+                               records = 1), 
+                 "1")
   }
 )
 
