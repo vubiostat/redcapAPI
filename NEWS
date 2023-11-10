@@ -10,6 +10,10 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.8.2
+
+* Extends casting to text fields validated with the BioPortal Ontology service.
+
 ## 2.8.1
 
 * New functions for project management: createRedcapProject, exportProjectXml
@@ -21,7 +25,6 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Adds `exportFilesMultiple` to facilitate exporting multiple files in a familiar interface.
 * Bug fix: Batching records no longer has the potential to produce duplicated records when a record ID has data in multiple events. (See Issue 262)
 * Extends `preserveProject` and adds `readPreservedProject` to assist with preparing data for offline users.
-* Extends casting to text fields validated with the BioPortal Ontology service.
 
 ## 2.8.0
 
