@@ -121,6 +121,16 @@ A 'batched' import is one where the export is performed over a series of
 API calls rather than one large call.  For large projects on small servers,
 this may prevent a single user from tying up the server and forcing others
 to wait on a larger job.
+\subsection{BioPortal Fields}{
+
+Text fields that are validation enabled using the BioPortal Ontology service
+may be imported by providing the coded value. Importing the coded value
+does not, however, guarantee that the labeled value will be immediately
+available. Labels for BioPortal values are cached on the REDCap server
+in a process that occurs when viewing data in the user interface. Thus,
+if the label has not be previously cached on the server, the code will be
+used to represent both the code and the label.
+}
 }
 \examples{
 \dontrun{

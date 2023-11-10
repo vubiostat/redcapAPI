@@ -1,5 +1,5 @@
 ---
-title: "Getting Started: Connecting to REDCAp"
+title: "Getting Started: Connecting to REDCap"
 date: "`r Sys.Date()`"
 toc: true
 toc-title: "Contents"

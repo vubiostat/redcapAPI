@@ -48,7 +48,7 @@ When testing fields for missing values, all field types are tested using the `is
 * The R missing value `NA`
 * Empty strings, i.e. `""`
 
-The empty strings are treated as missing values because this is how REDCap represents missing values in the data export. When exporting data `exportRecordsTyped` will convert empty strings to `NA`. Conversely, `prepDataForImport` will convert `NA` values to empty strings to prepare the data for import.
+The empty strings are treated as missing values because this is how REDCap represents missing values in the data export. When exporting data `exportRecordsTyped` will convert empty strings to `NA`. Conversely, `castForImport` will convert `NA` values to empty strings to prepare the data for import.
 
 ## Customizing Missing Data Detection For a Field Type
 
