@@ -38,6 +38,8 @@
 #' * `min` - For date and numeric fields, the minimum value in the validation, if any.
 #' * `max` - For date and numeric fields, the maximum value in the validation, if any.
 #' * `branching_logic` - For fields with branching logic, the string denoting the logic applied.
+#' * `field_order` - The numeric order of the field in the data dictionary.
+#' * `form_order` - The numeric order of the form in the data dictionary.
 #' 
 #' @seealso
 #' [exportMetaData()]
@@ -127,52 +129,133 @@ assembleCodebook.redcapConnection <- function(rcon,
   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be included in the codebook
-  fields <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
-                                            fields      = fields, 
-                                            drop_fields = drop_fields, 
-                                            forms       = forms)
+  field_names <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
+                                                 fields      = fields, 
+                                                 drop_fields = drop_fields, 
+                                                 forms       = forms, 
+                                                 include_descriptive = TRUE, 
+                                                 use_original = !expand_check)
   
-  MetaData <- rcon$metadata()
-  MetaData <- MetaData[MetaData$field_name %in% fields, ]
+  UnexpandedCodebook <- .assembleCodebook_unexpanded(field_names, 
+                                                     rcon)
   
-  FieldNames <- rcon$fieldnames()
-  if (expand_check){
-    field_names <- FieldNames$export_field_name[FieldNames$original_field_name %in% fields]
-  } else {
-    field_names <- FieldNames$original_field_name[FieldNames$original_field_name %in% fields]
-  }  
-  
-  if (!include_form_complete){
-    form_name <- unique(rcon$metadata()$form_name)
-    form_name <- sprintf("%s_complete", form_name)
-    field_names <- field_names[!field_names %in% form_name]
-  }
+  .assembleCodebook_expandCoding(UnexpandedCodebook)
+}
 
+#####################################################################
+# Unexported                                                     ####
+
+.assembleCodebook_unexpanded <- function(field_names, rcon){
+  MetaData <- rcon$metadata()
+  
+  # Identify field bases, field tyeps, and mapping order
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R
                      "\\1", field_names, perl = TRUE)
   field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
-
+  
   field_types <- .castRecords_getFieldTypes(rcon             = rcon,
                                             field_map        = field_map,
                                             field_bases      = field_bases,
                                             field_text_types = field_text_types)
-  form_names <- rep(NA_character_, length(field_names))
-  branching_logic <- rep(NA_character_, length(field_names))
   
-  for (i in seq_along(form_names)){
-    form_names[i] <- 
-      if (field_names[i] %in% sprintf("%s_complete", 
-                                      MetaData$form_name)){
-        sub("_complete$", "", field_names[i])
-      } else {
-        MetaData$form_name[MetaData$field_name %in% field_bases[i]]
-      }
+  # Assemble the field type data frame
+  Codebook <- as.data.frame(cbind(field_name = field_names, 
+                                  field_type = field_types, 
+                                  field_map, 
+                                  field_bases), 
+                            stringsAsFactors = FALSE)
+  
+  # Merge the field types with other relevant data dictionary fields
+  Codebook <- merge(Codebook,
+                    rcon$metadata()[c("field_name", 
+                                      "form_name", 
+                                      "branching_logic", 
+                                      "text_validation_min", 
+                                      "text_validation_max", 
+                                      "select_choices_or_calculations")],
+                    by.x = "field_bases",
+                    by.y = "field_name", 
+                    all.x = TRUE, 
+                    sort = FALSE)
+  
+  # Populate form name for form_complete fields
+  Codebook$form_name <- ifelse(is.na(Codebook$form_name), 
+                               sub("_complete$", "", Codebook$field_names), 
+                               Codebook$form_name)
+  Codebook$form_name <- factor(Codebook$form_name, 
+                               unique(rcon$metadata()$form_name))
+  
+  # Arrange the codebook in the order of the data dictionary
+  Codebook <- Codebook[order(Codebook$form_name, Codebook$field_map), ]
+  
+  Codebook$field_order <- seq_len(nrow(Codebook))
+  Codebook$form_order <- as.numeric(Codebook$form_name)
+  Codebook$form_name <- as.character(Codebook$form_name)
+  
+  Codebook
+}
+
+
+.assembleCodebook_expandCoding <- function(Codebook){
+  # split into each row
+  Codebook <- split(Codebook, 
+                    Codebook$field_name)
+  
+  # Get the codings for each row and expand the data frame
+  for (i in seq_along(Codebook)){
+    this_field_type <- Codebook[[i]]$field_type
+    this_field_name <- Codebook[[i]]$field_name
     
-    if (length(MetaData$branching_logic[MetaData$field_name %in% field_bases[i]]))
-      branching_logic[i] <- 
-        MetaData$branching_logic[MetaData$field_name %in% field_bases[i]]
+    coding <- 
+      switch(this_field_type, 
+             "yesno" = "0, No | 1, Yes",
+             "truefalse" = "0, FALSE | 1, TRUE",
+             "form_complete" = "0, Incomplete | 1, Unverified | 2, Complete", 
+             "dropdown" = Codebook[[i]]$select_choices_or_calculations, 
+             "radio" = Codebook[[i]]$select_choices_or_calculations, 
+             "checkbox" = if (grepl("___.+$", this_field_name)) "0, Unchecked | 1, Checked" else Codebook[[i]]$select_choices_or_calculations, 
+             "NA, NA")
+    
+    coding <- fieldChoiceMapping(coding, this_field_name)
+    
+    # if the coding has more than one row, 
+    # make n-coding rows of the data and bind it to the coding
+    Codebook[[i]] <- 
+      cbind(do.call("rbind", 
+                    replicate(nrow(coding), 
+                              Codebook[[i]], 
+                              simplify = FALSE)), 
+            coding)
   }
   
-  cbind(field_names, field_types)
+  # Reassemble into one data frame
+  Codebook <- do.call("rbind", Codebook)
+  Codebook <- Codebook[order(Codebook$form_order, 
+                             Codebook$field_order), ]
+  rownames(Codebook) <- NULL
+  
+  # Assemble columns in desired order and with the desired names
+  Codebook <- Codebook[c("field_name", 
+                         "form_name", 
+                         "field_type", 
+                         "choice_value", 
+                         "choice_label", 
+                         "text_validation_min", 
+                         "text_validation_max", 
+                         "branching_logic", 
+                         "field_order", 
+                         "form_order")]
+  names(Codebook) <- c("field_name", 
+                       "form_name", 
+                       "field_type", 
+                       "value", 
+                       "label", 
+                       "min", 
+                       "max", 
+                       "branching_logic", 
+                       "field_order", 
+                       "form_order")
+  
+  Codebook
 }
