@@ -85,3 +85,11 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 }
 }
+\seealso{
+\code{\link[=redcapConnection]{redcapConnection()}}
+\subsection{Vignettes}{
+
+\code{vignette("redcapAPI-best-practices")}, \cr
+\code{vignette("redcapAPI-getting-started-connecting")}
+}
+}

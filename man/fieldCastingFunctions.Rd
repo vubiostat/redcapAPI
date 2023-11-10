@@ -215,6 +215,9 @@ exportRecordsTyped(rcon) |>
 
 \subsection{Vignettes}{
 
-\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}\cr
+\code{vignette("redcapAPI-casting-data")}\cr
+\code{vignette("redcapAPI-missing-data-detection")}\cr
+\verb{vignette("redcapAPI-data-validation)}
 }
 }

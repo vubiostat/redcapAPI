@@ -753,6 +753,27 @@ test_that(
 )
 
 #####################################################################
+# castLogical                                                    ####
+
+test_that(
+  "castLogical",
+  {
+    x <- c("0", "1", "false", "true", "no", "yes")
+    
+    expect_equal(castLogical(x), 
+                 c(FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
+    
+    expect_equal(castLogical(toupper(x)), 
+                 c(FALSE, TRUE, FALSE, FALSE, FALSE, FALSE))
+    
+    # Preserves NA
+    x <- c("0", NA_character_, "1")
+    expect_equal(castLogical(x), 
+                 c(FALSE, NA, TRUE))
+  }
+)
+
+#####################################################################
 # na_values Testing                                              ####
 
 test_that(
