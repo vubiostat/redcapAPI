@@ -181,7 +181,7 @@ assembleCodebook.redcapConnection <- function(rcon,
   
   # Populate form name for form_complete fields
   Codebook$form_name <- ifelse(is.na(Codebook$form_name), 
-                               sub("_complete$", "", Codebook$field_names), 
+                               sub("_complete$", "", Codebook$field_name), 
                                Codebook$form_name)
   Codebook$form_name <- factor(Codebook$form_name, 
                                unique(rcon$metadata()$form_name))
