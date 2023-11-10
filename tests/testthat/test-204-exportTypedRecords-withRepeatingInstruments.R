@@ -27,9 +27,17 @@ RepeatInst <- data.frame(event_name = "event_1_arm_1",
 importRepeatingInstrumentsEvents(rcon, 
                                  data = RepeatInst)
 
-ImportData <- test_redcapAPI_Data
+# castForImport only needed until 3.0.0
+ImportData <- castForImport(test_redcapAPI_Data,
+                            rcon,
+                            cast = list(number_1dp = as.numeric,
+                                        number_2dp = as.numeric,
+                                        number_1dp_comma_decimal = as.numeric,
+                                        number_2dp_comma_decimal = as.numeric, 
+                                        bioportal = as.character))
 
 importRecords(rcon, ImportData)
+rcon$flush_externalCoding()
 
 #######################################################################
 # Export Records with Repeating Instruments                        ####

@@ -6,6 +6,14 @@ context("Export Typed Records with DAGs Functionality")
 ImportData <- exportRecordsTyped(rcon, 
                                  cast = raw_cast)
 
+ImportData <- castForImport(ImportData, 
+                            rcon, 
+                            cast = list(number_1dp = as.numeric, 
+                                        number_2dp = as.numeric, 
+                                        number_1dp_comma_decimal = as.numeric, 
+                                        number_2dp_comma_decimal = as.numeric, 
+                                        bioportal = as.character))
+
 #####################################################################
 # Create DAGs to use in testing                                  ####
 
@@ -18,6 +26,7 @@ ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name,
                                            length.out = nrow(ImportData))
 
 importRecords(rcon, ImportData)
+rcon$flush_externalCoding()
 
 #####################################################################
 # Export Data Access Groups
