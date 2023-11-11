@@ -35,7 +35,8 @@ offlineConnection(
   version = NULL,
   file_repo = NULL,
   records = NULL,
-  url = NULL
+  url = NULL,
+  external_coding = list()
 )
 
 \method{print}{redcapOfflineConnection}(x, ...)
@@ -116,6 +117,15 @@ File Repository Listing can be read, or a \code{data.frame}.}
 Records can be read, or a \code{data.frame}. This should be the raw
 data as downloaded from the API, for instance. Using labeled or formatted
 data is likely to result in errors when passed to other functions.}
+
+\item{external_coding}{Named \code{list} of named \code{character} vectors or a
+\code{character} giving the file from which the external coding may
+be read. The list is generally obtained from the API using
+\code{\link[=exportExternalCoding]{exportExternalCoding()}}. The name of the list element should be
+a field name in the data that is of type \code{bioportal} or \code{sql}.
+The named vectors are code-label pairings where the value of the
+vector is the code and the name is the label. If passing a file name,
+it should be a file with the list saved via \code{dput}.}
 }
 \description{
 These methods enable the user to create a connection object

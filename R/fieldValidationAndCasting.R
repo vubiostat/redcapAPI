@@ -547,7 +547,8 @@ default_cast_character <- default_cast_no_factor
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
-  sql                = NA # This requires a bit more effort !?
+  sql                = valChoice, 
+  bioportal          = valChoice
 )
 
 .default_cast <- list(
