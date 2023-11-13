@@ -13,6 +13,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.8.2
 
 * Extends casting to text fields validated with the BioPortal Ontology service.
+* Extends casting to sql fields. 
 * Adds `castLogical` casting function. 
 * Adds four vignettes for getting started with using `unlockREDCap` and `exportRecordsTyped`.
 

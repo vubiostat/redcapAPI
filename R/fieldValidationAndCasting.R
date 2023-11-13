@@ -515,7 +515,7 @@ default_cast_no_factor <- list(
   select                   = castLabelCharacter,
   radio                    = castLabelCharacter,
   dropdown                 = castLabelCharacter,
-  sql                      = NA, 
+  sql                      = castLabelCharacter, 
   system                   = castLabelCharacter, 
   bioportal                = castLabelCharacter
 )
@@ -574,8 +574,8 @@ default_cast_character <- default_cast_no_factor
   select                   = castLabel,
   radio                    = castLabel,
   dropdown                 = castLabel,
-  sql                      = NA, 
-  system                   = castLabel,
+  sql                      = castLabel, 
+  system                   = castLabel, 
   bioportal                = castLabel
 )
 
@@ -641,8 +641,8 @@ default_cast_character <- default_cast_no_factor
   phone                    = as.character,
   zipcode                  = as.character, 
   slider                   = as.numeric,
-  sql                      = NA, 
-  system                   = castRaw,
+  sql                      = castRaw, 
+  system                   = castRaw, 
   bioportal                = castCodeCharacter
 )
 
@@ -656,6 +656,3 @@ FIELD_TYPES <- c(
   "truefalse",      "checkbox",   "form_complete",      "select",
   "radio",          "dropdown",   "sql",                "system", 
   "bioportal")
-
-
-
