@@ -147,10 +147,12 @@ To prevent R from inadvertently saving API_KEYs to files, it is recommended to t
 off any saving of workspace data. In RStudio this is under "Tools -> Global Options 
 (General)", set 'Save Workspace to .RData on exit' to *Never*.
 
-For command line users create an `.Rprofile` file in one's home directory 
+For command line users create an `.Rprofile` file in one's home directory [simple method: `usethis::edit_r_profile()`]
 containing the following base function override:
 
 ```
+options(keyring_backend=keyring::backend_file)
+
 utils::assignInNamespace(
   "q",
   function(save="no", status=0, runLast=TRUE)
@@ -853,12 +855,12 @@ For example, using `makeApiCall`, we can get User-Roles, even though `redcapAPI`
 does not have a dedicated method to retrieve those.
 
 ```{r}
-response <- makeApiCall(sandbox_conn, 
-                        body = list(content = 'userRole', 
+response <- makeApiCall(test_conn, 
+                        body = list(content= 'metadata',
                                     format = 'csv', 
                                     returnFormat = 'csv'))
-read.csv(text = as.character(response), 
-         na.strings = '')
+head(read.csv(text = as.character(response), 
+         na.strings = ''))
 ```
 
 When constructing custom calls, the user should read the REDCap API 
@@ -878,7 +880,7 @@ vectorToApiBodyList(c(1, 3, 4), "arms")
 A call to export only a selection of arms from a project would look like this:
 
 ```{r, eval = FALSE}
-makeApiCall(rcon, 
+makeApiCall(test_conn, 
             body = c(list(content = 'arm', 
                           format = 'csv', 
                           returnFormat = 'csv'), 
@@ -895,7 +897,7 @@ capture.output(
 with_config(verbose(data_out=FALSE, data_in=TRUE, ssl=TRUE),
             { test <- exportRecordsTyped(test_conn, 
                               records = 10:20, 
-                              forms = "data_import_export") }),
+                              forms = "text_fields") }),
 type="message")
 ```
 
