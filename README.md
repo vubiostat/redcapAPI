@@ -33,7 +33,16 @@ The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap
 
 The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened and naming it the same thing. The second call is saying for this connection export back the all the forms present in that `db`. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
 
-These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`
+These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`. 
+
+## All Vignettes
+
+* redcapAPI-casting-data Casting Data
+* redcapAPI-data-validation Data Validation
+* redcapAPI-getting-started-connecting Connecting to REDCap
+* redcapAPI-missing-data-detection Missing Data Detection
+* redcapAPI-best-practices Best Practices 
+* redcapAPI-offline-connection Offline Connections 
 
 ## 2.7.0+
 
