@@ -1,5 +1,16 @@
 # Frequently Asked Questions
 
+```{r, include=FALSE}
+library(redcapAPI)
+url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
+
+conns <- unlockREDCap(
+  c(rcon ="TestRedcapAPI"), ## Change to rcon when satisfied with testing
+ # c(rcon = "DataTypes"),        ## Delete this to change to primary project
+  url=url, keyring='API_KEYs', 
+  envir=globalenv())
+```
+
 ## How do I stop casting fields to factors?
 
 _I used to be able to set `factors = FALSE` to prevent categorical values from being returned as factors. How do I do that with `exportRecordsTyped`?_
@@ -38,3 +49,14 @@ exportRecordsTyped(rcon,
                    records = 1:3, 
                    cast = list(system = castRaw))
 ```
+
+## Which is preferred `exportRecordsTyped` or `exportBulkRecords`?
+
+This depends on ones prefered use case. It's important to understand the difference in the two and their relationship.
+
+`exportRecordsTyped` exports a single `data.frame` of all the data requested. 
+
+`exportBulkRecords` call `exportRecordsTyped` to create a `data.frame` for each form in the project, or just those requested via the `forms` argument. Additional arguments are all passed to `exportRecordsTyped`. Thus the documentation on validation and casting is the same for both.
+
+If one is starting a new project, we would recommend using `exportBulkRecords` as the subsetting and filtering of empty rows is taken care of, and the user is left with doing the required joins to the data. If one has existing code they are converting that used `exportRecords`, then `exportRecordsTyped` is the recommendation. This is usually followed by code to subset into forms, filtering and then the same joins between these. Thus new projects can save some code by starting with `exportBulkRecords`. 
+
