@@ -1,0 +1,40 @@
+# Frequently Asked Questions
+
+## How do I stop casting fields to factors?
+
+_I used to be able to set `factors = FALSE` to prevent categorical values from being returned as factors. How do I do that with `exportRecordsTyped`?_
+
+Users may substitute an alternate casting list specification within the call to `exportRecordsTyped`. `redcapAPI` provides two lists for this purpose: `default_cast_character` and `default_cast_no_factor`. These two lists are identical and may be used interchangeably.
+
+```{r, eval = FALSE}
+exportRecordsTyped(rcon, 
+                   cast = default_cast_character)
+
+exportRecordsTyped(rcon, 
+                   cast = default_cast_no_factor)
+```
+
+Aside from not casting factors, all other settings in this list are identical to the default casting.
+
+## How do I control the casting of `redcap_event_name`?
+
+_In earlier versions of `redcapAPI`, the `redcap_event_name` field commonly returned the values such as `event_1_arm_1`, `event_2_arm_1`, etc. It now returns "fancy" values. How do I get the original behavior?_
+
+The `redcap_event_name` field is one of the fields referred to as a "system" field. These fields are not part of the project's data dictionary, and are automatically returned by the API based on the configuration of the project. 
+
+By default, `exportRecordsTyped` returns the "labeled" values of the event names. 
+
+```{r}
+exportRecordsTyped(rcon, 
+                   fields = "redcap_event_name", 
+                   records = 1:3)
+```
+
+This behavior can be changed using the `system` casting override (this will also affect the casting of other system fields). 
+
+```{r}
+exportRecordsTyped(rcon, 
+                   fields = "redcap_event_name", 
+                   records = 1:3, 
+                   cast = list(system = castRaw))
+```
