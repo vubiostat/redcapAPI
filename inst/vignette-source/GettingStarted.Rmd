@@ -39,6 +39,27 @@ By default, `unlockREDCap` returns connection objects in a list. Using `envir = 
 
 After a keyring has been unlocked, it remains unlocked for the duration of the R session. In other words, the keyring will remain unlocked until the user closes R.
 
+### Important Note on R/RStudio defaults
+
+The encrypted keyring file can be done via the OS or via a local library. The default for the `keyring` package is the OS. On MacOS has caused a lot of users problems, as with each recent update Apple has changed the interface. This has at times resulted in repeated requests for the password, and occasionally an outright failure to work. To prevent this we recommend setting the default to be a local encrypted file in ones user directory.
+
+Further, R's default of saving user data locally can inadvertantly save an API_KEY in plain text files locally. It is better to set the quit function for R command line to never save data files. If one is using R studio, this needs to be set under "Tools -> Global Options" and on the Basic tab, make sure that "Restore .RData into workspace at startup:" is not select. Also "Save workspace to .RData on exit:" should be set to NEVER.
+
+To do this execute `usethis::edit_r_profile()` and this opens a file that will execute every time the user starts R. Add the following to this file:
+
+```
+options(keyring_backend=keyring::backend_file)
+
+utils::assignInNamespace(
+  "q",
+  function(save="no", status=0, runLast=TRUE)
+  {
+    .Internal(quit(save, status, runLast))
+  },
+  "base"
+)
+```
+
 ## Creating a New Keyring
 
 When executed, `unlockREDCap` will first look to see if a keyring named `"KeyringName"` exists. If it cannot find a keyring by that name, it will then create the keyring and prompt the user to provide the password for the keyring.
