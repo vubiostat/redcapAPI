@@ -1,0 +1,928 @@
+---
+title: "redcapAPI Best Practices"
+author: "Benjamin Nutter, Savannah Obregon, Shawn Garbett"
+date: "`r Sys.Date()`"
+toc: true
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+[Research Electronic Data Capture or REDCap](https://projectredcap.org) puts a lot of power into the hands 
+of those wishing to collect data, from surveys to running clinical trials. Once the data is 
+collected the statistician or data scientist is responsible for summarizing the collected data 
+into reports. [R](https://www.r-project.org/) being a useful tool for this purpose, the department of
+Biostatistics at Vanderbilt University Medical Center has provided the community with the 
+package [`redcapAPI`](https://cran.r-project.org/package=redcapAPI) to facilitate using REDCap from R. 
+
+`redcapAPI` has undergone significant growth over time, causing its previous code and interface 
+to no longer align with the current state of the REDCap project. The original package started 
+to directly expose the raw API in R and the common needs of users propagated via snippets of R code. 
+To address the true needs of the user, a major refactor based on user feedback was undertaken to 
+better address the challenges of a researcher in today's computing environments. This new interface
+began with version 2.7.0.
+
+The primary change has been in the method of retrieving records, which has shifted from using 
+`exportRecords` to `exportRecordsTyped`. The reason for renaming the function is to provide ample 
+time for systems to transition to the new interface. It is important to read over this document 
+and understand the changes if one is a current user of `exportRecords`. However, the modifications 
+are considerably more extensive. This document will outline the best practices approach to using the library.
+
+The ultimate goal is to minimize the number of calls a user needs to make to accomplish their task and 
+have the data prepared for analysis. This can't happen without user involvement--if the library doesn't 
+work easily for ones needs, please open an issue on [GitHub](https://github.com/vubiostat/redcapAPI/issues) and 
+we will do our best to provide a solution. 
+
+If one wishes to reproduce these examples, see '*Reproducing this Vignette*' towards the end of this document.
+
+## Quickstart Guide
+
+*This document is too long! I need to get to work now.* 
+
+There are 2 basic functions that are key to understanding the major changes with this version:
+
+* `unlockREDCap`
+* `exportBulkRecords`
+
+These two are all that required to get all the forms from databases into R objects. Open a connection and export the records.
+
+Here's a typical call for these two:
+
+```
+options(keyring_backend=keyring::backend_file) # Put in .Rprofile
+unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
+             keyring     = 'API_KEYs',
+             envir       = 1,
+             url         = 'https://<REDCAP_URL>/api/')
+exportBulkRecords(list(db = rcon), envir = 1)
+```
+
+The `keyring_backend` option tells the system to use a filesystem based crypto locker for storing keys. It is recommended to put this into one's `.Rprofile`. The system crypto lockers can have odd behavior, the filesystem method is consistent across all platforms.
+
+The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project; this is the name the API_KEY for this project will be stored under in the crypto locker file. The `rcon` is the variable you wish to assign it too in R memory. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The `envir` call is where to write the connection object; if not specified the call will return a list.
+
+The next call to `exportBulkRecords`, defaults to exporting by form name. The first argument is specifying a `db` reference to the connection opened. This can be used to specify just a subset of desired forms via the `forms` argument if needed. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. Looking over the documentation for `exportRecordsTyped` is key to understanding all the possibilities. To really understand, keep reading.
+
+## API_KEY security
+
+The first thing to consider is the API_KEY. This key is what enables the export of data 
+from a REDCap project. It is the equivalent of a user name, password and
+project identifier in a single character string. As such it should be protected
+as strongly as one's password into the systems that store one's data. In the
+United States, the HIPAA law has a minimum violation of $100 per private health
+record exposed. In a large clinical trial setting this can easily run into
+millions of dollars of potential risk.
+
+Therefore, **the API_KEY should never be stored in a plain text file** unless
+it's on a tightly monitored and secured production system that cannot work
+without it.
+f
+Logging into REDCap every time one wants to work, and then juggling
+multiple API_KEYs will quickly become burdensome. Copying and pasting that API_KEY
+into code (plain text!) and then remembering to delete when finished is all too
+easy to forget. A single git commit and simple push to share code and
+the API_KEY is exposed to the world. Making a mistake is highly probable, and the risk of exposing any plain text file in a directory is high. The problem
+is so rampant that at one point there was a website scanning `github.com` for API_KEYS and posting them on a rolling kiosk. Exposures were occurring every few seconds. Many of these were for other APIs, but the risk of exposure through an inadvertent commit cannot be understated.
+
+The library provides a helper function that uses an encrypted local file
+to store API_KEYS for opening connections to REDCap. Using this function
+greatly reduces the risk of exposure. It has tools to facilitate a transfer of code to an automated environment as well. See `?unlockREDcap` for those details. 
+
+Note: *This functionality was originally in the package `rccola`, but this
+library is no longer needed. The functionality is built into `redcapAPI` and
+only requesting connections is supported. This is the preferred long term 
+solution.*
+
+
+```{r unlock}
+library(redcapAPI)
+suppressWarnings(library(Hmisc))
+library(httr)
+
+options(keyring_backend=keyring::backend_file) # Put in .Rprofile
+
+unlockREDCap(c(test_conn    = 'TestRedcapAPI', # REDCap project 1
+               sandbox_conn = 'SandboxAPI'),   # REDCap project 2
+             keyring      = 'API_KEYs',
+             envir        = 1,
+             url          = 'https://redcap.vanderbilt.edu/api/')  
+```
+
+The first time this is called, it asks the user for a password that will be used
+to unlock the crypto locker `API_KEYs`. A keyring can contain multiple API_KEYs
+and hence the name we've given it here--one is free to use any naming they
+desire. The first time it is run it will prompt for each
+API_KEY by the name one has given it, e.g. 'TestRedcapAPI'. If an API_KEY
+does not connect the call will fail and halt execution in R and it will be
+deleted from the key_ring to prompt one to enter it again. Subsequent 
+calls will not prompt for an API_KEY, just the password one has given
+to unlock the remaining keys in the locker. It will stay open in an R session
+and not prompt again. *caveat: each knit button press from RStudio creates a new session, so it
+will prompt each call to knitr*. MacOS has a password prompt problem with `getPass`; this only works from RStudio at present on MacOS.
+
+Specifying `envir=1` tells the function to create the connections
+in the global environment as variables. Without this the function returns 
+a list of the connections. 
+
+In summary, the keyring is stored in an 
+encrypted form accessible by a single password. If one's laptop were stolen or
+compromised it is far more difficult for a hacker to gain further access due
+to the encryption. 
+
+This library also cooperates with our production environments by looking for
+these things in a plain text file `yml` in the directory above execution. This
+functionality is *only* recommended for system admins and should **never** be
+used on a work desktop or laptop.
+
+
+#### Other API_KEY Leakage Risks
+
+To prevent R from inadvertently saving API_KEYs to files, it is recommended to turn 
+off any saving of workspace data. In RStudio this is under "Tools -> Global Options 
+(General)", set 'Save Workspace to .RData on exit' to *Never*.
+
+For command line users create an `.Rprofile` file in one's home directory [simple method: `usethis::edit_r_profile()`]
+containing the following base function override:
+
+```
+options(keyring_backend=keyring::backend_file)
+
+utils::assignInNamespace(
+  "q",
+  function(save="no", status=0, runLast=TRUE)
+  {
+    .Internal(quit(save, status, runLast))
+  },
+  "base"
+)
+```
+
+More details on keyring management are in the `keyring` package. If one forgets their password, 
+one helpful solution is to delete it and try again using the `keyring::keyring_delete("API_KEYs")` function.
+
+Once again, per our design goals, our choices and recommendations do not limit the user. If one has their own system of API_KEY management, one can still open a connection directly using `redcapConnection`. 
+
+If the easiest path is the best path, it will become the common path. We've
+done our best to make best security practice the easiest path.
+
+## The Connection Object (caching)
+
+The connection objects are a much richer object than the older version of the library. During many REDCap 
+interactions the meta data is necessary to properly interpret the data and
+guide data transformation. Instead of calling multiple times with each
+call for this data, the meta data is now cached in the connection object.
+
+Caching saves a lot of round trip calls but brings with it the burden that
+sometimes it needs to be refreshed. For example, one is developing in a 
+REDCap object and has an R environment interacting with it. After a call, 
+it's noted that something needs changed in the project proper. Using the REDCap
+GUI, the project's definition is changed. This requires flushing the cache
+so the next call will retrieve and cached the new data. 
+
+```{r flushcache}
+head(test_conn$fieldnames())
+test_conn$flush_fieldnames()
+
+head(test_conn$metadata())
+test_conn$flush_metadata()
+
+test_conn$flush_all()
+
+```
+
+*Tip: Remember to flush cache after updating project meta data in the GUI.*
+
+Another benefit of the new connection object is the idea of retry. When 
+developing, it's okay if the network hiccups, one can simply rerun the report
+or command and try again. In a production environment, a report that makes
+a lot of API calls is assuming that all of those calls are successful in order to complete execution. This is not that case 100% of the time, so a mitigation strategy
+is needed on the connection object. This is implemented via the `retries`,
+`retry_interval` and `retry_quietly` parameters when calling to build the
+connection objects. These are passed to `redcapAPI::redcapConnection` as
+additional parameters.
+The default is to quietly make 5 retries on a call, with an interval of 2, 4, 8,
+16, and 32 seconds between retries. This greatly improves the odds of
+building a complex report involving a lot of REDCap calls. The user
+of the package gets this for **free** and by specifying `retries=10` it will try up to 30 minutes per call if necessary, allowing downtime to not affect report generation. This is important on automated systems that require reliability and can wait.  
+
+## `exportRecordsTyped`
+
+`exportRecords`, `redcapFactor` and `redcapFlipFactor` still exist in the
+library but are deprecated. These functions will no longer be updated. `exportRecordsTyped` is the preferred method moving forward.  
+
+Armed with a connection from a secured API_KEY in one's R session, the 
+usual goal is to get the data into R, properly typed for use in an R
+model. Dates and Factors need to be converted into a usable format that makes
+statistical modelling easy. Type theory is a very deep theoretical topic
+in mathematics and computer science and thus this topic is complex.
+`redcapAPI` has made a lot of default choices which we felt will satisfy 80% of
+use cases.
+
+However, these choices are not a limitation. Care has been taken to allow user 
+defined overrides for each of these choices and to be extensible to handle
+just about anything the user would prefer. The strategy chosen is
+called _inversion of control_. 
+
+Understanding the type 'casting' algorithm is important if the default
+choices are not satisfactory. Casting referring to the transformation
+of one data class in R to another (aka type casting). 
+
+### The algorithm
+
+REDCap stores all data as character strings. A validation on input may be
+specified as a `field_type` in the REDCap project. However, these might
+be added later, changed or raw data from a different system pushed up. The
+declared `field_type` from the REDCap meta data has no guarantee to describe
+the data format of the actual data. This divergence can be a source of
+frustration and difficulty, thus we've designed the following steps of
+the process to cast a column of data from a project:
+
+1. Detect fields that are NA. This defaults to `""`--the empty string.
+2. Fields that are not NA, are passed through a validation for the `field_type`.
+3. Fields that are not NA, that pass validation are then cast to the desired class.
+
+The choice of which routine to call is a defined by `field_type`. The current
+version of REDCap at the time of this writing is: `date_`, `datetime_`,
+`datetime_seconds_`, `time_mm_ss`, `time_hh_mm_ss`, `time`, `float`, `number`,
+`calc`, `int`, `integer`, `yesno`, `truefalse`, `checkbox`, `form_complete`,
+`select`, `radio`, `dropdown`, and `sql`.
+
+The field_type for `date_`, `datetime_` and `datetime_seconds` are all 
+truncated from the original as all of these are reported in the API as ymd. 
+
+### NA
+
+The definition of NA may vary. An example is someone uploaded external data
+that says "-5" is an NA due to a code book. These values are not desired
+to be treated as anything but NA. In this case the user needs to specify
+an override.
+
+The expected function signature is `function(x, field_name, coding)`. The
+following demonstrates some test data. It follows with a declaration that date 
+"2023-02-24" is to be treated as NA. Then, "2023-03-24" is only to be treated
+as NA for the field `date_mdy`.  Coding is only provided if there is a
+defined code book for the variable. 
+
+```{r na_exp}
+head(exportRecordsTyped(test_conn)[,1:10])
+
+my_na_detector <- function(x, field_name, coding) is.na(x) | x=="" | x == "2023-02-24"
+
+head(exportRecordsTyped(test_conn, na=list(date_=my_na_detector))[,1:10])
+
+my_limited_na_detector <- function(x, field_name, coding)
+  is.na(x) |
+  x==""    |
+  field_name=='date_mdy'
+                                   
+head(exportRecordsTyped(test_conn, na=list(date_=my_limited_na_detector))[,1:10])
+
+```
+
+One can also fill the full table for `na` with a function. 
+
+```{r all_na}
+head(exportRecordsTyped(test_conn, na=na_values(my_limited_na_detector))[,1:10])
+```
+
+It is hopefully a rare case when this is needed. The next step, validation, has an available report that should clarify when it is required.
+
+### Validation
+
+This step based on `field_type` calls a function that returns a vector of 
+logical specifying what is valid or not. The simplest of these is via
+a regular expression or regex. Detailing construction of a regex for
+validation of a field is outside the scope of this document, good tutorials
+are available online such as
+[https://regextutorial.org/](https://regextutorial.org/). It's helpful to have
+an interactive environment to develop one, we used 
+[https://regex101.com/](https://regex101.com/) frequently in developing the 
+regexs provided by default.
+
+The function signature once again is `function(x, field_name, coding)`. 
+
+The default set of validations is:
+
+```
+list(
+  date_              = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
+  datetime_          = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
+  datetime_seconds_  = valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])\\s([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
+  time_mm_ss         = valRx("^[0-5][0-9]:[0-5][0-9]$"),
+  time_hh_mm_ss      = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"),
+  time               = valRx("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"),
+  float              = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
+  number             = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
+  calc               = valRx("^[-+]?(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))([Ee][+-]?[0-9]+)?$"),
+  int                = valRx("^[-+]?[0-9]+(|\\.|\\.[0]+)$"),
+  integer            = valRx("^[-+]?[0-9]+$"),
+  yesno              = valRx("^(?i)(0|1|yes|no)$"),
+  truefalse          = valRx("^(0|1|true|false)$"),
+  checkbox           = valRx("^(?i)(0|1|yes|no)$"),
+  form_complete      = valRx("^[012]$"),
+  select             = valChoice,
+  radio              = valChoice,
+  dropdown           = valChoice,
+  sql                = NA # Incomplete at present
+)
+```
+
+Ignore the complex regular expressions above if unfamiliar. Let's look
+at a building a simple validation for `form_complete`: `valRx("^[012]$")`. The
+regex here starts with "^" for beginning of string, it's followed by a set
+in square brackets meaning to match one of those characters, then the "$" meaning
+end of string. Thus, it asks to build a validation function of the right
+signature that will return a vector that is TRUE for input that is a single
+character "0", "1" or "2" and FALSE otherwise. 
+
+All characters that fail a validation are returned as an attribute "invalid"
+on the resulting data.frame. The default print method will format this
+into Markdown, and all records that are not NA that fail validation will be
+called out. 
+
+We will use a RegEx to make a lot of numbers fail in this example, and use
+the [1:10,] selector to limit the output for this example.
+
+```{r validation}
+Records <- exportRecordsTyped(test_conn,
+             validation=list(number=valRx("^5$|^-100$")))
+summary(Records$prereq_number)
+knitr::asis_output(format(attr(Records, "invalid")[1:10,]))
+```
+
+This shows that the number records containing "1" did not pass the regex validation
+and these will become NA in the final output. The field name, type, row number and record id all help the user to quickly diagnose what is not validating.
+
+Once again, overriding the default is expected to be a rare need, but the
+option is available should it arise. Casting variables to the desired class
+is up next. 
+
+### Casting
+
+The na and validation callback list serve to exclude what should not be
+attempted to cast into a class. This prevents the library from crashing
+when the input does not match the expected format. This is particularly
+troublesome with date and time casting, and excluding these failed validations
+ensures the cast will be successful. 
+
+The function signature for these callbacks is the familiar `function(x, field_name, coding)`.
+
+
+```
+list(
+  date_              = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d"),
+  datetime_          = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M"),
+  datetime_seconds_  = function(x, ...) as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S"),
+  time_mm_ss         = function(x, ...) chron::times(ifelse(is.na(x),NA,paste0("00:",x)), format=c(times="h:m:s")),
+  time_hh_mm_ss      = function(x, ...) chron::times(x, format=c(times="h:m:s")),
+  time               = function(x, ...) chron::times(gsub("(^\\d{2}:\\d{2}$)", "\\1:00", x), 
+                                                     format=c(times="h:m:s")),
+  float              = as.numeric,
+  number             = as.numeric,
+  calc               = as.numeric,
+  int                = as.integer,
+  integer            = as.numeric,
+  yesno              = castLabel,
+  truefalse          = function(x, ...) x=='1' | tolower(x) =='true',
+  checkbox           = castChecked,
+  form_complete      = castLabel,
+  select             = castLabel,
+  radio              = castLabel,
+  dropdown           = castLabel,
+  sql                = NA
+)
+```
+
+A common request is to use the internal as.Date function instead of POSIXct
+for handling dates.
+
+NOTE: An exported object `cast_raw` consists of NA for each of these keys. If 
+one desires raw data the cast function is NA. 
+
+```{r date_cast}
+head(exportRecordsTyped(test_conn, cast=list(date_=as.Date))[,1:10])
+
+```
+The date columns are now of the internal base R `date` class. Various helper
+routines are available on the `?fieldValidationAndCasting` help page. One 
+of note is `castCode` which when used instead of `castLabel` it will cast
+to the coded value and not the labelled value. 
+
+With na, validation and cast covered a large amount of new functionality 
+and control is in the hands of the user.
+
+### Labels and Units
+
+Inversion of control is available for the assignment of attributes to columns
+as well. There exists an assignment argument which is a list of functions
+that will assign their output to the attribute using the name of the list key.
+
+The defaults add labels and units. 
+
+```
+assignment=list(label=stripHTMLandUnicode, units=unitsFieldAnnotation)
+```
+The function signature for these is `function(field_name, field_label, field_annotation)`. 
+
+The label for a column is created by stripping HTML and Unicode characters from
+the REDCap field label. The units are done by searching the field annotation
+for something of the following form: `units={"meters"}` (using a regex). 
+
+If one desired custom attributes on columns based on this information it can 
+be done with an override.
+
+### Forms
+
+If the forms argument is specified, the return from `exportRecordsTyped` filters
+the data down to only rows and columns containing information for the specified
+forms. I.e., REDCap raw data is in "block sparse" format and what users really want is "long" format without extraneous empty rows. 
+
+```{r}
+exportRecordsTyped(test_conn, forms="repeating_instrument")
+```
+
+There are only 2 rows from a test project with over 20 rows of data for this form. 
+
+### Block Sparse Example
+
+```{r block_sparse, echo=FALSE}
+
+set.seed(442560557)
+forms <- c(10, 7, 12, 9)
+n <- length(forms)
+cols <- rows <- sum(forms)
+membership <- replicate(rows, rbinom(n, 1, 1/n))
+bs <- sapply(seq(rows), function(i) {
+  (rep(membership[,i], times=forms) == 1) & (rbinom(cols, 1, 0.75) == 1)
+})
+
+par(mfrow=c(1,2))
+plot(0:1, 0:1, typ="n", xlim=c(0, cols+1), ylim=c(0, rows+1), ylab='', xlab='', axes=FALSE,
+     main="Raw Data Example")
+for(x in 1:cols)
+  for(y in 1:rows)
+    if(bs[x,y]) polygon(c(x, x+1, x+1, x), c(y, y, y+1, y+1), col='darkblue')
+
+
+plot(0:1, 0:1, typ="n", xlim=c(0, cols+1), ylim=c(0, rows+1), ylab='', xlab='', axes=FALSE,
+     main="Block Sparse Sorted Example")
+
+ord <- order(((2^(0:(n-1))) %*% membership)[1,])
+
+bso <- bs[,ord]
+
+for(x in 1:cols)
+  for(y in 1:rows)
+    if(bso[x,y]) polygon(c(x, x+1, x+1, x), c(y, y, y+1, y+1), col='darkblue')
+box <- function(x1,x2, y1, y2) lines(c(x1, x2, x2, x1, x1), c(y1, y1, y2, y2, y1), col='red', lwd=2)
+box( 1, 11,  8, 14)
+box(11, 18, 14, 23)
+box( 1, 11, 22, 23)
+box(11, 18, 28, 31)
+box(18, 30, 23, 31)
+box(30, 39, 31, 39)
+box(18, 30, 35, 39)
+box(11, 18, 38, 39)
+box( 1, 11, 36, 39)
+box( 1, 11, 34, 35)
+
+text( 5, 5, "Form 1", pos=1, cex=0.7)
+text(15, 5, "Form 2", pos=1, cex=0.7)
+text(24, 5, "Form 3", pos=1, cex=0.7)
+text(35, 5, "Form 4", pos=1, cex=0.7)
+```
+
+Only the highlighted in red data is desired for processing.
+
+## Post Processing
+
+The scope and purpose of `exportRecordsTyped` was to extract the data frame in
+the desired classes for analysis. Sometimes post processing of the frame
+for further cleanup is desired and casting cannot do all that is required.
+Several useful helper routines for post processing are provided. 
+The first we'll cover is `recastRecords`. 
+
+### `recastRecords`
+
+Users have reported that `redcapFactorFlip` has been very useful for them
+to switch the way the data was cast in a back and forth manner. The current
+library has deprecated `redcapFactorFlip` and the new method to replace it
+is `recastRecords`.
+
+```{r recast}
+exportRecordsTyped(test_conn,
+  fields=c("record_id", "date_dmy_test",
+           "date_mdy_test", "prereq_yesno")) |>
+  recastRecords(test_conn,
+                fields = c("date_dmy_test", "date_mdy_test", "prereq_yesno"),
+                cast   = list(date_  = as.Date,
+                              yesno = castRaw)) |>
+head()
+```
+
+Recasting may be performed using a character vector of field names; a numeric 
+vector of field indices; or a logical vector (the logical vector must be
+the same length as the number of columns in the data frame).
+
+### mChoice
+
+Users of `Hmisc` or `rms` might want multiple choice class fields added to 
+their resulting Record data.frame. 
+
+```{r mchoice}
+x <- exportRecordsTyped(test_conn) |> mChoiceCast(test_conn)
+x$checkbox_test
+```
+
+### guessCast
+
+What if validations were never added to the project and one would like to
+take a guess at casting, i.e. not rely on the meta data? Any field that
+remains character can be subject to a guess based on passing validation.
+
+This is kept as a separate function to ensure that the user makes 
+a clear choice in using guesswork. 
+
+```{r guess}
+exportRecordsTyped(test_conn, fields="date_dmy_test", cast=raw_cast) |>
+  guessCast(
+    test_conn,
+    validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+    cast=as.Date,
+    threshold=0.1)
+```
+
+Since dates are common, a helper specifically for this guess is provided.
+
+```{r guessDate}
+exportRecordsTyped(test_conn, fields="date_dmy_test", cast=raw_cast) |>
+  guessDate(test_conn, threshold=0.1)
+```
+
+### Split Data Into Forms
+
+There are times when it is desirable to separate a data set into its 
+forms/instruments. Most notably, this may be necessary to work with 
+repeating instruments in projects that have complex repeating structures. 
+
+Separating forms can be done via multiple calls to the API, or it 
+can be done in post-processing via `splitForms`. 
+
+FIXME: Make an example with splitForms after we finish the function.
+
+*NOTE: The later section on `exportBulkRecords` might be a better option than using splitForms.*
+
+### Widen / Shorten a Repeating Instrument
+
+When working with repeating instruments in REDCap the default export is a
+tall and thin data frame where repeat instances are split into separate rows. 
+The `widerRepeated` function converts this data frame into a short and wide one and ignores any data.frame that is not a repeated_instrument (this allows for post processing pipelining). 
+Instead of multiple rows for one record, this function will transform all the 
+data for each record into one row using `reshape`. The function accepts a single 
+form and returns the reshaped data frame.
+
+```{r}
+Records <- exportRecordsTyped(test_conn,
+                              forms = "repeating_instrument")
+
+Records
+
+widerRepeated(Records, test_conn)
+```
+
+The `widerRepeated` function will not widen forms passed into it without 
+repeating instruments. It will return these records in the original format. 
+This function expects that all values in the `redcap_repeat_instrument` column 
+are the same. If this is not the case it will return and error.
+
+### castForImport
+
+While it is true that `importRecords` will convert most data types into a 
+format that can be imported, it has proven to be overly rigid with blind 
+spots that cannot be easily overcome. In order to provide better support for
+importing data, we have provided the stand-alone function `castForImport`.
+
+`castForImport` follows the same strategy of validation and casting 
+used in `exportRecordsTyped`. It returns a data frame where the fields are 
+cast in a format (usually character) that can be passed into `importRecords`. 
+
+```{r}
+Records <- exportRecordsTyped(test_conn, 
+                              records = 10:29, 
+                              forms = "multiple_choice")
+
+Records$checkbox_test___x
+
+Records$dropdown_test
+```
+
+The default settings of `castForImport` are arranged so that most cases of 
+data will be recast for import as desired. 
+
+```{r}
+ForImport <- castForImport(Records, 
+                           test_conn)
+
+ForImport$checkbox_test___x
+
+ForImport$dropdown_test
+```
+
+The actual default casting list for `castForImport` is 
+
+```{r, eval = FALSE}
+list(
+  date_                    = as.character,
+  datetime_                = as.character,
+  datetime_seconds_        = as.character,
+  time_mm_ss               = castTimeMMSS,
+  time_hh_mm_ss            = as.character,
+  time                     = castTimeHHMM,
+  alpha_only               = as.character,
+  float                    = as.character,
+  number                   = as.character,
+  number_1dp               = castDpCharacter(1, dec_symbol = "."), 
+  number_1dp_comma_decimal = castDpCharacter(1),
+  number_2dp               = castDpCharacter(2, dec_symbol = "."), 
+  number_2dp_comma_decimal = castDpCharacter(2),
+  calc                     = as.character,
+  int                      = function(x, ...) as.character(as.integer(x)),
+  integer                  = function(x, ...) as.character(as.integer(x)),
+  yesno                    = castRaw,
+  truefalse                = function(x, ...) (x=='1' | tolower(x) =='true') + 0L,
+  checkbox                 = castRaw,
+  form_complete            = castRaw,
+  select                   = castRaw,
+  radio                    = castRaw,
+  dropdown                 = castRaw,
+  email                    = as.character, 
+  phone                    = as.character,
+  zipcode                  = as.character, 
+  slider                   = as.numeric,
+  sql                      = NA
+)
+```
+
+At this time, we have not changed anything within `importRecords`. Doing so 
+would require making a breaking change and we aren't prepared to do that on 
+short notice. However, we are considering this change in the future. For that 
+reason, we advise changing one's processes to utilize `castForImport` prior
+to importing data. 
+
+#### Customizing Checkbox Casting
+
+We have encountered a special case of a checkbox function that `importRecords` 
+is entirely incapable of handling. In this case, the checkbox variable was
+defined with the options
+
+```
+0, 0
+1, 1
+2, 2
+```
+
+In this case, the field `checkbox_example___0` could actually be cast in a way
+that "0" indicates the checkbox was "checked". This is a scenario that is 
+problematic, as the API would determine that any value of "0" is unchecked. 
+
+In order to handle this scenario, we have provided a special casting function, 
+`castCheckForImport`, that allows the user to designate what values are to 
+represent a checked value. 
+
+```{r}
+Records <- data.frame(checkbox_test___x = c("0", "", "", "0"), 
+                      checkbox_test___y = c("y", "y", "", "y"))
+
+ForImport <- castForImport(Records, 
+                           test_conn, 
+                           fields = "checkbox_test___x",
+                           cast = list(checkbox = castCheckForImport(checked = "0")))
+ForImport
+```
+
+To complete an import in this scenario may require two passes with `castForImport`
+before calling `importRecords`.
+
+```{r, eval = FALSE}
+ForImport <- 
+  castForImport(Records, 
+                test_conn, 
+                fields = "checkbox_test___x", 
+                cast = list(checkbox = castCheckForImport(checked = "0"))) |>
+  castForImport(test_conn)
+
+importRecords(test_conn, 
+              data = ForImport)
+```
+## Helper Functions
+
+### All Together Now: `exportBulkRecords`
+
+For a user interested in pulling all the data for a project or set of projects, the `exportBulkRecords` function brings all this together in a helper function. It breaks it down by form, can deal with multiple connections and apply a set of post processing choices to all pulls in a single call. Any additional arguments are sent to each `exportRecordsTyped`. This is in a sense the `apply` for `redcapAPI` exports. If the forms argument is not specified it will default to all forms in a project.
+
+
+```{r}
+exportBulkRecords(
+ rcon  = list(test = test_conn,
+              sand = sandbox_conn),
+ forms = list(test = c('repeating_instrument', 'branching_logic')),
+ envir = 1,
+ post  = function(Records, rcon)
+         {
+           Records              |>
+           mChoiceCast(rcon)    |>
+           guessDate(rcon)      |>
+           widerRepeated(rcon)
+         }
+)
+test_repeating_instrument
+head(test_branching_logic)
+```
+
+This references the connections we opened in the `unlockREDCap` section at
+the beginning and provides the names we want for the resulting records.
+The environment post execution contains the data.frames: `test.repeating_instrument`,
+`test.branching_logic`, `sand`. Each of these were retrieved, possibly using the forms
+argument and all were post processed in the same manner as specified by `post`.
+Any additional arguments are passed on to the `exportRecordsTyped` call.
+ If `forms` is not specified it defaults to all forms in a project. 
+
+### Branching Logic NA detection
+
+The `missingSummary` function provides a utility to look for missing values 
+within a dataset. The results account for branching logic in the instrument; 
+fields that are missing because branching logic did not expose them do not
+get counted as missing. One may restrict the summary to fields, forms, and/or 
+records as well. 
+
+```{r}
+missingSummary(test_conn, 
+               exportRecordsArgs = list(records = 10:29, 
+                                        fields = "record_id", 
+                                        forms = "branching_logic")) |>
+  head()
+```
+
+One limitation of `missingSummary`, however, is that the summary operates 
+exclusively within each row of the data. Thus, if one's branching logic 
+utilizes values from previous events, this summary will not correctly identify
+non-missing values. 
+
+## Cornucopia of Functions to explore
+
+The functions offered by `redcapAPI` have expanded significantly in recent
+versions. The table below names all of the methods provided by the REDCap
+API and indicates which are supported by `redcapAPI`. 
+
+| System          | Export | Import | Delete | Other Method | 
+|---------|-----|-----|-----|--------------|
+| Arms            | Yes    | Yes    | Yes    | N/A          |
+| DAGs            | No     | No     | No     | SwitchDag (No)   | 
+|                 |        |        |        | exportDagAssigment (No) | 
+|                 |        |        |        | importDagAssigment (No) |
+| Events          | Yes    | Yes    | Yes    | N/A                |
+| Field Names     | Yes    | N/A    | N/A    | N/A                |
+| Files           | Yes    | Yes    | Yes    | N/A                |
+| File Repository | Yes    | Yes    | Yes    | createFileRepositoryFolder (Yes) |
+|                 |        |        |        | exportFileRepositoryListing (Yes) |
+| Instruments     | Yes    | N/A    | N/A    | exportMappings (Yes) | 
+|                 |        |        |        | importMappings (Yes) | 
+| Logging         | Yes    | N/A    | N/A    | N/A                  |
+| Meta Data       | Yes    | Yes    | N/A    | N/A                  | 
+| Project Info    | Yes    | Yes    | N/A    | createProject (No)   |
+|                 |        |        |        | exportProjectXML (No) | 
+| Records         | Yes    | Yes    | Yes    | renameRecord (No)    | 
+|                 |        |        |        | exportNextRecordName (Yes) | 
+| Reports         | Yes    | N/A    | N/A    | N/A                  |
+| Version         | Yes    | N/A    | N/A    | N/A                  |
+| Surveys         | N/A    | N/A    | N/A    | exportSurveyLink (No) | 
+|                 |        |        |        | exportSurveyParticipants (Yes) | 
+|                 |        |        |        | exportSurveyQueueLink (No) | 
+|                 |        |        |        | exportSurveyReturnCode (No) | 
+| Users           | Yes    | No     | No     | N/A                   |
+| UserRoles       | No     | No     | No     | exportUserRoleAssigments (No) | 
+|                 |        |        |        | importUserRoleAssigments (No) |
+
+
+## Reproducing this Vignette
+
+To reproduce this vignette one must build a copy of the `redcapAPI` test
+database. The first step is creating a new project via the REDCap web
+interface and generating an API Key. Using this key create a connection
+as usual, then `restoreProject` will install all forms and data used
+in the construction of this vignette.
+
+In addition, there are other project helper functions available. `purgeProject`
+will purge
+all data and metadata from a REDCap project. Once can create their own archive 
+of a REDCap project using `preserveProject`.
+
+```{r, eval = FALSE}
+purgeProject(rcon, records = TRUE) # Delete everything in the project
+
+# Find path to project definition in package
+load(file.path(path.package('redcapAPI'),
+     "extdata",
+     "testingBranchingLogic",
+     "TestingBranchingLogic.Rdata"))
+
+# Rebuild the Project
+restoreProject(TestingBranchingLogic, rcon = rcon)
+```
+
+## Custom API Calls
+
+`redcapAPI` calls are very specific in how they access the REDCap API and leave 
+very little flexibility to the user in the choice of arguments to pass to the
+API. This lack of flexibility is deliberate, as it helps limit the potential
+for errors and frustration to the typical user. Advanced users may, at times, 
+find our decisions limiting. Or there may be a need to use an API method that
+`redcapAPI` does not yet offer. 
+
+Users wishing to customize their API calls may use `makeApiCall`. This is a 
+flexible function that utilizes the `redcapConnection` object, permitting 
+customized calls within the same code style of the rest of the package. 
+It has an added benefit of the retry strategy for API call failures as 
+mentioned in the '*Connection*' section above.
+
+For example, using `makeApiCall`, we can get User-Roles, even though `redcapAPI`
+does not have a dedicated method to retrieve those.
+
+```{r}
+response <- makeApiCall(test_conn, 
+                        body = list(content= 'metadata',
+                                    format = 'csv', 
+                                    returnFormat = 'csv'))
+head(read.csv(text = as.character(response), 
+         na.strings = ''))
+```
+
+When constructing custom calls, the user should read the REDCap API 
+documentation carefully. Any time a parameter calls for an _array_ of values, 
+the values from R must be passed in a very specific format--even if there is only
+a single value to pass. `redcapAPI` uses a function to format R vectors into 
+the proper format to be accepted by the API. The user should also adopt this 
+strategy in order to make custom API calls. 
+
+The `vectorToApiBodyList` function returns a list that can be appended to the 
+list passed to the `body` argument. 
+
+```{r}
+vectorToApiBodyList(c(1, 3, 4), "arms")
+```
+
+A call to export only a selection of arms from a project would look like this:
+
+```{r, eval = FALSE}
+makeApiCall(test_conn, 
+            body = c(list(content = 'arm', 
+                          format = 'csv', 
+                          returnFormat = 'csv'), 
+                     vectorToApiBodyList(c(1, 3, 4), "arms")))
+```
+
+## Debugging Raw Connection
+
+The library from 2.7.3 up supports `httr` debugging. 
+
+```{r, echo=TRUE, message=TRUE, warning=TRUE, error=TRUE }
+library(httr)
+capture.output(
+with_config(verbose(data_out=FALSE, data_in=TRUE, ssl=TRUE),
+            { test <- exportRecordsTyped(test_conn, 
+                              records = 10:20, 
+                              forms = "text_fields") }),
+type="message")
+```
+
+
+## Thanks
+
+Thanks to all those that have made this effort possible for `redcapAPI` as an R package, and striven to make it better.
+
+* Will Beasley
+* Cole Beck
+* Lynne Berry
+* Caroline Birdrow
+* Thomas Dupont
+* Shawn Garbett
+* Will Gray
+* Frank Harrell
+* **Jeffrey Horner**
+* Omair Khan
+* Stephen Lane
+* Marcus Lehr
+* Dandan Liu
+* **Benjamin Nutter**
+* Savannah Obregon
+* Jeremy Stephens
+* The Biostatistics department at Vanderbilt University Medical Center
+* The R-Project and CRAN team
+* The REDCap Team at Vanderbilt University Medical Center
+* National Institutes of Health (NIH/NCATS UL1 TR000445)

@@ -105,6 +105,11 @@
 #' facilitate importing data. They convert time data into a character format 
 #' that will pass the API requirements. 
 #' 
+#' `castLogical` is a casting function that returns a logical vector for 
+#' common, binary-type responses. It is well suited to changing true/false, 
+#' yes/no, and checkbox fields into logical vectors, as it returns `TRUE` if
+#' the value is one of `c("1", "true", "yes")` and returns `FALSE` otherwise.
+#' 
 #' 
 #' ## Casting Lists
 #' `raw_cast` overrides all casting if passed as the `cast`
@@ -146,12 +151,19 @@
 #' | `castDpCharacter`         | `character`          |
 #' | `castTimeHHMM`            | `character`          |
 #' | `castTimeMMSS`            | `character`          |
+#' | `castLogical`             | `logical`            |
 #' 
 #' 
 #' @seealso 
 #' [fieldCastingFunctions()], \cr
 #' [exportRecordsTyped()], \cr
 #' [exportReportsTyped()]
+#' 
+#' ## Vignettes
+#' 
+#' `vignette("redcapAPI-casting-data")`\cr
+#' `vignette("redcapAPI-missing-data-detection")`\cr
+#' `vignette("redcapAPI-data-validation)`
 #' 
 #' @examples
 #' \dontrun{
@@ -436,6 +448,16 @@ castTimeMMSS <- function(x, field_name, coding){
   x
 }
 
+#' @rdname fieldValidationAndCasting
+#' @export
+
+castLogical <- function(x, field_name, coding){
+  is_na <- is.na(x)
+  x <- x %in% c("1", "true", "yes")
+  x[is_na] <- NA
+  x
+}
+
 #####################################################################
 # Cast function lists                                            ####
 
@@ -553,7 +575,7 @@ default_cast_character <- default_cast_no_factor
   radio                    = castLabel,
   dropdown                 = castLabel,
   sql                      = NA, 
-  system                   = castLabel, 
+  system                   = castLabel,
   bioportal                = castLabel
 )
 
@@ -588,7 +610,7 @@ default_cast_character <- default_cast_no_factor
   phone                    = valPhone,
   zipcode                  = valRx(REGEX_ZIPCODE),
   slider                   = valRx(REGEX_NUMBER),
-  sql                      = NA # This requires a bit more effort !?
+  sql                      = NA
 )
 
 .default_cast_import <- list(
@@ -620,7 +642,7 @@ default_cast_character <- default_cast_no_factor
   zipcode                  = as.character, 
   slider                   = as.numeric,
   sql                      = NA, 
-  system                   = castRaw, 
+  system                   = castRaw,
   bioportal                = castCodeCharacter
 )
 

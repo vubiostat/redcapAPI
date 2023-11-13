@@ -73,7 +73,10 @@
 #' 
 #' ## Vignettes
 #' 
-#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`
+#' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`\cr
+#' `vignette("redcapAPI-casting-data")`\cr
+#' `vignette("redcapAPI-missing-data-detection")`\cr
+#' `vignette("redcapAPI-data-validation)`
 #'   
 #'   
 #' @examples

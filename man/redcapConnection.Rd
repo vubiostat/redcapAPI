@@ -257,6 +257,11 @@ off_conn$events()
 
 }
 \seealso{
+For establishing connections using secure token storage. \cr
+\code{\link[=unlockREDCap]{unlockREDCap()}} \cr
+\code{vignette("redcapAPI-getting-started-connecting", package = "redcapAPI")}\cr
+
+For working with offline connections.
 \code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}\cr
 \cr
 To prepare data for an offline user, see \code{\link[=preserveProject]{preserveProject()}} and

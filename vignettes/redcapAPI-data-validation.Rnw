@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Data Validation with exportRecordsTyped}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{precompiled-data-validation.pdf}
+\end{document}
