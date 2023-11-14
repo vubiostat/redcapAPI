@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Getting Started: Connecting to REDCap}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{precompiled-getting-started-connecting.pdf}
+\end{document}

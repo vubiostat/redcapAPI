@@ -112,6 +112,11 @@
 #' will be used to replace the existing component. See examples. 
 #' 
 #' @seealso 
+#' For establishing connections using secure token storage. \cr
+#' [unlockREDCap()] \cr
+#' `vignette("redcapAPI-getting-started-connecting", package = "redcapAPI")`\cr
+#' 
+#' For working with offline connections.
 #' `vignette("redcapAPI-offline-connection", package = "redcapAPI")`\cr
 #' \cr
 #' To prepare data for an offline user, see [preserveProject()] and 

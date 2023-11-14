@@ -215,6 +215,16 @@ The fields affected by the \code{system} override are \code{redcap_event_name},
 \code{redcap_repeat_instrument}, and \code{redcap_data_access_group}.
 }
 
+\subsection{BioPortal Fields}{
+
+Text fields that are validation enabled using the BioPortal Ontology service
+may be cast to labeled values so long as the labels have been cached on the
+REDCap server. Caching is performed when the field is viewed in a form on
+the web interface. However, labels are not cached when data are imported
+via the API. In cases where labels are not cached, the coded value is
+treated as both the code and the label.
+}
+
 \subsection{Record Batching}{
 
 A 'batched' export is one where the export is performed over a series of
@@ -382,6 +392,9 @@ exportRecordsTyped(rcon_off)
 
 \subsection{Vignettes}{
 
-\code{vignette("redcapAPI-offline-connection", package = "redcapAPI")}
+\code{vignette("redcapAPI-offline-connection")}\cr
+\code{vignette("redcapAPI-casting-data")}\cr
+\code{vignette("redcapAPI-missing-data-detection")}\cr
+\verb{vignette("redcapAPI-data-validation)}
 }
 }
