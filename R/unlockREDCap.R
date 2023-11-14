@@ -224,6 +224,13 @@
 #' @importFrom keyring keyring_list
 #' @importFrom keyring keyring_unlock
 #' @importFrom keyring keyring_is_locked
+#' 
+#' @seealso 
+#' [redcapConnection()]
+#' 
+#' ## Vignettes
+#' `vignette("redcapAPI-best-practices")`, \cr
+#' `vignette("redcapAPI-getting-started-connecting")`
 #'
 #' @examples
 #' \dontrun{

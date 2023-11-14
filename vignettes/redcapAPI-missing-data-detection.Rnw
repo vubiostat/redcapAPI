@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Missing Data Detection with exportRecordsTyped}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{precompiled-missing-data-detection.pdf}
+\end{document}
