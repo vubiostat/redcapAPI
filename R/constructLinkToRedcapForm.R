@@ -66,7 +66,6 @@ constructLinkToRedcapForm.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_character(x = form_name,
-                              any.missing = FALSE,
                               add = coll)
   
   checkmate::assert_character(x = record_id,
@@ -140,7 +139,6 @@ constructLinkToRedcapForm.redcapOfflineConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_character(x = form_name,
-                              any.missing = FALSE,
                               add = coll)
   
   checkmate::assert_character(x = record_id,
