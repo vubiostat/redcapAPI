@@ -55,6 +55,7 @@ RecordToImport <- RecordToImport[is.na(RecordToImport$repeat_question_1), ]
 RecordToImport <- RecordToImport[names(RecordToImport) %in% rcon$metadata()$field_name]
 # castForImport only needed until 3.0.0
 RecordToImport <- castForImport(RecordToImport, rcon, 
+                                validation = list(bioportal = valSkip),
                                 cast = list(number_1dp = as.numeric, 
                                             number_2dp = as.numeric, 
                                             number_1dp_comma_decimal = as.numeric, 
