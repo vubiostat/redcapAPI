@@ -34,22 +34,18 @@
 changedRecords <- function(rcon,
                            ...)
 {
+  # Relies on exportLogging for argument validation 
   Log <- exportLogging(rcon, ...)
-  
-  create_record <- which(grepl("^create record", 
-                               Log$action, 
-                               ignore.case = TRUE))
-  
-  delete_record <- which(grepl("^delete record", 
-                               Log$action, 
-                               ignore.case = TRUE))
-  
-  update_record <- seq_len(nrow(Log))
-  update_record <- update_record[!update_record %in% c(create_record, 
-                                                       delete_record)]
+
   list(
-    updated = unique(Log$record[update_record]), 
-    deleted = unique(Log$record[delete_record]),
-    created = unique(Log$record[create_record])
+    updated = unique(Log$record[grepl("^update record", 
+                                      Log$action, 
+                                      ignore.case = TRUE)]), 
+    deleted = unique(Log$record[grepl("^delete record", 
+                                      Log$action, 
+                                      ignore.case = TRUE)]),
+    created = unique(Log$record[grepl("^create record", 
+                                      Log$action, 
+                                      ignore.case = TRUE)])
   )
 }
