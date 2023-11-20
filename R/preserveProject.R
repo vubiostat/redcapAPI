@@ -226,7 +226,8 @@ preserveProject.redcapApiConnection <- function(rcon,
          records               = exportRecordsTyped(rcon, 
                                                     cast = raw_cast,
                                                     error_handling = error_handling, 
-                                                    config = config)
+                                                    config = config), 
+         external_coding        = exportExternalCoding(rcon)
     )
   
   if (is.null(save_as)){
@@ -264,9 +265,15 @@ preserveProject.redcapApiConnection <- function(rcon,
                          rcon$projectInformation()$project_id, 
                          names(RedcapList)[i])
     
-    utils::write.csv(x = RedcapList[[i]], 
-                     file = file.path(dir, file_name), 
-                     row.names = FALSE)
+    if (names(RedcapList)[i] == "external_coding"){
+      dput(RedcapList[[i]], 
+           file = file.path(dir, 
+                            sub("\\.csv", ".txt", file_name)))
+    } else {
+      utils::write.csv(x = RedcapList[[i]], 
+                       file = file.path(dir, file_name), 
+                       row.names = FALSE)
+    }
   }
 }
 
@@ -287,7 +294,7 @@ readPreservedProject.list <- function(x, ...,
   
   checkmate::assert_list(x = x, 
                          names = "named", 
-                         types = "data.frame", 
+                         types = c("data.frame", "list"),
                          add = coll)
   
   checkmate::reportAssertions(coll)
@@ -304,7 +311,8 @@ readPreservedProject.list <- function(x, ...,
                                        "user_role_assignments", 
                                        "dags", 
                                        "dag_assignments", 
-                                       "records"), 
+                                       "records", 
+                                       "external_coding"), 
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -321,7 +329,8 @@ readPreservedProject.list <- function(x, ...,
                     records = x$records, 
                     project_info = x$project_information,
                     version = version, 
-                    url = url)
+                    url = url, 
+                    external_coding = x$external_coding)
 }
 
 #' @rdname preserveProject
@@ -348,6 +357,14 @@ readPreservedProject.character <- function(x,
                       pattern = "project-[0-9]+.+$", 
                       full.names = TRUE)
   
+  external_coding <- .rPP_getFileName(files, "external_coding")
+  if (file.exists(external_coding)){
+    external_coding <- eval(parse(file = external_coding))
+  } else {
+    external_coding <- list()
+  }
+  
+  
   offlineConnection(
     meta_data = .rPP_getFileName(files, "meta_data"), 
     arms = .rPP_getFileName(files, "arms"), 
@@ -360,7 +377,8 @@ readPreservedProject.character <- function(x,
     dag_assignment = .rPP_getFileName(files, "dag_assignments"), 
     records = .rPP_getFileName(files, "records"), 
     version = version, 
-    url = url
+    url = url, 
+    external_coding = external_coding
   )
 }
 

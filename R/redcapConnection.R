@@ -416,7 +416,8 @@ print.redcapApiConnection <- function(x, ...){
       sprintf("DAG Assignment       : %s", is_cached(x$has_dag_assignment())),
       sprintf("Project Info         : %s", is_cached(x$has_projectInformation())),
       sprintf("Version              : %s", is_cached(x$has_version())),  
-      sprintf("File Repo            : %s", is_cached(x$has_fileRepository())))
+      sprintf("File Repo            : %s", is_cached(x$has_fileRepository())), 
+      sprintf("External Coding      : %s", is_cached(x$has_externalCoding())))
   cat(output, sep = "\n")
 }
 
@@ -456,6 +457,14 @@ print.redcapApiConnection <- function(x, ...){
 #'   Records can be read, or a `data.frame`. This should be the raw 
 #'   data as downloaded from the API, for instance. Using labeled or formatted
 #'   data is likely to result in errors when passed to other functions.
+#' @param external_coding Named `list` of named `character` vectors or a 
+#'   `character` giving the file from which the external coding may 
+#'   be read. The list is generally obtained from the API using 
+#'   [exportExternalCoding()]. The name of the list element should be 
+#'   a field name in the data that is of type `bioportal` or `sql`. 
+#'   The named vectors are code-label pairings where the value of the 
+#'   vector is the code and the name is the label. If passing a file name, 
+#'   it should be a file with the list saved via `dput`. 
 #'   
 #' @export
 
@@ -475,7 +484,8 @@ offlineConnection <- function(meta_data = NULL,
                               version = NULL, 
                               file_repo = NULL,
                               records = NULL, 
-                              url = NULL){
+                              url = NULL, 
+                              external_coding = list()){
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -641,6 +651,28 @@ offlineConnection <- function(meta_data = NULL,
                               null.ok = TRUE,
                               add = coll)
   
+  checkmate::assert(
+    checkmate::check_list(x = external_coding,
+                          types = "character",
+                          names = "named", 
+                          null.ok = TRUE), 
+    checkmate::check_character(x = external_coding, 
+                               len = 1, 
+                               null.ok = TRUE), 
+    .var.name = "external_coding", 
+    add = coll
+  )
+  
+  checkmate::reportAssertions(coll)
+  
+  if (is.list(external_coding) && length(external_coding) > 0){
+    for (i in seq_along(external_coding)){
+      checkmate::assert_character(x = external_coding[[i]], 
+                                  names = "named", 
+                                  add = coll)
+    }
+  }
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -716,6 +748,11 @@ offlineConnection <- function(meta_data = NULL,
                                   add = coll)
   }
   
+  if (is.character(external_coding)){
+    checkmate::assert_file_exists(x = external_coding, 
+                                  add = coll)
+  }
+  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -763,6 +800,13 @@ offlineConnection <- function(meta_data = NULL,
   this_version <- version
 
   this_fileRepository <- .offlineConnection_readFile(file_repo)
+  
+  this_ec <- 
+    if (is.list(external_coding)){
+      external_coding
+    } else {
+      eval(parse(file = external_coding))
+    }
 
   
   this_instrument <- 
@@ -894,10 +938,16 @@ offlineConnection <- function(meta_data = NULL,
       flush_records = function() this_record <<- NULL,
       refresh_records = function(x) {this_record <<- .offlineConnection_readFile(records)},
       
+      externalCoding = function(...){ this_ec }, 
+      has_externalCoding = function() !is.null(this_ec), 
+      flush_externalCoding = function() this_ec <<- NULL,
+      refresh_externalCoding = function(x, ...) {this_ec <<- x},
+      
       flush_all = function(){ 
         this_metadata <<- this_arm <<- this_event <<- this_fieldname <<- 
           this_mapping <<- this_user <<- this_version <<- this_project <<- 
-          this_instrument <<- this_fileRepository <<- this_repeat <<- NULL}, 
+          this_instrument <<- this_fileRepository <<- this_repeat <<- 
+          this_ec <<- NULL}, 
       
       refresh_all = function(){} # provided only to match the redcapApiConnection. Has no effect
     )
@@ -928,7 +978,8 @@ print.redcapOfflineConnection <- function(x, ...){
         sprintf("DAG Assigment         : %s", is_cached(x$has_dag_assignment())),
         sprintf("Project Info          : %s", is_cached(x$has_projectInformation())), 
         sprintf("Version               : %s", is_cached(x$has_version())), 
-        sprintf("File Repo             : %s", is_cached(x$has_fileRepository())))
+        sprintf("File Repo             : %s", is_cached(x$has_fileRepository())), 
+        sprintf("External Coding       : %s", is_cached(x$has_externalCoding())))
     cat(output, sep = "\n")
 }
 
