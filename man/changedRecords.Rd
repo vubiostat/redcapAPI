@@ -2,29 +2,30 @@
 % Please edit documentation in R/changedRecords.R
 \name{changedRecords}
 \alias{changedRecords}
-\title{get a list of records changed (adds, updates, deletes)}
+\title{returns a list of record IDs changed (adds, updates, deletes)}
 \usage{
 changedRecords(rcon, ...)
 }
 \arguments{
-\item{rcon}{A redcapConnection object.}
+\item{rcon}{A \code{redcapConnection} object.}
 
-\item{...}{Arguments passed to \code{exportLogging}}
+\item{...}{Arguments to pass to other methods}
 }
 \value{
 Returns a list with the elements\tabular{ll}{
     \tab  \cr
-   \code{updated} \tab character vector of updated record's ids \cr
-   \code{deleted} \tab charcater vector of deleted record's ids \cr
-   \code{created} \tab character vector of created record's ids \cr
+   \code{updated} \tab character vector of updated records' IDs \cr
+   \code{deleted} \tab charcater vector of deleted records' IDs \cr
+   \code{created} \tab character vector of created records' IDs \cr
 }
 }
 \description{
-This is a convience function that scans logs and
-returns record ids of changes.
+This is a convenience function that scans logs and
+returns record IDs of changed records.
 }
 \details{
-Makes a call to \code{exportLogging} and
+Makes a call to \code{exportLogging} with passed arguments. Returns
+filtered list or records IDs with update, delete or create events.
 }
 \examples{
 \dontrun{

@@ -1,22 +1,23 @@
 #' @name changedRecords
-#' @title get a list of records changed (adds, updates, deletes)
+#' @title returns a list of record IDs changed (adds, updates, deletes)
 #' 
-#' @description This is a convience function that scans logs and 
-#' returns record ids of changes. 
+#' @description This is a convenience function that scans logs and 
+#' returns record IDs of changed records.  
 #' 
-#' @param rcon A redcapConnection object.
-#' @param ... Arguments passed to `exportLogging`
+#' @inheritParams common-rcon-arg
+#' @inheritParams common-dot-args
 #' 
-#' @details Makes a call to `exportLogging` and 
+#' @details Makes a call to `exportLogging` with passed arguments. Returns 
+#' filtered list or records IDs with update, delete or create events.
 #'   
 #' @return 
 #' Returns a list with the elements
 #' 
 #' |           |                                          |
 #' |-----------|------------------------------------------|
-#' | `updated` | character vector of updated record's ids |
-#' | `deleted` | charcater vector of deleted record's ids |
-#' | `created` | character vector of created record's ids |
+#' | `updated` | character vector of updated records' IDs |
+#' | `deleted` | charcater vector of deleted records' IDs |
+#' | `created` | character vector of created records' IDs |
 
 #' @examples
 #' \dontrun{
