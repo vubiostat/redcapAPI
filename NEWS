@@ -17,6 +17,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Adds `valSkip`, allowing for validation to be skipped for a field type.
 * Adds `castLogical` casting function. 
 * Adds four vignettes for getting started with using `unlockREDCap` and `exportRecordsTyped`.
+* Added helper function `changedRecords`.
 
 ## 2.8.1
 
