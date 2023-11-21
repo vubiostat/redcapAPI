@@ -9,14 +9,14 @@ changedRecords(rcon, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{...}{Arguments to pass to other methods}
+\item{...}{Arguments passed to \code{\link[=exportLogging]{exportLogging()}}}
 }
 \value{
 Returns a list with the elements\tabular{ll}{
     \tab  \cr
-   \code{updated} \tab character vector of updated records' IDs \cr
-   \code{deleted} \tab charcater vector of deleted records' IDs \cr
-   \code{created} \tab character vector of created records' IDs \cr
+   \code{updated} \tab character vector of updated record IDs \cr
+   \code{deleted} \tab character vector of deleted record IDs \cr
+   \code{created} \tab character vector of created record IDs \cr
 }
 }
 \description{

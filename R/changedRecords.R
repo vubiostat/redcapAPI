@@ -5,7 +5,7 @@
 #' returns record IDs of changed records.  
 #' 
 #' @inheritParams common-rcon-arg
-#' @inheritParams common-dot-args
+#' @param ... Arguments passed to [exportLogging()]
 #' 
 #' @details Makes a call to `exportLogging` with passed arguments. Returns 
 #' filtered list or records IDs with update, delete or create events.
@@ -15,9 +15,9 @@
 #' 
 #' |           |                                          |
 #' |-----------|------------------------------------------|
-#' | `updated` | character vector of updated records' IDs |
-#' | `deleted` | charcater vector of deleted records' IDs |
-#' | `created` | character vector of created records' IDs |
+#' | `updated` | character vector of updated record IDs |
+#' | `deleted` | character vector of deleted record IDs |
+#' | `created` | character vector of created record IDs |
 
 #' @examples
 #' \dontrun{
