@@ -129,6 +129,7 @@ assembleCodebook.redcapConnection <- function(rcon,
                                         forms = forms, 
                                         coll = coll)
   
+  checkmate::reportAssertions(coll)
   
   
   ###################################################################
