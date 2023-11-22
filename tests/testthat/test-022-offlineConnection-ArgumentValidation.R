@@ -38,7 +38,9 @@ test_that(
     expect_error(offlineConnection(file_repo = 123), 
                  "(Must be of type 'character'|Must be of type 'data.frame')")
     expect_error(offlineConnection(records = 123), 
-                 "(Must be of type 'character'|Must be of type 'data.frame')")
+                 "(Must be of type 'character'|Must be of type 'data.frame')") 
+    expect_error(offlineConnection(external_coding = 123), 
+                 "(Must be of type 'character'|Must be of type 'list')")
   }
 )
 

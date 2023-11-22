@@ -43,6 +43,12 @@
 #'   phone numbers. It removes punctuation and spaces prior to validating
 #'   with the regular expression.
 #'   
+#' `valSkip` is a function that supports skipping the validation for 
+#'   a field type. It returns a `TRUE` value for each record, regardless
+#'   of its value. Validation skipping has occasional utility when importing
+#'   certain field types (such as `bioportal` or `sql`) where not all of the
+#'   eventual choices are available in the project yet.
+#'   
 #' `na_values` is a helper function to create a list of functions
 #' to test for NA based on field type. Useful for bulk override of
 #' NA detection for a project. The output can be directly passed to the `na`
@@ -135,6 +141,7 @@
 #' | `valRx`                   | `logical`            |
 #' | `valChoice`               | `logical`            |
 #' | `valPhone`                | `logical`            |
+#' | `valSkip`                 | `logical`            |
 #' | `castLabel`               | `factor`             |
 #' | `castLabelCharacter`      | `character`          |
 #' | `castCode`                | `factor`             |
@@ -202,6 +209,13 @@ valChoice <- function(x, field_name, coding) x %in% coding | x %in% names(coding
 valPhone <- function(x, field_name, coding){
   x <- gsub("[[:punct:][:space:]]", "", x)
   grepl(REGEX_PHONE, x)
+}
+
+#' @rdname fieldValidationAndCasting
+#' @export
+
+valSkip <- function(x, field_name, coding){
+  rep(TRUE, length(x))
 }
 
 #' @rdname fieldValidationAndCasting
@@ -547,7 +561,8 @@ default_cast_character <- default_cast_no_factor
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
-  sql                = NA # This requires a bit more effort !?
+  sql                = valChoice, 
+  bioportal          = valChoice
 )
 
 .default_cast <- list(
@@ -610,7 +625,8 @@ default_cast_character <- default_cast_no_factor
   phone                    = valPhone,
   zipcode                  = valRx(REGEX_ZIPCODE),
   slider                   = valRx(REGEX_NUMBER),
-  sql                      = NA
+  sql                      = valChoice,
+  bioportal                = valChoice
 )
 
 .default_cast_import <- list(

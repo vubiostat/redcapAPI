@@ -232,6 +232,21 @@ test_that(
 )
 
 #####################################################################
+# valSkip                                                        ####
+
+test_that(
+  "valSkip gives expected results",
+  {
+     coding <- c("x" = "Ex", y = "Why", z = "Zee")
+     field_name <- "some_field"
+     x <- rep(FALSE, 5)
+     
+     expect_equal(valSkip(x, field_name, coding), 
+                  rep(TRUE, 5))
+  }
+)
+
+#####################################################################
 # getCodingIndex                                                 ####
 
 test_that(

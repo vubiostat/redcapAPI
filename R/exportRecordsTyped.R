@@ -280,8 +280,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                .var.name = "rcon$metadata()",
                                add = coll)
   
-  checkmate::assert_data_frame(x = rcon$record(),
-                               .var.name = "rcon$record()",
+  checkmate::assert_data_frame(x = rcon$records(),
+                               .var.name = "rcon$records()",
                                add = coll)
   
   checkmate::reportAssertions(coll)
@@ -341,9 +341,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 
   ###################################################################
   # Raw Data comes from the rcon object for offlineConnections
-  
+
   Raw <- rcon$records()[fields]
-  
+
   if (length(records) > 0)
     Raw <- Raw[Raw[[ rcon$metadata()$field_name[1] ]] %in% records, ]
 
@@ -362,7 +362,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   }
   
   Raw <- filterEmptyRow(Raw, rcon)
-  
+
   ###################################################################
   # Process meta data for useful information
   

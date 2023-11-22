@@ -23,7 +23,8 @@ test_that(
                               "user_role_assignments", 
                               "dags", 
                               "dag_assignments", 
-                              "records"))
+                              "records", 
+                              "external_coding"))
   }
 )
 
@@ -50,7 +51,8 @@ test_that(
                             events = RedcapList$events,  
                             mapping = RedcapList$mappings, 
                             records = RedcapList$records, 
-                            project_info = RedcapList$project_information)
+                            project_info = RedcapList$project_information, 
+                            external_coding = RedcapList$external_coding)
       })
     })
     
@@ -91,6 +93,9 @@ test_that(
                                      "dags", 
                                      "dag_assignments", 
                                      "records")))
+    ext_code <- file.path(temp_dir, 
+                          sprintf("project-%s-external_coding.txt", 
+                                  rcon$projectInformation()$project_id))
     
     expect_no_error({
       suppressWarnings({
@@ -100,7 +105,8 @@ test_that(
                             events = csv_files[3],  
                             mapping = csv_files[5], 
                             records = csv_files[12], 
-                            project_info = csv_files[1])
+                            project_info = csv_files[1], 
+                            external_coding = ext_code)
       })
     })
     
