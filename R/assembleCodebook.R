@@ -16,9 +16,10 @@
 #'   and `forms`. When `NULL`, all forms are included.
 #' @param drop_fields `character` or `NULL`. When given, fields named 
 #'   will be removed from the code book. 
-#' @param `field_types` `character` or `NULL`. When given, only the field
+#' @param field_types `character` or `NULL`. When given, only the field
 #'   types listed will be included in the code book. This will supercede
-#'   the intersection of `fields` and `forms`. 
+#'   the intersection of `fields` and `forms`. Matching of field types is 
+#'   performed against the values in the `field_type` column of the meta data. 
 #' @param include_form_complete `logical(1)`. When `TRUE`, the 
 #'   `[form name]_complete` fields will be included in the codebook.
 #' @param expand_check `logical(1)`. When `FALSE`, the codebook for checkbox 
@@ -26,9 +27,11 @@
 #'   with one line per user-defined option. When `TRUE`, each checkbox option
 #'   will be represented in two fields, one each for 0 (Unchecked) and 
 #'   1 (Checked).
+#' @param x A `redcapCodebook` object as returned by `assembleCodebook`.
 #'   
 #' @return
-#' Returns a data frame with the columns
+#' Returns a `redcapCodebook` object. This inherits the `data.frame` class
+#' and has the columns
 #' 
 #' * `field_name` - The name of the field.
 #' * `form` - The name of the form on which the field is located.
@@ -126,9 +129,18 @@ assembleCodebook.redcapConnection <- function(rcon,
                                         forms = forms, 
                                         coll = coll)
   
+  
+  
   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be included in the codebook
+  
+  if (!is.null(field_types)){
+    MD <- rcon$metadata()
+    ft_field <- MD$field_name[MD$field_type %in% field_types]
+    fields <- c(fields, ft_field)
+  }
+  
   field_names <- .exportRecordsTyped_fieldsArray(rcon        = rcon, 
                                                  fields      = fields, 
                                                  drop_fields = drop_fields, 
@@ -139,7 +151,8 @@ assembleCodebook.redcapConnection <- function(rcon,
   UnexpandedCodebook <- .assembleCodebook_unexpanded(field_names, 
                                                      rcon)
   
-  .assembleCodebook_expandCoding(UnexpandedCodebook)
+  structure(.assembleCodebook_expandCoding(UnexpandedCodebook), 
+            class = c("redcapCodebook", "data.frame"))
 }
 
 #####################################################################
@@ -258,4 +271,17 @@ assembleCodebook.redcapConnection <- function(rcon,
                        "form_order")
   
   Codebook
+}
+
+#' @rdname assembleCodebook
+#' @export
+
+as.list.redcapCodebook <- function(x, ...){
+  CodeList <- split(x, x$field_name)
+  
+  for (i in seq_along(Temp)){
+    CodeList[[i]] <- lapply(Temp[[i]], unique)
+  }
+  
+  CodeList
 }

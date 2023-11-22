@@ -3,6 +3,7 @@
 \name{assembleCodebook}
 \alias{assembleCodebook}
 \alias{assembleCodebook.redcapConnection}
+\alias{as.list.redcapCodebook}
 \title{Assemble Codebook From the Data Dictionary}
 \usage{
 assembleCodebook(
@@ -26,6 +27,8 @@ assembleCodebook(
   expand_check = FALSE,
   ...
 )
+
+\method{as.list}{redcapCodebook}(x, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -41,6 +44,11 @@ and \code{forms}. When \code{NULL}, all forms are included.}
 \item{drop_fields}{\code{character} or \code{NULL}. When given, fields named
 will be removed from the code book.}
 
+\item{field_types}{\code{character} or \code{NULL}. When given, only the field
+types listed will be included in the code book. This will supercede
+the intersection of \code{fields} and \code{forms}. Matching of field types is
+performed against the values in the \code{field_type} column of the meta data.}
+
 \item{include_form_complete}{\code{logical(1)}. When \code{TRUE}, the
 \verb{[form name]_complete} fields will be included in the codebook.}
 
@@ -52,12 +60,11 @@ will be represented in two fields, one each for 0 (Unchecked) and
 
 \item{...}{Arguments to pass to other methods}
 
-\item{`field_types`}{\code{character} or \code{NULL}. When given, only the field
-types listed will be included in the code book. This will supercede
-the intersection of \code{fields} and \code{forms}.}
+\item{x}{A \code{redcapCodebook} object as returned by \code{assembleCodebook}.}
 }
 \value{
-Returns a data frame with the columns
+Returns a \code{redcapCodebook} object. This inherits the \code{data.frame} class
+and has the columns
 \itemize{
 \item \code{field_name} - The name of the field.
 \item \code{form} - The name of the form on which the field is located.
@@ -67,6 +74,8 @@ Returns a data frame with the columns
 \item \code{min} - For date and numeric fields, the minimum value in the validation, if any.
 \item \code{max} - For date and numeric fields, the maximum value in the validation, if any.
 \item \code{branching_logic} - For fields with branching logic, the string denoting the logic applied.
+\item \code{field_order} - The numeric order of the field in the data dictionary.
+\item \code{form_order} - The numeric order of the form in the data dictionary.
 }
 }
 \description{
