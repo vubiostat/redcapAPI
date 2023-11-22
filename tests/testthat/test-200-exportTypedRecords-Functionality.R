@@ -48,6 +48,7 @@ ImportData <- ImportData[!is.na(ImportData$email_test), ]
 # castForImport only needed until 3.0.0
 ImportData <- castForImport(ImportData, 
                             rcon, 
+                            validation = list(bioportal = valSkip),
                             cast = list(number_1dp = as.numeric, 
                                         number_2dp = as.numeric, 
                                         number_1dp_comma_decimal = as.numeric, 

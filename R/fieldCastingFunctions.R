@@ -523,7 +523,7 @@ mChoiceCast <- function(data,
                                             field_map        = field_map,
                                             field_bases      = field_bases, 
                                             field_text_types = field_text_types)  
-  
+
   ###################################################################
   # Derive codings                                               ####
   codings <- .castRecords_getCodings(rcon        = rcon, 
@@ -635,14 +635,8 @@ mChoiceCast <- function(data,
           sum(field_bases %in% "redcap_data_access_group"))
   }
   
-  if (inherits(rcon, "offlineConnection")){
-    if (any(grepl("BIOPORTAL", choices, ignore.case = TRUE))){
-      warning("Casting for 'bioportal' fields in not yet supported for offlineConnections.")
-    }
-  } else {
-    field_types[field_types == "text" & 
-                  grepl("BIOPORTAL", choices, ignore.case = TRUE)] <- "bioportal"
-  }
+  field_types[field_types == "text" & 
+                grepl("BIOPORTAL", choices, ignore.case = TRUE)] <- "bioportal"
   
   field_types
 }
@@ -800,8 +794,9 @@ mChoiceCast <- function(data,
       # No validate function is an auto pass
       if(is.null(f)) function(...) rep(TRUE,nrow(Raw)) else f 
     })
+
   validations <- mapply(do.call, funs, args, SIMPLIFY = FALSE)
-  
+
   is_correct_length <- vapply(validations, function(x) length(x) == correct_length, logical(1))
   is_logical <- vapply(validations, is.logical, logical(1))
   
@@ -822,7 +817,7 @@ mChoiceCast <- function(data,
   }
   
   checkmate::reportAssertions(cm)
-  
+
   matrix(unlist(validations), ncol = length(validations), byrow = FALSE)
 }
 

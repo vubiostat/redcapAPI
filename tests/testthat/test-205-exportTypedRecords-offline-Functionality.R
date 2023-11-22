@@ -152,3 +152,49 @@ test_that(
                  c(NA_character_, NA_character_))
   }
 )
+
+#####################################################################
+# Casting bioportal and sql from offline connections             ####
+
+load(test_path("testdata/test_redcapAPI_MetaData.Rdata"))
+
+MetaData <- test_redcapAPI_MetaData
+MetaData <- MetaData[MetaData$field_name %in% c("record_id", "bioportal_test"), ]
+MetaData <- rbind(MetaData, MetaData[2, ])
+MetaData$field_name[3] <- "sql_test"
+MetaData$field_label[3] <- "SQL Field Testing"
+MetaData$field_type[3] <- "sql"
+MetaData$select_choices_or_calculations[3] <- NA_character_
+MetaData$form_name <- rep("this_form", nrow(MetaData))
+rownames(MetaData) <- NULL
+
+Records <- data.frame(record_id = 1:3, 
+                      bioportal_test = c("a", "a", "b"), 
+                      sql_test = c("1", "2", "3"), 
+                      this_form_complete = c("0", "1", "2"),
+                      stringsAsFactors = FALSE)
+
+ExternalCoding = list(bioportal_test = c(Alpha = "a", 
+                                         Bravo = "b"), 
+                      sql_test = c(One = "1", 
+                                   Two = "2", 
+                                   Three = "3"))
+
+test_that(
+  "Cast bioportal and sql fields with offline connections",
+  {
+    roff <- offlineConnection(meta_data = MetaData, 
+                              records = Records, 
+                              external_coding = ExternalCoding)
+    
+    Rec <- exportRecordsTyped(roff)
+    
+    expect_equal(as.character(Rec$bioportal_test), 
+                 c("Alpha", "Alpha", "Bravo"))
+    
+    expect_equal(as.character(Rec$sql_test), 
+                 c("One", "Two", "Three"))
+  }
+)
+
+rm(list = c("MetaData", "Records", "ExternalCoding"))

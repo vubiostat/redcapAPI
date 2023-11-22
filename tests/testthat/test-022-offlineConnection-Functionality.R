@@ -371,6 +371,17 @@ test_that(
   }
 )
 
+test_that(
+  "External Codings load from a list", 
+  {
+    EC <- list(var1 = c(label = "abc"))
+    
+    roff <- offlineConnection(external_coding = EC)
+    
+    expect_true(roff$has_externalCoding())
+  }
+)
+
 
 #####################################################################
 # Functionality - Files Downloaded from REDCap UI

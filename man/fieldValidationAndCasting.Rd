@@ -7,6 +7,7 @@
 \alias{valRx}
 \alias{valChoice}
 \alias{valPhone}
+\alias{valSkip}
 \alias{na_values}
 \alias{castLabel}
 \alias{castLabelCharacter}
@@ -44,6 +45,8 @@ valRx(rx)
 valChoice(x, field_name, coding)
 
 valPhone(x, field_name, coding)
+
+valSkip(x, field_name, coding)
 
 na_values(FUN)
 
@@ -118,6 +121,7 @@ following table:\tabular{ll}{
    \code{valRx} \tab \code{logical} \cr
    \code{valChoice} \tab \code{logical} \cr
    \code{valPhone} \tab \code{logical} \cr
+   \code{valSkip} \tab \code{logical} \cr
    \code{castLabel} \tab \code{factor} \cr
    \code{castLabelCharacter} \tab \code{character} \cr
    \code{castCode} \tab \code{factor} \cr
@@ -166,6 +170,12 @@ matches one of the choices.
 \code{valPhone} constructs a validation function for (North American)
 phone numbers. It removes punctuation and spaces prior to validating
 with the regular expression.
+
+\code{valSkip} is a function that supports skipping the validation for
+a field type. It returns a \code{TRUE} value for each record, regardless
+of its value. Validation skipping has occasional utility when importing
+certain field types (such as \code{bioportal} or \code{sql}) where not all of the
+eventual choices are available in the project yet.
 
 \code{na_values} is a helper function to create a list of functions
 to test for NA based on field type. Useful for bulk override of

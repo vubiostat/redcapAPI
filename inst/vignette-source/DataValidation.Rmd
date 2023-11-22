@@ -85,6 +85,7 @@ Rec
 
 ## Data Validation Field Types
 
+* `bioportal`: Text fields that are validated using the BioPortal Ontology service.
 * `calc`: Calculated fields.
 * `checkbox`: Checkbox fields.
 * `date_`: Text fields with the "Date" validation type. 
@@ -133,7 +134,8 @@ The values of the `REGEX_*` regular expressions can be quite long and several wo
   select             = valChoice,
   radio              = valChoice,
   dropdown           = valChoice,
-  sql                = NA 
+  sql                = valChoice,
+  bioportal          = valChoice
 )
 ```
 
