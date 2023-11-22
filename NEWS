@@ -18,6 +18,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Adds `castLogical` casting function. 
 * Adds four vignettes for getting started with using `unlockREDCap` and `exportRecordsTyped`.
 * Added helper function `changedRecords`.
+* Added `assembleCodebook`, which mimics the codebook in the REDCap UI in the form of a data frame.
 
 ## 2.8.1
 
