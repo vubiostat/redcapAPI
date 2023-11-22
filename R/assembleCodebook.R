@@ -278,9 +278,12 @@ assembleCodebook.redcapConnection <- function(rcon,
 #' @export
 
 as.list.redcapCodebook <- function(x, ...){
-  CodeList <- split(x, x$field_name)
+  class(x) <- "data.frame"
+  Temp <- split(x, x$field_name)
   
-  for (i in seq_along(Temp)){
+  CodeList <- vector("list", length(Temp))
+  
+  for (i in seq_along(CodeList)){
     CodeList[[i]] <- lapply(Temp[[i]], unique)
   }
   
