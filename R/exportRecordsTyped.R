@@ -484,7 +484,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                             fields, 
                                             drop_fields, 
                                             forms, 
-                                            use_original = TRUE)
+                                            use_original = TRUE, 
+                                            include_descriptive = FALSE)
 {
   MetaData <- rcon$metadata()
   
@@ -492,8 +493,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   # We need to wedge them in here or we'll never get them out of the API
   ProjectFields <- rcon$fieldnames()
   
-  MissingFromFields <- MetaData[MetaData$field_type %in% c("calc", 
-                                                           "file"), ]
+  restore_types <- c("calc", 
+                     "file", 
+                     if (include_descriptive) "descriptive" else character(0))
+  
+  MissingFromFields <- MetaData[MetaData$field_type %in% restore_types, ]
   if (nrow(MissingFromFields) > 0){
     # FIXME: We need a test on a project that has no calc or file fields.
     MissingFromFields <- 
