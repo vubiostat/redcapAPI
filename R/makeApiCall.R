@@ -224,6 +224,7 @@ makeApiCall <- function(rcon,
 ####################################################################
 # Unexported
 
+#' @importFrom httr content
 .makeApiCall_isRetryEligible <- function(response){
   # the return from this is a logical indicating if we are ready to break the loop.
   # we want to break the loop in cases where the response is anything that does
@@ -233,9 +234,9 @@ makeApiCall <- function(rcon,
   # without having to force one of these conditions onto the server. 
   # See tests for .makeApiCall_isRetryEligible in test/testthat/test-makeApiCall.R
   
-  retry_eligible <- response$status_code %in% c(408, 500, 502, 503, 504)
-  
-  return(retry_eligible)
+  response$status_code %in% c(408, 500, 502, 503, 504) ||
+  ( response$status_code == 200 &&
+    length(content(response, "raw")) == 0 )
 }
 
 

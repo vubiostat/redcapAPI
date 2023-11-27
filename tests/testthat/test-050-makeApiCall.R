@@ -38,6 +38,12 @@ test_that(
     }
     
     expect_equal(ideal, actual)
+    
+    # Test weird 200 with null response
+    response$status_code <- 200
+    response$content <- raw(0)
+    
+    expect_true(.makeApiCall_isRetryEligible(response))
   }
 )
 
