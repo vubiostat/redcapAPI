@@ -234,6 +234,9 @@ makeApiCall <- function(rcon,
   # without having to force one of these conditions onto the server. 
   # See tests for .makeApiCall_isRetryEligible in test/testthat/test-makeApiCall.R
   
+  
+  # NOTE: May need to be !any(content(response, "raw") == 0x0a)
+  #       instead of length check. 
   response$status_code %in% c(408, 500, 502, 503, 504) ||
   ( response$status_code == 200 &&
     length(content(response, "raw")) == 0 )
