@@ -6,7 +6,7 @@
 a single call.}
 \usage{
 exportBulkRecords(
-  rcon,
+  lcon,
   forms = NULL,
   envir = NULL,
   sep = "_",
@@ -15,7 +15,9 @@ exportBulkRecords(
 )
 }
 \arguments{
-\item{rcon}{A \code{redcapConnection} object.}
+\item{lcon}{A named list of connections. The name is used as a prefix for data.frame
+names in the environment specified. It may also be used as a reference from the
+forms argument.}
 
 \item{forms}{A named list that is a subset of rcon's names. A specified \code{rcon}
 will provide a list of forms for repeated calls to \code{exportRecordsType}.
