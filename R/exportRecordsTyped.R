@@ -720,7 +720,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @description Exports records from multiple REDCap Databases using
 #' multiple calls to [exportRecordsTyped()]
 #'
-#' @inheritParams common-rcon-arg
+#' @param lcon  A named list of connections. The name is used as a prefix for data.frame
+#'              names in the environment specified. It may also be used as a reference from the
+#'              forms argument.
 #' @param forms A named list that is a subset of rcon's names. A specified `rcon`
 #'              will provide a list of forms for repeated calls to `exportRecordsType`.
 #'              If a connection reference is missing it will default to all forms. To override
@@ -772,13 +774,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' }
 #' @export
 
-exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
+exportBulkRecords <- function(lcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
 {
   if(is.numeric(envir)) envir <- as.environment(envir)
   
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_list(     x       = rcon,
+  checkmate::assert_list(     x       = lcon,
                               types   = "redcapApiConnection",
                               min.len = 1,
                               names   = "named",
@@ -810,7 +812,7 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
     forms[is.na(forms)] <- NA_character_ 
     
     checkmate::assert_subset( x       = names(forms),
-                              choices = names(rcon),
+                              choices = names(lcon),
                               add     = coll)
     
     checkmate::assert_list( x       = forms,
@@ -825,9 +827,9 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   if(is.null(forms)) forms <- list()
   
   # For each dataset requested
-  for(i in names(rcon))
+  for(i in names(lcon))
   {
-    conn  <- rcon[[i]]
+    conn  <- lcon[[i]]
     f     <- forms[[i]]
     
     lform <- if(is.null(f))                 conn$instruments()$instrument_name else
