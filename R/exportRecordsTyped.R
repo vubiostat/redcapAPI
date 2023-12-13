@@ -173,12 +173,13 @@ exportRecordsTyped.redcapApiConnection <-
                  type                   = "flat", 
                  exportSurveyFields     = tolower(survey), 
                  exportDataAccessGroups = tolower(dag), 
-                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
-                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
                  csvDelimiter           = csv_delimiter), 
             vectorToApiBodyList(fields, "fields"), 
             vectorToApiBodyList(events, "events"))
   
+  if(!is.null(date_begin)) body$dateRangeBegin = format(date_begin, format = "%Y-%m-%d %H:%M:%S")
+  if(!is.null(date_end))   body$dateRangeEnd   = format(date_end,   format = "%Y-%m-%d %H:%M:%S")
+
   body <- body[lengths(body) > 0]
   
   Raw <- 
