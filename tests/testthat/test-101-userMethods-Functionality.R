@@ -93,7 +93,7 @@ test_that(
     importUsers(rcon, 
                 data = data.frame(username = EXPENDABLE_USER,
                                   data_export = 1, 
-                                  forms = c("record_id:0","branching_logic:0"), 
+                                  forms = c("record_id:0"), 
                                   forms_export = "record_id:0"), 
                 consolidate = FALSE)
     
