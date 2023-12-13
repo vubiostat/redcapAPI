@@ -10,6 +10,10 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.8.3
+
+Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server. 
+
 ## 2.8.2
 
 * Extends casting and validation to text fields validated with the BioPortal Ontology service.
