@@ -86,26 +86,20 @@ test_that(
     
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
-    expect_true(Users$forms == "record_id:1")
-    # FIXME: I don't think forms_export is working with a CSV export
-    #        Not sure if this is a REDCap problem or a redcapAPI problem.
-    # expect_true(Users$forms_export == "record_id:1")
-    
+    expect_true(grepl("record_id:1",Users$forms))
+
     # Update form permissions with unconsolidated format
     
     importUsers(rcon, 
                 data = data.frame(username = EXPENDABLE_USER,
                                   data_export = 1, 
-                                  forms = "record_id:0", 
+                                  forms = c("record_id:0","branching_logic:0"), 
                                   forms_export = "record_id:0"), 
                 consolidate = FALSE)
     
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
-    expect_true(Users$forms == "record_id:0")
-    # FIXME: I don't think forms_export is working with a CSV export
-    #        Not sure if this is a REDCap problem or a redcapAPI problem.
-    # expect_true(Users$forms_export == "record_id:0")
+    expect_true(grepl("record_id:0",Users$forms))
   }
 )
 
