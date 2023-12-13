@@ -21,7 +21,7 @@ test_that(
     # User roles, labeled
     expect_data_frame(UserRoles)
     expect_equal(UserRoles$user_rights, 
-                 factor("Access", levels = c("No Access", "Access")))
+                 rep(factor("Access", levels = c("No Access", "Access")),2))
     
     
     # User roles, unlabeled
@@ -29,8 +29,7 @@ test_that(
                                  labels = FALSE)
     expect_data_frame(UserRoles)
     expect_equal(UserRoles$user_rights, 
-                 1)
-    
+                 c(1,1))
     
     # Update the existing user role
     UpdateRole <- data.frame(unique_role_name = UserRoles$unique_role_name[1], 
@@ -45,9 +44,9 @@ test_that(
     UserRoles <- exportUserRoles(rcon)
     
     expect_equal(as.character(UserRoles$design), 
-                 "Access")
+                 rep("Access",2))
     expect_equal(as.character(UserRoles$reports), 
-                 "Access")
+                 rep("Access",2))
     
     rcon$refresh_user_roles()
     rcon$user_roles()
