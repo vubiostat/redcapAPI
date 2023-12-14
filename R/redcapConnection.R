@@ -228,6 +228,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   rtry_q <- retry_quietly
   
   getter <- function(export, ...){
+    Sys.sleep(1)
     switch(export, 
            "metadata" = exportMetaData(rc), 
            "arm" = exportArms(rc), 
