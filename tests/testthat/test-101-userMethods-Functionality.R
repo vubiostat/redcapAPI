@@ -37,6 +37,7 @@ test_that(
     skip_if(!RUN_USER_TESTS,
             "User tests without an expendable user could have negative consequences and are not run.")
     
+    rcon$refresh_users()
     if (EXPENDABLE_USER %in% rcon$users()$username){
       deleteUsers(rcon, 
                   users = EXPENDABLE_USER)
