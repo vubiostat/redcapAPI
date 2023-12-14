@@ -37,7 +37,6 @@ test_that(
                                             data = ImportAssignmentTest)
     expect_equal(n_imported, "1")
 
-    rcon$flush_user_role_assignment()
     CompareFrame <- rcon$user_role_assignment()
     CompareFrame <- CompareFrame[CompareFrame$username == the_user, ]
     
@@ -53,7 +52,6 @@ test_that(
                                              data = ImportAssignmentTest)
     expect_equal(n_imported, "1")
     
-    rcon$flush_user_role_assignment()
     CompareFrame <- rcon$user_role_assignment()
     CompareFrame <- CompareFrame[CompareFrame$username == the_user, ]
     
@@ -75,7 +73,6 @@ test_that(
     
     importUserRoles(rcon, data = UserRole)
     
-    rcon$flush_user_roles()
     THIS_ROLE <- rcon$user_roles()$unique_role_name[1]
     
     importUserRoleAssignments(rcon, 
