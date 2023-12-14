@@ -14,7 +14,8 @@ test_that(
     the_user <- EXPENDABLE_USER
     
     # Delete any existing roles if script crashed previously
-    for(i in rcon$user_roles()$unique_role_name) deleteUserRoles(rcon, i)
+    for(i in rcon$user_roles()$unique_role_name)
+      if(!is.na(i)) deleteUserRoles(rcon, i)
 
     # Make sure you include api_import and api_export rights in the
     # role so you don't lock someone out of testing.
