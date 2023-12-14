@@ -182,7 +182,8 @@ assembleCodebook.redcapConnection <- function(rcon,
   
   # Merge the field types with other relevant data dictionary fields
   Codebook <- merge(Codebook,
-                    rcon$metadata()[c("field_name", 
+                    rcon$metadata()[c("field_name",
+                                      "field_label",
                                       "form_name", 
                                       "branching_logic", 
                                       "text_validation_min", 
@@ -249,8 +250,16 @@ assembleCodebook.redcapConnection <- function(rcon,
                              Codebook$field_order), ]
   rownames(Codebook) <- NULL
   
+  # Populate field_label for form_complete fields
+  Codebook$field_label <- 
+    .assembleCodebook_finalizeFieldLabel(field_label = Codebook$field_label, 
+                                         field_type = Codebook$field_type, 
+                                         form_name = Codebook$form_name, 
+                                         rcon)
+  
   # Assemble columns in desired order and with the desired names
-  Codebook <- Codebook[c("field_name", 
+  Codebook <- Codebook[c("field_name",
+                         "field_label",
                          "form_name", 
                          "field_type", 
                          "choice_value", 
@@ -260,7 +269,8 @@ assembleCodebook.redcapConnection <- function(rcon,
                          "branching_logic", 
                          "field_order", 
                          "form_order")]
-  names(Codebook) <- c("field_name", 
+  names(Codebook) <- c("field_name",
+                       "field_label",
                        "form_name", 
                        "field_type", 
                        "value", 
@@ -271,7 +281,56 @@ assembleCodebook.redcapConnection <- function(rcon,
                        "field_order", 
                        "form_order")
   
+  Codebook <- rbind(.assembleCodebook_systemField(rcon, "redcap_event_name"), 
+                    .assembleCodebook_systemField(rcon, "redcap_data_access_group"),
+                    .assembleCodebook_systemField(rcon, "redcap_repeat_instrument"),
+                    Codebook)
+  
   Codebook
+}
+
+.assembleCodebook_finalizeFieldLabel <- function(field_label, field_type, form_name, rcon){
+  Inst <- rcon$instruments()
+  for (i in seq_along(field_label)){
+    if (field_type[i] == "form_complete"){
+      field_label[i] <- 
+        sprintf("%s Complete", 
+                Inst$instrument_label[Inst$instrument_name == form_name[i]])
+    }
+  }
+  
+  field_label
+}
+
+.assembleCodebook_systemField <- function(rcon, field_name){
+  Coding <- .castRecords_getSystemCoding(field_name, rcon)
+  
+  if (Coding == "") return(NULL)
+  
+  Coding <- fieldChoiceMapping(Coding, field_name)
+  
+  label <- switch(field_name, 
+                  "redcap_event_name" = "REDCap Event Name", 
+                  "redcap_data_access group" = "REDCap Data Access Group", 
+                  "redcap_repeat_instrument" = "REDCap Repeat Instrument")
+  
+  field_ord <- switch(field_name, 
+                      "redcap_event_name" = -3, 
+                      "redcap_data_access group" = -2, 
+                      "redcap_repeat_instrument" = -1)
+  
+  data.frame(field_name = rep(field_name, nrow(Coding)), 
+             field_label = rep(label, nrow(Coding)), 
+             form_name = rep("System Fields", nrow(Coding)), 
+             field_type = rep("system_field", nrow(Coding)), 
+             value = Coding[, 1], 
+             label = Coding[, 2], 
+             min = rep(NA_character_, nrow(Coding)), 
+             max = rep(NA_character_, nrow(Coding)), 
+             branching_logic = rep(NA_character_, nrow(Coding)), 
+             field_order = rep(field_ord, nrow(Coding)), 
+             form_order = seq_len(nrow(Coding)), 
+             stringsAsFactors = FALSE)
 }
 
 #' @rdname assembleCodebook
