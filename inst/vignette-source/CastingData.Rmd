@@ -246,10 +246,6 @@ Rec <- exportRecordsTyped(rcon,
 ```
 
 \clearpage
-```{r, child = 'FAQ.Rmd'}
-```
-
-\clearpage
 # Appendix
 
 ## Casting Field Types

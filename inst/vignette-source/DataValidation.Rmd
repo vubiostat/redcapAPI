@@ -45,6 +45,8 @@ Data validation operates in a similar manner to casting data (see `vignette("red
 
 When data are exported from REDCap, each field is compared against the expected format for the field type. A record of values that fail validation is recorded and available for review using `reviewInvalidRecords`. 
 
+Validation is performed after missing data detection. Values that are determined to be missing are not included in the validation report.
+
 ## Customizing Data Validation For a Field
 
 The default validation functions are designed to match the format expected by REDCap for each data type. Users can customize validation to unique circumstances by writing custom functions and/or regular expressions. Functions must return logical values and may utilize arguments `x`, `field_name`, and `coding` (the last argument is used when validating multiple choice fields).

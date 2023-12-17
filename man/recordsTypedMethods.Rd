@@ -395,6 +395,7 @@ exportRecordsTyped(rcon_off)
 \code{vignette("redcapAPI-offline-connection")}\cr
 \code{vignette("redcapAPI-casting-data")}\cr
 \code{vignette("redcapAPI-missing-data-detection")}\cr
-\verb{vignette("redcapAPI-data-validation)}
+\verb{vignette("redcapAPI-data-validation)}\cr
+\verb{vignette("redcapAPI-faq)}
 }
 }

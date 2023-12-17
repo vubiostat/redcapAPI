@@ -123,26 +123,63 @@ Rec
 
 \clearpage
 
-# Frequently Asked Questions
+# Project Level Missing Data Codes
 
-## Change the Default Missing Data Detection for All Field Types
+Users of a project may designate missing data codes for the entire project. These codes will not be apparent in the data dictionary, and they cannot be accessed through the API. Thus, `redcapAPI` will be entirely unaware of their existence. When project-level missing data codes have been defined, the user may notice a high volume of failed validations when exporting data via `exportRecordsTyped`. 
 
-_How do I change the default missing data detection for all field types?_
+## Identifying Projects with Project-Level Missing Data Codes
 
-`redcapAPI` has an obscure function that will create a list of overrides for every field type. Use the `na_values` function to create the override list as illustrated below. (Yes, `na_values` takes a function as an argument)
+There are two places in the REDCap User Interface where the user may determine if project-level missing data codes have been defined. Users who have access to the project set up can see the definitions through **Project Setup > Additional Customizations > Missing Data Codes**. The following images illustrate how to find these in the user interface.
 
-```{r}
+![](img/project-setup-screen.png)
+From this page, scroll down to the "Additional Customizations" button. 
+
+![](img/project-setup-additional-customization.png)
+![](img/missing-data-code-setup.png)
+
+Another place the user may find project-level missing data codes is in the codebook. The next image shows what these look like:
+
+![](img/missing-data-code-codebook.PNG)
+
+## Applying Project-Level Missing Data Codes To All Fields
+
+It is usually desirable to apply project-level missing data codes to all fields. Unfortunately, these codes are not accessible via the API, so it is up to the user to identify if a project has missing data codes and to apply them. This can be accomplished relatively easily by defining a custom function and submitting it to the `na_values` function. 
+
+For the codes used in the images above, the user could apply the missing data codes in the following way:
+
+```
 customMissingDetection <- function(x, ...){
-  is.na(x) | x == "" | x %in% c(-98, -99)
+  is.na(x) | x == "" | x %in% c(-90, -98, -99))
 }
 
-Rec <- exportRecordsTyped(rcon,
-                          fields = c("days_between", 
-                                     "days_between_duplicate", 
-                                     "dropdown_example", 
-                                     "dropdown_example_duplicate"), 
-                          na = na_values(customMissingDetection))
-Rec
+exportRecordsTyped(rcon, 
+                   cast = special_cast, 
+                   na = na_values(customMissingDetection))
+```
+
+## Project-Level and Field-Specific Missing Data Codes 
+
+It is possible for a project to have project-level missing data codes and to also have fields with their own field-specific missing data codes. Missing data detection in this scenario is somewhat more complicated, but still manageable. The user may define their custom function with a `field_name` argument and process individual fields in whatever special way is needed.
+
+For this example, suppose a radio button field, "final_evaluation", has a missing data code where -10 means "incomplete forms."
+
+```
+customMissingDetection <- function(x, field_name, ...){
+  is_project_na <- is.na(x) | x == "" | x %in% c(-90, -98, -99))
+  
+  is_field_na <- 
+    if (field_name == "final_evaluation"){
+      x %in% -10
+    } else {
+      FALSE
+    }
+    
+  is_project_na | is_field_na
+}
+
+exportRecordsTyped(rcon, 
+                   cast = special_cast, 
+                   na = na_values(customMissingDetection))
 ```
 
 \clearpage
