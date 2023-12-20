@@ -327,6 +327,7 @@ REDCAP_USER_STRUCTURE <-
              data_quality_execute = character(0),
              api_export = character(0),
              api_import = character(0),
+             api_modules = character(0),
              mobile_app = character(0),
              mobile_app_download_data = character(0),
              record_create = character(0),
