@@ -328,7 +328,7 @@ redcapUserStructure <- function(version)
              data_quality_execute = character(0),
              api_export = character(0),
              api_import = character(0),
-             api_modules=if(compareVersion(version, "14.0.3") < 0) NULL else character(0),
+             api_modules=if(is.null(version) || compareVersion(version, "14.0.3") < 0) NULL else character(0),
              mobile_app = character(0),
              mobile_app_download_data = character(0),
              record_create = character(0),
