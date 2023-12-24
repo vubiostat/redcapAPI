@@ -1,7 +1,5 @@
 context("REDCap user structure versioning")
 
-#library(mockery)
-
 User <- exportUsers(rcon)
 
 test_that("User structure contains api_modules starting at 14.0.3",
