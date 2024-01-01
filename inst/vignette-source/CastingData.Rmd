@@ -1,6 +1,5 @@
 ---
 title: "Casting Data with `exportRecordsTyped`"
-subtitle: "and Frequently Asked Questions"
 date: "`r Sys.Date()`"
 toc: true
 toc-title: "Contents"
