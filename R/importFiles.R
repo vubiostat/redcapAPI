@@ -131,7 +131,7 @@ importFiles.redcapApiConnection <- function(rcon,
       fileThere <- fileThere[fileThere$redcap_repeat_instance %in% repeat_instance, ]
     }
     
-    if (nrow(fileThere) > 0 && !is.na(fileThere[[field]])) 
+    if (nrow(fileThere) > 0 && !any(is.na(fileThere[[field]])))
       coll$push("A file exists and overwrite = FALSE")
   }
   
