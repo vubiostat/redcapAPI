@@ -311,12 +311,12 @@ assembleCodebook.redcapConnection <- function(rcon,
   
   label <- switch(field_name, 
                   "redcap_event_name" = "REDCap Event Name", 
-                  "redcap_data_access group" = "REDCap Data Access Group", 
+                  "redcap_data_access_group" = "REDCap Data Access Group", 
                   "redcap_repeat_instrument" = "REDCap Repeat Instrument")
   
   field_ord <- switch(field_name, 
                       "redcap_event_name" = -3, 
-                      "redcap_data_access group" = -2, 
+                      "redcap_data_access_group" = -2, 
                       "redcap_repeat_instrument" = -1)
   
   data.frame(field_name = rep(field_name, nrow(Coding)), 
