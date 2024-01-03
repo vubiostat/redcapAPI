@@ -152,7 +152,7 @@ assembleCodebook.redcapConnection <- function(rcon,
   UnexpandedCodebook <- .assembleCodebook_unexpanded(field_names, 
                                                      rcon)
   
-  structure(.assembleCodebook_expandCoding(UnexpandedCodebook), 
+  structure(.assembleCodebook_expandCoding(UnexpandedCodebook, rcon), 
             class = c("redcapCodebook", "data.frame"))
 }
 
@@ -212,7 +212,7 @@ assembleCodebook.redcapConnection <- function(rcon,
 }
 
 
-.assembleCodebook_expandCoding <- function(Codebook){
+.assembleCodebook_expandCoding <- function(Codebook, rcon){
   # split into each row
   Codebook <- split(Codebook, 
                     Codebook$field_name)
