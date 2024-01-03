@@ -1,12 +1,12 @@
 context("exportBulkRecords")
 
 test_that("Requires Connection",{
-  expect_error(exportBulkRecords(), "rcon")
-  expect_error(exportBulkRecords(FALSE), "rcon")
+  expect_error(exportBulkRecords(), "lcon")
+  expect_error(exportBulkRecords(FALSE), "lcon")
 })
 
 test_that("Connections must be named",{
-  expect_error(exportBulkRecords(rcon), "rcon")
+  expect_error(exportBulkRecords(rcon), "lcon")
 })
 
 test_that("Form names must match rcon",{

@@ -173,12 +173,13 @@ exportRecordsTyped.redcapApiConnection <-
                  type                   = "flat", 
                  exportSurveyFields     = tolower(survey), 
                  exportDataAccessGroups = tolower(dag), 
-                 dateRangeBegin         = format(date_begin, format = "%Y-%m-%d %H:%M:S"), 
-                 dateRangeEnd           = format(date_end,   format = "%Y-%m-%d %H:M%:%S"), 
                  csvDelimiter           = csv_delimiter), 
             vectorToApiBodyList(fields, "fields"), 
             vectorToApiBodyList(events, "events"))
   
+  if(!is.null(date_begin)) body$dateRangeBegin = format(date_begin, format = "%Y-%m-%d %H:%M:%S")
+  if(!is.null(date_end))   body$dateRangeEnd   = format(date_end,   format = "%Y-%m-%d %H:%M:%S")
+
   body <- body[lengths(body) > 0]
   
   Raw <- 
@@ -484,7 +485,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                             fields, 
                                             drop_fields, 
                                             forms, 
-                                            use_original = TRUE)
+                                            use_original = TRUE, 
+                                            include_descriptive = FALSE)
 {
   MetaData <- rcon$metadata()
   
@@ -492,8 +494,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   # We need to wedge them in here or we'll never get them out of the API
   ProjectFields <- rcon$fieldnames()
   
-  MissingFromFields <- MetaData[MetaData$field_type %in% c("calc", 
-                                                           "file"), ]
+  restore_types <- c("calc", 
+                     "file", 
+                     if (include_descriptive) "descriptive" else character(0))
+  
+  MissingFromFields <- MetaData[MetaData$field_type %in% restore_types, ]
   if (nrow(MissingFromFields) > 0){
     # FIXME: We need a test on a project that has no calc or file fields.
     MissingFromFields <- 
@@ -716,7 +721,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @description Exports records from multiple REDCap Databases using
 #' multiple calls to [exportRecordsTyped()]
 #'
-#' @inheritParams common-rcon-arg
+#' @param lcon  A named list of connections. The name is used as a prefix for data.frame
+#'              names in the environment specified. It may also be used as a reference from the
+#'              forms argument.
 #' @param forms A named list that is a subset of rcon's names. A specified `rcon`
 #'              will provide a list of forms for repeated calls to `exportRecordsType`.
 #'              If a connection reference is missing it will default to all forms. To override
@@ -768,13 +775,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' }
 #' @export
 
-exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
+exportBulkRecords <- function(lcon, forms=NULL, envir=NULL, sep="_", post=NULL, ...)
 {
   if(is.numeric(envir)) envir <- as.environment(envir)
   
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_list(     x       = rcon,
+  checkmate::assert_list(     x       = lcon,
                               types   = "redcapApiConnection",
                               min.len = 1,
                               names   = "named",
@@ -806,7 +813,7 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
     forms[is.na(forms)] <- NA_character_ 
     
     checkmate::assert_subset( x       = names(forms),
-                              choices = names(rcon),
+                              choices = names(lcon),
                               add     = coll)
     
     checkmate::assert_list( x       = forms,
@@ -821,9 +828,9 @@ exportBulkRecords <- function(rcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   if(is.null(forms)) forms <- list()
   
   # For each dataset requested
-  for(i in names(rcon))
+  for(i in names(lcon))
   {
-    conn  <- rcon[[i]]
+    conn  <- lcon[[i]]
     f     <- forms[[i]]
     
     lform <- if(is.null(f))                 conn$instruments()$instrument_name else
