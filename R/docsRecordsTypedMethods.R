@@ -171,7 +171,8 @@
 #' `vignette("redcapAPI-offline-connection")`\cr
 #' `vignette("redcapAPI-casting-data")`\cr
 #' `vignette("redcapAPI-missing-data-detection")`\cr
-#' `vignette("redcapAPI-data-validation)`
+#' `vignette("redcapAPI-data-validation)`\cr
+#' `vignette("redcapAPI-faq)`
 #' 
 #' @examples
 #' \dontrun{

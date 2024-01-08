@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{redcapAPI FAQ}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{precompiled-faq.pdf}
+\end{document}

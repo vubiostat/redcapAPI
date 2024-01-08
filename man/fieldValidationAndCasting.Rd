@@ -155,6 +155,25 @@ of \verb{function(x, coding, field_name)}. \code{na} and \code{validation}
 functions are expected to return a logical vector of the same length as the
 column processed. Helper routines
 are provided here for common cases to construct these functions.
+\subsection{Missing Data Detection}{
+
+\code{na_values} is a helper function to create a list of functions
+to test for NA based on field type. Useful for bulk override of
+NA detection for a project. The output can be directly passed to the \code{na}
+parameter of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
+
+Missing data detection is performed ahead of validation. Data that are found
+to be missing are excluded from validation reports.
+
+REDCap users may define project-level missing value codes. If such codes
+are defined, they can be seen in Project Setup > Additional Customizations >
+Missing Data Codes. They will also be displayed in the project's Codebook.
+Project-level missing data codes cannot be accessed via the API, meaning
+\code{redcapAPI} is unable to assist in determining if a project has any. The
+most likely symptom of project-level codes is a high frequency of
+values failing validation (See \code{vignette("redcapAPI-missing-data-detection")}).
+}
+
 \subsection{Validation Functions}{
 
 \code{isNAorBlank} returns TRUE/FALSE if field is NA or blank. Helper
@@ -176,11 +195,6 @@ a field type. It returns a \code{TRUE} value for each record, regardless
 of its value. Validation skipping has occasional utility when importing
 certain field types (such as \code{bioportal} or \code{sql}) where not all of the
 eventual choices are available in the project yet.
-
-\code{na_values} is a helper function to create a list of functions
-to test for NA based on field type. Useful for bulk override of
-NA detection for a project. The output can be directly passed to the \code{na}
-parameter of \code{\link[=exportRecordsTyped]{exportRecordsTyped()}}.
 }
 
 \subsection{Casting Functions}{
@@ -284,7 +298,8 @@ customCastCode <- function(x, field_name, coding){
 
 \code{vignette("redcapAPI-casting-data")}\cr
 \code{vignette("redcapAPI-missing-data-detection")}\cr
-\verb{vignette("redcapAPI-data-validation)}
+\verb{vignette("redcapAPI-data-validation)}\cr
+\verb{vignette("redcapAPI-faq)}
 }
 }
 \keyword{datasets}
