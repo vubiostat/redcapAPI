@@ -28,7 +28,7 @@ filterEmptyRow <- function(data,
   
   invalid <- attr(data, "invalid")
   
-  id_fields <- c(redcapAPI:::getProjectIdFields(rcon), REDCAP_SYSTEM_FIELDS,
+  id_fields <- c(getProjectIdFields(rcon), REDCAP_SYSTEM_FIELDS,
                  "redcap_data_access_group")
   
   other_fields <- setdiff(names(data), id_fields)
