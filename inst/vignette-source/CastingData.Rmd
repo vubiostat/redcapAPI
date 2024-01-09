@@ -1,6 +1,5 @@
 ---
 title: "Casting Data with `exportRecordsTyped`"
-subtitle: "and Frequently Asked Questions"
 date: "`r Sys.Date()`"
 toc: true
 toc-title: "Contents"
@@ -243,10 +242,6 @@ If the user were to choose to use `source` to load the objects, utilization of t
 source("path/to/casting_source.R")
 Rec <- exportRecordsTyped(rcon, 
                           casting = preferred_casting)
-```
-
-\clearpage
-```{r, child = 'FAQ.Rmd'}
 ```
 
 \clearpage

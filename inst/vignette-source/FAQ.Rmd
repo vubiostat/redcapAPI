@@ -1,4 +1,52 @@
-# Frequently Asked Questions
+---
+title: "Frequently Asked Questions"
+date: "`r Sys.Date()`"
+toc: true
+toc-title: "Contents"
+output: pdf_document
+---
+
+```{r, result = 'hide', message = FALSE, warning = FALSE}
+library(redcapAPI)
+url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
+
+unlockREDCap(c(rcon = "Sandbox"), 
+             envir = .GlobalEnv,
+             keyring = "API_KEYs", 
+             url = url)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+ExistingProject <- preserveProject(rcon)
+```
+
+\clearpage
+
+# Exporting Records
+
+## Which is preferred `exportRecordsTyped` or `exportBulkRecords`?
+
+This depends on ones preferred use case. It's important to understand the difference in the two and their relationship.
+
+`exportRecordsTyped` exports a single `data.frame` of all the data requested. 
+
+`exportBulkRecords` call `exportRecordsTyped` to create a `data.frame` for each form in the project, or just those requested via the `forms` argument. Additional arguments are all passed to `exportRecordsTyped`. Thus the documentation on validation and casting is the same for both.
+
+If one is starting a new project, we would recommend using `exportBulkRecords` as the subsetting and filtering of empty rows is taken care of, and the user is left with doing the required joins to the data. If one has existing code they are converting that used `exportRecords`, then `exportRecordsTyped` is the recommendation. This is usually followed by code to subset into forms, filtering and then the same joins between these. Thus new projects can save some code by starting with `exportBulkRecords`. 
+
+\clearpage
+
+# Casting Records
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+purgeProject(rcon, purge_all= TRUE)
+load("data/CastingVignetteData.Rdata")
+
+importArms(rcon, Arms)
+importEvents(rcon, Events)
+importMetaData(rcon, MetaData)
+importRecords(rcon, Records)
+```
 
 ## How do I stop casting fields to factors?
 
@@ -39,13 +87,47 @@ exportRecordsTyped(rcon,
                    cast = list(system = castRaw))
 ```
 
-## Which is preferred `exportRecordsTyped` or `exportBulkRecords`?
+\clearpage
 
-This depends on ones prefered use case. It's important to understand the difference in the two and their relationship.
+# Missing Data Detection
 
-`exportRecordsTyped` exports a single `data.frame` of all the data requested. 
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+purgeProject(rcon, purge_all= TRUE)
+load("data/MissingDataVignetteData.Rdata")
 
-`exportBulkRecords` call `exportRecordsTyped` to create a `data.frame` for each form in the project, or just those requested via the `forms` argument. Additional arguments are all passed to `exportRecordsTyped`. Thus the documentation on validation and casting is the same for both.
+importArms(rcon, Arms)
+importEvents(rcon, Events)
+importMetaData(rcon, MetaData)
+importRecords(rcon, Records)
+```
 
-If one is starting a new project, we would recommend using `exportBulkRecords` as the subsetting and filtering of empty rows is taken care of, and the user is left with doing the required joins to the data. If one has existing code they are converting that used `exportRecords`, then `exportRecordsTyped` is the recommendation. This is usually followed by code to subset into forms, filtering and then the same joins between these. Thus new projects can save some code by starting with `exportBulkRecords`. 
+## Change the Default Missing Data Detection for All Field Types
 
+_How do I change the default missing data detection for all field types?_
+
+`redcapAPI` has an obscure function that will create a list of overrides for every field type. Use the `na_values` function to create the override list as illustrated below. (Yes, `na_values` takes a function as an argument)
+
+```{r}
+customMissingDetection <- function(x, ...){
+  is.na(x) | x == "" | x %in% c(-98, -99)
+}
+
+Rec <- exportRecordsTyped(rcon,
+                          fields = c("days_between", 
+                                     "days_between_duplicate", 
+                                     "dropdown_example", 
+                                     "dropdown_example_duplicate"), 
+                          na = na_values(customMissingDetection))
+Rec
+```
+
+```{r, echo = FALSE, message = FALSE, results = 'hide', error = TRUE}
+purgeProject(rcon, purge_all = TRUE)
+importProjectInformation(rcon, ExistingProject$project_information)
+importArms(rcon, ExistingProject$arms)
+importEvents(rcon, ExistingProject$events)
+importMetaData(rcon, ExistingProject$meta_data)
+importMappings(rcon, ExistingProject$mappings)
+importRepeatingInstrumentsEvents(rcon, ExistingProject$repeating_instruments)
+importRecords(rcon, ExistingProject$records)
+```
