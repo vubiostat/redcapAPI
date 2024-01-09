@@ -207,6 +207,9 @@ exportRecordsTyped.redcapApiConnection <-
   if (identical(Raw, data.frame())){
     return(Raw)
   }
+ 
+  # Issue #293 - See function for details
+  Raw <- .exportRecordsTyped_missingCheckboxToZero(Raw)
   
   if(filter_empty_rows) Raw <- filterEmptyRow(Raw, rcon)
   
@@ -714,6 +717,26 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   Batched
 }
 
+# .exportRecordsTyped_missingCheckboxToZero -------------------------
+
+.exportRecordsTyped_missingCheckboxToZero <- function(Raw){
+  # Issue 293 - if a record consists of only missing data AND all of its
+  #   checkboxes are unchecked, the row will be exported as entirely 
+  #   missing values. In this context, it is safe to assume that a 
+  #   checkbox value that is missing is equivalent to 0. 
+  # This is written as a stand alone function so that testing can 
+  # be performed without having to call the API
+  checkbox_field <- grepl(REGEX_CHECKBOX_FIELD_NAME, names(Raw))
+  Raw[checkbox_field] <- lapply(Raw[checkbox_field], 
+                                function(x){
+                                  x[is.na(x)] <- 0
+                                  x
+                                })
+  Raw
+}
+
+#####################################################################
+# exportBulkRecord                                               ####
 
 #' @name exportBulkRecords
 #' @title A helper function to export multiple records and forms using
@@ -886,3 +909,4 @@ exportBulkRecords <- function(lcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   
   if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
+

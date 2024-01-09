@@ -534,4 +534,39 @@ test_that(
   }
 )
 
+#####################################################################
+# Issue 293 - no checked checkboxes                              ####
+# When a subset of fields is requested where all of the values are 
+# missing AND all of the checkboxes are 0, the API returns an empty
+# value instead of 0 for the checkboxes.  These then get eliminated
+# via filterEmptyRows for lack of valid data. 
+# In this instance, however, we can treat NA's for checkboxes the 
+# same as 0. This function converts them.
 
+test_that(
+  "Entirely unchecked checkboxes conver to 0", 
+  {
+    CheckData <- data.frame(checkbox___1 = rep(NA, 3), 
+                            checkbox___2 = rep(NA, 3))
+    
+    expect_equal(
+      .exportRecordsTyped_missingCheckboxToZero(CheckData), 
+      data.frame(checkbox___1 = rep(0, 3), 
+                 checkbox___2 = rep(0, 3))
+    )
+    
+    # Let's add another field that isn't a checkbox field to it.
+    
+    CheckData <- data.frame(dropdown = rep(NA, 3), 
+                            checkbox___1 = rep(NA, 3), 
+                            checkbox___2 = rep(NA, 3))
+    
+    expect_equal(
+      .exportRecordsTyped_missingCheckboxToZero(CheckData), 
+      data.frame(dropdown = rep(NA, 3), 
+                 checkbox___1 = rep(0, 3), 
+                 checkbox___2 = rep(0, 3))
+    )
+    
+  }
+)
