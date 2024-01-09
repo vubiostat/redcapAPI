@@ -740,6 +740,37 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 #' @param \dots Any additional variables to pass to [exportRecordsTyped()].
 #' @return Will return a named list of the resulting records if `envir` is 
 #'    NULL. Otherwise will assign them to the specified `envir`.
+#'    
+#' @seealso 
+#' ## Other records exporting functions
+#' 
+#' [exportRecordsTyped()], \cr
+#' [exportRecords()], \cr
+#' [exportReports()]
+#' 
+#' ## Field validations and casting
+#' 
+#' [fieldValidationAndCasting()], \cr
+#' [reviewInvalidRecords()]
+#' 
+#' ## Post-processing functionality
+#' 
+#' [recastRecords()], \cr
+#' [guessCast()], \cr
+#' [guessDate()], \cr
+#' [castForImport()], \cr
+#' [mChoiceCast()], \cr
+#' [splitForms()], \cr
+#' [widerRepeated()]
+#' 
+#' ## Vignettes
+#' 
+#' `vignette("redcapAPI-offline-connection")`\cr
+#' `vignette("redcapAPI-casting-data")`\cr
+#' `vignette("redcapAPI-missing-data-detection")`\cr
+#' `vignette("redcapAPI-data-validation)`\cr
+#' `vignette("redcapAPI-faq)`
+#' 
 #' @examples
 #' \dontrun{
 #' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
