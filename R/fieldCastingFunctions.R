@@ -899,12 +899,38 @@ mChoiceCast <- function(data,
                                              field_names, 
                                              MetaData, 
                                              field_map){
+  # Construct the field labels while accomodating checkbox field choices
+  field_labels <- mapply(.castRecords_makeFieldLabel, 
+                         field_names, 
+                         field_map, 
+                         MoreArgs = list(MetaData = MetaData), 
+                         SIMPLIFY = TRUE, 
+                         USE.NAMES = FALSE)
+  
   for(i in names(assignment))
   {
-    x <- assignment[[i]](field_names, MetaData$field_label[field_map], MetaData$field_annotation[field_map])
+    x <- assignment[[i]](field_names, field_labels, MetaData$field_annotation[field_map])
+    
     for(j in seq_along(Records)) if(!is.na(x[j])) attr(Records[,j], i) <- x[j]
   }
   Records
+}
+
+.castRecords_makeFieldLabel <- function(field_name, field_map, MetaData){
+  is_checkbox <- MetaData$field_type[field_map] %in% "checkbox"
+  
+  # checkbox field labels need to follow the pattern '[field_label] (choice=[choice_label])'
+  # Issue #301
+  if (is_checkbox){
+    check_choice <- sub(REGEX_CHECKBOX_FIELD_NAME, "\\2", field_name, perl = TRUE)
+    Mapping <- fieldChoiceMapping(MetaData$select_choices_or_calculations[field_map])
+    Mapping <- Mapping[which(Mapping[, 1] == check_choice), ]
+    sprintf("%s (choice=%s)", 
+            MetaData$field_label[field_map], 
+            Mapping[2])
+  } else {
+    MetaData$field_label[field_map]
+  }
 }
 
 # .exportRecordsTyped_attachInvalid ---------------------------------

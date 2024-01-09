@@ -130,6 +130,19 @@ test_that(
     expect_equal(attr(rec$date_dmy_test, "units"), "time")
   }
 )
+
+test_that(
+  "Checkbox fields labels include the choice", 
+  {
+    expect_equal(attr(rec$checkbox_test___x, "label"), 
+                 "Checkbox Example (choice=Guitar)")
+    expect_equal(attr(rec$checkbox_test___y, "label"), 
+                 "Checkbox Example (choice=Ukulele)")
+    expect_equal(attr(rec$checkbox_test___z, "label"), 
+                 "Checkbox Example (choice=Mandolin)")
+  }
+)
+
 rm(rec)
 
 #####################################################################
