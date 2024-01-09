@@ -12,7 +12,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.8.3
 
-Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server. 
+* Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server.
+* Improved speed / memory usage for empty row exclusion.
 
 ## 2.8.2
 
