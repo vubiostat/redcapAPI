@@ -131,3 +131,9 @@ test_that(
     expect_list(as.list(Codebook))
   }
 )
+
+# Additional tests to write
+# 1. Missing value codes added to checkbox variables
+# 2. Missing value codes not added to form_complete fields
+# 3. Missing value codes not added to system fields
+# 3. Missing value codes added to all other field types properly
