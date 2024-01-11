@@ -263,7 +263,9 @@ assembleCodebook.redcapConnection <- function(rcon,
     
     # When there are project level missing data codes, add them to the coding
     # Except for checkboxes (those were handled in the modified meta data object)
-    if (this_field_type != "checkbox" && !is.na(rcon$projectInformation()$missing_data_codes)){
+    if (this_field_type != "checkbox" && 
+        !is.na(rcon$projectInformation()$missing_data_codes) &&
+        !this_field_name %in% getProjectIdFields(rcon)){
       coding <- sprintf("%s | %s", 
                         coding, 
                         rcon$projectInformation()$missing_data_codes)
