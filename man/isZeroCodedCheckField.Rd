@@ -40,13 +40,13 @@ correctly.
 A zero-coded check field is a field of the REDCap type \code{checkbox} that has
 a coding definition of \verb{0, [label]}. When exported, the field names for
 these fields is \verb{[field_name]___0}. As in other checkbox fields, the
-raw data output returns binary values where 0 represent and unchecked
+raw data output returns binary values where 0 represent an unchecked
 box and 1 represents a checked box. For zero-coded checkboxes, then, a
 value of 1 indicates that 0 was selected.
 
 This coding rarely presents a problem when casting from raw values
 (as is done in \code{exportRecordsTyped}). However, casting from coded or
-labeled values can be problematic, as it In this case, it becomes
+labeled values can be problematic. In this case, it becomes
 indeterminate from context if the intent of \code{0} is 'false' or the coded
 value '0' ('true') ...
 
