@@ -744,7 +744,7 @@ For a user interested in pulling all the data for a project or set of projects, 
 
 ```{r}
 exportBulkRecords(
- rcon  = list(test = test_conn,
+ lcon  = list(test = test_conn,
               sand = sandbox_conn),
  forms = list(test = c('repeating_instrument', 'branching_logic')),
  envir = 1,
