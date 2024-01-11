@@ -207,12 +207,7 @@ exportRecordsTyped.redcapApiConnection <-
   if (identical(Raw, data.frame())){
     return(Raw)
   }
- 
-  # Issue #293 - See function for details
-  Raw <- .exportRecordsTyped_missingCheckboxToZero(Raw)
-  
-  if(filter_empty_rows) Raw <- filterEmptyRow(Raw, rcon)
-  
+
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
       Raw <- Raw[-1]
@@ -223,15 +218,19 @@ exportRecordsTyped.redcapApiConnection <-
   }
 
   # See fieldCastingFunctions.R for definition of .castRecords
-  .castRecords(Raw              = Raw, 
-               Records          = NULL,
-               rcon             = rcon, 
-               na               = na, 
-               validation       = validation, 
-               cast             = cast, 
-               assignment       = assignment, 
-               default_cast     = .default_cast, 
-               default_validate = .default_validate)
+  CastData <- .castRecords(Raw              = Raw, 
+                           Records          = NULL,
+                           rcon             = rcon, 
+                           na               = na, 
+                           validation       = validation, 
+                           cast             = cast, 
+                           assignment       = assignment, 
+                           default_cast     = .default_cast, 
+                           default_validate = .default_validate)
+  
+  if(filter_empty_rows) CastData <- filterEmptyRow(CastData, rcon)
+  
+  CastData
 }
 
 
@@ -717,23 +716,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   Batched
 }
 
-# .exportRecordsTyped_missingCheckboxToZero -------------------------
 
-.exportRecordsTyped_missingCheckboxToZero <- function(Raw){
-  # Issue 293 - if a record consists of only missing data AND all of its
-  #   checkboxes are unchecked, the row will be exported as entirely 
-  #   missing values. In this context, it is safe to assume that a 
-  #   checkbox value that is missing is equivalent to 0. 
-  # This is written as a stand alone function so that testing can 
-  # be performed without having to call the API
-  checkbox_field <- grepl(REGEX_CHECKBOX_FIELD_NAME, names(Raw))
-  Raw[checkbox_field] <- lapply(Raw[checkbox_field], 
-                                function(x){
-                                  x[is.na(x)] <- 0
-                                  x
-                                })
-  Raw
-}
 
 #####################################################################
 # exportBulkRecord                                               ####
