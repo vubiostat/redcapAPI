@@ -173,6 +173,8 @@ assembleCodebook.redcapConnection <- function(rcon,
                                             field_bases      = field_bases,
                                             field_text_types = field_text_types)
   
+
+  
   # Assemble the field type data frame
   Codebook <- as.data.frame(cbind(field_name = field_names, 
                                   field_type = field_types, 
@@ -183,7 +185,6 @@ assembleCodebook.redcapConnection <- function(rcon,
   # Merge the field types with other relevant data dictionary fields
   Codebook <- merge(Codebook,
                     rcon$metadata()[c("field_name",
-                                      "field_label",
                                       "form_name", 
                                       "branching_logic", 
                                       "text_validation_min", 
@@ -222,6 +223,8 @@ assembleCodebook.redcapConnection <- function(rcon,
     this_field_type <- Codebook[[i]]$field_type
     this_field_name <- Codebook[[i]]$field_name
     
+
+    
     coding <- 
       switch(this_field_type, 
              "yesno" = "0, No | 1, Yes",
@@ -249,6 +252,16 @@ assembleCodebook.redcapConnection <- function(rcon,
   Codebook <- Codebook[order(Codebook$form_order, 
                              Codebook$field_order), ]
   rownames(Codebook) <- NULL
+  
+  Codebook$field_labels <- 
+    mapply(.castRecords_makeFieldLabel, 
+           ifelse(Codebook$field_type == "checkbox" & !grepl(REGEX_CHECKBOX_FIELD_NAME, Codebook$field_name), 
+                  sprintf("%s___%s", Codebook$field_name, Codebook$choice_value),
+                  Codebook$field_name), 
+           as.numeric(Codebook$field_map), 
+           MoreArgs = list(MetaData = rcon$metadata()), 
+           SIMPLIFY = TRUE, 
+           USE.NAMES = FALSE)
   
   # Populate field_label for form_complete fields
   Codebook$field_label <- 
@@ -281,7 +294,7 @@ assembleCodebook.redcapConnection <- function(rcon,
                        "field_order", 
                        "form_order")
   
-  Codebook <- rbind(.assembleCodebook_systemField(rcon, "redcap_event_name"), 
+  Codebook <- rbind(.assembleCodebook_systemField(rcon, "redcap_event_name"),
                     .assembleCodebook_systemField(rcon, "redcap_data_access_group"),
                     .assembleCodebook_systemField(rcon, "redcap_repeat_instrument"),
                     Codebook)
