@@ -131,14 +131,35 @@ assembleCodebook.redcapConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  ###################################################################
+  # Modified Meta Data Object for Project-Level Missing Codes    ####
+  # When a project has project-level missing codes, checkboxes
+  # have special treatment. In addition to the ___[option] fields
+  # defined by the data dictionary, there will also be 
+  # ___[missing_code] fields for each project level missing code. 
+  # When building the codebook, it is easier if we add the 
+  # project level missing code to the options in the 
+  # data dictionary. 
+  # It is important to use this modified object as meta data 
+  # throughout this process and NOT the cached meta data.
+  
+  MetaData <- rcon$metadata()
+  
+  if (!is.na(rcon$projectInformation()$missing_data_codes)){
+    MetaData$select_choices_or_calculations <- 
+      ifelse(MetaData$field_type == "checkbox", 
+             sprintf("%s | %s", 
+                     MetaData$select_choices_or_calculations, 
+                     rcon$projectInformation()$missing_data_codes), 
+             MetaData$select_choices_or_calculations)
+  }
   
   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be included in the codebook
   
   if (!is.null(field_types)){
-    MD <- rcon$metadata()
-    ft_field <- MD$field_name[MD$field_type %in% field_types]
+    ft_field <- MetaData$field_name[MetaData$field_type %in% field_types]
     fields <- c(fields, ft_field)
   }
   
@@ -150,17 +171,17 @@ assembleCodebook.redcapConnection <- function(rcon,
                                                  use_original = !expand_check)
   
   UnexpandedCodebook <- .assembleCodebook_unexpanded(field_names, 
-                                                     rcon)
+                                                     rcon, 
+                                                     MetaData)
   
-  structure(.assembleCodebook_expandCoding(UnexpandedCodebook), 
+  structure(.assembleCodebook_expandCoding(UnexpandedCodebook, rcon, MetaData), 
             class = c("redcapCodebook", "data.frame"))
 }
 
 #####################################################################
 # Unexported                                                     ####
 
-.assembleCodebook_unexpanded <- function(field_names, rcon){
-  MetaData <- rcon$metadata()
+.assembleCodebook_unexpanded <- function(field_names, rcon, MetaData){
   
   # Identify field bases, field tyeps, and mapping order
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R
@@ -173,25 +194,31 @@ assembleCodebook.redcapConnection <- function(rcon,
                                             field_bases      = field_bases,
                                             field_text_types = field_text_types)
   
+
+  
   # Assemble the field type data frame
   Codebook <- as.data.frame(cbind(field_name = field_names, 
                                   field_type = field_types, 
                                   field_map, 
-                                  field_bases), 
+                                  field_bases, 
+                                  order = seq_along(field_names)), # To force it back to original order
                             stringsAsFactors = FALSE)
   
   # Merge the field types with other relevant data dictionary fields
   Codebook <- merge(Codebook,
-                    rcon$metadata()[c("field_name", 
-                                      "form_name", 
-                                      "branching_logic", 
-                                      "text_validation_min", 
-                                      "text_validation_max", 
-                                      "select_choices_or_calculations")],
+                    MetaData[c("field_name",
+                               "form_name", 
+                               "branching_logic", 
+                               "text_validation_min", 
+                               "text_validation_max", 
+                               "select_choices_or_calculations")],
                     by.x = "field_bases",
                     by.y = "field_name", 
                     all.x = TRUE, 
                     sort = FALSE)
+  
+  Codebook <- Codebook[order(Codebook$order), ]
+  Codebook$order <- NULL
   
   # Populate form name for form_complete fields
   Codebook$form_name <- ifelse(is.na(Codebook$form_name), 
@@ -211,7 +238,8 @@ assembleCodebook.redcapConnection <- function(rcon,
 }
 
 
-.assembleCodebook_expandCoding <- function(Codebook){
+.assembleCodebook_expandCoding <- function(Codebook, rcon, MetaData){
+  
   # split into each row
   Codebook <- split(Codebook, 
                     Codebook$field_name)
@@ -221,6 +249,8 @@ assembleCodebook.redcapConnection <- function(rcon,
     this_field_type <- Codebook[[i]]$field_type
     this_field_name <- Codebook[[i]]$field_name
     
+
+    
     coding <- 
       switch(this_field_type, 
              "yesno" = "0, No | 1, Yes",
@@ -228,8 +258,18 @@ assembleCodebook.redcapConnection <- function(rcon,
              "form_complete" = "0, Incomplete | 1, Unverified | 2, Complete", 
              "dropdown" = Codebook[[i]]$select_choices_or_calculations, 
              "radio" = Codebook[[i]]$select_choices_or_calculations, 
-             "checkbox" = if (grepl("___.+$", this_field_name)) "0, Unchecked | 1, Checked" else Codebook[[i]]$select_choices_or_calculations, 
+             "checkbox" = if (grepl(REGEX_CHECKBOX_FIELD_NAME, this_field_name)) "0, Unchecked | 1, Checked" else Codebook[[i]]$select_choices_or_calculations, 
              "NA, NA")
+    
+    # When there are project level missing data codes, add them to the coding
+    # Except for checkboxes (those were handled in the modified meta data object)
+    if (!this_field_type %in% c("checkbox", "form_complete") && 
+        !is.na(rcon$projectInformation()$missing_data_codes) &&
+        !this_field_name %in% getProjectIdFields(rcon)){
+      coding <- sprintf("%s | %s", 
+                        coding, 
+                        rcon$projectInformation()$missing_data_codes)
+    }
     
     coding <- fieldChoiceMapping(coding, this_field_name)
     
@@ -249,8 +289,26 @@ assembleCodebook.redcapConnection <- function(rcon,
                              Codebook$field_order), ]
   rownames(Codebook) <- NULL
   
+  Codebook$field_labels <- 
+    mapply(.castRecords_makeFieldLabel, 
+           ifelse(Codebook$field_type == "checkbox" & !grepl(REGEX_CHECKBOX_FIELD_NAME, Codebook$field_name), 
+                  sprintf("%s___%s", Codebook$field_name, Codebook$choice_value),
+                  Codebook$field_name), 
+           as.numeric(Codebook$field_map), 
+           MoreArgs = list(MetaData = MetaData), 
+           SIMPLIFY = TRUE, 
+           USE.NAMES = FALSE)
+  
+  # Populate field_label for form_complete fields
+  Codebook$field_label <- 
+    .assembleCodebook_finalizeFieldLabel(field_label = Codebook$field_label, 
+                                         field_type = Codebook$field_type, 
+                                         form_name = Codebook$form_name, 
+                                         rcon)
+  
   # Assemble columns in desired order and with the desired names
-  Codebook <- Codebook[c("field_name", 
+  Codebook <- Codebook[c("field_name",
+                         "field_label",
                          "form_name", 
                          "field_type", 
                          "choice_value", 
@@ -260,7 +318,8 @@ assembleCodebook.redcapConnection <- function(rcon,
                          "branching_logic", 
                          "field_order", 
                          "form_order")]
-  names(Codebook) <- c("field_name", 
+  names(Codebook) <- c("field_name",
+                       "field_label",
                        "form_name", 
                        "field_type", 
                        "value", 
@@ -271,7 +330,56 @@ assembleCodebook.redcapConnection <- function(rcon,
                        "field_order", 
                        "form_order")
   
+  Codebook <- rbind(.assembleCodebook_systemField(rcon, "redcap_event_name"),
+                    .assembleCodebook_systemField(rcon, "redcap_data_access_group"),
+                    .assembleCodebook_systemField(rcon, "redcap_repeat_instrument"),
+                    Codebook)
+  
   Codebook
+}
+
+.assembleCodebook_finalizeFieldLabel <- function(field_label, field_type, form_name, rcon){
+  Inst <- rcon$instruments()
+  for (i in seq_along(field_label)){
+    if (field_type[i] == "form_complete"){
+      field_label[i] <- 
+        sprintf("%s Complete", 
+                Inst$instrument_label[Inst$instrument_name == form_name[i]])
+    }
+  }
+  
+  field_label
+}
+
+.assembleCodebook_systemField <- function(rcon, field_name){
+  Coding <- .castRecords_getSystemCoding(field_name, rcon)
+  
+  if (Coding == "") return(NULL)
+  
+  Coding <- fieldChoiceMapping(Coding, field_name)
+  
+  label <- switch(field_name, 
+                  "redcap_event_name" = "REDCap Event Name", 
+                  "redcap_data_access_group" = "REDCap Data Access Group", 
+                  "redcap_repeat_instrument" = "REDCap Repeat Instrument")
+  
+  field_ord <- switch(field_name, 
+                      "redcap_event_name" = -3, 
+                      "redcap_data_access_group" = -2, 
+                      "redcap_repeat_instrument" = -1)
+  
+  data.frame(field_name = rep(field_name, nrow(Coding)), 
+             field_label = rep(label, nrow(Coding)), 
+             form_name = rep("System Fields", nrow(Coding)), 
+             field_type = rep("system_field", nrow(Coding)), 
+             value = Coding[, 1], 
+             label = Coding[, 2], 
+             min = rep(NA_character_, nrow(Coding)), 
+             max = rep(NA_character_, nrow(Coding)), 
+             branching_logic = rep(NA_character_, nrow(Coding)), 
+             field_order = rep(field_ord, nrow(Coding)), 
+             form_order = seq_len(nrow(Coding)), 
+             stringsAsFactors = FALSE)
 }
 
 #' @rdname assembleCodebook
