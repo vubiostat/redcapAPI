@@ -207,9 +207,7 @@ exportRecordsTyped.redcapApiConnection <-
   if (identical(Raw, data.frame())){
     return(Raw)
   }
-  
-  if(filter_empty_rows) Raw <- filterEmptyRow(Raw, rcon)
-  
+
   if (user_requested_system_fields){
     if (user_requested_only_system_fields){
       Raw <- Raw[-1]
@@ -220,15 +218,19 @@ exportRecordsTyped.redcapApiConnection <-
   }
 
   # See fieldCastingFunctions.R for definition of .castRecords
-  .castRecords(Raw              = Raw, 
-               Records          = NULL,
-               rcon             = rcon, 
-               na               = na, 
-               validation       = validation, 
-               cast             = cast, 
-               assignment       = assignment, 
-               default_cast     = .default_cast, 
-               default_validate = .default_validate)
+  CastData <- .castRecords(Raw              = Raw, 
+                           Records          = NULL,
+                           rcon             = rcon, 
+                           na               = na, 
+                           validation       = validation, 
+                           cast             = cast, 
+                           assignment       = assignment, 
+                           default_cast     = .default_cast, 
+                           default_validate = .default_validate)
+  
+  if(filter_empty_rows) CastData <- filterEmptyRow(CastData, rcon)
+  
+  CastData
 }
 
 
@@ -715,6 +717,10 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 }
 
 
+
+#####################################################################
+# exportBulkRecord                                               ####
+
 #' @name exportBulkRecords
 #' @title A helper function to export multiple records and forms using
 #' a single call.
@@ -886,3 +892,4 @@ exportBulkRecords <- function(lcon, forms=NULL, envir=NULL, sep="_", post=NULL, 
   
   if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
+
