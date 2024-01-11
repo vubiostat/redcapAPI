@@ -131,14 +131,35 @@ assembleCodebook.redcapConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  ###################################################################
+  # Modified Meta Data Object for Project-Level Missing Codes    ####
+  # When a project has project-level missing codes, checkboxes
+  # have special treatment. In addition to the ___[option] fields
+  # defined by the data dictionary, there will also be 
+  # ___[missing_code] fields for each project level missing code. 
+  # When building the codebook, it is easier if we add the 
+  # project level missing code to the options in the 
+  # data dictionary. 
+  # It is important to use this modified object as meta data 
+  # throughout this process and NOT the cached meta data.
+  
+  MetaData <- rcon$metadata()
+  
+  if (!is.na(rcon$projectInformation()$missing_data_codes)){
+    MetaData$select_choices_or_calculations <- 
+      ifelse(MetaData$field_type == "checkbox", 
+             sprintf("%s | %s", 
+                     MetaData$select_choices_or_calculations, 
+                     rcon$projectInformation()$missing_data_codes), 
+             MetaData$select_choices_or_calculations)
+  }
   
   ###################################################################
   # Combine fields, drop_fields, and forms into the fields that will 
   # be included in the codebook
   
   if (!is.null(field_types)){
-    MD <- rcon$metadata()
-    ft_field <- MD$field_name[MD$field_type %in% field_types]
+    ft_field <- MetaData$field_name[MetaData$field_type %in% field_types]
     fields <- c(fields, ft_field)
   }
   
@@ -150,17 +171,17 @@ assembleCodebook.redcapConnection <- function(rcon,
                                                  use_original = !expand_check)
   
   UnexpandedCodebook <- .assembleCodebook_unexpanded(field_names, 
-                                                     rcon)
+                                                     rcon, 
+                                                     MetaData)
   
-  structure(.assembleCodebook_expandCoding(UnexpandedCodebook, rcon), 
+  structure(.assembleCodebook_expandCoding(UnexpandedCodebook, rcon, MetaData), 
             class = c("redcapCodebook", "data.frame"))
 }
 
 #####################################################################
 # Unexported                                                     ####
 
-.assembleCodebook_unexpanded <- function(field_names, rcon){
-  MetaData <- rcon$metadata()
+.assembleCodebook_unexpanded <- function(field_names, rcon, MetaData){
   
   # Identify field bases, field tyeps, and mapping order
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R
@@ -179,21 +200,25 @@ assembleCodebook.redcapConnection <- function(rcon,
   Codebook <- as.data.frame(cbind(field_name = field_names, 
                                   field_type = field_types, 
                                   field_map, 
-                                  field_bases), 
+                                  field_bases, 
+                                  order = seq_along(field_names)), # To force it back to original order
                             stringsAsFactors = FALSE)
   
   # Merge the field types with other relevant data dictionary fields
   Codebook <- merge(Codebook,
-                    rcon$metadata()[c("field_name",
-                                      "form_name", 
-                                      "branching_logic", 
-                                      "text_validation_min", 
-                                      "text_validation_max", 
-                                      "select_choices_or_calculations")],
+                    MetaData[c("field_name",
+                               "form_name", 
+                               "branching_logic", 
+                               "text_validation_min", 
+                               "text_validation_max", 
+                               "select_choices_or_calculations")],
                     by.x = "field_bases",
                     by.y = "field_name", 
                     all.x = TRUE, 
                     sort = FALSE)
+  
+  Codebook <- Codebook[order(Codebook$order), ]
+  Codebook$order <- NULL
   
   # Populate form name for form_complete fields
   Codebook$form_name <- ifelse(is.na(Codebook$form_name), 
@@ -213,7 +238,8 @@ assembleCodebook.redcapConnection <- function(rcon,
 }
 
 
-.assembleCodebook_expandCoding <- function(Codebook, rcon){
+.assembleCodebook_expandCoding <- function(Codebook, rcon, MetaData){
+  
   # split into each row
   Codebook <- split(Codebook, 
                     Codebook$field_name)
@@ -232,8 +258,16 @@ assembleCodebook.redcapConnection <- function(rcon,
              "form_complete" = "0, Incomplete | 1, Unverified | 2, Complete", 
              "dropdown" = Codebook[[i]]$select_choices_or_calculations, 
              "radio" = Codebook[[i]]$select_choices_or_calculations, 
-             "checkbox" = if (grepl("___.+$", this_field_name)) "0, Unchecked | 1, Checked" else Codebook[[i]]$select_choices_or_calculations, 
+             "checkbox" = if (grepl(REGEX_CHECKBOX_FIELD_NAME, this_field_name)) "0, Unchecked | 1, Checked" else Codebook[[i]]$select_choices_or_calculations, 
              "NA, NA")
+    
+    # When there are project level missing data codes, add them to the coding
+    # Except for checkboxes (those were handled in the modified meta data object)
+    if (this_field_type != "checkbox" && !is.na(rcon$projectInformation()$missing_data_codes)){
+      coding <- sprintf("%s | %s", 
+                        coding, 
+                        rcon$projectInformation()$missing_data_codes)
+    }
     
     coding <- fieldChoiceMapping(coding, this_field_name)
     
@@ -259,7 +293,7 @@ assembleCodebook.redcapConnection <- function(rcon,
                   sprintf("%s___%s", Codebook$field_name, Codebook$choice_value),
                   Codebook$field_name), 
            as.numeric(Codebook$field_map), 
-           MoreArgs = list(MetaData = rcon$metadata()), 
+           MoreArgs = list(MetaData = MetaData), 
            SIMPLIFY = TRUE, 
            USE.NAMES = FALSE)
   
