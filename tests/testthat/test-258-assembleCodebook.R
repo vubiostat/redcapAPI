@@ -97,17 +97,29 @@ test_that(
                                             "dropdown_test"))
     expect_true(all(Codebook$field_name %in% c("record_id", 
                                                "text_test", 
-                                               "dropdown_test")))
+                                               "dropdown_test", 
+                                               "redcap_event_name", 
+                                               "redcap_data_access_group", 
+                                               "redcap_repeat_instrument")))
     
     # For selected forms
     Codebook <- assembleCodebook(rcon, 
                                  forms = "numbers")
-    expect_true(all(Codebook$form_name %in% c("record_id", "numbers")))
+    expect_true(all(Codebook$form_name %in% c("record_id", "numbers", 
+                                              "System Fields")))
+    
+    # Includes form_complete fields
+    
+    form_complete <- rcon$instruments()$instrument_name
+    form_complete <- sprintf("%s_complete", form_complete)
+    Codebook <- assembleCodebook(rcon)
+    expect_true(all(form_complete %in% Codebook$field_name))
     
     # For selected field types
     Codebook <- assembleCodebook(rcon, 
                                  field_types = c("radio", "dropdown", "calc"))
-    expect_true(all(Codebook$field_type %in% c("text", "dropdown", "radio", "calc")))
+    expect_true(all(Codebook$field_type %in% c("text", "dropdown", "radio", "calc", 
+                                               "system_field")))
   }
 )
 
@@ -119,3 +131,9 @@ test_that(
     expect_list(as.list(Codebook))
   }
 )
+
+# Additional tests to write
+# 1. Missing value codes added to checkbox variables
+# 2. Missing value codes not added to form_complete fields
+# 3. Missing value codes not added to system fields
+# 3. Missing value codes added to all other field types properly
