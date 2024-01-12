@@ -82,6 +82,6 @@ warnOfZeroCodedCheckCasting(field_name = "check_field___0",
                             x = x)
                        
  
-warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"))
+warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"), TRUE)
 }
 }
