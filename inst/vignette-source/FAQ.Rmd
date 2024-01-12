@@ -87,6 +87,21 @@ exportRecordsTyped(rcon,
                    cast = list(system = castRaw))
 ```
 
+## Concerns Over Invalid Data Being Marked NA
+
+Users have expressed concern that marking data that fails validation is not desired, as NA(not in REDCap) is not the same as NA(Unable to Cast). While this is true, there is no means to easily differentiate the two in the same `data.frame`. The problem can be demonstrated with a simple example as follows.
+
+Say that one needs to write a general function that given a vector of strings in R and turn this into a `Date` object; in type theory this is $f : \texttt{Text} \rightarrow \texttt{Date}$. What if the string presented is "yyz"? There is no date that can be assigned in R and the core date routines in R will throw an error and halt processing. R is somewhat unique in that *all* it's core data types exist inside the `Maybe` monad, i.e. `Maybe a = Just a | NA`. Thus the true function type is $f : \texttt{Text} \rightarrow \texttt{Maybe Date}$. This allows for `NA` or "not available" values. R makes no judgement on the cause of the lack of availability. To continue processing the only safe choice is to assign "yyz" to NA, $f(``yyz'') = NA$.This was a big driving reason behind the design of `exportRecordsTyped`. The "Typed" portion of the name referring to this. Thus the algorithm:
+
+* Assign NA to all values that are NA by definition from the data collection source.
+* Assign NA to all values that cannot be cast into their target types *_and record this in the `invalidRecords` attribute_*.
+* Perform the final type casting on the values that have not been assigned NA. 
+
+Via inversion of control, the user can override any choices the library team has made in `exportRecordsTyped` via the `na`, `validation` or `cast` arguments. It should be noted that the `validation` and `cast` arguments need to remain consistent with one another or each type. 
+
+Because NA has 2 meanings, the scanning of the resulting `reviewInvalidRecords` report is a crucial and important step in ensuring data quality of preparing data for analysis and reporting.
+
+
 \clearpage
 
 # Missing Data Detection
