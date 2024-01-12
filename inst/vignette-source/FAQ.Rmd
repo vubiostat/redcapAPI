@@ -65,7 +65,7 @@ and
 2, 2
 ```
 
-When it is necessary to cast a zero-coded check field from raw or labeled values, the `castCheckForImport` casting function is the best option, as it provides the user full control over what values are to be considered "Checked."
+When it is necessary to cast a zero-coded check field from coded or labeled values, the `castCheckForImport` casting function is the best option, as it provides the user full control over what values are to be considered "Checked."
 
 `redcapAPI` is noisy (creates lots of warnings) about the presence of zero-coded check fields. The potential for loss of data integrity is serious and users need to be aware of that potential. The user may disable these warnings in `exportRecordsTyped` by setting the argument `warn_zero_coded = FALSE`.
 
@@ -133,7 +133,7 @@ Say that one needs to write a general function that given a vector of strings in
 * Assign NA to all values that cannot be cast into their target types *_and record this in the `invalidRecords` attribute_*.
 * Perform the final type casting on the values that have not been assigned NA. 
 
-Via inversion of control, the user can override any choices the library team has made in `exportRecordsTyped` via the `na`, `validation` or `cast` arguments. It should be noted that the `validation` and `cast` arguments need to remain consistent with one another or each type. 
+Via inversion of control, the user can override any choices the library team has made in `exportRecordsTyped` via the `na`, `validation` or `cast` arguments. It should be noted that the `validation` and `cast` arguments need to remain consistent with one another for each type. 
 
 Because NA has 2 meanings, the scanning of the resulting `reviewInvalidRecords` report is a crucial and important step in ensuring data quality of preparing data for analysis and reporting.
 
@@ -149,8 +149,7 @@ load("data/MissingDataVignetteData.Rdata")
 importArms(rcon, Arms)
 importEvents(rcon, Events)
 importMetaData(rcon, MetaData)
-importProjectInformation(rcon, data.frame(is_longitudinal = 1, 
-                                          missing_data_codes = ""))
+importProjectInformation(rcon, data.frame(is_longitudinal = 1))
 importRecords(rcon, Records)
 ```
 

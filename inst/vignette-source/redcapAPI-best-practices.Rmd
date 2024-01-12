@@ -569,7 +569,7 @@ exportRecordsTyped(test_conn, fields="date_dmy_test", cast=raw_cast) |>
 
 Another potential problem is a Date field was allowed to be free form text for a period and later updated in REDCap to be a Date field with validation. This now requires some guessing for the Date format. The default methods require well formed Date strings and thus fail for a lot of cases that could be potentially dealt with.
 
-The `anytime` library in R has a robust set of date guesses that deal with a lot of different potential formats. This is a great use and example of inversion of control over type casting. Once can simply make the decision that guessing at Dates is acceptible (guessing is never the default in the redcapAPI library), and then override the defaults.
+The `anytime` library in R has a robust set of date guesses that deal with a lot of different potential formats. This is a great use and example of inversion of control over type casting. Once can simply make the decision that guessing at Dates is acceptable (guessing is never the default in the redcapAPI library), and then override the defaults.
 
 ```
 library(anytime)
