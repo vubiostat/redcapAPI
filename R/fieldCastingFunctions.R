@@ -548,7 +548,11 @@ mChoiceCast <- function(data,
                              correct_length = nrow(Raw))
 
   ###################################################################
-  # Run Validation Functions                                     ####
+  # Run Validation Functions
+  
+  # Minimize user surprise on raw_cast #310
+  if(identical(cast, raw_cast) && identical(validation, .default_validate)) 
+    validation <- na_values(function(x, ...) rep(TRUE, length(x)))
   
   validations <- 
     .castRecords_runValidation(Raw              = Raw, 
