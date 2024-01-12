@@ -107,14 +107,22 @@ warnOfZeroCodedCheckCasting <- function(field_name, x){
 
 #' @rdname isZeroCodedCheckField
 
-warnZeroCodedFieldPresent <- function(field_names){
+warnZeroCodedFieldPresent <- function(field_names, warn_zero_coded)
+{
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_character(x = field_names,
                               any.missing = FALSE,
                               add = coll)
   
+  checkmate::assert_logical(x = warn_zero_coded,
+                            len = 1,
+                            any.missing = FALSE,
+                            add = coll)
+  
   checkmate::reportAssertions(coll)
+  
+  if(!warn_zero_coded) return(NULL)
   
   lgl_zero_coded <- vapply(field_names, 
                                isZeroCodedCheckField, 

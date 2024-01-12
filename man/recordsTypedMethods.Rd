@@ -38,6 +38,7 @@ exportReportsTyped(rcon, report_id, ...)
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
   filter_empty_rows = TRUE,
+  warn_zero_coded = TRUE,
   ...,
   config = list(),
   api_param = list(),
@@ -57,6 +58,7 @@ exportReportsTyped(rcon, report_id, ...)
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
+  warn_zero_coded = TRUE,
   ...
 )
 
@@ -68,6 +70,7 @@ exportReportsTyped(rcon, report_id, ...)
   validation = list(),
   cast = list(),
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
+  warn_zero_coded = TRUE,
   ...,
   config = list(),
   api_param = list(),
@@ -150,6 +153,9 @@ delimiter for the CSV file received from the API.}
 
 \item{batch_size}{\code{integerish(1)} or \code{NULL}. When \code{NULL},
 all records are pulled. Otherwise, the records all pulled in batches of this size.}
+
+\item{warn_zero_coded}{\code{logical(1)}. Turn on or off warnings about
+potentially problematic zero coded fields. Defaults to \code{TRUE}.}
 
 \item{...}{Arguments to pass to other methods}
 

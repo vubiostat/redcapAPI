@@ -23,6 +23,7 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                                                    cast          = list(),
                                                    assignment    = list(label=stripHTMLandUnicode,
                                                                         units=unitsFieldAnnotation),
+                                                   warn_zero_coded = TRUE,
                                                    ..., 
                                                    config        = list(),
                                                    api_param     = list(),
@@ -129,5 +130,6 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                cast             = cast, 
                assignment       = assignment, 
                default_cast     = .default_cast, 
-               default_validate = .default_validate)
+               default_validate = .default_validate,
+               warn_zero_coded  = warn_zero_coded)
 }

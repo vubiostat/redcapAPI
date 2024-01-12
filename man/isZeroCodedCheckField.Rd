@@ -10,7 +10,7 @@ isZeroCodedCheckField(field_name)
 
 warnOfZeroCodedCheckCasting(field_name, x)
 
-warnZeroCodedFieldPresent(field_names)
+warnZeroCodedFieldPresent(field_names, warn_zero_coded)
 }
 \arguments{
 \item{field_name}{\code{character(1)} The name of a field to be tested.}

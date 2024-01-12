@@ -45,6 +45,7 @@ exportRecordsTyped.redcapApiConnection <-
     assignment     = list(label=stripHTMLandUnicode,
                           units=unitsFieldAnnotation),
     filter_empty_rows = TRUE,
+    warn_zero_coded = TRUE,
     ...,
     config         = list(),
     api_param      = list(),
@@ -62,17 +63,19 @@ exportRecordsTyped.redcapApiConnection <-
                           classes = "redcapApiConnection",
                           add = coll)
   
-  .exportRecordsTyped_validateCommonArgument(fields      = fields,
-                                             drop_fields = drop_fields,
-                                             forms       = forms,
-                                             records     = records,
-                                             events      = events, 
-                                             na          = na, 
-                                             validation  = validation, 
-                                             cast        = cast, 
-                                             assignment  = assignment,
-                                             coll        = coll,
-                                             ...)
+  .exportRecordsTyped_validateCommonArgument(
+    fields          = fields,
+    drop_fields     = drop_fields,
+    forms           = forms,
+    records         = records,
+    events          = events, 
+    na              = na, 
+    validation      = validation, 
+    cast            = cast, 
+    assignment      = assignment,
+    coll            = coll,
+    warn_zero_coded = warn_zero_coded,
+    ...)
   
   checkmate::assert_logical(x = survey, 
                             len = 1, 
@@ -226,7 +229,8 @@ exportRecordsTyped.redcapApiConnection <-
                            cast             = cast, 
                            assignment       = assignment, 
                            default_cast     = .default_cast, 
-                           default_validate = .default_validate)
+                           default_validate = .default_validate,
+                           warn_zero_coded  = warn_zero_coded)
   
   if(filter_empty_rows) CastData <- filterEmptyRow(CastData, rcon)
   
@@ -252,6 +256,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        cast          = list(),
                                                        assignment    = list(label=stripHTMLandUnicode,
                                                                             units=unitsFieldAnnotation),
+                                                       warn_zero_coded = TRUE,
                                                        ...){
   
   if (is.numeric(records)) records <- as.character(records)
@@ -265,17 +270,19 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                           classes = "redcapOfflineConnection", 
                           add = coll)
   
-  .exportRecordsTyped_validateCommonArgument(fields = fields, 
-                                             drop_fields = drop_fields, 
-                                             forms = forms, 
-                                             records = records, 
-                                             events = events, 
-                                             na          = na, 
-                                             validation  = validation, 
-                                             cast        = cast, 
-                                             assignment  = assignment,
-                                             coll = coll,
-                                             ...)
+  .exportRecordsTyped_validateCommonArgument(
+    fields          = fields, 
+    drop_fields     = drop_fields, 
+    forms           = forms, 
+    records         = records, 
+    events          = events, 
+    na              = na, 
+    validation      = validation, 
+    cast            = cast, 
+    assignment      = assignment,
+    coll            = coll,
+    warn_zero_coded = warn_zero_coded,
+    ...)
   
   checkmate::reportAssertions(coll)
   
@@ -379,7 +386,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                assignment       = assignment, 
                default_cast     = .default_cast, 
                default_validate = .default_validate, 
-               batch_size       = NULL)
+               batch_size       = NULL,
+               warn_zero_coded  = warn_zero_coded)
 }
 
 
@@ -398,7 +406,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        cast, 
                                                        assignment,
                                                        coll,
-                                                       ...){
+                                                       warn_zero_coded,
+                                                       ...)
+{
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
@@ -440,6 +450,11 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                          names = "named", 
                          types = "function",
                          add = coll)
+  
+  checkmate::assert_logical(x = warn_zero_coded,
+                            len = 1,
+                            any.missing = FALSE,
+                            add = coll)
   
   add_args <- names(list(...))
   if("labels" %in% add_args ||
