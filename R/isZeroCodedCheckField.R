@@ -9,6 +9,7 @@
 #'
 #' @param field_name `character(1)` The name of a field to be tested.
 #' @param field_names `character` vector of field names.
+#' @param warn_zero_coded `logical(1)`. Turn on or off warnings about zero coded fields. Defaults to `TRUE`.
 #' @param x `atomic` object.
 #' 
 #' @section Zero-Coded Check Fields:

@@ -18,6 +18,8 @@ warnZeroCodedFieldPresent(field_names, warn_zero_coded)
 \item{x}{\code{atomic} object.}
 
 \item{field_names}{\code{character} vector of field names.}
+
+\item{warn_zero_coded}{\code{logical(1)}. Turn on or off warnings about zero coded fields. Defaults to \code{TRUE}.}
 }
 \value{
 \code{isZeroCodedCheckField} returns a \code{logical(1)}
