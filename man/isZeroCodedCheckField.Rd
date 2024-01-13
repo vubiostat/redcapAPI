@@ -10,7 +10,7 @@ isZeroCodedCheckField(field_name)
 
 warnOfZeroCodedCheckCasting(field_name, x)
 
-warnZeroCodedFieldPresent(field_names)
+warnZeroCodedFieldPresent(field_names, warn_zero_coded)
 }
 \arguments{
 \item{field_name}{\code{character(1)} The name of a field to be tested.}
@@ -18,6 +18,8 @@ warnZeroCodedFieldPresent(field_names)
 \item{x}{\code{atomic} object.}
 
 \item{field_names}{\code{character} vector of field names.}
+
+\item{warn_zero_coded}{\code{logical(1)}. Turn on or off warnings about zero coded fields. Defaults to \code{TRUE}.}
 }
 \value{
 \code{isZeroCodedCheckField} returns a \code{logical(1)}
@@ -80,6 +82,6 @@ warnOfZeroCodedCheckCasting(field_name = "check_field___0",
                             x = x)
                        
  
-warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"))
+warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"), TRUE)
 }
 }

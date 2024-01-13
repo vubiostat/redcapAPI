@@ -27,7 +27,7 @@
 #' @param quiet Print no messages if triggered, Default=FALSE. 
 #' @param threshold numeric(1). The threshold of non-NA data to trigger casting.
 #' @param style character. One of "labelled" or "coded". Default is "labelled"
-#'   
+#' @param warn_zero_coded logical(1). Turn on or off warnings about zero coded fields. Default is TRUE.
 #' @details `recastRecords` is a post-processing function motivated 
 #'   initially by the need to switch between codes and labels in multiple 
 #'   choice fields. Field types for which no casting function is specified will
@@ -122,7 +122,8 @@ recastRecords <- function(data,
                           rcon, 
                           fields, 
                           cast = list(), 
-                          suffix    = ""){
+                          suffix    = "",
+                          warn_zero_coded=TRUE){
   ###################################################################
   # Argument Validation #############################################
   coll <- checkmate::makeAssertCollection()
@@ -150,6 +151,11 @@ recastRecords <- function(data,
                               len = 1, 
                               any.missing = FALSE,
                               add = coll)
+  
+  checkmate::assert_logical(x = warn_zero_coded,
+                            len = 1,
+                            any.missing = FALSE,
+                            add = coll)
   
   checkmate::reportAssertions(coll)
   
@@ -192,7 +198,7 @@ recastRecords <- function(data,
   ###################################################################
   # Derive field information
   # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
-  warnZeroCodedFieldPresent(fields)
+  warnZeroCodedFieldPresent(fields, warn_zero_coded)
   
   MetaData <- rcon$metadata()
   
@@ -230,11 +236,12 @@ recastRecords <- function(data,
 #' @export
 
 castForImport <- function(data, 
-                            rcon, 
-                            fields     = NULL,
-                            na         = list(),
-                            validation = list(), 
-                            cast       = list()){
+                          rcon, 
+                          fields     = NULL,
+                          na         = list(),
+                          validation = list(), 
+                          cast       = list(),
+                          warn_zero_coded = TRUE){
   
   if (is.null(fields)) fields <- names(data)
   
@@ -291,6 +298,7 @@ castForImport <- function(data,
                          validation       = validation, 
                          cast             = cast, 
                          assignment       = NULL, 
+                         warn_zero_coded  = warn_zero_coded,
                          default_cast     = .default_cast_import, 
                          default_validate = .default_validate_import)
   
@@ -499,11 +507,12 @@ mChoiceCast <- function(data,
                          assignment       = NULL, 
                          default_cast     = .default_cast, 
                          default_validate = .default_validate, 
-                         batch_size       = NULL){
+                         batch_size       = NULL,
+                         warn_zero_coded  = TRUE){
   # batch_size will be passed to rcon$externalCoding() if batch_size was passed to the executing function
   #                              This occurs in .castRecords_getCodings
   # Issue a warning if any of the fields are zero-coded check fields (See Issue 199)
-  warnZeroCodedFieldPresent(names(Raw))
+  warnZeroCodedFieldPresent(names(Raw), warn_zero_coded)
   
   ###################################################################
   # Process meta data for useful information                     ####

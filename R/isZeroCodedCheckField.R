@@ -9,6 +9,7 @@
 #'
 #' @param field_name `character(1)` The name of a field to be tested.
 #' @param field_names `character` vector of field names.
+#' @param warn_zero_coded `logical(1)`. Turn on or off warnings about zero coded fields. Defaults to `TRUE`.
 #' @param x `atomic` object.
 #' 
 #' @section Zero-Coded Check Fields:
@@ -63,7 +64,7 @@
 #'                             x = x)
 #'                        
 #'  
-#' warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"))
+#' warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"), TRUE)
 #' }
 
 isZeroCodedCheckField <- function(field_name){
@@ -107,14 +108,22 @@ warnOfZeroCodedCheckCasting <- function(field_name, x){
 
 #' @rdname isZeroCodedCheckField
 
-warnZeroCodedFieldPresent <- function(field_names){
+warnZeroCodedFieldPresent <- function(field_names, warn_zero_coded)
+{
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_character(x = field_names,
                               any.missing = FALSE,
                               add = coll)
   
+  checkmate::assert_logical(x = warn_zero_coded,
+                            len = 1,
+                            any.missing = FALSE,
+                            add = coll)
+  
   checkmate::reportAssertions(coll)
+  
+  if(!warn_zero_coded) return(NULL)
   
   lgl_zero_coded <- vapply(field_names, 
                                isZeroCodedCheckField, 
