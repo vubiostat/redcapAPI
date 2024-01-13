@@ -263,7 +263,8 @@ the value is one of \code{c("1", "true", "yes")} and returns \code{FALSE} otherw
 \subsection{Casting Lists}{
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
-parameter.
+parameter. If \code{validation} is left to default it will be disabled
+to pass pure raw values with no validation.
 
 \code{default_cast_no_factor} is a list of casting functions that matches
 all of the default casts but with the exception that any fields that would

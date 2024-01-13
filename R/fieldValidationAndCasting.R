@@ -132,7 +132,8 @@
 #' 
 #' ## Casting Lists
 #' `raw_cast` overrides all casting if passed as the `cast`
-#' parameter.
+#' parameter. If `validation` is left to default it will be disabled
+#' to pass pure raw values with no validation. 
 #' 
 #' `default_cast_no_factor` is a list of casting functions that matches
 #' all of the default casts but with the exception that any fields that would

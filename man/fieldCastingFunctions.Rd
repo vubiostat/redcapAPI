@@ -58,7 +58,9 @@ multiple choice fields. Fields of class \code{mChoice} are quietly skipped.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+vector of logical matching the input length. If \code{raw_cast} is specified and
+\code{validation} is left to default it will disable validation to pass all
+values as raw. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{suffix}{\code{character(1)}. An optional suffix to provide if
 the recoded variables should be returned as new columns. For example,
