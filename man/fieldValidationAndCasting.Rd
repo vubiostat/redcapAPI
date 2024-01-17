@@ -29,6 +29,7 @@
 \alias{raw_cast}
 \alias{default_cast_no_factor}
 \alias{default_cast_character}
+\alias{skip_validation}
 \title{Helper functions for \code{exportRecordsTyped} Validation and Casting}
 \format{
 An object of class \code{list} of length 21.
@@ -36,6 +37,8 @@ An object of class \code{list} of length 21.
 An object of class \code{list} of length 25.
 
 An object of class \code{list} of length 25.
+
+An object of class \code{list} of length 21.
 }
 \usage{
 isNAorBlank(x, ...)
@@ -89,6 +92,8 @@ raw_cast
 default_cast_no_factor
 
 default_cast_character
+
+skip_validation
 }
 \arguments{
 \item{x}{\code{character}. A vector to check.}
@@ -195,6 +200,9 @@ a field type. It returns a \code{TRUE} value for each record, regardless
 of its value. Validation skipping has occasional utility when importing
 certain field types (such as \code{bioportal} or \code{sql}) where not all of the
 eventual choices are available in the project yet.
+
+\code{skip_validation} is a list of functions that just returns TRUE for
+all data passed in.
 }
 
 \subsection{Casting Functions}{
@@ -263,7 +271,8 @@ the value is one of \code{c("1", "true", "yes")} and returns \code{FALSE} otherw
 \subsection{Casting Lists}{
 
 \code{raw_cast} overrides all casting if passed as the \code{cast}
-parameter.
+parameter. It is important the the validation specified matches
+the chosen cast. For fully raw it should be \code{skip_validation}.
 
 \code{default_cast_no_factor} is a list of casting functions that matches
 all of the default casts but with the exception that any fields that would
