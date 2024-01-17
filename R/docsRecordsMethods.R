@@ -147,8 +147,8 @@
 #'               report_id = 12345)
 #'               
 #' # Export raw data
-#' # Note: Unless custom validations are indicated, using raw_cast will skip validations.
 #' exportRecordsTyped(rcon, 
+#'                    validation = skip_validation,
 #'                    cast = raw_cast)
 #' 
 #' }
