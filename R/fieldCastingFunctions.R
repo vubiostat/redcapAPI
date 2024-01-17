@@ -266,6 +266,7 @@ castForImport <- function(data,
   
   checkmate::assert_list(x = validation, 
                          names = "named", 
+                         null.ok= TRUE,
                          add = coll)
   
   checkmate::assert_list(x = cast, 
@@ -551,9 +552,7 @@ mChoiceCast <- function(data,
   ###################################################################
   # Run Validation Functions
   
-  # Minimize user surprise on raw_cast #310
-  if(identical(cast, raw_cast) && identical(validation, .default_validate)) 
-    validation <- na_values(function(x, ...) rep(TRUE, length(x)))
+  if(is.null(validation)) validation <- skip_validation
   
   validations <- 
     .castRecords_runValidation(Raw              = Raw, 
