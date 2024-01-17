@@ -174,7 +174,10 @@ assembleCodebook.redcapConnection <- function(rcon,
                                                      rcon, 
                                                      MetaData)
   
-  structure(.assembleCodebook_expandCoding(UnexpandedCodebook, rcon, MetaData), 
+  ExpandedCodebook <- .assembleCodebook_expandCoding(UnexpandedCodebook, rcon, MetaData)
+  rownames(ExpandedCodebook) <- NULL
+  
+  structure(ExpandedCodebook, 
             class = c("redcapCodebook", "data.frame"))
 }
 
@@ -333,6 +336,7 @@ assembleCodebook.redcapConnection <- function(rcon,
   Codebook <- rbind(.assembleCodebook_systemField(rcon, "redcap_event_name"),
                     .assembleCodebook_systemField(rcon, "redcap_data_access_group"),
                     .assembleCodebook_systemField(rcon, "redcap_repeat_instrument"),
+                    .assembleCodebook_systemField(rcon, "redcap_repeat_instance"),
                     Codebook)
   
   Codebook
@@ -352,7 +356,17 @@ assembleCodebook.redcapConnection <- function(rcon,
 }
 
 .assembleCodebook_systemField <- function(rcon, field_name){
+
+  # If not repeating instruments are designated, there's no need to include
+  # these in the codebook. 
+  if (field_name %in% c("redcap_repeat_instrument", "redcap_repeat_instance") && 
+      nrow(rcon$repeatInstrumentEvent()) == 0){
+    return(NULL)
+  }
+  
   Coding <- .castRecords_getSystemCoding(field_name, rcon)
+  
+  if (is.na(Coding)) Coding <- "NA, NA"
   
   if (Coding == "") return(NULL)
   
@@ -361,12 +375,14 @@ assembleCodebook.redcapConnection <- function(rcon,
   label <- switch(field_name, 
                   "redcap_event_name" = "REDCap Event Name", 
                   "redcap_data_access_group" = "REDCap Data Access Group", 
-                  "redcap_repeat_instrument" = "REDCap Repeat Instrument")
+                  "redcap_repeat_instrument" = "REDCap Repeat Instrument", 
+                  "redcap_repeat_instance"   = "REDCap Repeat Instance")
   
   field_ord <- switch(field_name, 
-                      "redcap_event_name" = -3, 
-                      "redcap_data_access_group" = -2, 
-                      "redcap_repeat_instrument" = -1)
+                      "redcap_event_name" = -4, 
+                      "redcap_data_access_group" = -3, 
+                      "redcap_repeat_instrument" = -2, 
+                      "redcap_repeat_instance"   = -1)
   
   data.frame(field_name = rep(field_name, nrow(Coding)), 
              field_label = rep(label, nrow(Coding)), 
