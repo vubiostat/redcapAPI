@@ -440,6 +440,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   checkmate::assert_list(x = validation, 
                          names = "named", 
+                         null.ok = TRUE,
                          add = coll)
   
   checkmate::assert_list(x = cast, 

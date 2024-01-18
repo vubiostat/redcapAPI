@@ -55,7 +55,9 @@ NULL
 #' @param cast A named `list` of user specified class casting functions. The
 #'   same named keys are supported as the na argument. The function will be 
 #'   provided the variables (x, field_name, coding). The function must return a
-#'   vector of logical matching the input length. See [fieldValidationAndCasting()]
+#'   vector of logical matching the input length. The cast should match the validation,
+#'   if one is using `raw_cast`, then `validation=skip_validation` is likely
+#'   the desired intent. See [fieldValidationAndCasting()]
 #' @param assignment A named `list` of functions. These functions are provided, field_name,
 #'   label, description and field_type and return a list of attributes to assign
 #'   to the column. Defaults to creating a label attribute from the stripped

@@ -66,7 +66,9 @@ multiple choice fields. Fields of class \code{mChoice} are quietly skipped.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+vector of logical matching the input length. The cast should match the validation,
+if one is using \code{raw_cast}, then \code{validation=skip_validation} is likely
+the desired intent. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{suffix}{\code{character(1)}. An optional suffix to provide if
 the recoded variables should be returned as new columns. For example,
@@ -192,8 +194,9 @@ castForImport(Records,
 
 
 # Using guessCast
-exportRecordsTyped(rcon, 
-                           cast = raw_cast) |> 
+exportRecordsTyped(rcon,
+                   validation=skip_validation,
+                   cast = raw_cast) |> 
   guessCast(rcon, 
             validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
             cast=as.Date,

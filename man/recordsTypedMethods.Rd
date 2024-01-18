@@ -138,7 +138,9 @@ are not identified as NA will be passed to validation functions.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+vector of logical matching the input length. The cast should match the validation,
+if one is using \code{raw_cast}, then \code{validation=skip_validation} is likely
+the desired intent. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign

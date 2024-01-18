@@ -261,6 +261,11 @@ exportRecords(rcon,
 # Export a report
 exportReports(rcon, 
               report_id = 12345)
+              
+# Export raw data
+exportRecordsTyped(rcon, 
+                   validation = skip_validation,
+                   cast = raw_cast)
 
 }
 

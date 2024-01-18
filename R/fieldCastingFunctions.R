@@ -101,8 +101,9 @@
 #' 
 #' 
 #' # Using guessCast
-#' exportRecordsTyped(rcon, 
-#'                            cast = raw_cast) |> 
+#' exportRecordsTyped(rcon,
+#'                    validation=skip_validation,
+#'                    cast = raw_cast) |> 
 #'   guessCast(rcon, 
 #'             validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
 #'             cast=as.Date,
@@ -272,6 +273,7 @@ castForImport <- function(data,
   
   checkmate::assert_list(x = validation, 
                          names = "named", 
+                         null.ok= TRUE,
                          add = coll)
   
   checkmate::assert_list(x = cast, 
@@ -557,7 +559,9 @@ mChoiceCast <- function(data,
                              correct_length = nrow(Raw))
 
   ###################################################################
-  # Run Validation Functions                                     ####
+  # Run Validation Functions
+  
+  if(is.null(validation)) validation <- skip_validation
   
   validations <- 
     .castRecords_runValidation(Raw              = Raw, 
