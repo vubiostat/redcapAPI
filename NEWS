@@ -16,6 +16,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Improved speed / memory usage for empty row exclusion.
 * Checkbox field labels now follow the pattern '[field_label] (choice=[choice_label])'
 * Fixed checkbox handling to be consistent with data export tool.
+* Added `skip_validation` function to complement `raw_cast`.
 
 ## 2.8.2
 
