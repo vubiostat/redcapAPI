@@ -75,16 +75,31 @@ test_that(
     local_reproducible_output(width = 200)
     expect_warning(
       warnZeroCodedFieldPresent(field_names = c("checkbox_zero___0", 
-                                                "checkbox_zero___1")), 
+                                                "checkbox_zero___1"),
+                                TRUE), 
       "Zero-coded check fields found. Verify that casting is correct for checkbox_zero___0")
     
     expect_warning(
       warnZeroCodedFieldPresent(field_names = c("checkbox_zero___0", 
-                                                "checkbox_other___0")), 
+                                                "checkbox_other___0"),
+                                TRUE), 
       "Zero-coded check fields found. Verify that casting is correct for checkbox_zero___0, checkbox_other___0")
     
     expect_silent(
-      warnZeroCodedFieldPresent(field_names = "field_name")
+      warnZeroCodedFieldPresent(field_names = "field_name",
+                                TRUE)
+    )
+    
+    expect_silent(
+      warnZeroCodedFieldPresent(field_names = c("checkbox_zero___0", 
+                                                "checkbox_other___0"),
+                                warn_zero_coded=FALSE)
+    )
+    
+    expect_silent(
+      warnZeroCodedFieldPresent(field_names = c("checkbox_zero___0", 
+                                                "checkbox_zero___1"),
+                                FALSE)
     )
   }
 )
@@ -94,8 +109,28 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(
-      warnZeroCodedFieldPresent(field_names = 1:3), 
+      warnZeroCodedFieldPresent(field_names = 1:3,TRUE), 
       "'field_names': Must be of type 'character'"
+    )
+    
+    expect_error(
+      warnZeroCodedFieldPresent(field_names = "yyz","yyz"), 
+      "'warn_zero_coded': Must be of type 'logical'"
+    )
+    
+    expect_error(
+      warnZeroCodedFieldPresent(field_names = "yyz",NA), 
+      "Variable 'warn_zero_coded': Contains missing values"
+    )
+    
+    expect_error(
+      warnZeroCodedFieldPresent(field_names = "yyz",logical()), 
+      "Variable 'warn_zero_coded': Must have length 1"
+    )
+    
+    expect_error(
+      warnZeroCodedFieldPresent(field_names = "yyz",c(TRUE,TRUE)), 
+      "Variable 'warn_zero_coded': Must have length 1"
     )
   }
 )

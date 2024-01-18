@@ -9,7 +9,14 @@
 \alias{mChoiceCast}
 \title{Functions for Casting Fields After Export (Post Processing)}
 \usage{
-recastRecords(data, rcon, fields, cast = list(), suffix = "")
+recastRecords(
+  data,
+  rcon,
+  fields,
+  cast = list(),
+  suffix = "",
+  warn_zero_coded = TRUE
+)
 
 castForImport(
   data,
@@ -17,7 +24,8 @@ castForImport(
   fields = NULL,
   na = list(),
   validation = list(),
-  cast = list()
+  cast = list(),
+  warn_zero_coded = TRUE
 )
 
 guessCast(
@@ -66,6 +74,8 @@ if recoding a field \code{forklift_brand} and \code{suffix = "_labeled"},
 the result will have one column with the coded values
 (\code{forklift_brand}) and one column with the labeled values
 (\code{forklift_brand_labeled}).}
+
+\item{warn_zero_coded}{logical(1). Turn on or off warnings about zero coded fields. Default is TRUE.}
 
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
@@ -133,13 +143,13 @@ to be loaded.
 A zero-coded check field is a field of the REDCap type \code{checkbox} that has
 a coding definition of \verb{0, [label]}. When exported, the field names for
 these fields is \verb{[field_name]___0}. As in other checkbox fields, the
-raw data output returns binary values where 0 represent and unchecked
+raw data output returns binary values where 0 represent an unchecked
 box and 1 represents a checked box. For zero-coded checkboxes, then, a
 value of 1 indicates that 0 was selected.
 
 This coding rarely presents a problem when casting from raw values
 (as is done in \code{exportRecordsTyped}). However, casting from coded or
-labeled values can be problematic, as it In this case, it becomes
+labeled values can be problematic. In this case, it becomes
 indeterminate from context if the intent of \code{0} is 'false' or the coded
 value '0' ('true') ...
 

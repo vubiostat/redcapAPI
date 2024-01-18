@@ -34,6 +34,41 @@ This depends on ones preferred use case. It's important to understand the differ
 
 If one is starting a new project, we would recommend using `exportBulkRecords` as the subsetting and filtering of empty rows is taken care of, and the user is left with doing the required joins to the data. If one has existing code they are converting that used `exportRecords`, then `exportRecordsTyped` is the recommendation. This is usually followed by code to subset into forms, filtering and then the same joins between these. Thus new projects can save some code by starting with `exportBulkRecords`. 
 
+## What is the warning about zero-coded check fields?
+
+**The `redcapAPI` development team strongly advises against the use of zero-coded check fields in project databases.**
+
+A zero-coded check field is a field of the REDCap type `checkbox` that has a coding definition of `0, [label]`. When exported, the field names for these fields is `[field_name]___0`. As in other checkbox fields, the raw data output returns binary values where 0 represent an unchecked box and 1 represents a checked box. For zero-coded checkboxes, then, a value of 1 indicates that 0 was selected. 
+ 
+This coding rarely presents a problem when casting from raw values (as is done in `exportRecordsTyped`). However, casting from coded or labeled values can be problematic. In this case, it becomes indeterminate from context if the intent of `0` is 'false' or the coded value '0' ('true') ... 
+ 
+The situations in which casting may fail to produce the desired results are 
+ 
+| Code | Label                   | Result                                        | 
+|------|-------------------------|-----------------------------------------------|
+| 0    | anything other than "0" | Likely to fail when casting from coded values |
+| 0    | 0                       | Likely to fail when casting from coded or labeled values | 
+
+Examples of problematic coding are
+
+```
+0, Stegosaurus     (likely to fail when casting from coded values)
+1, Triceratops
+2, Brachiosaurus
+```
+
+and
+
+```
+0, 0               (likely to fail when casting for coded or labeled values)
+1, 1
+2, 2
+```
+
+When it is necessary to cast a zero-coded check field from coded or labeled values, the `castCheckForImport` casting function is the best option, as it provides the user full control over what values are to be considered "Checked."
+
+`redcapAPI` is noisy (creates lots of warnings) about the presence of zero-coded check fields. The potential for loss of data integrity is serious and users need to be aware of that potential. The user may disable these warnings in `exportRecordsTyped` by setting the argument `warn_zero_coded = FALSE`.
+
 \clearpage
 
 # Casting Records
@@ -45,6 +80,7 @@ load("data/CastingVignetteData.Rdata")
 importArms(rcon, Arms)
 importEvents(rcon, Events)
 importMetaData(rcon, MetaData)
+importProjectInformation(rcon, data.frame(is_longitudinal = 1))
 importRecords(rcon, Records)
 ```
 
@@ -87,6 +123,21 @@ exportRecordsTyped(rcon,
                    cast = list(system = castRaw))
 ```
 
+## Concerns Over Invalid Data Being Marked NA
+
+Users have expressed concern that marking data that fails validation is not desired, as NA(not in REDCap) is not the same as NA(Unable to Cast). While this is true, there is no means to easily differentiate the two in the same `data.frame`. The problem can be demonstrated with a simple example as follows.
+
+Say that one needs to write a general function that given a vector of strings in R and turn this into a `Date` object; in type theory this is $f : \texttt{Text} \rightarrow \texttt{Date}$. What if the string presented is "yyz"? There is no date that can be assigned in R and the core date routines in R will throw an error and halt processing. R is somewhat unique in that *all* it's core data types exist inside the `Maybe` monad, i.e. `Maybe a = Just a | NA`. Thus the true function type is $f : \texttt{Text} \rightarrow \texttt{Maybe Date}$. This allows for `NA` or "not available" values. R makes no judgement on the cause of the lack of availability. To continue processing the only safe choice is to assign "yyz" to NA, $f(``yyz'') = NA$.This was a big driving reason behind the design of `exportRecordsTyped`. The "Typed" portion of the name referring to this. Thus the algorithm:
+
+* Assign NA to all values that are NA by definition from the data collection source.
+* Assign NA to all values that cannot be cast into their target types *_and record this in the `invalidRecords` attribute_*.
+* Perform the final type casting on the values that have not been assigned NA. 
+
+Via inversion of control, the user can override any choices the library team has made in `exportRecordsTyped` via the `na`, `validation` or `cast` arguments. It should be noted that the `validation` and `cast` arguments need to remain consistent with one another for each type. 
+
+Because NA has 2 meanings, the scanning of the resulting `reviewInvalidRecords` report is a crucial and important step in ensuring data quality of preparing data for analysis and reporting.
+
+
 \clearpage
 
 # Missing Data Detection
@@ -98,6 +149,7 @@ load("data/MissingDataVignetteData.Rdata")
 importArms(rcon, Arms)
 importEvents(rcon, Events)
 importMetaData(rcon, MetaData)
+importProjectInformation(rcon, data.frame(is_longitudinal = 1))
 importRecords(rcon, Records)
 ```
 
@@ -121,7 +173,7 @@ Rec <- exportRecordsTyped(rcon,
 Rec
 ```
 
-```{r, echo = FALSE, message = FALSE, results = 'hide', error = TRUE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', error = TRUE, warning = FALSE}
 purgeProject(rcon, purge_all = TRUE)
 importProjectInformation(rcon, ExistingProject$project_information)
 importArms(rcon, ExistingProject$arms)
@@ -129,5 +181,11 @@ importEvents(rcon, ExistingProject$events)
 importMetaData(rcon, ExistingProject$meta_data)
 importMappings(rcon, ExistingProject$mappings)
 importRepeatingInstrumentsEvents(rcon, ExistingProject$repeating_instruments)
-importRecords(rcon, ExistingProject$records)
+if (nrow(ExistingProject$records)){
+  importRecords(rcon, ExistingProject$records)
+}
 ```
+
+
+
+

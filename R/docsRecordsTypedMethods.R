@@ -43,6 +43,8 @@
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
 #' @param filter_empty_rows `logical(1)`. Filter out empty rows post retrieval. 
 #'   Defaults to `TRUE`.
+#' @param warn_zero_coded `logical(1)`. Turn on or off warnings about
+#'   potentially problematic zero coded fields. Defaults to `TRUE`. 
 #' 
 #' @details
 #' 
@@ -247,6 +249,7 @@ recordsTypedMethods <- function(rcon,
                                 filter_empty_rows, 
                                 csv_delimiter, 
                                 batch_size,
+                                warn_zero_coded,
                                 ...,
                                 error_handling, 
                                 config, 

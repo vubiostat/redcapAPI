@@ -100,7 +100,8 @@ test_that(
                                                "dropdown_test", 
                                                "redcap_event_name", 
                                                "redcap_data_access_group", 
-                                               "redcap_repeat_instrument")))
+                                               "redcap_repeat_instrument", 
+                                               "redcap_repeat_instance")))
     
     # For selected forms
     Codebook <- assembleCodebook(rcon, 
@@ -133,6 +134,10 @@ test_that(
 )
 
 # Additional tests to write
+# Turns out we can't write these tests because we can't import 
+# missing data codes.  They have to be set manually.  
+# Validation of these items must be performed manually
+# 
 # 1. Missing value codes added to checkbox variables
 # 2. Missing value codes not added to form_complete fields
 # 3. Missing value codes not added to system fields
