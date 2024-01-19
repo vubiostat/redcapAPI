@@ -56,8 +56,9 @@ REDCap and it's API have a large number of options and choices, with such comple
 2. What is returned by `exportRecordsTyped(rcon, validation = skip_validation, cast = raw_cast)`? This is a completely raw export with no processing by the library.
 3. Do you have any project level missing data codes? `rcon$projectInformation()$missing_data_codes`
 4. Do you have a secondary id field defined? `rcon$projectInformation()$secondary_unique_field`. In earlier versions REDCap will report one even if it's been disabled later, if this column doesn't exist then the library is unable to properly handle exports as the definition of the unique key doesn't exist. If one is defined and the field doesn't exist, one will have to contact their REDCap administrator to get the project fixed.
-5. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
-6. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
+5. Is it an empty row filtering issue? Try the option `filter_empty_rows=FALSE` and see if that fixes it.
+6. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
+7. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
  on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`. 
 
 ## Back Matter
