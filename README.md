@@ -48,6 +48,18 @@ These two calls will handle most analysis requests. To truly understand all thes
 
 2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
+## Troubleshooting Exports
+
+REDCap and it's API have a large number of options and choices, with such complexity the possibility of bugs increases as well. This is a checklist of troubleshooting exports. 
+
+1. Does `Rec <- exportRecordsTyped(rcon)` give you a warning about data that failed validations? If so, what kind of content are you seeing from `reviewInvalidRecords(Rec)`?
+2. What is returned by `exportRecordsTyped(rcon, validation = skip_validation, cast = raw_cast)`? This is a completely raw export with no processing by the library.
+3. Do you have any project level missing data codes? `rcon$projectInformation()$missing_data_codes`
+4. Do you have a secondary id field defined? `rcon$projectInformation()$secondary_unique_field`. In earlier versions REDCap will report one even if it's been disabled later, if this column doesn't exist then the library is unable to properly handle exports as the definition of the unique key doesn't exist. If one is defined and the field doesn't exist, one will have to contact their REDCap administrator to get the project fixed.
+5. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
+6. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
+ on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`. 
+
 ## Back Matter
 
 *NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.
