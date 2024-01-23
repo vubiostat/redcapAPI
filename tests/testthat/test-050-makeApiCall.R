@@ -174,3 +174,14 @@ test_that(
                  "'config': Must have names")
   }
 )
+
+test_that(
+  ".safe_as_character_response handles invalid encoded characters",
+  {
+    x <- list(content=charToRaw("fa\xE7il,joe\n1, 2\n3, 4"))
+    y <- .safe_as_character_response(x)
+    expect_true(grepl("\u25a1",y))
+    expect_equal(read.csv(text=y),
+      data.frame(fa.il=c(1,3), joe=c(2,4)))
+  }
+)
