@@ -76,7 +76,7 @@ exportUserRoles.redcapApiConnection <- function(rcon,
     return(REDCAP_USER_ROLE_STRUCTURE)
   }
   
-  UserRole <- utils::read.csv(text = as.character(response), 
+  UserRole <- utils::read.csv(text = .safe_as_character_response(response), 
                               na.strings = "", 
                               stringsAsFactors = FALSE)
   

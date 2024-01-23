@@ -78,7 +78,7 @@ exportUsers.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  Users <- utils::read.csv(text = as.character(response), 
+  Users <- utils::read.csv(text = .safe_as_character_response(response), 
                            stringsAsFactors = FALSE,
                            na.strings = "")
   

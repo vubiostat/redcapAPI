@@ -160,7 +160,7 @@ exportLogging.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   } 
   
-  Log <- utils::read.csv(text = as.character(response),
+  Log <- utils::read.csv(text = .safe_as_character_response(response),
                          stringsAsFactors = FALSE,
                          na.strings = "")
   

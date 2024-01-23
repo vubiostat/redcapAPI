@@ -188,7 +188,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   }
   
   # Prepare Output --------------------------------------------------
-  NewFolder <- utils::read.csv(text = as.character(response), 
+  NewFolder <- utils::read.csv(text = .safe_as_character_response(response), 
                                stringsAsFactors = FALSE, 
                                na.strings = "")
   NewFolder$name <- rep(name, nrow(NewFolder))

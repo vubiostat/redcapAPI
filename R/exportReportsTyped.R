@@ -109,7 +109,7 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config)
   
-  Raw <- utils::read.csv(text = as.character(response), 
+  Raw <- utils::read.csv(text = .safe_as_character_response(response), 
                          na.strings = "", 
                          sep = csv_delimiter,
                          stringsAsFactors = FALSE)

@@ -258,3 +258,8 @@ makeApiCall <- function(rcon,
   
   message(msg_part1, msg_part2, msg_part3)
 }
+
+# Helper function to convert responses to character strings without crashing.
+# ASSUMPTION: UTF-8 is the only allowed encoding. 
+.safe_as_character_response <- function(x, ...)
+  iconv(readBin(x$content, character()), 'UTF-8', 'UTF-8', '\U25a1')

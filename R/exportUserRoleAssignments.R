@@ -64,7 +64,7 @@ exportUserRoleAssignments.redcapApiConnection <- function(rcon,
     return(REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
   }
   
-  utils::read.csv(text = as.character(response), 
+  utils::read.csv(text = .safe_as_character_response(response), 
                   na.strings = "", 
                   stringsAsFactors = FALSE)
 }

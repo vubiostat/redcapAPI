@@ -443,7 +443,7 @@ import_records_unbatched <- function(rcon,
   
   if (response$status_code == "200"){
     if (returnContent %in% c("ids", "auto_ids")){
-      utils::read.csv(text = as.character(response), 
+      utils::read.csv(text = .safe_as_character_response(response), 
                na.strings = "", 
                stringsAsFactors = FALSE)
     } else {

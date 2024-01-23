@@ -660,7 +660,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     return(data.frame())
   }
   
-  utils::read.csv(text = as.character(response), 
+  utils::read.csv(text = .safe_as_character_response(response), 
                   stringsAsFactors = FALSE, 
                   na.strings = "", 
                   colClasses = "character", 
@@ -699,7 +699,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
       return(data.frame())
     }
     
-    records <- utils::read.csv(text = as.character(record_response), 
+    records <- utils::read.csv(text = .safe_as_character_response(record_response), 
                                stringsAsFactors = FALSE, 
                                na.strings = "", 
                                sep = csv_delimiter)
