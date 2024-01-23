@@ -262,9 +262,13 @@ makeApiCall <- function(rcon,
 # Helper function to convert responses to character strings without crashing.
 # ASSUMPTION: UTF-8 is the only allowed encoding. 
 as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
+{
+  enc <- x$headers[["Content-Type"]]
+  if(is.null(enc)) enc <- 'UTF-8'
   utils::read.csv(
     text             = iconv(readBin(x$content, character()),
-                                    'UTF-8', 'UTF-8', '\U25a1'),
+                             enc, 'UTF-8', '\U25a1'),
     stringsAsFactors = stringsAsFactors, 
     na.strings       = na.strings,
     ...)
+}
