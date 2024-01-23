@@ -260,7 +260,6 @@ makeApiCall <- function(rcon,
 }
 
 # Helper function to convert responses to character strings without crashing.
-# ASSUMPTION: UTF-8 is the only allowed encoding. 
 as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
 {
   enc <- x$headers[["Content-Type"]]
