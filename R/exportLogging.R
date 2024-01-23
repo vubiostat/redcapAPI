@@ -160,9 +160,7 @@ exportLogging.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   } 
   
-  Log <- utils::read.csv(text = .safe_as_character_response(response),
-                         stringsAsFactors = FALSE,
-                         na.strings = "")
+  Log <- as.data.frame(response)
   
   # Format and return data ------------------------------------------
   Log$timestamp <- as.POSIXct(Log$timestamp, 

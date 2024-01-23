@@ -176,12 +176,14 @@ test_that(
 )
 
 test_that(
-  ".safe_as_character_response handles invalid encoded characters",
+  "as.data.frame.response handles invalid encoded characters",
   {
-    x <- list(content=charToRaw("fa\xE7il,joe\n1, 2\n3, 4"))
-    y <- .safe_as_character_response(x)
-    expect_true(grepl("\u25a1",y))
-    expect_equal(read.csv(text=y),
-      data.frame(fa.il=c(1,3), joe=c(2,4)))
+    x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
+    class(x) <- c("response","list")
+    y <- redcapAPI:::as.data.frame.response(x)
+    expect_equal(
+      y,
+      data.frame(fa.il=as.integer(c(1,3)), joe=c("2\U25a1","4"))
+    )
   }
 )

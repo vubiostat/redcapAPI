@@ -69,7 +69,5 @@ exportRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  utils::read.csv(text = .safe_as_character_response(response), 
-                  stringsAsFactors = FALSE,
-                  na.strings = "")
+  as.data.frame(response)
 }

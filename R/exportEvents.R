@@ -86,8 +86,6 @@ exportEvents.redcapApiConnection <- function(rcon,
   if (trimws(as.character(response)) == ""){
     REDCAP_EVENT_STRUCTURE
   } else {
-    utils::read.csv(text = .safe_as_character_response(response),
-                    stringsAsFactors = FALSE,
-                    na.strings = "")
+    as.data.frame(response)
   }
 }
