@@ -263,7 +263,7 @@ makeApiCall <- function(rcon,
 as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
 {
   enc <- if(grepl("charset", x$headers[["Content-Type"]]))
-    toupper(sub(".*charset=", "", x$headers[["Content-Type"]])) else
+    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')
