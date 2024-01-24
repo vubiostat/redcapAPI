@@ -65,7 +65,5 @@ exportUserDagAssignments.redcapApiConnection <- function(rcon,
     return(REDCAP_DAG_ASSIGNMENT_STRUCTURE)
   }
   
-  utils::read.csv(text = as.character(response), 
-                  na.strings = "", 
-                  stringsAsFactors = FALSE)
+  as.data.frame(response)
 }

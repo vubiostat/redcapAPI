@@ -115,9 +115,7 @@ exportReports.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) redcapError(response, error_handling)
   
-  Report <- utils::read.csv(text = as.character(response), 
-                            stringsAsFactors = FALSE, 
-                            na.strings = "")
+  Report <- as.data.frame(response)
   
    ##################################################################
   # Process the data

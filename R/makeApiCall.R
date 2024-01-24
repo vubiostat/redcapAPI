@@ -258,3 +258,19 @@ makeApiCall <- function(rcon,
   
   message(msg_part1, msg_part2, msg_part3)
 }
+
+# Helper function to convert responses to character strings without crashing.
+as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
+{
+  enc <- if(grepl("charset", x$headers[["Content-Type"]]))
+    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
+    'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
+  mapped <- iconv(readBin(x$content, character()),
+                  enc, 'UTF-8', '\U25a1')
+  if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
+  utils::read.csv(
+    text             = mapped,
+    stringsAsFactors = stringsAsFactors, 
+    na.strings       = na.strings,
+    ...)
+}

@@ -77,7 +77,5 @@ exportMappings.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
   
-  utils::read.csv(text = as.character(response), 
-                  stringsAsFactors = FALSE, 
-                  na.strings = "")
+  as.data.frame(response)
 }
