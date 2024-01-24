@@ -264,10 +264,13 @@ as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", .
 {
   enc <- x$headers[["Content-Type"]]
   if(is.null(enc)) enc <- 'UTF-8'
-  utils::read.csv(
-    text             = iconv(readBin(x$content, character()),
-                             enc, 'UTF-8', '\U25a1'),
+  mapped <- iconv(readBin(x$content, character()),
+                  enc, 'UTF-8', '\U25a1')
+  if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
+  Frame <- utils::read.csv(
+    text             = mapped,
     stringsAsFactors = stringsAsFactors, 
     na.strings       = na.strings,
     ...)
+  Frame
 }

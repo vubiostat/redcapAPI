@@ -180,7 +180,8 @@ test_that(
   {
     x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
     class(x) <- c("response","list")
-    y <- redcapAPI:::as.data.frame.response(x)
+    expect_warning({y <- redcapAPI:::as.data.frame.response(x)},
+                  "invalid characters")
     expect_equal(
       y,
       data.frame(fa.il=as.integer(c(1,3)), joe=c("2\U25a1","4"))
