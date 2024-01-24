@@ -1,6 +1,6 @@
 
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11826.png)](https://dx.doi.org/10.5281/zenodo.11826)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10564837.svg)](https://doi.org/10.5281/zenodo.10564837)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
 
 redcapAPI
