@@ -14,7 +14,6 @@ exportMetaData.redcapApiConnection <- function(rcon,
                                                fields = character(0), 
                                                forms = character(0),
                                                ...,
-                                               drop_utf8 = FALSE, 
                                                error_handling = getOption("redcap_error_handling"), 
                                                config = list(), 
                                                api_param = list()){
@@ -30,11 +29,7 @@ exportMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = forms, 
                               add = coll)
-  
-  checkmate::assert_logical(x = drop_utf8,
-                            len = 1,
-                            add = coll)
-  
+
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
                                         .var.name = "error_handling", 
@@ -86,9 +81,5 @@ exportMetaData.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  # Post processing -------------------------------------------------
- 
-  # FIXME: drop_utf8 is automatic in the conversion to data frame, i.e. they become "." in R
-  # Is this flag still needed?
   as.data.frame(response)
 }

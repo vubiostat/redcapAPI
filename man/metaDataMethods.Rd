@@ -19,7 +19,6 @@ importMetaData(rcon, data, ...)
   fields = character(0),
   forms = character(0),
   ...,
-  drop_utf8 = FALSE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -53,9 +52,6 @@ dictionary, and not the display names shown on the web interface.}
 
 \item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached metadata
 and instruments will be refreshed after the import.}
-
-\item{drop_utf8}{\code{logical(1)}. When \code{TRUE}, non-ASCII characters
-will be replaced with empty characters.}
 
 \item{...}{Arguments to pass to other methods}
 
