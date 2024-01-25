@@ -87,13 +87,8 @@ exportMetaData.redcapApiConnection <- function(rcon,
   }
   
   # Post processing -------------------------------------------------
-  response <- as.character(response)
-  if (drop_utf8)
-  {
-    response <- iconv(response, "utf8", "ASCII", sub = "")
-  }
-  
-  utils::read.csv(text = response, 
-                  stringsAsFactors = FALSE,
-                  na.strings = "")
+ 
+  # FIXME: drop_utf8 is automatic in the conversion to data frame, i.e. they become "." in R
+  # Is this flag still needed?
+  as.data.frame(response)
 }

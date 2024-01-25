@@ -331,13 +331,7 @@ unbatched <- function(rcon, body, id, colClasses, error_handling, config)
   
   if (response$status_code != 200) redcapError(response, error_handling = error_handling)
   
-  response <- as.character(response)
-  # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-  # x <- iconv(x, "utf8", "ASCII", sub = "")
-  utils::read.csv(text = response, 
-                  stringsAsFactors = FALSE, 
-                  na.strings = "",
-                  colClasses = colClasses)
+  as.data.frame(response, colClasses=colClasses)
 }
 
 
@@ -368,14 +362,8 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
   
   if (IDs$status_code != 200) redcapError(IDs, error_handling)
   
-  IDs <- as.character(IDs)
-  # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-  # IDs <- iconv(IDs, "utf8", "ASCII", sub = "")
-  IDs <- utils::read.csv(text = IDs,
-                         stringsAsFactors = FALSE,
-                         na.strings = "",
-                         colClasses = colClasses[id])
-  
+  IDs <- as.data.frame(IDs, colClasses = colClasses[id])
+
   #* 2. Restrict to unique IDs
   unique_id <- unique(IDs[[id]])
   
@@ -408,13 +396,8 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
     
     if (this_response$status_code != 200) redcapError(this_response, error_handling = "error")
     
-    this_response <- as.character(this_response)
-    # probably not necessary for data.  Useful for meta data though. (See Issue #99)
-    # x <- iconv(x, "utf8", "ASCII", sub = "")
-    batch_list[[i]] <- utils::read.csv(text = this_response,
-                                       stringsAsFactors = FALSE,
-                                       na.strings = "",
-                                       colClasses = colClasses)
+    batch_list[[i]] <- as.data.frame(this_response, colClasses = colClasses)
+
     Sys.sleep(1)
   }
   

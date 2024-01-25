@@ -148,12 +148,8 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   # If folder_id has length 0, set the parent to top-level
   parent <- if (length(folder_id) == 0) 0 else folder_id
   
-  
-  response <- as.character(response)
-  if (nchar(response) > 0){
-    response <- utils::read.csv(text = response, 
-                                stringsAsFactors = FALSE, 
-                                na.strings = "")
+  if (length(response$content) > 0){
+    response <- as.data.frame(response)
     response$parent_folder <- rep(parent, 
                                   nrow(response))
   } else {
