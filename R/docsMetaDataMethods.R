@@ -22,8 +22,6 @@
 #'   when validating the `field_type` column. This  
 #' @param validation_types `character` giving the acceptable values 
 #'   for the `text_validation_or_show_slider_number` column.
-#' @param drop_utf8 `logical(1)`. When `TRUE`, non-ASCII characters 
-#'   will be replaced with empty characters.
 #'   
 #' @details
 #' When importing meta data, the following conditions apply:
@@ -122,8 +120,7 @@ metaDataMethodsArgs <- function(rcon,
                                 fields, 
                                 forms, 
                                 data, 
-                                refresh, 
-                                drop_utf8,
+                                refresh,
                                 ...,
                                 field_types, 
                                 validation_types, 
