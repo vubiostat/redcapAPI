@@ -2,9 +2,25 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10564837.svg)](https://doi.org/10.5281/zenodo.10564837)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 redcapAPI
 ======
+
+`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. It's design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory in R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
+
+Core concerns that handled by the library:
+
+* API_KEY (which is equivalent of username/password to ones data!) secure handling practices are designed to be as seamless as possible via `unlockREDCap`. There are override methods available for production environments.
+* Retry strategy with exponential back off. When a REDCap server or a network is overload requests can fail. Each call to the API will retry multiple times, and it doubles the wait time between each all. This dramatically increases the odds of success for a script with multiple API calls to REDCap. 
+* Automatically handles and caches meta data information needed to understand and translate a projects data.
+* A robust type casting strategy that every step of the process can be overridden by the user via inversion of control. The strategy proceeds as follows:
+  * NA detection per REDCap definition of NA. 
+  * Validation of data versus the target type/class. `reviewInvalidRecords` provides a summary report of all data that fails validation, with hot links to the record in question. This is an important step. Data that does not match the target format cannot be cast, e.g. "xyz" cannot be treated as a numeric and will become NA in the final dataset.
+  * Final type casting to target type.
+* Sparse block matrix splitting into forms/instruments with filtering of empty rows. 
+* Additional helper functions, e.g. longitudinal wider/long conversions, guessing if a character field is actually a date, and SAS exports.
+* Importing data reuses a lot of the casting functions in reverse to ensure data integrity. 
 
 ## Quick Start Guide
 
@@ -29,28 +45,37 @@ exportBulkRecords(list(db = rcon),
   envir = globalenv())
 ```
 
-The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api. The `passwordFUN` specified is an override if one is using RStudio. It's not required, but on a Mac this is the only option that works well. The `envir` call is where to write the connection object; if not specified the call will return a list.
+The `<MY PROJECT NAME>` is a reference for whatever you wish to call this REDCap project. The `rcon` is the variable you wish to assign it too. The keyring is a name for this key ring. If one uses `'API_KEYs'` for all your projects, you'll have one big keyring for all your API_KEYs locally encrypted. The url is the standard url for the api at your institution. The `envir` call is where to write the connection object; if not specified the call will return a list.
 
-The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened and naming it the same thing. The second call is saying for this connection export back the all the forms present in that `db`. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call. 
+The next call to `exportBulkRecords`, says to export by form and leave out records not filled out and columns not part of a form. The first argument is specifying a `db` reference to the connection opened and naming it the same thing. The second call is saying for this connection export back the all the forms/instruments present in that `db`, if this is left blank it defaults to all forms/instruments. The `envir` has it writing it back to the global environment as variables. Any parameter not recognized is passed to the `exportRecordsTyped` call--for every REDCap database connection. For most analysis projects the function `exportBulkRecords` provides the functionality required to get the data in memory, converted, type cast and sparse block matrix split into forms/instruments with blank rows filtered out.
 
-These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`. 
+These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`.
 
-## All Vignettes
-
-* redcapAPI-casting-data Casting Data
-* redcapAPI-data-validation Data Validation
-* redcapAPI-getting-started-connecting Connecting to REDCap
-* redcapAPI-missing-data-detection Missing Data Detection
-* redcapAPI-best-practices Best Practices 
-* redcapAPI-offline-connection Offline Connections 
-
-## 2.7.0+
+### 2.7.0+
 
 2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
-## Troubleshooting Exports
+## Community Guidelines
 
-REDCap and it's API have a large number of options and choices, with such complexity the possibility of bugs increases as well. This is a checklist of troubleshooting exports. 
+This package exists to serve the research community and would not exist without community support. We are interested in volunteers who would like to translate the documentation into other languages.
+
+### Contribute
+
+If you wish to contribute new features to this software, we are open to [pull requests](https://github.com/vubiostat/redcapAPI/pulls). Before doing a lot of work, it would be best to open [issue](https://github.com/vubiostat/redcapAPI/issues) for discussion about your
+idea. 
+
+#### Coding Style Guideline Note
+
+- Exported function names: dromedaryCase
+- Internal function names: .dromedaryCase
+- Constant data exported: UPPERCASE
+- Function parameters: snake_case
+- Function variables: snake_case
+- - (exception) data.frame variable: CamelCase
+
+### Report Issues or Problems
+
+REDCap and it's API have a large number of options and choices, with such complexity the possibility of bugs increases as well. This is a checklist for troubleshooting exports. 
 
 1. Does `Rec <- exportRecordsTyped(rcon)` give you a warning about data that failed validations? If so, what kind of content are you seeing from `reviewInvalidRecords(Rec)`?
 2. What is returned by `exportRecordsTyped(rcon, validation = skip_validation, cast = raw_cast)`? This is a completely raw export with no processing by the library.
@@ -61,26 +86,55 @@ REDCap and it's API have a large number of options and choices, with such comple
 7. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
  on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`. 
 
+### Seek Support
+
+If you need help or assistance in understanding how to approach a project or problem using the library, please open an [issue](https://github.com/vubiostat/redcapAPI/issues). We use these questions to refine the documentation. Thus asking questions contributes to refinement of documentation. 
+
+## Documentation
+
+Your institutions installation of REDCap contains a lot of documentation for the general usage of REDCap. For general questions outside the scope of interfacing the API to R please refer to your institutions REDCap instance documentation.
+
+The help pages for functions is fairly extensive. Try `?exportRecordsTyped` or `?fieldValidationAndCasting` for good starting points into the help pages.
+
+### All Vignettes
+
+There are several vignettes with helpful information and examples to explore. These provide higher level views than can be provided in help pages.
+
+* redcapAPI-casting-data 
+* redcapAPI-data-validation 
+* redcapAPI-getting-started-connecting 
+* redcapAPI-missing-data-detection 
+* redcapAPI-best-practices 
+* redcapAPI-offline-connection 
+
 ## Back Matter
 
 *NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.
 
-The research community owes a big thanks to [Benjamin Nutter](https://github.com/nutterb/redcapAPI)
-for his years of service keeping this package current.
+The research community owes a big thanks to [Benjamin Nutter](https://github.com/nutterb/redcapAPI) for his years of service keeping this package current.
 
-The package `redcapAPI` is an R interface to REDCap (https://www.projectredcap.org/), originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
+This package was originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
 
-Please read the documentation on your institutions REDCap installation.
+The current package was developed under REDCap Version 14+. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
 
-Issues may be reported at [Issues](https://github.com/vubiostat/redcapAPI/issues)
+### License
 
-This package was developed under REDCap Version 13.8.2. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
+redcapAPI A rich API client for interfacing REDCap to R
+Copyright (C) 2012 Jeffrey Horner, Vanderbilt University Medical Center
+Copyright (C) 2013-2022 Benjamin Nutter
+Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University Medical Center
 
-### Coding Style Guideline Note
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-- Exported function names: dromedaryCase
-- Internal function names: .dromedaryCase
-- Constant data exported: UPPERCASE
-- Function parameters: snake_case
-- Function variables: snake_case
-- - (exception) data.frame variable: CamelCase
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
