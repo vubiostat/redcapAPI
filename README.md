@@ -7,9 +7,9 @@
 redcapAPI
 ======
 
-`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. It's design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory in R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
+`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory in R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
 
-Core concerns that handled by the library:
+Core concerns handled by the library:
 
 * API_KEY (which is equivalent of username/password to ones data!) secure handling practices are designed to be as seamless as possible via `unlockREDCap`. There are override methods available for production environments.
 * Retry strategy with exponential back off. When a REDCap server or a network is overload requests can fail. Each call to the API will retry multiple times, and it doubles the wait time between each all. This dramatically increases the odds of success for a script with multiple API calls to REDCap. 
@@ -120,8 +120,11 @@ The current package was developed under REDCap Version 14+. Institutions can be 
 ### License
 
 redcapAPI A rich API client for interfacing REDCap to R
+
 Copyright (C) 2012 Jeffrey Horner, Vanderbilt University Medical Center
+
 Copyright (C) 2013-2022 Benjamin Nutter
+
 Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University Medical Center
 
 This program is free software; you can redistribute it and/or
