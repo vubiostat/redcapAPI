@@ -109,9 +109,9 @@ There are several vignettes with helpful information and examples to explore. Th
 
 ## Back Matter
 
-*NOTE*: Ownership transfer of this package to VUMC Biostatistics is complete.
+*NOTE*: Ownership transfer of this package to [VUMC Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics) is complete.
 
-The research community owes a big thanks to [Benjamin Nutter](https://github.com/nutterb/redcapAPI) for his years of service keeping this package current.
+The research community owes a big thanks to [Benjamin Nutter](https://github.com/nutterb/) for his years of service keeping this package current.
 
 This package was originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
 
