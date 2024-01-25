@@ -89,9 +89,5 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
   
-  SurveyParticipant <- utils::read.csv(textConnection(as.character(response)), 
-                                       stringsAsFactors=FALSE, 
-                                       na.strings="")
-
-  return(SurveyParticipant)
+  as.data.frame(response)
 }
