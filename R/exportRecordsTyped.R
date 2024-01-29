@@ -655,14 +655,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                  error_handling = error_handling)
   } 
   
-  if (trimws(as.character(response)) == ""){
-    message("No data found in the project.")
-    return(data.frame())
-  }
+  response <- as.data.frame(response,
+                            colClasses = "character",
+                            sep = csv_delimiter)
   
-  as.data.frame(response,  
-                colClasses = "character", 
-                sep = csv_delimiter)
+  if (nrow(response) == 0) message("No data found in the project.")
+  
+  response
 }
 
 # .exportRecordsTyped_Batched ---------------------------------------
@@ -692,12 +691,15 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                    error_handling = error_handling)
     }
     
-    if (trimws(as.character(record_response)) == ""){
+    records <- as.data.frame(record_response, sep = csv_delimiter)
+    
+    if (nrow(record_response) == 0)
+    {
       message("No data found in the project.")
       return(data.frame())
     }
     
-    records <- as.data.frame(record_response, sep = csv_delimiter)
+    
     records <- unique(records[[target_field]])
   }
 
