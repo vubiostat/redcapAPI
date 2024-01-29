@@ -268,9 +268,17 @@ as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", .
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
-  utils::read.csv(
-    text             = mapped,
-    stringsAsFactors = stringsAsFactors, 
-    na.strings       = na.strings,
-    ...)
+
+  if(grepl('^\\s*$',mapped))
+  {
+    data.frame()
+  }
+  else
+  {
+    utils::read.csv(
+      text             = mapped,
+      stringsAsFactors = stringsAsFactors, 
+      na.strings       = na.strings,
+      ...)
+  }
 }
