@@ -269,6 +269,8 @@ as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", .
                   enc, 'UTF-8', '\U25a1')
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
 
+  # First check is very fast check to see if the first 10 bytes are empty space
+  # Second check is followup to see if it's entirely empty space (verify)
   if(grepl("^\\s*$", substr(mapped, 1, 10)) &&
      nchar(trimws(mapped,'left')) == 0)
   {
