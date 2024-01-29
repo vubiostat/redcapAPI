@@ -693,7 +693,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     
     records <- as.data.frame(record_response, sep = csv_delimiter)
     
-    if (nrow(record_response) == 0)
+    if (nrow(records) == 0)
     {
       message("No data found in the project.")
       return(data.frame())

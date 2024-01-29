@@ -269,7 +269,7 @@ as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", .
                   enc, 'UTF-8', '\U25a1')
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
 
-  if(grepl('^\\s*$',mapped))
+  if(grepl("^\\s*$", substr(x, 1, 80)))
   {
     data.frame()
   }
