@@ -85,7 +85,7 @@ REDCap and it's API have a large number of options and choices, with such comple
 7. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
  on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`.
  
-## What does "Project contains invalid characters. Mapped to '□'." mean?
+#### What does "Project contains invalid characters. Mapped to '□'." mean?
 
 This means that the data/meta-data stored in the REDCap database contains improperly encoded characters. It is a problem with the REDCap project itself. The authors of this library do not the root cause of this, but suspect it was an earlier version of REDCap that did not handle encoding properly. This library is doing it's best to respect the reported encoding type when loading into memory. All cases seen to date have the data encoded in ISO-8859-1 (the default when the HTTP header is missing charset) and the REDCap server treats all data as UTF-8. This improper coding can result in data loss via the GUI if records are updated. It is best to discuss with your institutions REDCap administrator how to repair this problem and such repairs are outside the scope of this library. 
 
