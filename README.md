@@ -1,6 +1,6 @@
 
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10564837.svg)](https://doi.org/10.5281/zenodo.10564837)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10602052.svg)](https://doi.org/10.5281/zenodo.10602052)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
