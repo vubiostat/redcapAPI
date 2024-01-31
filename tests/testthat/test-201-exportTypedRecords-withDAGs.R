@@ -42,7 +42,7 @@ test_that(
     DagRaw <- exportRecordsTyped(rcon, 
                                  dag = TRUE, 
                                  cast = list(system = castRaw))  
-    expect_equal(unique(DagRaw$redcap_data_access_group), 
+    expect_equal(sort(unique(DagRaw$redcap_data_access_group)), 
                  c("test_dag_1", "test_dag_2"))
   }
 )

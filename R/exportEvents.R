@@ -83,9 +83,6 @@ exportEvents.redcapApiConnection <- function(rcon,
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
 
-  if (trimws(as.character(response)) == ""){
-    REDCAP_EVENT_STRUCTURE
-  } else {
-    as.data.frame(response)
-  }
+  response <- as.data.frame(response)
+  if(nrow(response) == 0) REDCAP_EVENT_STRUCTURE else response
 }
