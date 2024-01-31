@@ -7,7 +7,7 @@
 redcapAPI
 ======
 
-`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory using base R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
+`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. One principal goal is to get data into memory using base R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
 
 Core concerns handled by the library:
 
@@ -87,7 +87,7 @@ REDCap and it's API have a large number of options and choices, with such comple
  
 #### What does "Project contains invalid characters. Mapped to '□'." mean?
 
-This means that the data/meta-data stored in the REDCap database contains improperly encoded characters. It is a problem with the REDCap project itself. The authors of this library do not the root cause of this, but suspect it was an earlier version of REDCap that did not handle encoding properly. This library is doing it's best to respect the reported encoding type when loading into memory. All cases seen to date have the data encoded in ISO-8859-1 (the default when the HTTP header is missing charset) and the REDCap server treats all data as UTF-8. This improper coding can result in data loss via the GUI if records are updated. It is best to discuss with your institutions REDCap administrator how to repair this problem and such repairs are outside the scope of this library. 
+This means that the data/meta-data stored in the REDCap database contains improperly encoded characters. It is a problem with the REDCap project itself. The authors of this library do not know the root cause of the encoding issue, but suspect it was an earlier version of REDCap that did not handle encoding properly. This library is respecting the reported encoding type when loading into memory. All cases seen to date have the data encoded in ISO-8859-1 (the default when the HTTP header is missing charset) and the REDCap server treats all data as UTF-8. This improper coding can result in data loss via the GUI if records are updated. It is best to discuss with your institutions REDCap administrator how to repair this problem and such repairs are outside the scope of this library. This error message is to make one aware of this issue in their project. The library does the best it can.
 
 ### Seek Support
 
