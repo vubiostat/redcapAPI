@@ -260,8 +260,15 @@ makeApiCall <- function(rcon,
 }
 
 # Helper function to convert responses to character strings without crashing.
-as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
+as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
 {
+  # Setting defaults, necessary because cannot change S3 interface
+  extra <- list(...)
+  stringsAsFactors <- extra$stringsAsFactors
+  if(is.null(stringsAsFactors)) stringsAsFactors <- FALSE
+  na.strings <- extra$na.strings
+  if(is.null(na.strings)) na.strings <- ""
+  
   enc <- if(grepl("charset", x$headers[["Content-Type"]]))
     toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)

@@ -121,9 +121,9 @@ Otherwise, records created or modified before this date will be returned.}
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
-{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql, system}. The function will be provided the
+checkbox, form_complete, sql, system. The function will be provided the
 variables (x, field_name, coding). The function must return a vector of
 logicals matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
@@ -145,7 +145,7 @@ the desired intent. See \code{\link[=fieldValidationAndCasting]{fieldValidationA
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
-HTML and UNICODE raw label and scanning for units={"UNITS"} in description}
+HTML and UNICODE raw label and scanning for units=\{"UNITS"\} in description}
 
 \item{filter_empty_rows}{\code{logical(1)}. Filter out empty rows post retrieval.
 Defaults to \code{TRUE}.}
