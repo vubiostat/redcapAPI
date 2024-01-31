@@ -7,24 +7,24 @@
 redcapAPI
 ======
 
-`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory in R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
+`redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. It's goal is to get data into memory using base R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
 
 Core concerns handled by the library:
 
 * API_KEY (which is equivalent of username/password to ones data!) secure handling practices are designed to be as seamless as possible via `unlockREDCap`. There are override methods available for production environments.
-* Retry strategy with exponential back off. When a REDCap server or a network is overload requests can fail. Each call to the API will retry multiple times, and it doubles the wait time between each all. This dramatically increases the odds of success for a script with multiple API calls to REDCap. 
-* Automatically handles and caches meta data information needed to understand and translate a projects data.
+* Retry strategy with exponential back off. When a REDCap server or a network is overloaded requests can fail. Each call to the API will retry multiple times, and it doubles the wait time between each call. This dramatically increases the odds of success for a script with multiple API calls to REDCap. 
+* Automatically handles and caches meta data information needed to understand and translate a project's data.
 * A robust type casting strategy that every step of the process can be overridden by the user via inversion of control. The strategy proceeds as follows:
-  * NA detection per REDCap definition of NA. 
-  * Validation of data versus the target type/class. `reviewInvalidRecords` provides a summary report of all data that fails validation, with hot links to the record in question. This is an important step. Data that does not match the target format cannot be cast, e.g. "xyz" cannot be treated as a numeric and will become NA in the final dataset.
+  * NA detection per REDCap (_or user!_) definition of NA. 
+  * Validation of data versus the target type/class. `reviewInvalidRecords` provides a summary report of all data that fails validation, with hot links to the record in question. This is an important step. Data that does not match the target format cannot be cast, e.g. "xyz" cannot be treated as a numeric and will become NA in the final data set.
   * Final type casting to target type.
 * Sparse block matrix splitting into forms/instruments with filtering of empty rows. 
 * Additional helper functions, e.g. longitudinal wider/long conversions, guessing if a character field is actually a date, and SAS exports.
-* Importing data reuses a lot of the casting functions in reverse to ensure data integrity. 
+* Importing data reuses a lot of the casting functions in reverse to ensure data integrity both directions.
 
 ## Quick Start Guide
 
-There are 2 basic functions that are key to understanding the major changes with this version:
+There are 2 basic functions that are key to understanding the core approach:
 
 * `unlockREDCap`
 * `exportBulkRecords`
@@ -51,9 +51,9 @@ The next call to `exportBulkRecords`, says to export by form and leave out recor
 
 These two calls will handle most analysis requests. To truly understand all these changes see: `vignette("redcapAPI-best-practices")`.
 
-### 2.7.0+
+### Version 2.7.0+
 
-2.7.0 includes `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential backoff through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
+2.7.0 introduced `exportRecordsTyped` which is a major move forward for the package. It replaces `exportRecords` with a far more stable and dependable call. It includes retries with exponential back off through the connection object. It has inversion of control over casting, and has a useful validation report attached when things fail. It is worth the time to convert calls to `exportRecords` to `exportRecordsTyped` and begin using this new routine. It is planned that in the next year `exportRecords` will be removed from the package.
 
 ## Community Guidelines
 
@@ -61,8 +61,7 @@ This package exists to serve the research community and would not exist without 
 
 ### Contribute
 
-If you wish to contribute new features to this software, we are open to [pull requests](https://github.com/vubiostat/redcapAPI/pulls). Before doing a lot of work, it would be best to open [issue](https://github.com/vubiostat/redcapAPI/issues) for discussion about your
-idea. 
+If you wish to contribute new features to this software, we are open to [pull requests](https://github.com/vubiostat/redcapAPI/pulls). Before doing a lot of work, it would be best to open [issue](https://github.com/vubiostat/redcapAPI/issues) for discussion about your idea. 
 
 #### Coding Style Guideline Note
 
@@ -84,7 +83,11 @@ REDCap and it's API have a large number of options and choices, with such comple
 5. Is it an empty row filtering issue? Try the option `filter_empty_rows=FALSE` and see if that fixes it.
 6. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
 7. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
- on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`. 
+ on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`.
+ 
+## What does "Project contains invalid characters. Mapped to '□'." mean?
+
+This means that the data/meta-data stored in the REDCap database contains improperly encoded characters. It is a problem with the REDCap project itself. The authors of this library do not the root cause of this, but suspect it was an earlier version of REDCap that did not handle encoding properly. This library is doing it's best to respect the reported encoding type when loading into memory. All cases seen to date have the data encoded in ISO-8859-1 (the default when the HTTP header is missing charset) and the REDCap server treats all data as UTF-8. This improper coding can result in data loss via the GUI if records are updated. It is best to discuss with your institutions REDCap administrator how to repair this problem and such repairs are outside the scope of this library. 
 
 ### Seek Support
 
