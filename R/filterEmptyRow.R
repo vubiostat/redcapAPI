@@ -1,3 +1,22 @@
+  #####################################################################
+ ##
+## Helper function to filter a data.frame and preserve all attributes
+##
+.df_filter_i <- function (x, i)
+{
+  rows  <- attr(x, "row.names")[i]
+  attrs <- lapply(x, attributes)
+  x     <- unclass(x)
+  for (j in seq_along(x))
+  {
+    x[[j]] <- x[[j]][i]
+    attributes(x[[j]]) <- attrs[[j]]
+  }
+  class(x) <- 'data.frame'
+  attr(x, "row.names") <- rows
+  x
+}
+
 #' @name filterEmptyRow
 #' @title Remove Rows Containing Only Missing Values
 #' 
@@ -12,7 +31,6 @@
 #' @seealso 
 #' [exportRecordsTyped()], \cr
 #' [exportReportsTyped()]
-
 filterEmptyRow <- function(data, 
                            rcon){
   coll <- checkmate::makeAssertCollection()
@@ -26,28 +44,17 @@ filterEmptyRow <- function(data,
   
   checkmate::reportAssertions(coll)
   
-  invalid <- attr(data, "invalid")
+  other_fields <- setdiff(names(data),
+                          c(getProjectIdFields(rcon),
+                            REDCAP_SYSTEM_FIELDS,
+                            "redcap_data_access_group"))
   
-  id_fields <- c(getProjectIdFields(rcon), REDCAP_SYSTEM_FIELDS,
-                 "redcap_data_access_group")
-  
-  other_fields <- setdiff(names(data), id_fields)
-  
-  if(length(other_fields) == 0)
-    NewData <- data
-  
-  else {
-    is_all_missing <- rowSums(!is.na(data[other_fields])) == 0
-    if(all(!is_all_missing)) return(data)
-    
-    NewData <- data[!is_all_missing, , drop = FALSE]
-    
-    for (field in names(NewData)) {
-      attributes(NewData[[field]]) <- attributes(data[[field]])
-    }
-    
-    attr(NewData, "invalid") <- invalid
+  if(length(other_fields) == 0) data else
+  {
+    has_any_value <- rowSums(!is.na(data[other_fields])) != 0
+    if(all(has_any_value)) return(data)
+    .df_filter_i(data, has_any_value)
   }
-  
-  NewData
 }
+
+
