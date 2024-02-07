@@ -678,7 +678,9 @@ mChoiceCast <- function(data,
                                    rcon = rcon)
   
   codings <- vector("list", length = length(codebook))
-  
+  # add known maps
+  known_maps <- list()
+
   for (i in seq_along(codings)){
     codings[[i]] <-
       if (is.na(codebook[i])){
@@ -693,9 +695,11 @@ mChoiceCast <- function(data,
         }
       } else {
         this_mapping <- fieldChoiceMapping(object = codebook[i],
-                                           field_name = field_names[i])
+                                           field_name = field_names[i],
+                                           known_maps = known_maps)
         this_coding <- this_mapping[, 1]
         names(this_coding) <- this_mapping[, 2]
+        known_maps[[codebook[i]]] <- this_mapping
         this_coding
       }
   }

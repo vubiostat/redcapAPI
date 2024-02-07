@@ -42,6 +42,9 @@ fieldChoiceMapping.character <- function(object,
               field_name))
     checkmate::reportAssertions(coll)
   }
+  xargs <- list(...)
+  mapping <- xargs[['known_maps']][[object]]
+  if(!is.null(mapping)) return(mapping)
   
   mapping <- unlist(strsplit(object, "[|]"))
   #split on only the first comma. This allows commas to remain in the field label.
