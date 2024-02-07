@@ -49,11 +49,15 @@ filterEmptyRow <- function(data,
                             REDCAP_SYSTEM_FIELDS,
                             "redcap_data_access_group"))
   
-  if(length(other_fields) == 0) data else
+  if(length(other_fields) == 0)
+    data
+  else
   {
     has_any_value <- rowSums(!is.na(data[other_fields])) != 0
-    if(all(has_any_value)) return(data)
-    .df_filter_i(data, has_any_value)
+    if(all(has_any_value))
+      data
+    else
+      .df_filter_i(data, has_any_value)
   }
 }
 
