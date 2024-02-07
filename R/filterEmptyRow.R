@@ -37,7 +37,8 @@ filterEmptyRow <- function(data,
     NewData <- data
   
   else {
-    is_all_missing <- apply(is.na(data[other_fields]), 1, all)
+    is_all_missing <- rowSums(!is.na(data[other_fields])) == 0
+    if(all(!is_all_missing)) return(data)
     
     NewData <- data[!is_all_missing, , drop = FALSE]
     
