@@ -106,7 +106,7 @@
 .unlockENVOverride <- function(connections, url, ...)
 {
   for (conn in length(connections)) {
-    conn_uppercase <- toupper(toString(conn))
+    conn_uppercase <- toupper(conn)
     
     if (is.null(Sys.getenv(conn_uppercase))) {
       stop(paste("Some matching ENV variables found but missing:",paste0(conn, collpase=", ")))
@@ -115,7 +115,7 @@
   
   dest <- lapply(connections, function(conn) 
   {
-    conn_uppercase <- toupper(toString(conn))
+    conn_uppercase <- toupper(conn)
     key <- Sys.getenv(conn_uppercase)
     
     if(is.null(key) || length(key)==0)
