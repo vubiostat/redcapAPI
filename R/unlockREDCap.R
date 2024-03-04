@@ -106,7 +106,7 @@
 .unlockENVOverride <- function(connections, url, ...)
 {
   for (conn in length(connections)) {
-    conn_uppercase <- toupper(conn)
+    conn_uppercase <- toupper(toString(conn))
     
     if (is.null(Sys.getenv(conn_uppercase))) {
       stop(paste("Some matching ENV variables found but missing:",paste0(conn, collpase=", ")))
@@ -115,8 +115,8 @@
   
   dest <- lapply(connections, function(conn) 
   {
-    key  <- keys[[conn]]
-    conn_uppercase <- toupper(conn)
+    conn_uppercase <- toupper(toString(conn))
+    key <- Sys.getenv(conn_uppercase)
     
     if(is.null(key) || length(key)==0)
       stop(paste0("ENV variable '", conn_uppercase, "' does not have API_KEY for '", conn,"' specified."))
@@ -130,7 +130,6 @@
     args     <- list(...)
     args$key <- key
     args$url <- url
-    # if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
     do.call(.connectAndCheck, args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
