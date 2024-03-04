@@ -100,6 +100,43 @@
   
   return(dest)
 }
+  #############################################################################
+ ## unlock via ENV override if it exists
+##
+.unlockENVOverride <- function(connections, url, ...)
+{
+  for (conn in length(connections)) {
+    conn_uppercase <- toupper(conn)
+    
+    if (is.null(Sys.getenv(conn_uppercase))) {
+      stop(paste("Some matching ENV variables found but missing:",paste0(conn, collpase=", ")))
+    }
+  }
+  
+  dest <- lapply(connections, function(conn) 
+  {
+    key  <- keys[[conn]]
+    conn_uppercase <- toupper(conn)
+    
+    if(is.null(key) || length(key)==0)
+      stop(paste0("ENV variable '", conn_uppercase, "' does not have API_KEY for '", conn,"' specified."))
+    if(!is.character(key))
+    {
+      stop(paste0("ENV variable '", conn_uppercase, "' invalid entry for '", conn,"'."))
+    }
+    if(length(key) > 1)
+      stop(paste0("ENV variable '", conn_uppercase, "' has too may key entries for '", conn,"' specified."))
+    
+    args     <- list(...)
+    args$key <- key
+    args$url <- url
+    # if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
+    do.call(.connectAndCheck, args)
+  })
+  names(dest) <- if(is.null(names(connections))) connections else names(connections)
+  
+  return(dest)
+}
  
   #############################################################################
  ## unlock keyring
@@ -266,6 +303,11 @@ unlockREDCap    <- function(connections,
   # Use YAML config if it exists
   dest <- .unlockYamlOverride(connections, url, ...)
   if(length(dest) > 0) 
+    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
+  
+  # Use ENV if it exists and YAML does not exist
+  dest <- .unlockENVOverride(connections, url, ...)
+  if(length(dest) > 0)
     return(if(is.null(envir)) dest else list2env(dest, envir=envir))
   
   .unlockKeyring(keyring, passwordFUN)
