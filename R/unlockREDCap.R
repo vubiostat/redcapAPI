@@ -105,34 +105,21 @@
 ##
 .unlockENVOverride <- function(connections, url, ...)
 {
-  for (conn in length(connections)) {
-    conn_uppercase <- toupper(conn)
-    
-    if (is.null(Sys.getenv(conn_uppercase))) {
-      stop(paste("Some matching ENV variables found but missing:",paste0(conn, collpase=", ")))
-    }
-  }
+  api_key_ENV <- sapply(connections, function(x) Sys.getenv(toupper(x)))
   
-  dest <- lapply(connections, function(conn) 
+  if(all(api_key_ENV == "")) return(list())
+  
+  if(any(api_key_ENV == ""))
+    stop(paste("Some matching ENV variables found but missing:",paste0(toupper(connections[api_key_ENV=='']), collapse=", ")))
+  
+  dest <- lapply(api_key_ENV, function(conn) 
   {
-    conn_uppercase <- toupper(conn)
-    key <- Sys.getenv(conn_uppercase)
-    
-    if(is.null(key) || length(key)==0)
-      stop(paste0("ENV variable '", conn_uppercase, "' does not have API_KEY for '", conn,"' specified."))
-    if(!is.character(key))
-    {
-      stop(paste0("ENV variable '", conn_uppercase, "' invalid entry for '", conn,"'."))
-    }
-    if(length(key) > 1)
-      stop(paste0("ENV variable '", conn_uppercase, "' has too may key entries for '", conn,"' specified."))
-    
     args     <- list(...)
     args$key <- key
     args$url <- url
     do.call(.connectAndCheck, args)
   })
-  names(dest) <- if(is.null(names(connections))) connections else names(connections)
+  names(dest) <- if(is.null(names(api_key_ENV))) api_key_ENV else names(api_key_ENV)
   
   return(dest)
 }
