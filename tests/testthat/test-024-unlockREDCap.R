@@ -112,8 +112,7 @@ test_that(
 test_that(
   ".unlockENVOverride return empty when override ENV doesn't exist",
   {
-    stub(.unlockENVOverride, "ENV.exists", FALSE)
-    
+    stub(.unlockENVOverride, "Sys.getenv", "")
     x <- .unlockENVOverride("TestRedcapAPI", url)
     expect_class(x, "list")
     expect_true(length(x$TestRedcapAPI) == 0)
@@ -121,13 +120,10 @@ test_that(
 )
 
 test_that(
-  ".unlockENVOverride stops if a non string entry is found",
+  ".unlockENVOverride will stop when only one of two ENV's are found",
   {
-    stub(.unlockENVOverride, "ENV.exists", TRUE)
-    stub(.unlockENVOverride, "read_env", list(redcapAPI=list(keys=list(TestRedcapAPI=TRUE))))
-    stub(.unlockENVOverride, ".connectAndCheck", TRUE)
-    
-    expect_true(length(.unlockENVOverride("TestRedcapAPI", url)) == 0)
+    stub(.unlockENVOverride, "sapply", c("", "YO"))
+    expect_error(.unlockENVOverride(c("x", "y"), url))
   }
 )
 
