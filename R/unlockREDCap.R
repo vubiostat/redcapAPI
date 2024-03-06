@@ -217,7 +217,8 @@
 #' other-config-stuff3: blah blah
 #' }
 #' 
-#' For production servers the use of ENV variables is also supported. If a YAML 
+#' For production servers the use of ENV variables is also supported. The connection
+#' string is converted to upper case for the search of ENV. If a YAML 
 #' and ENV variable both exist, the YAML will take precedence.
 #' 
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData

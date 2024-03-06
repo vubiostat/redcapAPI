@@ -14,3 +14,7 @@ sample_data
 *.Rproj
 /doc/
 /Meta/
+vignettes/*.aux
+vignettes/*.log
+vignettes/*.tex
+vignettes/*.pdf
