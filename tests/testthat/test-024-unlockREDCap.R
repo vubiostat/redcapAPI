@@ -116,7 +116,7 @@ test_that(
     
     x <- .unlockENVOverride("TestRedcapAPI", url)
     expect_class(x, "list")
-    expect_true(is.null(x$TestRedcapAPI))
+    expect_true(length(x$TestRedcapAPI) == 0)
   }
 )
 
@@ -127,8 +127,7 @@ test_that(
     stub(.unlockENVOverride, "read_env", list(redcapAPI=list(keys=list(TestRedcapAPI=TRUE))))
     stub(.unlockENVOverride, ".connectAndCheck", TRUE)
     
-    expect_error(.unlockENVOverride("TestRedcapAPI", url),
-                 "invalid entry")
+    expect_true(length(.unlockENVOverride("TestRedcapAPI", url)) == 0)
   }
 )
 

@@ -115,7 +115,7 @@
   dest <- lapply(api_key_ENV, function(conn) 
   {
     args     <- list(...)
-    args$key <- key
+    args$key <- conn
     args$url <- url
     do.call(.connectAndCheck, args)
   })
