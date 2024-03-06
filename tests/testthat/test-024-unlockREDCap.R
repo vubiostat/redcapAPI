@@ -134,9 +134,7 @@ test_that(
 test_that(
   ".unlockENVOverride returns an entry for every connection",
   {
-    stub(.unlockENVOverride, "env.exists", TRUE)
-    stub(.unlockENVOverride, "read_env",
-         list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
+    stub(.unlockENVOverride, "Sys.getenv", "xyz")
     stub(.unlockENVOverride, ".connectAndCheck", TRUE)
     x <- .unlockENVOverride(c("TestRedcapAPI", "Sandbox"), url)
     expect_true(x$TestRedcapAPI)
@@ -147,9 +145,7 @@ test_that(
 test_that(
   ".unlockENVOverride returns an entry for every connection renamed as requested",
   {
-    stub(.unlockENVOverride, "env.exists", TRUE)
-    stub(.unlockENVOverride, "read_env",
-         list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
+    stub(.unlockENVOverride, "Sys.getenv", "xyz")
     stub(.unlockENVOverride, ".connectAndCheck", TRUE)
     x <- .unlockENVOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
     expect_true(x$rcon)
