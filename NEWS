@@ -13,6 +13,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.8.5
 
 * Minor export optimizations for records.
+* unlockREDCap will now search for ENV variables.
 
 ## 2.8.4
 
