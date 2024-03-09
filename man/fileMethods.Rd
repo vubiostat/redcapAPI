@@ -176,5 +176,6 @@ deleteFiles(rcon,
 
 }
 \seealso{
-\code{\link[=exportFilesMultiple]{exportFilesMultiple()}}
+\code{\link[=exportFilesMultiple]{exportFilesMultiple()}}, \cr
+\code{\link[=importFileToRecord]{importFileToRecord()}} (can create a record to receive the file if it does yet exist)
 }
