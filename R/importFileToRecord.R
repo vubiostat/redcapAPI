@@ -119,8 +119,8 @@ importFileToRecord <- function(rcon,
     if (!is.null(record)){
       suppressMessages({
         RecordData <- exportRecordsTyped(rcon, 
-                                         record = record, 
-                                         fields = rcon$metadata()$field_name[1])
+                                         records = record, 
+                                         fields  = rcon$metadata()$field_name[1])
       })
       nrow(RecordData) > 0
     } else {
