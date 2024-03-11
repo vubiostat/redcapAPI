@@ -83,7 +83,7 @@ missingSummary.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
-  RecordsOrig <- exportRecordsTyped(rcon, cast=list(system=castRaw),...)
+  RecordsOrig <- exportRecordsTyped(rcon, cast=raw_cast,...)
   
   # Import the Meta Data --------------------------------------------
   MetaData <- rcon$metadata()
@@ -178,9 +178,7 @@ missingSummary_offline <- function(records,
     if (!this_field %in% c(REDCAP_SYSTEM_FIELDS, 
                            meta_data$field_name[1]) & 
         !is.null(this_logic)){
-      
-      
-      
+   
       # get the name of the form on which the field is saved
       tmp_form <- meta_data$form_name[meta_data$field_name == 
                                         sub("___[[:print:]]", "", names(records)[i])]
@@ -206,6 +204,7 @@ missingSummary_offline <- function(records,
                                no = is.na(records_orig[[i]]))
       }
       else
+      {
         # Here we have branching logic.
         # If the `[form]_complete` field is missing, we return FALSE
         # If the `[form]_complete` is non-missing:
@@ -215,7 +214,8 @@ missingSummary_offline <- function(records,
                                yes = FALSE,
                                no = ifelse(test = with(records_orig, eval(this_logic)), 
                                            yes = is.na(records_orig[[i]]),
-                                           no = FALSE))  
+                                           no = FALSE))
+      }
     }
   }
   records
