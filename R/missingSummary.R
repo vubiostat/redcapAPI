@@ -5,7 +5,6 @@
 #' @description Returns a data frame of subject events with missing values. 
 #' 
 #' @inheritParams common-rcon-arg
-#' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @param records `character(1)` A filename pointing to the raw records
 #'   download from REDCap.
@@ -17,6 +16,7 @@
 #'   desirable is if a patient did not experience an adverse event; 
 #'   the adverse event form would contain no data and the empty fields
 #'   should not be considered missing data.
+#' @param ... additional arguments passed to inner call of exportRecordsTyped.
 #'   
 #' @details The intention of this function is to generate a list of subject
 #'   events that are missing and could potentially be values that should have

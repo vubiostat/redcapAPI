@@ -22,7 +22,7 @@ desirable is if a patient did not experience an adverse event;
 the adverse event form would contain no data and the empty fields
 should not be considered missing data.}
 
-\item{...}{Arguments to pass to other methods}
+\item{...}{additional arguments passed to inner call of exportRecordsTyped.}
 
 \item{records}{\code{character(1)} A filename pointing to the raw records
 download from REDCap.}
