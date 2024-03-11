@@ -111,8 +111,7 @@ missingSummary.redcapApiConnection <- function(rcon,
 
 missingSummary_offline <- function(records, 
                                    meta_data, 
-                                   excludeMissingForms = TRUE, 
-                                   fixed_fields = REDCAP_SYSTEM_FIELDS){
+                                   excludeMissingForms = TRUE){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_file_exists(x = records, 
