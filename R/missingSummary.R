@@ -17,15 +17,6 @@
 #'   desirable is if a patient did not experience an adverse event; 
 #'   the adverse event form would contain no data and the empty fields
 #'   should not be considered missing data.
-#' @param fixed_fields `character` A vector of field names that will be used as 
-#'   the identifying fields in the output summary. This always includes the record
-#'   identifier (ie, the first field in the data dictionary). By default it 
-#'   also includes any fields identified in `REDCAP_SYSTEM_FIELDS`, which
-#'   are fields that REDCap adds to exports to identify arms, events, etc..
-#' @param exportRecordsArgs named `list`. Arguments to pass to `exportRecords`. 
-#'   This allows for testing specific forms, events, and/or records. Internally, any 
-#'   setting passed for `factors, labels, dates, survey`, or `dag` 
-#'   arguments will be ignored.
 #'   
 #' @details The intention of this function is to generate a list of subject
 #'   events that are missing and could potentially be values that should have
@@ -68,8 +59,8 @@
 
 missingSummary <- function(rcon, 
                            excludeMissingForms = TRUE, 
-                           ..., 
-                           fixed_fields        = REDCAP_SYSTEM_FIELDS){
+                           ...)
+{
   UseMethod("missingSummary")
 }
 
@@ -78,12 +69,8 @@ missingSummary <- function(rcon,
 
 missingSummary.redcapApiConnection <- function(rcon, 
                                                excludeMissingForms = TRUE, 
-                                               ...,
-                                               fixed_fields        = REDCAP_SYSTEM_FIELDS,
-                                               exportRecordsArgs   = list(),
-                                               error_handling      = getOption("redcap_error_handling"), 
-                                               config              = list(), 
-                                               api_param           = list()){
+                                               ...)
+{
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_class(x = rcon,
@@ -94,47 +81,9 @@ missingSummary.redcapApiConnection <- function(rcon,
                             len = 1, 
                             add = coll)
   
-  checkmate::assert_character(x = fixed_fields, 
-                              add = coll)
-  
-  checkmate::assert_list(x = exportRecordsArgs, 
-                         names = "named", 
-                         add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
-  # Import the records ----------------------------------------------
-  # records will be used to store the results of tests for missingness
-  # records_orig will be used to conduct the tests
-  exportRecordsArgs <- exportRecordsArgs[!names(exportRecordsArgs) %in% c("factors", 
-                                                                          "labels", 
-                                                                          "dates", 
-                                                                          "survey", 
-                                                                          "dag", 
-                                                                          "rcon")]
-  exportRecordsArgs <- c(exportRecordsArgs, 
-                         list(rcon = rcon, 
-                              factors = FALSE, 
-                              labels = TRUE, 
-                              dates = FALSE, 
-                              survey = FALSE, 
-                              dag = TRUE))
-  
-  RecordsOrig <- do.call("exportRecords", 
-                         exportRecordsArgs)
+  RecordsOrig <- exportRecordsTyped(rcon, cast=list(system=castRaw),...)
   
   # Import the Meta Data --------------------------------------------
   MetaData <- rcon$metadata()
