@@ -265,9 +265,6 @@ test_that(
 test_that(
   ".unlockKeyring creates keyring respects user cancel",
   {
-#    skip_if(TRUE, 
-#            "At the time of writing, testthat mock framework not working in all environments")
-    
     Sys.unsetenv("REDCAPAPI_PW")
     stub(.unlockKeyring, "keyring_list", 
          data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
@@ -357,7 +354,6 @@ test_that(
     expect_true(x$rcon)
     expect_true(calls == 1) # Called to ask once
     expect_called(m, 1) # Called key_set_with_value once
-    #print(mock_args(m)[[1]])
     expect_equal(mock_args(m)[[1]], list(service="redcapAPI", username="George", password="xyz", keyring="API_KEYs"))
     expect_called(n, 1) # Called .connectAndCheck
   }
