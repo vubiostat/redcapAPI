@@ -11,7 +11,15 @@
 \alias{deleteFiles.redcapApiConnection}
 \title{Export, Import, or Delete Files to a Field in a REDCap Project}
 \usage{
-exportFiles(rcon, record, field, event = NULL, dir, file_prefix = TRUE, ...)
+exportFiles(
+  rcon,
+  record,
+  field,
+  event = NULL,
+  dir = getwd(),
+  file_prefix = TRUE,
+  ...
+)
 
 importFiles(
   rcon,
@@ -31,7 +39,7 @@ deleteFiles(rcon, record, field, event, ...)
   record,
   field,
   event = NULL,
-  dir,
+  dir = getwd(),
   file_prefix = TRUE,
   repeat_instance = NULL,
   ...,
