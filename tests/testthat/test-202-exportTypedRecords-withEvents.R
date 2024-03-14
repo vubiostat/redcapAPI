@@ -43,6 +43,31 @@ test_that(
   }
 )
 
+
+test_that("forms with mapping are filtered",
+{
+  testcon <- rcon
+  testcon[['has_mapping']] <- function() TRUE
+  testcon[['mapping']] <- function()
+  {
+    data.frame(
+      unique_event_name = "event_2_arm_2",
+      form = "numbers"
+    )
+  }
+  
+  expect_equal(nrow(exportRecordsTyped(testcon, forms="numbers", records=1:5)), 1)
+  
+  testcon[['mapping']] <- function()
+  {
+    data.frame(
+      unique_event_name = "event_1_arm_1",
+      form = "numbers"
+    )
+  }
+  expect_equal(nrow(exportRecordsTyped(testcon, forms="numbers", records=1:5)), 5)
+})
+
 #####################################################################
 # Cleanup the data
 
