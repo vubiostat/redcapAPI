@@ -79,6 +79,10 @@ importMetaData.redcapApiConnection <- function(rcon,
     coll$push(sprintf("The following have duplicate field names: {%s}", 
                       duplicate_field_name))
   }
+  
+    
+  # Convert "" to NA
+  data[data==''] <- NA
 
   isValidFieldName(field_name = data$field_name, 
                    coll = coll)
