@@ -219,6 +219,15 @@ exportRecordsTyped.redcapApiConnection <-
     unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
   }
+  
+  if(!is.null(forms)         &&
+     nrow(rcon$mapping()) >0 &&
+     "redcap_event_name" %in% names(Raw))
+  {
+    map <- rcon$mapping()
+    form_events <- map$unique_event_name[map$form %in% forms]
+    Raw <- Raw[Raw$redcap_event_name %in% form_events,]
+  }
 
   # See fieldCastingFunctions.R for definition of .castRecords
   CastData <- .castRecords(Raw              = Raw, 
