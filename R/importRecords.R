@@ -193,7 +193,7 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   
@@ -215,9 +215,9 @@ importRecords.redcapApiConnection <- function(rcon,
 
   if (any(unrecognized_names))
   {
-    message("The variable(s) ", 
+    stop("The variable(s) ", 
             paste0(names(data)[unrecognized_names], collapse=", "), 
-            " are not found in the project and/or cannot be imported. They have been removed from the imported data frame.")
+            " are not found in the project and/or cannot be imported.")
     data <- data[!unrecognized_names]
   }
   
