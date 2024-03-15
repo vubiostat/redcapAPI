@@ -9,7 +9,7 @@ test_that("Metadata can be imported",{
     load(test_path("testdata", "test_redcapAPI_MetaData.Rdata"))
   )
   
-  expect_no_error(importMetaData(rcon, test_redcapAPI_MetaData))
+  expect_no_error(importMetaData(rcon, test_redcapAPI_MetaData[1, ]))
 })
 
 test_that("Metadata with empty strings can be imported",
