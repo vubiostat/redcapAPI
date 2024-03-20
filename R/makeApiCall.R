@@ -260,17 +260,35 @@ makeApiCall <- function(rcon,
 }
 
 # Helper function to convert responses to character strings without crashing.
-as.data.frame.response <- function(x, stringsAsFactors=FALSE, na.strings = "", ...)
+as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
 {
+  # Setting defaults, necessary because cannot change S3 interface
+  extra <- list(...)
+  stringsAsFactors <- extra$stringsAsFactors
+  if(is.null(stringsAsFactors)) stringsAsFactors <- FALSE
+  na.strings <- extra$na.strings
+  if(is.null(na.strings)) na.strings <- ""
+  
   enc <- if(grepl("charset", x$headers[["Content-Type"]]))
     toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
-  utils::read.csv(
-    text             = mapped,
-    stringsAsFactors = stringsAsFactors, 
-    na.strings       = na.strings,
-    ...)
+
+  # First check is very fast check to see if the first 10 bytes are empty space
+  # Second check is followup to see if it's entirely empty space (verify)
+  if(grepl("^\\s*$", substr(mapped, 1, 10)) &&
+     nchar(trimws(mapped,'left')) == 0)
+  {
+    data.frame()
+  }
+  else
+  {
+    utils::read.csv(
+      text             = mapped,
+      stringsAsFactors = stringsAsFactors, 
+      na.strings       = na.strings,
+      ...)
+  }
 }

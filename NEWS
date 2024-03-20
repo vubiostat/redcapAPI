@@ -10,6 +10,13 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.8.5
+
+* Filtering empty records will use mapping if available 
+* Minor export optimizations for records.
+* unlockREDCap will now search for ENV variables.
+* New importFileToRecord which will import a file and create the record if it doesn't exist. 
+
 ## 2.8.4
 
 * Patch to reading HTTP data. When non UTF-8 characters are sent, they get mapped to '□'.

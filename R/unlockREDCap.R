@@ -100,6 +100,29 @@
   
   return(dest)
 }
+  #############################################################################
+ ## unlock via ENV override if it exists
+##
+.unlockENVOverride <- function(connections, url, ...)
+{
+  api_key_ENV <- sapply(connections, function(x) Sys.getenv(toupper(x)))
+  
+  if(all(api_key_ENV == "")) return(list())
+  
+  if(any(api_key_ENV == ""))
+    stop(paste("Some matching ENV variables found but missing:",paste0(toupper(connections[api_key_ENV=='']), collapse=", ")))
+  
+  dest <- lapply(api_key_ENV, function(conn) 
+  {
+    args     <- list(...)
+    args$key <- conn
+    args$url <- url
+    do.call(.connectAndCheck, args)
+  })
+  names(dest) <- if(is.null(names(api_key_ENV))) api_key_ENV else names(api_key_ENV)
+  
+  return(dest)
+}
  
   #############################################################################
  ## unlock keyring
@@ -194,6 +217,10 @@
 #' other-config-stuff3: blah blah
 #' }
 #' 
+#' For production servers the use of ENV variables is also supported. The connection
+#' string is converted to upper case for the search of ENV. If a YAML 
+#' and ENV variable both exist, the YAML will take precedence.
+#' 
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 #' as this *is* writing the API_KEY to a local file in clear text because
 #' connection objects contain the unlocked key in memory. Tips
@@ -203,7 +230,7 @@
 #'          connections with associated API_KEYs to load into environment. Each
 #'          name should correspond to a REDCap project for traceability, but 
 #'          it can be named anything one desires.
-#'          The name in the returned list is this name. 
+#'          The name in the returned list is this name.
 #' @param envir environment. The target environment for the connections. Defaults to NULL
 #'          which returns the keys as a list. Use [globalenv()] to assign in the
 #'          global environment. Will accept a number such a '1' for global as well.
@@ -266,6 +293,11 @@ unlockREDCap    <- function(connections,
   # Use YAML config if it exists
   dest <- .unlockYamlOverride(connections, url, ...)
   if(length(dest) > 0) 
+    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
+  
+  # Use ENV if it exists and YAML does not exist
+  dest <- .unlockENVOverride(connections, url, ...)
+  if(length(dest) > 0)
     return(if(is.null(envir)) dest else list2env(dest, envir=envir))
   
   .unlockKeyring(keyring, passwordFUN)

@@ -60,9 +60,7 @@ exportUserRoleAssignments.redcapApiConnection <- function(rcon,
                 error_handling = error_handling)
   }
   
-  if (as.character(response) == ""){
-    return(REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
-  }
+  response <- as.data.frame(response)
   
-  as.data.frame(response)
+  if(nrow(response) == 0) REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE else response
 }
