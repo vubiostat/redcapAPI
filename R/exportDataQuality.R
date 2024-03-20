@@ -1,10 +1,10 @@
 
-exportDataQuality <- function(rcon, 
+exportDataQuality <- function(rcon, prefix,
                                      ...){
   UseMethod("exportDataQuality")
 }
 
-exportDataQuality.redcapApiConnection <- function(rcon, 
+exportDataQuality.redcapApiConnection <- function(rcon, prefix,
                                                        ..., 
                                                        error_handling = getOption("redcap_error_handling"), 
                                                        config = list(), 
@@ -16,6 +16,10 @@ exportDataQuality.redcapApiConnection <- function(rcon,
   
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
+                          add = coll)
+  
+  checkmate::assert_class(x = prefix, 
+                          classes = "character", 
                           add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
@@ -36,7 +40,7 @@ exportDataQuality.redcapApiConnection <- function(rcon,
   ###################################################################
   # Build the query list                                         ####
   
-  url <- paste0("https://redcap.vanderbilt.edu/api/?prefix=vanderbilt_dataQuality&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
+  url <- paste0("https://redcap.vanderbilt.edu/api/?prefix=", prefix, "&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
   
   formData <- list(token = rcon$token)
   
