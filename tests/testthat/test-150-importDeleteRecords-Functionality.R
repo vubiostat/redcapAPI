@@ -13,7 +13,8 @@ fields <- c("record_id", "letters_only_test", "number_test", "date_dmy_test",
             "left_operand", "calc_squared", 
             "prereq_checkbox___1", "prereq_checkbox___2", 
             "prereq_checkbox___3", "prereq_checkbox___4")
-MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields, ]
+MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields |
+                                    test_redcapAPI_MetaData$field_name=='prereq_checkbox' , ]
 
 ImportData <- test_redcapAPI_Data
 ImportData <- ImportData[1, names(ImportData) %in% fields]
@@ -32,9 +33,10 @@ importProjectInformation(rcon,
 rcon$refresh_arms()
 rcon$refresh_events()
 
+n <- length(rcon$instruments()$instrument_name)
 importMappings(rcon, 
-               data = data.frame(arm_num = rep(1, 5), 
-                                 unique_event_name = rep("event_1_arm_1", 5), 
+               data = data.frame(arm_num = rep(1, n), 
+                                 unique_event_name = rep("event_1_arm_1", n), 
                                  form = rcon$instruments()$instrument_name))
 
 #####################################################################
@@ -164,7 +166,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     importRecords(rcon, 
-                  data = ImportData)
+                  data = ImportData[,])
                   
     require(Hmisc)
     TheData <- exportRecordsTyped(rcon)
