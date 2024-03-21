@@ -46,7 +46,7 @@ conns <- unlockREDCap(
 #     ), 
 #   url=url, keyring='API_KEYs')
 
-missing_codes <- rcon$projectInformation()$missing_data_codes
+missing_codes <- conns$rcon$projectInformation()$missing_data_codes
 
 if(!is.na(missing_codes) && nchar(missing_codes) > 0)
   stop("The test suite will fail if missing data codes are defined in the project.")
