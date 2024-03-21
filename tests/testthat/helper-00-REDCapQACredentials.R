@@ -30,8 +30,8 @@ conns <- unlockREDCap(
   ############################################################################
  #
 #  Uncomment to create all API Keys with names in keylocker,
-#  with TestRedcapAPI being ones default. This allows me to change the above
-#  rcon easily for my desired target. For convenience, the REPORT_IDS
+#  with TestRedcapAPI being ones default. This allows one to change the above
+#  rcon easily for desired target. For convenience, the REPORT_IDS
 #  for each environment is listed as well
 #
 # unlockREDCap(
