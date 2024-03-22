@@ -89,14 +89,10 @@ importMappings.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
+  rcon$flush_mapping()
   
-  if (response$status_code != "200"){
+  if (response$status_code != "200")
     redcapError(response, error_handling)
-  } 
-  
-  if (refresh && rcon$has_mapping()){
-    rcon$refresh_mapping()
-  }
   
   invisible(as.character(response))
 }

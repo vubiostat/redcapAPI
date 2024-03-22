@@ -139,14 +139,12 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   response <- as.character(response)
   
-  if (refresh){
-    if (rcon$has_metadata()){
-      rcon$refresh_metadata()
-    }
-    
-    if (rcon$has_instruments()){
-      rcon$refresh_instruments()
-    }
+  # Flush affected cache
+  if (refresh)
+  {
+    if (rcon$has_metadata())    rcon$refresh_metadata()
+    if (rcon$has_instruments()) rcon$refresh_instruments()
+    if (rcon$has_fieldnames())  rcon$refresh_fieldnames()
   }
   
   invisible(as.character(response))

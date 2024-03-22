@@ -86,15 +86,11 @@ importEvents.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  rcon$flush_events()
+  rcon$flush_arms()
+  rcon$flush_projectInformation()
   
-  if (refresh && rcon$has_events()){
-    rcon$refresh_events()
-    # changing events can change availability of arms
-    # and whether a project is considered longitudinal
-    rcon$refresh_arms()
-    rcon$refresh_projectInformation()
-  }
+  if (response$status_code != 200) return(redcapError(response, error_handling))
   
   invisible(as.character(response))
 }

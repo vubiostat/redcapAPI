@@ -290,6 +290,16 @@ castForImport <- function(data,
   
   checkmate::reportAssertions(coll)
   
+  # Remove mChoice variables from frame
+  mchoices <- vapply(data, inherits, logical(1), 'mChoice')
+  if(sum(mchoices) > 0)
+  {
+    message(paste0("The following mChoice variables(s) were dropped: ",
+                   paste0(fields[mchoices], collapse=', '), '.'))
+    data   <- data[,!mchoices, drop=FALSE]
+    fields <- fields[!mchoices]
+  }
+  
   Raw <- as.data.frame(lapply(data, 
                               function(x) trimws(as.character(x))))
   
