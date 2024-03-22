@@ -11,7 +11,7 @@
 \usage{
 exportMappings(rcon, arms, ...)
 
-importMappings(rcon, data, refresh = TRUE, ...)
+importMappings(rcon, data, ...)
 
 \method{exportMappings}{redcapApiConnection}(
   rcon,
@@ -25,7 +25,6 @@ importMappings(rcon, data, refresh = TRUE, ...)
 \method{importMappings}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
