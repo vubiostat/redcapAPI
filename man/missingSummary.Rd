@@ -6,30 +6,11 @@
 \alias{missingSummary.redcapApiConnection}
 \title{Report of Missing Values}
 \usage{
-missingSummary(
-  rcon,
-  excludeMissingForms = TRUE,
-  ...,
-  fixed_fields = REDCAP_SYSTEM_FIELDS
-)
+missingSummary(rcon, excludeMissingForms = TRUE, ...)
 
-\method{missingSummary}{redcapApiConnection}(
-  rcon,
-  excludeMissingForms = TRUE,
-  ...,
-  fixed_fields = REDCAP_SYSTEM_FIELDS,
-  exportRecordsArgs = list(),
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{missingSummary}{redcapApiConnection}(rcon, excludeMissingForms = TRUE, ...)
 
-missingSummary_offline(
-  records,
-  meta_data,
-  excludeMissingForms = TRUE,
-  fixed_fields = REDCAP_SYSTEM_FIELDS
-)
+missingSummary_offline(records, meta_data, excludeMissingForms = TRUE)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -41,30 +22,7 @@ desirable is if a patient did not experience an adverse event;
 the adverse event form would contain no data and the empty fields
 should not be considered missing data.}
 
-\item{...}{Arguments to pass to other methods}
-
-\item{fixed_fields}{\code{character} A vector of field names that will be used as
-the identifying fields in the output summary. This always includes the record
-identifier (ie, the first field in the data dictionary). By default it
-also includes any fields identified in \code{REDCAP_SYSTEM_FIELDS}, which
-are fields that REDCap adds to exports to identify arms, events, etc..}
-
-\item{exportRecordsArgs}{named \code{list}. Arguments to pass to \code{exportRecords}.
-This allows for testing specific forms, events, and/or records. Internally, any
-setting passed for \verb{factors, labels, dates, survey}, or \code{dag}
-arguments will be ignored.}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
+\item{...}{additional arguments passed to inner call of exportRecordsTyped.}
 
 \item{records}{\code{character(1)} A filename pointing to the raw records
 download from REDCap.}
