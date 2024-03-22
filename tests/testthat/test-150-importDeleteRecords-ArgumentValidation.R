@@ -5,6 +5,9 @@ load(file.path(test_path("testdata"),
 load(file.path(test_path("testdata"), 
                "test_redcapAPI_Data.Rdata"))
 
+purgeProject(rcon, 
+             purge_all = TRUE)
+
 fields <- c("record_id", "letters_only_test", "number_test", "date_dmy_test", 
             "left_operand", "calc_squared")
 MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields, ]
@@ -26,9 +29,6 @@ importEvents(rcon,
 
 importProjectInformation(rcon, 
                          data.frame(is_longitudinal = 1))
-
-rcon$refresh_arms()
-rcon$refresh_events()
 
 importMappings(rcon, 
                data = data.frame(arm_num = rep(1, 5), 

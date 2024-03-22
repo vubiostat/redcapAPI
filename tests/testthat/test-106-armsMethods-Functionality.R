@@ -51,7 +51,6 @@ test_that(
 purgeProject(rcon, 
              arms = TRUE, 
              events = TRUE)
-rcon$flush_all()
 
 test_that(
   "Import arms into a empty project.", 
@@ -67,9 +66,7 @@ test_that(
                              arms_data = Arms)
     expect_equal(n_imported, "3")
     
-    rcon$refresh_projectInformation()
-    expect_equal(rcon$projectInformation()$is_longitudinal, 
-                 0)
+    expect_equal(rcon$projectInformation()$is_longitudinal, 0)
     
     # Because we aren't yet longitudinal, we don't want arms back yet.
     expect_equal(exportArms(rcon), 
@@ -79,8 +76,6 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_projectInformation()
     
     # We haven't allowed the project to use arms/events, so it should 
     # still not be longitudinal, even though we've uploaded arms and events.
@@ -104,9 +99,6 @@ test_that(
                  Arms)
     expect_equal(exportEvents(rcon)[1:2], # we didn't provide a full specification for Events 
                  Events)
-    
-    rcon$refresh_arms()
-    rcon$refresh_events()
     
     # And now we clean up from our testing.
     
@@ -154,19 +146,14 @@ test_that(
     # export the Arms and compare output with what was imported
     expect_equal(exportArms(rcon), 
                  Arms)
-    
-    rcon$refresh_arms()
-    
+
     # delete the Arms
     n_deleted <- deleteArms(rcon, 
                             arms = 1:3)
     expect_equal(n_deleted, "3")
     
-    rcon$refresh_projectInformation()
-    
     # Now the project should no longer be considered longitudinal
-    expect_equal(rcon$projectInformation()$is_longitudinal, 
-                 0)
+    expect_equal(rcon$projectInformation()$is_longitudinal, 0)
   }
 )
 

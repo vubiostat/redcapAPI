@@ -83,8 +83,6 @@ test_that(
 purgeProject(rcon, 
              arms = TRUE, 
              events = TRUE)
-rcon$refresh_arms()
-rcon$refresh_events()
 
 test_that(
   "Functionality on a test with no events or arms", 

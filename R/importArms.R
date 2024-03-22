@@ -15,8 +15,7 @@ importArms <- function(rcon,
 
 importArms.redcapApiConnection <- function(rcon, 
                                            data,  
-                                           override       = FALSE, 
-                                           refresh        = TRUE,
+                                           override       = FALSE,
                                            ...,
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -36,10 +35,6 @@ importArms.redcapApiConnection <- function(rcon,
   
   checkmate::assert_logical(x = override,
                             len = 1,
-                            add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
