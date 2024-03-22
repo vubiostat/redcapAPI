@@ -20,8 +20,6 @@
 #' @param override `logical(1)`. By default, data will add to or modify 
 #'   existing arms data. When `TRUE`, all the existing arms data is 
 #'   deleted and replaced with the contents of `data`.
-#' @param refresh `logical(1)`. When `TRUE`, the cached arms data will
-#'   be refreshed after the API action is complete.
 #' 
 #' @details
 #' Exporting events is not supported for classical REDCap projects. If 
@@ -120,7 +118,6 @@ eventsMethods <- function(rcon,
                           events, 
                           data, 
                           override, 
-                          refresh, 
                           ..., 
                           error_handling, 
                           config, 

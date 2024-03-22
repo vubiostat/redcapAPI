@@ -25,21 +25,7 @@ test_that(
     
     
     NextMetaData <- MetaData[1:10, ]
-    
-    # Verify behaviors under refresh = FALSE
-    n_imported <- importMetaData(rcon, 
-                                 NextMetaData, 
-                                 refresh = FALSE)
-    expect_equal(n_imported, "10")
-    
-    expect_data_frame(rcon$metadata(), 
-                      nrows = nrow(MetaData))
-    
-    expect_equal(rcon$instruments()$instrument_name, 
-                 orig_instrument)
-    
-    rcon$refresh_metadata()
-    rcon$refresh_instruments()
+
     
     expect_data_frame(rcon$metadata(), 
                       nrows = nrow(NextMetaData))

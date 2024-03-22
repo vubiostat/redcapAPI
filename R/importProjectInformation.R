@@ -13,8 +13,7 @@ importProjectInformation <- function(rcon,
 #' @export
 
 importProjectInformation.redcapApiConnection <- function(rcon, 
-                                                         data, 
-                                                         refresh = TRUE, 
+                                                         data,
                                                          ...,
                                                          error_handling = getOption("redcap_error_handling"), 
                                                          config         = list(), 
@@ -32,11 +31,6 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data,
                                nrows = 1,
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 

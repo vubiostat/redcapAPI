@@ -16,8 +16,6 @@ load(file.path(test_path("testdata"),
 load(file.path(test_path("testdata"), 
                "test_redcapAPI_Events.Rdata"))
 
-rcon$flush_all()
-
 forms <- c("record_id", "text_fields", "dates_and_times", "numbers", 
            "slider_fields", "multiple_choice", 
            "files_notes_descriptions", "calculated_fields")
@@ -56,7 +54,7 @@ ImportData <- castForImport(ImportData,
 
 importRecords(rcon, 
               ImportData)
-rcon$flush_externalCoding()
+
 
 #####################################################################
 # Functional Testing                                             ####
@@ -324,7 +322,6 @@ test_that(
     NewMetaData$select_choices_or_calculations[2] <- "0, Zero | 1, One | 2, Two"
     
     importMetaData(rcon, NewMetaData)
-    rcon$refresh_fieldnames()
     
     importRecords(rcon, 
                   data = data.frame(record_id = 1:4,
@@ -468,7 +465,6 @@ test_that(
     
     # Restore the meta data for further testing ---------------------
     importMetaData(rcon, MetaData)
-    rcon$refresh_fieldnames()
   }
 )
 

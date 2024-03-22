@@ -137,8 +137,6 @@ test_that(
                                data = Events)
     expect_equal(n_imported, "3")
     
-    rcon$refresh_projectInformation()
-    
     # The project should now be recognized as longitudinal
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  1)
@@ -163,8 +161,7 @@ test_that(
   "Test the override argument in importArms",
   {
     local_reproducible_output(width = 200)
-    
-    rcon$refresh_projectInformation()
+
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -177,8 +174,6 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_projectInformation()
     
     expect_equal(exportArms(rcon), 
                  Arms)
@@ -193,15 +188,10 @@ test_that(
                                data = Events2)
     expect_equal(n_imported, "2")
     
-    rcon$refresh_projectInformation()
-    
     expect_equal(exportArms(rcon), 
                  Arms2)
     
-    
-    
     # Now Clean up from the test
-    rcon$refresh_arms()
     n_deleted <- deleteArms(rcon, arms = 10:11)
     expect_equal(n_deleted, "2")
   }
@@ -212,8 +202,7 @@ test_that(
   "Confirm that we can add additional arms and delete specific arms", 
   {
     local_reproducible_output(width = 200)
-    
-    rcon$refresh_projectInformation()
+
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -227,8 +216,6 @@ test_that(
                                data = Events)
     expect_equal(n_imported, "3")
     
-    rcon$refresh_projectInformation()
-    
     expect_equal(exportArms(rcon), 
                  Arms)
     
@@ -240,15 +227,11 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events2)
     expect_equal(n_imported, "2")
-    
-    rcon$refresh_projectInformation()
-    
+
     # Confirm that all of the arms are present.
     expect_equal(exportArms(rcon), 
                  rbind(Arms, Arms2))
-    
-    rcon$refresh_arms()
-    
+
     # Delete only arms 3 and 10
     
     n_deleted <- deleteArms(rcon, 

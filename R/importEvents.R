@@ -15,8 +15,7 @@ importEvents <- function(rcon,
 
 importEvents.redcapApiConnection <- function(rcon, 
                                              data, 
-                                             override       = FALSE, 
-                                             refresh        = TRUE,
+                                             override       = FALSE,
                                              ..., 
                                              error_handling = getOption("redcap_error_handling"), 
                                              config         = list(), 
@@ -40,10 +39,6 @@ importEvents.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = override, 
                             len = 1, 
                             any.missing = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 

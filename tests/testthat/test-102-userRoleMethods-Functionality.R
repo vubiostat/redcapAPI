@@ -49,8 +49,6 @@ test_that(
     expect_equal(as.character(UserRoles$reports), 
                  "Access")
     
-    rcon$refresh_user_roles()
-    rcon$user_roles()
     nroles <- nrow(rcon$user_roles())
     # Cleanup by deleting the user role
     n_deleted <- deleteUserRoles(rcon, 

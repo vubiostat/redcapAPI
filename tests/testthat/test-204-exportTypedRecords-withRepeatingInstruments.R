@@ -11,9 +11,6 @@ load(file.path(test_path("testdata"),
 importMetaData(rcon, 
                test_redcapAPI_MetaData)
 
-rcon$refresh_instruments()
-rcon$refresh_fieldnames()
-
 forms <- rcon$instruments()$instrument_name
 Mappings <- data.frame(arm_num = rep(1, length(forms)), 
                        unique_event_name = rep("event_1_arm_1", length(forms)), 

@@ -22,8 +22,8 @@ ImportData <- test_redcapAPI_Data
 ImportData <- ImportData[1, names(ImportData) %in% fields]
 
 
-importArms(rcon,   test_redcapAPI_Arms,   refresh=FALSE)
-importEvents(rcon, test_redcapAPI_Events, refresh=FALSE)
+importArms(rcon,   test_redcapAPI_Arms)
+importEvents(rcon, test_redcapAPI_Events)
 importProjectInformation(rcon, data.frame(is_longitudinal = 1))
 
 n <- length(rcon$instruments()$instrument_name)
@@ -217,8 +217,6 @@ test_that(
     importMetaData(rcon, 
                    NewMetaData)
     
-    rcon$refresh_fieldnames()
-    
     NewMetaData <- rcon$metadata()
     w_var <- which(NewMetaData$field_name == "date_ymd_test")
     
@@ -257,9 +255,7 @@ test_that(
     
     importMetaData(rcon, 
                    NewMetaData)
-    
-    rcon$refresh_fieldnames()
-    
+
     NewMetaData <- rcon$metadata()
     w_var <- which(NewMetaData$field_name == "datetime_ymd_hms_test")
     
