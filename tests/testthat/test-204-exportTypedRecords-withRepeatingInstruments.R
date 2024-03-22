@@ -140,7 +140,6 @@ test_that(
     # Now let's make a secondary unique field
     NewInfo <- data.frame(secondary_unique_field = "text_test")
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
 
     Rec <- exportRecordsTyped(rcon,
                               forms = c("randomization"))
@@ -149,7 +148,6 @@ test_that(
     NewInfo <- data.frame(secondary_unique_field = "",
                           surveys_enabled = 0)
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
   }
 )
 
