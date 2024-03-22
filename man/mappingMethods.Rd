@@ -40,9 +40,6 @@ given, mappings are only exported for the given arms.}
 \item{data}{\code{data.frame} with columns \code{arm_num}, \code{unique_event_name},
 and \code{form}. See Details}
 
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached mappings in the \code{rcon}
-object are refreshed after the import.}
-
 \item{...}{Arguments to pass to other methods}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.

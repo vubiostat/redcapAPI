@@ -30,7 +30,6 @@ deleteArms(rcon, arms, ...)
   rcon,
   data,
   override = FALSE,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -40,7 +39,6 @@ deleteArms(rcon, arms, ...)
 \method{deleteArms}{redcapApiConnection}(
   rcon,
   arms,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -61,9 +59,6 @@ this may also be passed as \code{arms_data}.}
 \item{override}{\code{logical(1)}. By default, data will add to or modify
 existing arms data. When \code{TRUE}, all the existing arms data is
 deleted and replaced with the contents of \code{data}.}
-
-\item{refresh}{\code{logical(1)} If \code{TRUE}, the cached arms data will
-be refreshed after the API action is complete.}
 
 \item{...}{Arguments to pass to other methods}
 
