@@ -7,6 +7,7 @@ context("Export Typed Records Functionality")
 #
 # Subsequent files will deal with each of those specifics
 
+purgeProject(rcon, records=TRUE)
 load(file.path(test_path("testdata"),
                "test_redcapAPI_MetaData.Rdata"))
 load(file.path(test_path("testdata"), 
@@ -21,13 +22,9 @@ forms <- c("record_id", "text_fields", "dates_and_times", "numbers",
            "files_notes_descriptions", "calculated_fields")
 MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$form_name %in% forms, ]
 
-importMetaData(rcon, 
-               MetaData)
-importArms(rcon, 
-           data = test_redcapAPI_Arms)
-importEvents(rcon, 
-             data = test_redcapAPI_Events)
-
+importMetaData(rcon, MetaData)
+importArms(rcon,     test_redcapAPI_Arms)
+importEvents(rcon,   test_redcapAPI_Events)
 importProjectInformation(rcon, 
                          data.frame(is_longitudinal = 1, 
                                     record_autonumbering_enabled = 0))
@@ -35,8 +32,7 @@ importProjectInformation(rcon,
 Mappings <- data.frame(arm_num = rep(1, length(forms)), 
                        unique_event_name = rep("event_1_arm_1", length(forms)), 
                        form = forms)
-importMappings(rcon, 
-               data = Mappings)
+importMappings(rcon, Mappings)
 
 
 ImportData <- test_redcapAPI_Data[names(test_redcapAPI_Data) %in% MetaData$field_name]
@@ -52,8 +48,7 @@ ImportData <- castForImport(ImportData,
                                         bioportal = as.character))
 
 
-importRecords(rcon, 
-              ImportData)
+importRecords(rcon, ImportData)
 
 
 #####################################################################
@@ -168,6 +163,7 @@ test_that(
                                fields="number_test", 
                                records = 1:5,
                                cast=raw_cast)
+    browser()
     recV <- expect_warning(
       exportRecordsTyped(
         rcon,

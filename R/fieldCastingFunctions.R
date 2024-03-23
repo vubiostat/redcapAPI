@@ -290,7 +290,7 @@ castForImport <- function(data,
   
   checkmate::reportAssertions(coll)
   
-  # Remove mChoice variables from frame
+  # Drop mChoice variables from frame
   mchoices <- vapply(data, inherits, logical(1), 'mChoice')
   if(sum(mchoices) > 0)
   {
@@ -298,6 +298,19 @@ castForImport <- function(data,
                    paste0(fields[mchoices], collapse=', '), '.'))
     data   <- data[,!mchoices, drop=FALSE]
     fields <- fields[!mchoices]
+  }
+  
+  # Drop non importable field types
+  for(type in c("file", "calc"))
+  {
+    drops <- rcon$metadata()[match(fields, rcon$metadata()$field_name),'field_type'] == type
+    if(sum(drops) > 0)
+    {
+      message(paste0("The following ", type, ", variables(s) were dropped: ",
+                     paste0(fields[drops], collapse=', '), '.'))
+      data   <- data[,!drops, drop=FALSE]
+      fields <- fields[!drops]
+    }
   }
   
   Raw <- as.data.frame(lapply(data, 
@@ -319,6 +332,7 @@ castForImport <- function(data,
   }
   
   attr(data, "invalid") <- attr(Recast, "invalid")
+  attr(data, "castForImport") <- TRUE
   
   data
 }
