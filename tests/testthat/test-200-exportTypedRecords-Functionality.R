@@ -163,7 +163,6 @@ test_that(
                                fields="number_test", 
                                records = 1:5,
                                cast=raw_cast)
-    browser()
     recV <- expect_warning(
       exportRecordsTyped(
         rcon,
