@@ -35,7 +35,6 @@ ImportData <- castForImport(test_redcapAPI_Data,
                                         bioportal = as.character))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
 
 #######################################################################
 # Export Records with Repeating Instruments                        ####

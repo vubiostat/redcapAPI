@@ -38,7 +38,6 @@ test_that(
     n_deleted <- deleteArms(rcon, 
                             arms = rcon$arms()$arm_num) 
     expect_equal(n_deleted, "0")
-    rcon$flush_arms()
   }
 )
 

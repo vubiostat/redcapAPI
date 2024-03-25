@@ -4,8 +4,6 @@ test_that(
   "User Role Methods Functionality", 
   {
     # Import a single user role
-    rcon$flush_all()
-    
     NewRole <- data.frame(role_label = "User Role 1", 
                           user_rights = 1)
   
