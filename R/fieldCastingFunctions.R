@@ -299,14 +299,15 @@ castForImport <- function(data,
     data   <- data[,!mchoices, drop=FALSE]
     fields <- fields[!mchoices]
   }
-  
+
   # Drop non importable field types
   for(type in c("file", "calc"))
   {
     drops <- rcon$metadata()[match(fields, rcon$metadata()$field_name),'field_type'] == type
-    if(!is.na(sum(drops)) && sum(drops) > 0)
+    drops[is.na(drops)] <- FALSE
+    if(sum(drops) > 0)
     {
-      message(paste0("The following ", type, ", variables(s) were dropped: ",
+      message(paste0("The following ", type, " variables(s) were dropped: ",
                      paste0(fields[drops], collapse=', '), '.'))
       data   <- data[,!drops, drop=FALSE]
       fields <- fields[!drops]

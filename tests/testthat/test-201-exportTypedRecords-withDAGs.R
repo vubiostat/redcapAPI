@@ -7,6 +7,7 @@ ImportData <- exportRecordsTyped(rcon,
                                  cast = raw_cast)
 ImportData <- castForImport(ImportData, 
                             rcon, 
+                            validation = list(bioportal=valSkip),
                             cast = list(number_1dp = as.numeric, 
                                         number_2dp = as.numeric, 
                                         number_1dp_comma_decimal = as.numeric, 
