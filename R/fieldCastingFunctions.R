@@ -304,7 +304,7 @@ castForImport <- function(data,
   for(type in c("file", "calc"))
   {
     drops <- rcon$metadata()[match(fields, rcon$metadata()$field_name),'field_type'] == type
-    if(sum(drops) > 0)
+    if(!is.na(sum(drops)) && sum(drops) > 0)
     {
       message(paste0("The following ", type, ", variables(s) were dropped: ",
                      paste0(fields[drops], collapse=', '), '.'))

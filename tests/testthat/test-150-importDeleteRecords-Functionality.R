@@ -290,4 +290,4 @@ test_that(
   }
 )
 
-purgeProject(rcon, purge_all = TRUE)
+#purgeProject(rcon, purge_all = TRUE)

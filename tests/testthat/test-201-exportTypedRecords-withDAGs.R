@@ -3,7 +3,7 @@ context("Export Typed Records with DAGs Functionality")
 # NOTE: Data for these tests was established in 
 #       test-200-exportTypedRecords-Functionality.R
 
-ImportData <- exportRecordsTyped(rcon, 
+ImportData <- exportRecordsTyped(rcon,
                                  cast = raw_cast)
 ImportData <- castForImport(ImportData, 
                             rcon, 
@@ -26,7 +26,7 @@ ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name,
                                            length.out = nrow(ImportData))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
+
 
 #####################################################################
 # Export Data Access Groups

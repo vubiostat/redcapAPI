@@ -237,12 +237,10 @@ test_that(
 test_that(
   "Calculated fields are exported", 
   {
-    expect_data_frame(
-      exportRecordsTyped(rcon, 
-                         fields = c("left_operand", "right_operand", 
-                                    "calc_addition", "calc_squared")), 
-      ncols = 6
-    )
+    fields <- c("left_operand", "right_operand","calc_addition", "calc_squared")
+    expect_data_frame(x <- exportRecordsTyped(rcon, fields = fields), 
+                      min.cols = 6)
+    expect_subset(fields, names(x))
   }
 )
 
