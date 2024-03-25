@@ -692,19 +692,8 @@ test_that(
     test_field <- "calc_addition"
     invalid_value <- "some text"
     
-    expect_silent(castForImport(data = TheData[c("record_id", test_field)], 
-                                  rcon = rcon))
-    
-    TheData[[test_field]][1] <- invalid_value
-    
-    ImportData <- 
-      expect_warning(castForImport(data = TheData[c("record_id", test_field)], 
-                                     rcon = rcon), 
-                     "Some records failed validation")
-    
-    expect_true(attr(ImportData, "invalid")$value == invalid_value)
-    
-    expect_true(is.na(ImportData[[test_field]][1]))
+    expect_message(castForImport(data = TheData[c("record_id", test_field)], 
+                                  rcon = rcon), 'calc_addition')
   }
 )
 

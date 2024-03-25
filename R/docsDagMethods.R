@@ -11,8 +11,6 @@
 #' @param data A `data.frame` with two columns: `data_access_group_name`
 #'   and `unique_group_name`. 
 #' @param dags `character` vector of names matching the `unique_group_name`.
-#' @param refresh `logical(1)`. When `TRUE`, cached data access
-#'   group data will be refreshed after the import.
 #'   
 #' @details To import new data access groups, the user must provide a value for 
 #'   `data_access_group_name` with no value (`NA`) for `unique_group_name`. 
@@ -75,7 +73,6 @@
 dagMethods <- function(rcon, 
                        dags, 
                        data, 
-                       refresh, 
                        ..., 
                        error_handling, 
                        config, 

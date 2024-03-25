@@ -14,7 +14,6 @@ importUserRoleAssignments <- function(rcon,
 
 importUserRoleAssignments.redcapApiConnection <- function(rcon, 
                                                           data, 
-                                                          refresh        = TRUE, 
                                                           ..., 
                                                           error_handling = getOption("redcap_error_handling"), 
                                                           config         = list(), 
@@ -31,12 +30,6 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data, 
                                col.names = "named", 
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            null.ok = FALSE, 
-                            any.missing = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"), 
@@ -102,14 +95,12 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
                           body = body, 
                           config = config)
   
+  rcon$flush_users()
+  rcon$flush_user_role_assignment()
+  
   if (response$status_code != 200){
     redcapError(response, 
                 error_handling = error_handling)
-  }
-  
-  if (refresh){
-    rcon$refresh_user_role_assignment()
-    rcon$refresh_users()
   }
   
   invisible(as.character(response))

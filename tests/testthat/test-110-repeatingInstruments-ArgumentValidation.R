@@ -50,22 +50,6 @@ test_that(
 )
 
 test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importRepeatingInstrumentsEvents(rcon, 
-                                                  data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE,
-                                                  refresh = "TRUE"), 
-                 "'refresh': Must be of type 'logical'")
-    
-    expect_error(importRepeatingInstrumentsEvents(rcon, 
-                                                  data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE,
-                                                  refresh = c(TRUE, FALSE)), 
-                 "'refresh': Must have length 1")
-  }
-)
-
-test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)

@@ -82,23 +82,6 @@ test_that(
 )
 
 test_that(
-  "Return an error when refresh is not a logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    
-    expect_error(importMetaData(rcon, 
-                                data = REDCAP_METADATA_STRUCTURE, 
-                                refresh = "FALSE"), 
-                 "'refresh': Must be of type 'logical'")
-    
-    expect_error(importMetaData(rcon, 
-                                data = REDCAP_METADATA_STRUCTURE, 
-                                refresh = c(TRUE, FALSE)), 
-                 "'refresh': Must have length 1")
-  }
-)
-
-test_that(
   "Return an error when field_types is not character", 
   {
     local_reproducible_output(width = 200)

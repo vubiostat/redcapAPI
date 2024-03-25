@@ -13,8 +13,6 @@
 #'   given, mappings are only exported for the given arms.
 #' @param data `data.frame` with columns `arm_num`, `unique_event_name`, 
 #'   and `form`. See Details
-#' @param refresh `logical(1)`. When `TRUE`, cached mappings in the `rcon` 
-#'   object are refreshed after the import.
 #'   
 #' @details These methods are only applicable to longitudinal projects.
 #'   If the project information reports that the project is not longitudinal, 
@@ -72,7 +70,6 @@
 mappingMethods <- function(rcon, 
                            arms, 
                            data, 
-                           refresh, 
                            ..., 
                            error_handling, 
                            config, 

@@ -11,8 +11,6 @@
 #'   `unique_role_name`. Each `username` must be unique. 
 #'   Users without a `unique_role_name` will not be assigned to 
 #'   a user role.
-#' @param refresh `logical(1)`. When `TRUE`, the cached value
-#'   in `rcon` will be refreshed after the import.
 #'   
 #' @return 
 #' `exportUserRoleAssignments` returns a data frame with the columns:
@@ -55,8 +53,7 @@
 #' @order 0
 
 userRoleAssignmentMethods <- function(rcon, 
-                                      data, 
-                                      refresh, 
+                                      data,
                                       ..., 
                                       error_handling, 
                                       config, 

@@ -48,9 +48,7 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_projectInformation()
-    
+   
     # The project should now be recognized as longitudinal
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  1)
@@ -77,9 +75,7 @@ test_that(
                                          "event_1_arm_2", 
                                          "event_1_arm_3"))
     expect_equal(n_deleted, "3")
-    
-    rcon$refresh_projectInformation()
-    
+
     # Now the project should no longer be considered longitudinal
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -93,7 +89,6 @@ test_that(
   {
     local_reproducible_output(width = 200)
     
-    rcon$refresh_projectInformation()
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -106,8 +101,6 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_projectInformation()
     
     expect_data_frame(exportEvents(rcon), 
                       ncols = 5, 
@@ -124,9 +117,7 @@ test_that(
                                data = OverrideEvent, 
                                override = TRUE)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_events()
-    
+
     expect_equal(rcon$events()$event_name, 
                  c("event_10", "event_11", "event_12"))
     
@@ -136,7 +127,6 @@ test_that(
     
     
     # Now Clean up from the test
-    rcon$refresh_arms()
     n_deleted <- deleteArms(rcon, arms = 1:3)
     expect_equal(n_deleted, "3")
   }
@@ -147,8 +137,7 @@ test_that(
   "Confirm that we can add additional events and delete specific events", 
   {
     local_reproducible_output(width = 200)
-    
-    rcon$refresh_projectInformation()
+
     # start from an empty project with no arms. It should be recognized as a classical project.
     expect_equal(rcon$projectInformation()$is_longitudinal, 
                  0)
@@ -161,8 +150,6 @@ test_that(
     n_imported <- importEvents(rcon, 
                                data = Events)
     expect_equal(n_imported, "3")
-    
-    rcon$refresh_projectInformation()
     
     expect_data_frame(exportEvents(rcon), 
                       ncols = 5, 
@@ -182,8 +169,6 @@ test_that(
                       ncols = 5, 
                       nrows = 5)
     
-    rcon$refresh_arms()
-    rcon$refresh_events()
     # Delete only arms 3 and 10
     
     n_deleted <- deleteEvents(rcon, 

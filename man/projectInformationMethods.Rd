@@ -24,7 +24,6 @@ importProjectInformation(rcon, data, ...)
 \method{importProjectInformation}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -36,9 +35,6 @@ importProjectInformation(rcon, data, ...)
 
 \item{data}{\code{data.frame} with only one row and any subset of allowable fields to be
 updated. See Details.}
-
-\item{refresh}{\code{logical(1)}. If \code{TRUE}, the cached project information
-will be updated after the import.}
 
 \item{...}{Arguments to pass to other methods}
 

@@ -15,7 +15,6 @@ importUserRoles <- function(rcon,
 importUserRoles.redcapApiConnection <- function(rcon, 
                                                 data,
                                                 consolidate = TRUE,
-                                                refresh = TRUE, 
                                                 ...,
                                                 error_handling = getOption("redcap_error_handling"), 
                                                 config = list(), 
@@ -34,11 +33,6 @@ importUserRoles.redcapApiConnection <- function(rcon,
                                add = coll)
   
   checkmate::assert_logical(x = consolidate, 
-                            len = 1, 
-                            null.ok = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
                             len = 1, 
                             null.ok = FALSE, 
                             add = coll)
@@ -87,21 +81,18 @@ importUserRoles.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
+
   if (response$status_code != 200){
     redcapError(response, 
                  error_handling = error_handling)
   }
   
-  if (refresh)
+  # From REDCap 14.0.2 forward, caching can sometimes catch an NA role pre-definition
+  roles <- c(NA)
+  while(length(roles > 0) && any(is.na(roles)))
   {
-    # From REDCap 14.0.2 forward, caching can sometimes catch an NA role pre-definition
-    roles <- c(NA)
-    while(length(roles > 0) && any(is.na(roles)))
-    {
-      rcon$refresh_user_roles()
-      roles <- rcon$user_roles()$unique_role_name
-    }
+    rcon$refresh_user_roles()
+    roles <- rcon$user_roles()$unique_role_name
   }
   
   invisible(as.character(response))

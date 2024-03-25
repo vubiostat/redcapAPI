@@ -3,10 +3,11 @@ context("Export Typed Records with DAGs Functionality")
 # NOTE: Data for these tests was established in 
 #       test-200-exportTypedRecords-Functionality.R
 
-ImportData <- exportRecordsTyped(rcon, 
+ImportData <- exportRecordsTyped(rcon,
                                  cast = raw_cast)
 ImportData <- castForImport(ImportData, 
                             rcon, 
+                            validation = list(bioportal=valSkip),
                             cast = list(number_1dp = as.numeric, 
                                         number_2dp = as.numeric, 
                                         number_1dp_comma_decimal = as.numeric, 
@@ -26,7 +27,7 @@ ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name,
                                            length.out = nrow(ImportData))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
+
 
 #####################################################################
 # Export Data Access Groups

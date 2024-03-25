@@ -109,6 +109,9 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config)
   
+  if (response$status_code != 200) stop(paste("No report of ID", report_id, "in project."))
+  
+  
   Raw <- as.data.frame(response, sep = csv_delimiter)
   
   if (length(drop_fields) > 0){

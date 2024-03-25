@@ -14,7 +14,6 @@ deleteUsers <- function(rcon,
 
 deleteUsers.redcapApiConnection <- function(rcon, 
                                             users, 
-                                            refresh = TRUE,
                                             ..., 
                                             error_handling = getOption("redcap_error_handling"), 
                                             config = list(), 
@@ -32,11 +31,6 @@ deleteUsers.redcapApiConnection <- function(rcon,
                               null.ok = FALSE, 
                               any.missing = FALSE,
                               add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            null.ok = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"),
@@ -77,13 +71,11 @@ deleteUsers.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
+  rcon$flush_users()
+  
   if (response$status_code != 200){
     redcapError(response, 
                  error_handling = error_handling)
-  }
-  
-  if (refresh){
-    rcon$refresh_users()
   }
   
   invisible(as.character(response))

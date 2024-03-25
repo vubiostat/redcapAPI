@@ -25,7 +25,6 @@ importRepeatingInstrumentsEvents(rcon, data, ...)
 \method{importRepeatingInstrumentsEvents}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -38,10 +37,6 @@ importRepeatingInstrumentsEvents(rcon, data, ...)
 \item{data}{\code{data.frame}. For classical projects, it must have the
 columns \code{form_name} and \code{custom_form_label}. Longitudinal
 projects also require a column for \code{event_name}.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached
-value of repeating instruments and events on \code{rcon} will be
-refreshed.}
 
 \item{...}{Arguments to pass to other methods}
 

@@ -13,8 +13,7 @@ importDags <- function(rcon,
 #' @export
 
 importDags.redcapApiConnection <- function(rcon, 
-                                           data, 
-                                           refresh = TRUE,
+                                           data,
                                            ..., 
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -31,12 +30,6 @@ importDags.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data, 
                                col.names = "named", 
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            null.ok = FALSE, 
-                            any.missing = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -89,11 +82,9 @@ importDags.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  rcon$flush_dags()
   
-  if (refresh){
-    rcon$refresh_dags()
-  }
+  if (response$status_code != 200) return(redcapError(response, error_handling))
   
   invisible(as.character(response))
 }

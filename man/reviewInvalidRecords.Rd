@@ -76,7 +76,7 @@ reviewInvalidRecords(Records)
 
 
 # Review Invalid data frame before import
-RecordsForIMport <- castForImport(rcon)
+Records <- castForImport(rcon)
 reviewInvalidRecords(Records)
 
 

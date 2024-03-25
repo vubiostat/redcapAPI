@@ -18,8 +18,6 @@
 #' @param dir_create `logical(1)`. Create the directory `dir` 
 #'   if it does not already exist. Defaults to `FALSE`. 
 #'   If `dir` does not exist and `create = FALSE`, an error is thrown.
-#' @param refresh `logical(1)` When `TRUE`, the cached 
-#'   File Repository data on `rcon` will be refreshed. 
 #' 
 #' @details When a file is deleted, the file will remain in the Recycle Bin 
 #' folder for up to 30 days.
@@ -84,8 +82,7 @@ fromFileRepositoryMethods <- function(rcon,
                                       folder_id,
                                       file,
                                       dir, 
-                                      dir_create, 
-                                      refresh, 
+                                      dir_create,
                                       ..., 
                                       error_handling, 
                                       config, 

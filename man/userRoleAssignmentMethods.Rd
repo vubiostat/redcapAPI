@@ -24,7 +24,6 @@ importUserRoleAssignments(rcon, data, ...)
 \method{importUserRoleAssignments}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -38,9 +37,6 @@ importUserRoleAssignments(rcon, data, ...)
 \code{unique_role_name}. Each \code{username} must be unique.
 Users without a \code{unique_role_name} will not be assigned to
 a user role.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached value
-in \code{rcon} will be refreshed after the import.}
 
 \item{...}{Arguments to pass to other methods}
 

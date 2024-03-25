@@ -13,8 +13,7 @@ deleteEvents <- function(rcon,
 #' @export
 
 deleteEvents.redcapApiConnection <- function(rcon, 
-                                             events         = NULL, 
-                                             refresh        = TRUE,
+                                             events         = NULL,
                                              ..., 
                                              error_handling = getOption("redcap_error_handling"), 
                                              config         = list(), 
@@ -32,10 +31,6 @@ deleteEvents.redcapApiConnection <- function(rcon,
                               any.missing = FALSE, 
                               null.ok = TRUE, 
                               add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -67,16 +62,11 @@ deleteEvents.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
+  rcon$flush_events()
+  rcon$flush_arms()
+  rcon$flush_projectInformation()
   
   if (response$status_code != 200) return(redcapError(response, error_handling))
-  
-  if (refresh && rcon$has_events()){
-    rcon$refresh_events()
-    # changing events can change availability of arms
-    # and whether a project is considered longitudinal
-    rcon$refresh_arms()
-    rcon$refresh_projectInformation()
-  }
   
   invisible(as.character(response))
 }

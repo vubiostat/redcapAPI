@@ -22,8 +22,6 @@
 #' @param consolidate `logical(1)`. When `TRUE`, the form and data 
 #'   export access values will be read from the expanded columns. Otherwise, 
 #'   the consolidated values (as provided by the API export) are utilized.
-#' @param refresh `logical(1)`. When `TRUE`, the cached data will
-#'   be refreshed after the API action is complete.
 #'   
 #' @details
 #'   User project access fields (those not related to forms or exports) 
@@ -184,8 +182,7 @@ userMethods <- function(rcon,
                         form_rights, 
                         users, 
                         data, 
-                        consolidate, 
-                        refresh, 
+                        consolidate,
                         ..., 
                         error_handling, 
                         config, 

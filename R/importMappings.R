@@ -3,8 +3,7 @@
 #' @export
 
 importMappings <- function(rcon, 
-                           data, 
-                           refresh = TRUE, 
+                           data,  
                            ...){
   UseMethod("importMappings")
 }
@@ -15,7 +14,6 @@ importMappings <- function(rcon,
 
 importMappings.redcapApiConnection <- function(rcon, 
                                                data, 
-                                               refresh = TRUE, 
                                                ..., 
                                                error_handling  = getOption("redcap_error_handling"),
                                                config          = list(), 
@@ -32,11 +30,6 @@ importMappings.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data, 
                                col.names = "named", 
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -89,14 +82,10 @@ importMappings.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
+  rcon$flush_mapping()
   
-  if (response$status_code != "200"){
+  if (response$status_code != "200")
     redcapError(response, error_handling)
-  } 
-  
-  if (refresh && rcon$has_mapping()){
-    rcon$refresh_mapping()
-  }
   
   invisible(as.character(response))
 }

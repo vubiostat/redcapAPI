@@ -119,22 +119,6 @@ test_that(
 )
 
 test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importEvents(rcon, 
-                              Events, 
-                              refresh = c(TRUE, FALSE)), 
-                 "'refresh': Must have length 1")
-    
-    expect_error(importEvents(rcon, 
-                              Events, 
-                              refresh = "TRUE"), 
-                 "'refresh': Must be of type 'logical'")
-  }
-)
-
-test_that(
   "Return an error when error handling isn't one of null, error", 
   {
     local_reproducible_output(width = 200)
@@ -187,22 +171,6 @@ test_that(
   }
 )
 
-test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    
-    expect_error(deleteEvents(rcon, 
-                              Events, 
-                              refresh = c(TRUE, FALSE)), 
-                 "'refresh': Must have length 1")
-    
-    expect_error(deleteEvents(rcon, 
-                              Events, 
-                              refresh = "TRUE"), 
-                 "'refresh': Must be of type 'logical'")
-  }
-)
 
 test_that(
   "Validate error_handling, config, api_param", 

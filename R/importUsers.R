@@ -13,7 +13,6 @@ importUsers <- function(rcon, data, ...){
 importUsers.redcapApiConnection <- function(rcon, 
                                             data,
                                             consolidate = TRUE, 
-                                            refresh = TRUE, 
                                             ...,
                                             error_handling = getOption("redcap_error_handling"), 
                                             config = list(), 
@@ -34,11 +33,6 @@ importUsers.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = consolidate, 
                             len = 1, 
                             null.ok = FALSE, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            null.ok = TRUE, 
                             add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
@@ -98,6 +92,8 @@ importUsers.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
+  rcon$flush_users()
+  
   if (response$status_code != 200){
     redcapError(response, 
                  error_handling = error_handling)
@@ -109,10 +105,6 @@ importUsers.redcapApiConnection <- function(rcon,
   if (user_conflict_exists){
     importUserRoleAssignments(rcon, 
                               data = OrigUserRoleAssign[1:2])
-  }
-  
-  if (refresh){
-    rcon$refresh_users()
   }
   
   invisible(as.character(response))

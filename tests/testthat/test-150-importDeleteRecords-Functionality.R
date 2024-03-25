@@ -13,29 +13,28 @@ fields <- c("record_id", "letters_only_test", "number_test", "date_dmy_test",
             "left_operand", "calc_squared", 
             "prereq_checkbox___1", "prereq_checkbox___2", 
             "prereq_checkbox___3", "prereq_checkbox___4")
-MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields, ]
+MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields |
+                                    test_redcapAPI_MetaData$field_name=='prereq_checkbox' , ]
+
+importMetaData(rcon, MetaData)
 
 ImportData <- test_redcapAPI_Data
 ImportData <- ImportData[1, names(ImportData) %in% fields]
 
-importMetaData(rcon, 
-               MetaData)
 
-importArms(rcon, 
-           data = test_redcapAPI_Arms)
-importEvents(rcon, 
-             data = test_redcapAPI_Events)
+importArms(rcon,   test_redcapAPI_Arms)
+importEvents(rcon, test_redcapAPI_Events)
+importProjectInformation(rcon, data.frame(is_longitudinal = 1))
 
-importProjectInformation(rcon, 
-                         data.frame(is_longitudinal = 1))
-
-rcon$refresh_arms()
-rcon$refresh_events()
-
-importMappings(rcon, 
-               data = data.frame(arm_num = rep(1, 5), 
-                                 unique_event_name = rep("event_1_arm_1", 5), 
-                                 form = rcon$instruments()$instrument_name))
+n <- length(rcon$instruments()$instrument_name)
+importMappings(
+  rcon, 
+  data = data.frame(
+    arm_num           = rep(1, n), 
+    unique_event_name = rep("event_1_arm_1", n), 
+    form              = rcon$instruments()$instrument_name
+  )
+)
 
 #####################################################################
 # Tests
@@ -160,19 +159,19 @@ test_that(
 )
 
 test_that(
-  "mChoice fields are dropped", 
+  "mChoice fields are handled", 
   {
     local_reproducible_output(width = 200)
     importRecords(rcon, 
-                  data = ImportData)
+                  data = ImportData[,])
                   
     require(Hmisc)
     TheData <- exportRecordsTyped(rcon)
     WithMChoice <- mChoiceCast(TheData, rcon)
-    WithMChoice <- suppressWarnings(castForImport(WithMChoice, rcon))
-    expect_message(importRecords(rcon, WithMChoice))
-    TheDataAfter <- exportRecordsTyped(rcon)
-    expect_true(identical(TheData, TheDataAfter))
+    expect_error(importRecords(rcon, WithMChoice), 
+                   ".*prereq_checkbox.*mChoice.*")
+    expect_message(WithMChoice <- castForImport(WithMChoice, rcon), ".*mChoice.*dropped.*prereq_checkbox.*")
+    expect_equal(importRecords(rcon, WithMChoice), "1")
     detach("package:Hmisc", unload = TRUE)
   }
 )
@@ -218,8 +217,6 @@ test_that(
     importMetaData(rcon, 
                    NewMetaData)
     
-    rcon$refresh_fieldnames()
-    
     NewMetaData <- rcon$metadata()
     w_var <- which(NewMetaData$field_name == "date_ymd_test")
     
@@ -258,9 +255,7 @@ test_that(
     
     importMetaData(rcon, 
                    NewMetaData)
-    
-    rcon$refresh_fieldnames()
-    
+
     NewMetaData <- rcon$metadata()
     w_var <- which(NewMetaData$field_name == "datetime_ymd_hms_test")
     
@@ -295,4 +290,4 @@ test_that(
   }
 )
 
-purgeProject(rcon, purge_all = TRUE)
+#purgeProject(rcon, purge_all = TRUE)

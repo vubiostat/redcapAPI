@@ -11,9 +11,6 @@
 #' @param data `data.frame`. For classical projects, it must have the
 #'   columns `form_name` and `custom_form_label`. Longitudinal
 #'   projects also require a column for `event_name`.
-#' @param refresh `logical(1)`. When `TRUE`, the cached 
-#'   value of repeating instruments and events on `rcon` will be
-#'   refreshed.
 #'   
 #' @details Repeating events (as opposed to repeating instruments) are 
 #'   provided as a row of data where the `form_name` column is `NA`.
@@ -63,8 +60,7 @@
 #' @order 0
 
 repeatingInstrumentEventMethods <- function(rcon, 
-                                            data, 
-                                            refresh, 
+                                            data,
                                             ..., 
                                             error_handling, 
                                             config, 
