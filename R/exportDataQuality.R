@@ -40,7 +40,7 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   ###################################################################
   # Build the query list                                         ####
   
-  url <- paste0("https://redcap.vanderbilt.edu/api/?prefix=", prefix, "&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
+  url <- paste0(rcon$url, prefix, "&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
   
   formData <- list(token = rcon$token)
   
