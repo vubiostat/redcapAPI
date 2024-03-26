@@ -40,7 +40,7 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   ###################################################################
   # Build the query list                                         ####
   
-  url <- paste0(rcon$url, prefix, "&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
+  url <- paste0(rcon$url, "?prefix=", prefix, "&page=export&type=module&NOAUTH&pid=", rcon$projectInformation()$project_id)
   
   formData <- list(token = rcon$token)
   
@@ -66,9 +66,8 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
     }
     
     return(result)
-  }, error = function(e) {
-    cat("Error in result: Make sure the Data Quality API module is enabled in your project.", conditionMessage(e), "\n")
-  })
+  }, stop ("Error in result: Make sure the Data Quality API module is enabled in your project.")
+  )
   
   
   
@@ -85,7 +84,7 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   }
   
   if (as.character(response) == ""){
-    return(REDCAP_DAG_ASSIGNMENT_STRUCTURE)
+    return(REDCAP_DQ_STRUCTURE)
   }
   
   as.data.frame(response)
