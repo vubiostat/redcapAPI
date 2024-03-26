@@ -45,12 +45,13 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   formData <- list(token = rcon$token)
   
   response <- httr::POST(url, body = formData, encode = "form")
+
   tryCatch({
     result <- httr::content(response, type = 'application/json')
     
     for(j in 1:length(result)){i=result[[j]];if(is.null(i$resolutions)){result[[j]]$resolutions=list()}}
     result <- as.data.frame(do.call(rbind, result))
-    
+
     if (nrow(result) > 0) {
       columns <- c("status_id", "project_id", "record", "event_id", "instance", "field_name")
       for (c in columns) {
@@ -64,12 +65,11 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
         return(m)
       })
     }
-    
+
     return(result)
-  }, stop ("Error in result: Make sure the Data Quality API module is enabled in your project.")
-  )
-  
-  
+  }, error = function(e) {
+    stop ("Error in result: Make sure the Data Quality API module is enabled in your project. ", e$message)
+  })
   
   ###################################################################
   # Make the API Call                                            ####
