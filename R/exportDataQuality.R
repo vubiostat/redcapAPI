@@ -78,11 +78,6 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200){
-    redcapError(response, 
-                error_handling = error_handling)
-  }
-  
   if (as.character(response) == ""){
     return(REDCAP_DQ_STRUCTURE)
   }
