@@ -2,8 +2,8 @@
 % Please edit documentation in R/redcapAPI-package.R
 \docType{package}
 \name{redcapAPI}
-\alias{redcapAPI}
 \alias{redcapAPI-package}
+\alias{redcapAPI}
 \title{Access data, meta data, and files from REDCap using the API}
 \description{
 REDCap is a database development tool built on MySQL.  Visit
