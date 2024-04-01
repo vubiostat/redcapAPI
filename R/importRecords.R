@@ -215,18 +215,20 @@ importRecords.redcapApiConnection <- function(rcon,
   mchoices <- which(vapply(data, inherits, logical(1), 'mChoice'))
   if(length(mchoices) > 0)
   {
-    stop("The variable(s) ", 
-         paste0(names(data)[mchoices], collapse=", "), 
-         " are mChoice formatted and cannot be imported.")
+    coll$push(paste0(
+      "The variable(s) ", 
+      paste0(names(data)[mchoices], collapse=", "), 
+      " are mChoice formatted and cannot be imported."))
   }
   
   # Validate field names
   unrecognized_names <- !(names(data) %in% c(with_complete_fields, REDCAP_SYSTEM_FIELDS))
   if (any(unrecognized_names))
   {
-    stop("The variable(s) ", 
-            paste0(names(data)[unrecognized_names], collapse=", "), 
-            " are not found in the project and/or cannot be imported.")
+    coll$push(paste0(
+      "The variable(s) ", 
+      paste0(names(data)[unrecognized_names], collapse=", "), 
+      " are not found in the project and/or cannot be imported."))
   }
   
   # Check that the study id exists in data
