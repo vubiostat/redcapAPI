@@ -69,9 +69,6 @@ the file is to be saved. Defaults to the working directory.}
 if it does not already exist. Defaults to \code{FALSE}.
 If \code{dir} does not exist and \code{create = FALSE}, an error is thrown.}
 
-\item{refresh}{\code{logical(1)} When \code{TRUE}, the cached
-File Repository data on \code{rcon} will be refreshed.}
-
 \item{...}{Arguments to pass to other methods}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
