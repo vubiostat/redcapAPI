@@ -57,13 +57,6 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
       for (c in columns) {
         result[, c] <- unlist(result[, c])
       }
-
-      result$codes <- lapply(result$resolutions, function(rs) {
-        rs_df <- as.data.frame(do.call(rbind, rs))
-        m <- stringr::str_match(unlist(rs_df$comment), "^([a-zA-Z]+\\d+):\\s")[, 2]
-        m <- m[!is.na(m)]
-        return(m)
-      })
     }
 
     return(result)
