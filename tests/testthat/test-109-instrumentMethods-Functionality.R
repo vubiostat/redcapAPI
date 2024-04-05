@@ -18,22 +18,11 @@ Events <- data.frame(event_name = c("event_1",
                                            "event_2_arm_2", 
                                            "event_1_arm_2"), 
                      stringsAsFactors = FALSE)
-
-
-importMetaData(rcon, 
-               test_redcapAPI_MetaData)
-
-importArms(rcon, 
-           data = Arms)
-
-importEvents(rcon, 
-             data = Events)
-
-importProjectInformation(rcon, 
-                         data = data.frame(is_longitudinal = 1))
-
-rcon$refresh_arms()
-rcon$refresh_events()
+purgeProject(rcon, purge_all = TRUE)
+importMetaData(rcon, test_redcapAPI_MetaData)
+importArms(rcon, data = Arms)
+importEvents(rcon, data = Events)
+importProjectInformation(rcon, data = data.frame(is_longitudinal = 1))
 
 Mapping <- data.frame(arm_num = c(1, 1, 1, 2, 2, 2), 
                       unique_event_name = c("event_1_arm_1", 
@@ -61,8 +50,9 @@ RecordToImport <- castForImport(RecordToImport, rcon,
                                             number_1dp_comma_decimal = as.numeric, 
                                             number_2dp_comma_decimal = as.numeric, 
                                             bioportal = as.character))
-importRecords(rcon, 
-              data = RecordToImport)
+importRecords(
+  rcon, 
+  RecordToImport[,!names(RecordToImport) %in% c("signature_test", "file_upload_test"),drop=FALSE])
 
 #####################################################################
 # exportInstruments                                              ####
@@ -100,7 +90,6 @@ test_that(
     # This only works because the API isn't every called for a non-longitudinal project
     importProjectInformation(rcon,
                              data.frame(is_longitudinal = 0))
-    rcon$flush_projectInformation()
     # tmp_proj <- rcon$projectInformation()
     # tmp_proj$is_longitudinal <- 0
 
@@ -109,7 +98,6 @@ test_that(
                       nrows = 0)
     importProjectInformation(rcon,
                              data.frame(is_longitudinal = 1))
-    rcon$flush_projectInformation()
   }
 )
 
@@ -125,21 +113,7 @@ test_that(
     n_imported <- importMappings(rcon,
                                  ArmOneMapping)
     expect_equal(n_imported, as.character(nrow(ArmOneMapping)))
-
-    expect_equal(ArmOneMapping,
-                 rcon$mapping())
-
-    importMappings(rcon,
-                   Mapping,
-                   refresh = FALSE)
-
-    expect_data_frame(rcon$mapping(),
-                      nrows = nrow(ArmOneMapping))
-
-    rcon$refresh_mapping()
-
-    expect_equal(Mapping,
-                 rcon$mapping())
+    expect_equal(ArmOneMapping, rcon$mapping())
   }
 )
 

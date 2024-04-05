@@ -10,8 +10,6 @@
 #' @inheritParams common-api-args
 #' @param data `data.frame` with only one row and any subset of allowable fields to be
 #'   updated. See Details.
-#' @param refresh `logical(1)`. If `TRUE`, the cached project information
-#'   will be updated after the import.
 #'   
 #' @details
 #' When importing, fields that are not editable will be quietly removed prior to 
@@ -112,8 +110,7 @@
 #' @order 0
 
 projectInformationMethods <- function(rcon, 
-                                      data, 
-                                      refresh,
+                                      data,
                                       ..., 
                                       error_handling, 
                                       config, 

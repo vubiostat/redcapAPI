@@ -27,7 +27,6 @@ importMetaData(rcon, data, ...)
 \method{importMetaData}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   field_types = REDCAP_METADATA_FIELDTYPE,
   validation_types = REDCAP_METADATA_VALIDATION_TYPE,
@@ -49,9 +48,6 @@ not.  Form names should match those in the second column of the data
 dictionary, and not the display names shown on the web interface.}
 
 \item{data}{\code{data.frame} with the Meta Data to import.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached metadata
-and instruments will be refreshed after the import.}
 
 \item{...}{Arguments to pass to other methods}
 

@@ -29,7 +29,6 @@ test_that(
     importUserRoles(rcon,
                     NewRole)
 
-    rcon$refresh_user_roles()
     the_role <- rcon$user_roles()$unique_role_name
 
     ImportAssignmentTest <-

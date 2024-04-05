@@ -11,9 +11,6 @@ load(file.path(test_path("testdata"),
 importMetaData(rcon, 
                test_redcapAPI_MetaData)
 
-rcon$refresh_instruments()
-rcon$refresh_fieldnames()
-
 forms <- rcon$instruments()$instrument_name
 Mappings <- data.frame(arm_num = rep(1, length(forms)), 
                        unique_event_name = rep("event_1_arm_1", length(forms)), 
@@ -38,7 +35,6 @@ ImportData <- castForImport(test_redcapAPI_Data,
                                         bioportal = as.character))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
 
 #######################################################################
 # Export Records with Repeating Instruments                        ####
@@ -143,7 +139,6 @@ test_that(
     # Now let's make a secondary unique field
     NewInfo <- data.frame(secondary_unique_field = "text_test")
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
 
     Rec <- exportRecordsTyped(rcon,
                               forms = c("randomization"))
@@ -152,7 +147,6 @@ test_that(
     NewInfo <- data.frame(secondary_unique_field = "",
                           surveys_enabled = 0)
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
   }
 )
 

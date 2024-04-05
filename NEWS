@@ -16,6 +16,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.8.5
 
+* importRecords stops when provided fields not in the project.
 * Filtering empty records will use mapping if available 
 * Minor export optimizations for records.
 * unlockREDCap will now search for ENV variables.
