@@ -231,15 +231,13 @@ makeApiCall <- function(rcon,
   {
     if(response$status_code == 301L)
     {
-      warning(paste("Permanent 301 redirect", rcon$url, "to", response$headers$Location))
+      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$Location))
     } else
     {
-      message(paste("Temporary 302 redirect", rcon$url, "to", response$headers$Location))
+      message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
     }
     
-    ## FIXME
-    ## Need some method to modify original source object!!!
-    rcon$url <- response$headers$location
+    assign("url", response$headers$location, envir=rcon$env.url)
         
     makeApiCall(rcon, body, config)
   } else 
