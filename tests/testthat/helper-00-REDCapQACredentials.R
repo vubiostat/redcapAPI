@@ -19,7 +19,7 @@
 library(checkmate) # for additional expect_* functions.
 library(keyring)
   
-url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
+url <- "https://redcap.vumc.org/api/" # Our institutions REDCap instance
 
 conns <- unlockREDCap(
   c(rcon ="TestRedcapAPI"), # Your default from keyring

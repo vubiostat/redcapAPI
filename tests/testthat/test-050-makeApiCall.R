@@ -46,8 +46,9 @@ test_that(
   {
     h <- new_handle(timeout = 1L)
     e <- structure(
-      list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
-           call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", handle = h)
+      list(message = paste0("Timeout was reached: [", url,
+                            "] Operation timed out after 300001 milliseconds with 0 bytes received"), 
+           call = curl_fetch_memory(paste0(url,"/params"), handle = h)
       ),
       class = c("simpleError", "error", "condition")
     )
@@ -71,7 +72,7 @@ test_that(
   {
     h <- new_handle(timeout = 1L)
     goodVersionPOST <- structure(
-      list(url = "https://redcap.vanderbilt.edu/api/",
+      list(url = url,
            status_code = 200L,
            content = charToRaw("13.10.3"),
            headers=structure(list(
@@ -80,8 +81,9 @@ test_that(
            class = c("insensitive", "list")),
       class = "response")
     e <- structure(
-           list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
-                call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", handle = h)
+           list(message = paste0("Timeout was reached: [", url,
+                            "] Operation timed out after 300001 milliseconds with 0 bytes received"),
+                call = curl_fetch_memory(paste0(url,"/params"), handle = h)
                 ),
            class = c("simpleError", "error", "condition")
     )
@@ -127,7 +129,7 @@ test_that(
     expect_error(redcapError(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
     
-    response$content <- charToRaw("Timeout was reached: [redcap.vanderbilt.edu] SSL connection timeout")
+    response$content <- charToRaw(paste0("Timeout was reached: [",url,"] SSL connection timeout"))
     
     expect_error(redcapError(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
