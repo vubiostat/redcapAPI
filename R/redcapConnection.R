@@ -396,7 +396,6 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   rc
 }
 
-#' @rdname redcapConnection
 #' @export
 `$.redcapApiConnection` <- function(x, i) if(i=='url') x$env.url$url else NextMethod()
 
