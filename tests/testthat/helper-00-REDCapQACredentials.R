@@ -20,12 +20,12 @@ library(checkmate) # for additional expect_* functions.
 library(keyring)
   
 # Defaults for our institutions institutions REDCap instance
-# Override using environment variable REDCAP_URL
-url <- Sys.getenv("REDCAP_URL", "https://redcap.vumc.org/api/")
+# Override using environment variable REDCAP_URL and REDCAP_TESTDB_NAME
+url     <- Sys.getenv("REDCAP_URL", "https://redcap.vumc.org/api/")
+testdb  <- Sys.getenv("REDCAP_TESTDB_NAME", "TestRedcapAPI") # reference in keyring
 
 unlockREDCap(
-  c(rcon ="TestRedcapAPI"), # Your default from keyring
-  #c(rcon = "YourChoiceOfKeyHere"),
+  c(rcon =  testdb),
   url=url,
   keyring='API_KEYs', 
   envir=globalenv())
