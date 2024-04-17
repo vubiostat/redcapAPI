@@ -29,7 +29,7 @@ unlockREDCap(
   c(rcon = testdb), # Open the keyring name as the variable rcon
   url     = url,    # Using the url
   keyring = keyring,# from the defined keyring
-  envir   = 1)      # in the global environment
+  envir   = environment())      # in the global environment
 
   ############################################################################
  #

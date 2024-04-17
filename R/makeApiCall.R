@@ -199,7 +199,9 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    is_retry_eligible <- .makeApiCall_isRetryEligible(response = response)
+    response <- .makeApiCall_handleRedirect(rcon, response)
+    
+    is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
     if (!is_retry_eligible) 
       break
@@ -223,8 +225,13 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
+.makeApiCall_handleRedirect <- function(rcon, response)
+{
+  response # the don't handle case for writing broken test cases
+}
 
-.makeApiCall_isRetryEligible <- function(response){
+.makeApiCall_isRetryEligible <- function(response)
+{
   # the return from this is a logical indicating if we are ready to break the loop.
   # we want to break the loop in cases where the response is anything that does
   # not justify a retry. 
@@ -237,8 +244,6 @@ makeApiCall <- function(rcon,
   
   return(retry_eligible)
 }
-
-
 
 .makeApiCall_retryMessage <- function(rcon, 
                                       response, 

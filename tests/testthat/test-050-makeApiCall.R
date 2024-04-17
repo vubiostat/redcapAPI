@@ -199,3 +199,37 @@ test_that(
     
   }
 )
+
+test_that(
+  "makeApiCall handles redirect 301 and 302",
+  {
+    local_reproducible_output(width = 200)
+    rcon$url <- "https://test.xyz/api" # bogus entry
+    h <- new_handle(timeout = 1L)
+    redirect <- structure(
+      list(url = rcon$url,
+           status_code = 301L,
+           content = "",
+           headers=structure(list(
+             'Content-Type'="text/csv; charset=utf-8",
+             'Location'=url
+           ),
+           class = c("insensitive", "list")),
+      class = "response")
+    )
+    
+    redirectCall <- TRUE
+    stub(makeApiCall, "httr::POST", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    
+    expect_warning(
+      response <- makeApiCall(rcon, 
+                        body = list(content = "version", 
+                                    format = "csv")),
+      paste0("Call redirected from https://test.xyz/api to ", url)
+    )
+    
+    expect_equal(response$status_code, 200L)
+    expect_equal(rcon$url, url)
+  }
+)
