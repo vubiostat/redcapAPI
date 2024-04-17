@@ -176,23 +176,6 @@ test_that(
 )
 
 test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importToFileRepository(rcon, 
-                                        file = "file1", 
-                                        folder_id = 123, 
-                                        refresh = c(TRUE, FALSE)), 
-                 "'refresh'[:] Must have length 1")
-    expect_error(importToFileRepository(rcon, 
-                                        file = "file1", 
-                                        folder_id = 123, 
-                                        refresh = "TRUE"), 
-                 "Variable 'refresh'[:] Must be of type 'logical'")
-  }
-)
-
-test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
@@ -250,21 +233,6 @@ test_that(
     expect_error(deleteFromFileRepository(rcon, 
                                           doc_id = "123"), 
                  "'doc_id'[:] Must be of type 'integerish'")
-  }
-)
-
-test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(deleteFromFileRepository(rcon, 
-                                          doc_id = 123, 
-                                          refresh = c(TRUE, FALSE)), 
-                 "'refresh'[:] Must have length 1")
-    expect_error(deleteFromFileRepository(rcon, 
-                                          doc_id = 123, 
-                                          refresh = "TRUE"), 
-                 "'refresh'[:] Must be of type 'logical'")
   }
 )
 
