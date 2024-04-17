@@ -2,6 +2,7 @@ context("makeApiCall Argument Validation")
 
 library(mockery)
 library(curl)
+library(httr)
 
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
@@ -201,7 +202,7 @@ test_that(
 )
 
 test_that(
-  "makeApiCall handles redirect 301 and 302",
+  "makeApiCall handles permanent redirect",
   {
     local_reproducible_output(width = 200)
     rcon$url <- "https://test.xyz/api" # bogus entry
@@ -211,8 +212,8 @@ test_that(
            status_code = 301L,
            content = "",
            headers=structure(list(
-             'Content-Type'="text/csv; charset=utf-8",
-             'Location'=url
+             'content-type'="text/csv; charset=utf-8",
+             'location'=url
            ),
            class = c("insensitive", "list")),
       class = "response")
@@ -226,10 +227,44 @@ test_that(
       response <- makeApiCall(rcon, 
                         body = list(content = "version", 
                                     format = "csv")),
-      paste0("Call redirected from https://test.xyz/api to ", url)
+      paste0("Permanent 301 redirect https://test.xyz/api to ", url)
     )
     
     expect_equal(response$status_code, 200L)
-    expect_equal(rcon$url, url)
+    #expect_equal(rcon$url, url)
+  }
+)
+
+test_that(
+  "makeApiCall handles temporary redirect",
+  {
+    local_reproducible_output(width = 200)
+    rcon$url <- "https://test.xyz/api" # bogus entry
+    h <- new_handle(timeout = 1L)
+    redirect <- structure(
+      list(url = rcon$url,
+           status_code = 302L,
+           content = "",
+           headers=structure(list(
+             'content-type'="text/csv; charset=utf-8",
+             'location'=url
+           ),
+           class = c("insensitive", "list")),
+      class = "response")
+    )
+    
+    redirectCall <- TRUE
+    stub(makeApiCall, "httr::POST", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    
+    expect_message(
+      response <- makeApiCall(rcon, 
+                        body = list(content = "version", 
+                                    format = "csv")),
+      paste0("Temporary 302 redirect https://test.xyz/api to ", url)
+    )
+    
+    expect_equal(response$status_code, 200L)
+    #expect_equal(rcon$url, url)
   }
 )

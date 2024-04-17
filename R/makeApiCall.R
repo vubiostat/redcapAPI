@@ -199,7 +199,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, response)
+    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -225,9 +225,25 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
-.makeApiCall_handleRedirect <- function(rcon, response)
+.makeApiCall_handleRedirect <- function(rcon, body, config, response)
 {
-  response # the don't handle case for writing broken test cases
+  if(response$status_code %in% c(301L, 302L))
+  {
+    if(response$status_code == 301L)
+    {
+      warning(paste("Permanent 301 redirect", rcon$url, "to", response$headers$Location))
+    } else
+    {
+      message(paste("Temporary 302 redirect", rcon$url, "to", response$headers$Location))
+    }
+    
+    ## FIXME
+    ## Need some method to modify original source object!!!
+    rcon$url <- response$headers$location
+        
+    makeApiCall(rcon, body, config)
+  } else 
+    response # The not redirected case
 }
 
 .makeApiCall_isRetryEligible <- function(response)
