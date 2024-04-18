@@ -250,8 +250,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   
   rc <- 
     list(
-      #url = u, 
-      env.url = new.env(),
+      url = u, 
       token = t, 
       config = config, 
       
@@ -392,12 +391,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       }
     )
   class(rc) <- c("redcapApiConnection", "redcapConnection")
-  assign("url", url, envir=rc$env.url)
   rc
 }
-
-#' @export
-`$.redcapApiConnection` <- function(x, i) if(i=='url') x$env.url$url else NextMethod()
 
 #' @rdname redcapConnection
 #' @export

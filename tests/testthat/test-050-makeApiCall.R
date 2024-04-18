@@ -205,10 +205,9 @@ test_that(
   "makeApiCall handles permanent redirect",
   {
     local_reproducible_output(width = 200)
-    assign("url", "https://test.xyz/api", envir=rcon$env.url)
     h <- new_handle(timeout = 1L)
     redirect <- structure(
-      list(url = rcon$url,
+      list(url = "https://test.xyz/api",
            status_code = 301L,
            content = "",
            headers=structure(list(
@@ -231,10 +230,6 @@ test_that(
     )
     
     expect_equal(response$status_code, 200L)
-    expect_equal(rcon$url, url)
-    
-    assign("url", url, envir=rcon$env.url)
-
   }
 )
 
@@ -242,11 +237,10 @@ test_that(
   "makeApiCall handles temporary redirect",
   {
     local_reproducible_output(width = 200)
-    assign("url", "https://test.xyz/api", envir=rcon$env.url)
 
     h <- new_handle(timeout = 1L)
     redirect <- structure(
-      list(url = rcon$url,
+      list(url = "https://test.xyz/api",
            status_code = 302L,
            content = "",
            headers=structure(list(
@@ -269,8 +263,5 @@ test_that(
     )
     
     expect_equal(response$status_code, 200L)
-    expect_equal(rcon$url, url)
-    assign("url", url, envir=rcon$env.url)
-
   }
 )

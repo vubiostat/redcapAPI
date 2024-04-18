@@ -237,8 +237,6 @@ makeApiCall <- function(rcon,
       message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
     }
     
-    assign("url", response$headers$location, envir=rcon$env.url)
-        
     makeApiCall(rcon, body, config)
   } else 
     response # The not redirected case
