@@ -21,9 +21,24 @@
 {
   tryCatch(
     { 
-      conn <- redcapConnection(token=key, url=url, ...)
-      conn$metadata() # Test connection by reading metadata into cache
-      conn
+      rcon    <- redcapConnection(token=key, url=url, ...)
+      version <- list(content = "version", format = "csv")
+      # Test connection by checking version
+      response <- makeApiCall(rcon, body = version)
+      
+      # No redirect, this is success
+      if(!response$status_code %in% c(301L, 302L)) return(rcon)
+      
+      # Handle redirect
+      rcon <- redcapConnection(token=key, url=response$header$location, ...)
+      
+      # Test connection by checking version post redirect
+      response <- makeApiCall(rcon, body = version)
+
+      if(response$status_code %in% c(301L, 302L))
+        stop(paste("Too many redirects from", url))
+      
+      rcon
     },
     error = function(e)
     {
