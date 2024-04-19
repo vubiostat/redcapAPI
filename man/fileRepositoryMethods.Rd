@@ -44,7 +44,6 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   role_id = numeric(0),
   recursive = FALSE,
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -54,7 +53,6 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   rcon,
   folder_id,
   recursive = FALSE,
-  refresh = TRUE,
   ...,
   confirm = c("ask", "no", "yes"),
   error_handling = getOption("redcap_error_handling"),
@@ -83,9 +81,6 @@ access to the folder will be restricted to users with that role.}
 
 \item{recursive}{\code{logical(1)}. When \code{TRUE}, export all subfolders
 and their files as well.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE} (default), the cached
-File Repository data on \code{rcon} will be refreshed.}
 
 \item{confirm}{\code{character}. One of \code{c("ask", "no", "yes")}.
 When \code{"ask"}, user will be prompted to confirm the deletion.

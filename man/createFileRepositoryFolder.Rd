@@ -21,7 +21,6 @@ createFileRepositoryFolder(
   dag_id = numeric(0),
   role_id = numeric(0),
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -43,9 +42,6 @@ provided, access to the folder will be restricted to the DAG.}
 access to the folder will be restricted to users with that role.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{refresh}{\code{logical(1)} When \code{TRUE} (default), the cached
-File Repository data on \code{rcon} will be refreshed.}
 
 \item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
 An option for how to handle errors returned by the API.
