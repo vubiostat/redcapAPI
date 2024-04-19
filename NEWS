@@ -13,6 +13,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.9.0
 
 * Refactor of missingSummary to use exportRecordsTyped. This is a breaking change in prep of 3.0.0.
+* Added handling of url redirects (301,302) on makeApiCall.
 
 ## 2.8.5
 

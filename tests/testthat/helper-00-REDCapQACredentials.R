@@ -19,13 +19,17 @@
 library(checkmate) # for additional expect_* functions.
 library(keyring)
   
-url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
+# Defaults for our institutions institutions REDCap instance
+# Override using environment variable REDCAP_URL, REDCAP_TESTDB_NAME, REDCAP_KEYRING
+url     <- Sys.getenv("REDCAP_URL",         "https://redcap.vumc.org/api/")
+testdb  <- Sys.getenv("REDCAP_TESTDB_NAME", "TestRedcapAPI") # reference in keyring
+keyring <- Sys.getenv("REDCAP_KEYRING",     "API_KEYs")
 
-conns <- unlockREDCap(
-  c(rcon ="TestRedcapAPI"), # Your default from keyring
-  #c(rcon = "YourChoiceOfKeyHere"),
-  url=url, keyring='API_KEYs', 
-  envir=globalenv())
+unlockREDCap(
+  c(rcon = testdb), # Open the keyring name as the variable rcon
+  url     = url,    # Using the url
+  keyring = keyring,# from the defined keyring
+  envir   = environment())      # in the global environment
 
   ############################################################################
  #
@@ -46,7 +50,7 @@ conns <- unlockREDCap(
 #     ), 
 #   url=url, keyring='API_KEYs')
 
-missing_codes <- conns$rcon$projectInformation()$missing_data_codes
+missing_codes <- rcon$projectInformation()$missing_data_codes
 
 if(!is.na(missing_codes) && nchar(missing_codes) > 0)
   stop("The test suite will fail if missing data codes are defined in the project.")
