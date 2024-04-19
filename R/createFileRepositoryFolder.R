@@ -16,8 +16,6 @@
 #'   provided, access to the folder will be restricted to the DAG.
 #' @param role_id `integerish(0/1)` The ID of a role. When provided, 
 #'   access to the folder will be restricted to users with that role.
-#' @param refresh `logical(1)` When `TRUE` (default), the cached 
-#'   File Repository data on `rcon` will be refreshed. 
 #'
 #' @return
 #' Returns a data frame with the columns
@@ -79,8 +77,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                                                            folder_id = numeric(0), 
                                                            dag_id = numeric(0), 
                                                            role_id = numeric(0), 
-                                                           ..., 
-                                                           refresh = TRUE, 
+                                                           ...,  
                                                            error_handling = getOption("redcap_error_handling"),
                                                            config = list(), 
                                                            api_param = list()){
@@ -108,10 +105,6 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   checkmate::assert_integerish(x = role_id, 
                                max.len = 1, 
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
@@ -182,11 +175,8 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   } 
   
   # Refresh the cached file repository ------------------------------
-  
-  if (refresh && rcon$has_fileRepository()){
-    rcon$refresh_fileRepository()
-  }
-  
+  rcon$flush_fileRepository()
+
   # Prepare Output --------------------------------------------------
   NewFolder <- as.data.frame(response)
 

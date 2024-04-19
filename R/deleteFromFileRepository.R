@@ -15,7 +15,6 @@ deleteFromFileRepository <- function(rcon,
 deleteFromFileRepository.redcapApiConnection <- function(rcon, 
                                                          doc_id, 
                                                          ...,
-                                                         refresh = TRUE, 
                                                          error_handling = getOption("redcap_error_handling"),
                                                          config = list(), 
                                                          api_param = list()){
@@ -31,10 +30,6 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                                len = 1, 
                                any.missing = FALSE,
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling,
                                         choices = c("null", "error"),
@@ -84,10 +79,8 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  # Refresh the cached File Repository ------------------------------
-  if (refresh && rcon$has_fileRepository()){
-    rcon$refresh_fileRepository()
-  }
+  # Flush cached info
+  rcon$flush_fileRepository()
   
   data.frame(directory = dirname(file_path), 
              filename = basename(file_path), 
