@@ -13,7 +13,12 @@
 #'   longitudinal with more than one arm. If the arm parameter is not 
 #'   provided, the specified records will be deleted from all arms in which 
 #'   they exist. Whereas, if `arm` is provided, they will only be deleted from 
-#'   the specified arm.  
+#'   the specified arm.
+#' @param instrument `character(1)` Optional instrument to delete records from.
+#' @param event `character(1)` Optional event to delete records from.
+#' @param repeat_instance `numeric(1)` optional repeat instance to delete records from.
+#' @param delete_logging `logical`. Should the logging for this record be
+#'   delete as well. Default to FALSE. 
 #' 
 #' @return
 #' `deleteRecords` invisibly returns a character value giving the number of records deleted.
