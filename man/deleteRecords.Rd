@@ -5,12 +5,25 @@
 \alias{deleteRecords.redcapApiConnection}
 \title{Delete Records from a Project}
 \usage{
-deleteRecords(rcon, records, arm = NULL, ...)
+deleteRecords(
+  rcon,
+  records,
+  arm = NULL,
+  instrument = NULL,
+  event = NULL,
+  repeat_instance = NULL,
+  delete_logging = FALSE,
+  ...
+)
 
 \method{deleteRecords}{redcapApiConnection}(
   rcon,
   records,
   arm = NULL,
+  instrument = NULL,
+  event = NULL,
+  repeat_instance = NULL,
+  delete_logging = FALSE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -29,6 +42,15 @@ longitudinal with more than one arm. If the arm parameter is not
 provided, the specified records will be deleted from all arms in which
 they exist. Whereas, if \code{arm} is provided, they will only be deleted from
 the specified arm.}
+
+\item{instrument}{\code{character(1)} Optional instrument to delete records from.}
+
+\item{event}{\code{character(1)} Optional event to delete records from.}
+
+\item{repeat_instance}{\code{numeric(1)} optional repeat instance to delete records from.}
+
+\item{delete_logging}{\code{logical}. Should the logging for this record be
+delete as well. Default to FALSE.}
 
 \item{...}{Arguments to pass to other methods}
 
