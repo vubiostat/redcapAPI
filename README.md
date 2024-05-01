@@ -26,7 +26,7 @@ Core concerns handled by the library:
 
 | Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM |
 |--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|
-| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExportera) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
+| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
 | Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
 | Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
 | Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
