@@ -5,7 +5,7 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 redcapAPI
-======
+=========
 
 `redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. One principal goal is to get data into memory using base R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
 
@@ -21,6 +21,27 @@ Core concerns handled by the library:
 * Sparse block matrix splitting into forms/instruments with filtering of empty rows. 
 * Additional helper functions, e.g. longitudinal wider/long conversions, guessing if a character field is actually a date, and SAS exports.
 * Importing data reuses a lot of the casting functions in reverse to ensure data integrity both directions.
+
+## Comparison to Other REDCap Packages
+
+| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM |
+|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|
+| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExportera) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
+| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
+| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
+| Field Labelling          |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
+| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
+| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Metadata Summarization   |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |
+| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    | 
+| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
 
 ## Quick Start Guide
 
