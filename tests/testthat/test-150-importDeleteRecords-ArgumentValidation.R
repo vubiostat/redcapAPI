@@ -49,6 +49,7 @@ test_that(
   }
 )
 
+
 test_that(
   "Return an error if data is not a data frame", 
   {
@@ -241,6 +242,7 @@ test_that(
 
 #####################################################################
 # Delete Records Argument Validation                             ####
+context("deleteRecords Argument Validation")
 
 importRecords(rcon, ImportData)
 
@@ -261,6 +263,66 @@ test_that(
     expect_error(deleteRecords(rcon, 
                                records = mtcars), 
                  "'records': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "Return an error if instrument is not a character(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteRecords(rcon, 
+                               records = 1,
+                               instrument = TRUE), 
+                 "'instrument': Must be of type 'character'")
+    expect_error(deleteRecords(rcon, 
+                           records = 1,
+                           instrument = c("a", "b")), 
+             "'instrument': Must have length 1")
+  }
+)
+
+test_that(
+  "Return an error if event is not a character(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteRecords(rcon, 
+                               records = 1,
+                               event = TRUE), 
+                 "'event': Must be of type 'character'")
+    expect_error(deleteRecords(rcon, 
+                           records = 1,
+                           event = c("a", "b")), 
+             "'event': Must have length 1")
+  }
+)
+
+test_that(
+  "Return an error if repeat_instance is not a numeric(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteRecords(rcon, 
+                               records = 1,
+                               repeat_instance = TRUE), 
+                 "'repeat_instance': Must be of type 'integerish'")
+    expect_error(deleteRecords(rcon, 
+                           records = 1,
+                           repeat_instance = c(1,2)), 
+             "'repeat_instance': Must have length 1")
+  }
+)
+
+test_that(
+  "Return an error if delete_logging is not a logical(1)", 
+  {
+    local_reproducible_output(width = 200)
+    expect_error(deleteRecords(rcon, 
+                               records = 1,
+                               delete_logging = 1), 
+                 "'delete_logging': Must be of type 'logical'")
+    expect_error(deleteRecords(rcon, 
+                           records = 1,
+                           delete_logging = c(TRUE, FALSE)), 
+             "'delete_logging': Must have length 1")
   }
 )
 
