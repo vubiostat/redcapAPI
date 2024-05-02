@@ -30,11 +30,11 @@ Core concerns handled by the library:
 | Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
 | Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
 | Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
-| Field Labelling          |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
+| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
 | Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
 | Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
 | Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Metadata Summarization   |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
 | Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
 | API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
 | Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |
