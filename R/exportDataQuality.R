@@ -79,16 +79,4 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
     stop ("Error in result: Make sure the Data Quality API module is enabled in your project. ", e$message)
   })
   
-  ###################################################################
-  # Make the API Call                                            ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (as.character(response) == ""){
-    return(REDCAP_DQ_STRUCTURE)
-  }
-  
-  as.data.frame(response)
 }
