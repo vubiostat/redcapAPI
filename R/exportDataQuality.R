@@ -67,13 +67,10 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
     for(j in seq_along(result)){i=result[[j]];if(is.null(i$resolutions)){result[[j]]$resolutions=list()}}
     result <- as.data.frame(do.call(rbind, result))
 
-    if (nrow(result) > 0) {
-      columns <- c("status_id", "project_id", "record", "event_id", "instance", "field_name")
-      for (c in columns) {
-        result[, c] <- unlist(result[, c])
-      }
+    if (!nrow(result) > 0) {
+      return(REDCAP_DQ_STRUCTURE)
     }
-
+    
     return(result)
   }, error = function(e) {
     stop ("Error in result: Make sure the Data Quality API module is enabled in your project. ", e$message)
