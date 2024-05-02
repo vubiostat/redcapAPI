@@ -63,17 +63,70 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
 
   tryCatch({
     result <- httr::content(response, type = 'application/json')
-    
-    for(j in seq_along(result)){i=result[[j]];if(is.null(i$resolutions)){result[[j]]$resolutions=list()}}
-    result <- as.data.frame(do.call(rbind, result))
-
-    if (!nrow(result) > 0) {
-      return(REDCAP_DQ_STRUCTURE)
-    }
-    
-    return(result)
   }, error = function(e) {
     stop ("Error in result: Make sure the Data Quality API module is enabled in your project. ", e$message)
   })
+  
+  list_swap_NULL2NA <- function(x) {
+    size <- vapply(x, length, numeric(1))
+    nr <- max(size)
+    na_vals <- rep(NA, nr)
+    for(j in which(size == 0)) x[[j]] <- na_vals
+    x
+  }
+  
+  .make_dq <- function(result) {
+    empty_dq <- data.frame(
+      status_id = NA,
+      rule_id = NA,
+      pd_rule_id = NA,
+      non_rule = NA,
+      project_id = NA,
+      record = NA,
+      event_id = NA,
+      field_name = NA,
+      repeat_instrument = NA,
+      instance = NA,
+      status = NA,
+      exclude = NA,
+      query_status = NA,
+      group_id = NA,
+      assigned_username = NA
+    )[FALSE,]
+    empty_res <- data.frame(
+      res_id = NA,
+      status_id = NA,
+      ts = NA,
+      response_requested = NA,
+      response = NA,
+      comment = NA,
+      current_query_status = NA,
+      upload_doc_id = NA,
+      field_comment_edited = NA,
+      username = NA
+    )[FALSE,]
+    
+    dq_info <- vector('list', length(result))
+    res_info <- vector('list', length(result))
+    for(i in seq_along(result)) {
+      tmp <- result[[i]]
+      res_i <- lapply(tmp$resolutions, function(i) {
+        as.data.frame(list_swap_NULL2NA(i))
+      })
+      res_ii <- do.call(rbind, res_i)
+      if(is.null(res_ii) || nrow(res_ii) == 0) res_ii <- empty_res
+      res_info[[i]] <- res_ii
+      tmp$resolutions <- NULL
+      dq_ii <- as.data.frame(list_swap_NULL2NA(tmp))
+      if(nrow(dq_ii) == 0) dq_ii <- empty_dq
+      dq_info[[i]] <- dq_ii
+    }
+    dq_dat <- do.call(rbind, dq_info)
+    res_dat <- do.call(rbind, res_info)
+    if(nrow(dq_dat) == 0) dq_dat <- empty_dq
+    merge(dq_dat, res_dat, all.x = TRUE)
+  }
+  
+  return(.make_dq(result))
   
 }
