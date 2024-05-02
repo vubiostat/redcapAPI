@@ -64,7 +64,7 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   tryCatch({
     result <- httr::content(response, type = 'application/json')
     
-    for(j in 1:length(result)){i=result[[j]];if(is.null(i$resolutions)){result[[j]]$resolutions=list()}}
+    for(j in seq_along(result)){i=result[[j]];if(is.null(i$resolutions)){result[[j]]$resolutions=list()}}
     result <- as.data.frame(do.call(rbind, result))
 
     if (nrow(result) > 0) {
