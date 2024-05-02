@@ -65,6 +65,8 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
     stop ("Error in result: Make sure the Data Quality API module is enabled in your project. ", e$message)
   })
   
+  .makeDq(result)
+  
 }
 
 .listSwapNullToNa <- function(x) {
@@ -127,4 +129,4 @@ exportDataQuality.redcapApiConnection <- function(rcon, prefix,
   merge(dq_dat, res_dat, all.x = TRUE)
 }
 
-.makeDq(result)
+
