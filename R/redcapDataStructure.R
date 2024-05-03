@@ -87,29 +87,6 @@ REDCAP_DAG_ASSIGNMENT_STRUCTURE <-
              redcap_data_access_group = character(0), 
              stringsAsFactors = FALSE)
 
-# Data Quality ------------------------------------------------------
-# Data Quality Structure
-
-REDCAP_DQ_STRUCTURE <- 
-  data.frame(status_id = character(0), 
-             rule_id = character(0), 
-             pd_rule_id = character(0), 
-             non_rule = character(0), 
-             project_id = character(0), 
-             record = character(0),
-             event_id = character(0),
-             field_name = character(0),
-             repeat_instrument = character(0),
-             instance = character(0),
-             status = character(0),
-             exclude = character(0),
-             query_status = character(0),
-             group_id = character(0),
-             assigned_username = character(0),
-             resolutions = character(0),
-             codes = character(0),
-             stringsAsFactors = FALSE)
-
 # Events ------------------------------------------------------------
 # Event Structure
 
