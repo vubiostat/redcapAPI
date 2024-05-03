@@ -98,22 +98,6 @@ test_that(
 )
 
 test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(createFileRepositoryFolder(rcon, 
-                                            name = "folder", 
-                                            refresh = c(TRUE, FALSE)), 
-                 "'refresh': Must have length 1")
-    
-    expect_error(createFileRepositoryFolder(rcon, 
-                                            name = "folder", 
-                                            refresh = "TRUE"), 
-                 "'refresh': Must be of type 'logical'")
-  }
-)
-
-test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)

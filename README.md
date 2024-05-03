@@ -5,7 +5,7 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 redcapAPI
-======
+=========
 
 `redcapAPI` is an [R](https://www.r-project.org) package to pull data from a [REDCap](https://www.project-redcap.org/) project. Its design goes far beyond a 'thin' client which just exposes the raw REDCap API into R. One principal goal is to get data into memory using base R in a format that is analysis ready with a minimum of function calls. There are over 7,000 institutions and 3 million users of REDCap worldwide collecting data. Analysis in R for monitoring and reporting that data is a common concern for these projects.
 
@@ -21,6 +21,27 @@ Core concerns handled by the library:
 * Sparse block matrix splitting into forms/instruments with filtering of empty rows. 
 * Additional helper functions, e.g. longitudinal wider/long conversions, guessing if a character field is actually a date, and SAS exports.
 * Importing data reuses a lot of the casting functions in reverse to ensure data integrity both directions.
+
+## Comparison to Other REDCap Packages
+
+| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM |
+|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|
+| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
+| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
+| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
+| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
+| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
+| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |
+| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
+| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |
+| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    | 
+| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
 
 ## Quick Start Guide
 
@@ -77,12 +98,13 @@ If you wish to contribute new features to this software, we are open to [pull re
 REDCap and it's API have a large number of options and choices, with such complexity the possibility of bugs increases as well. This is a checklist for troubleshooting exports. 
 
 1. Does `Rec <- exportRecordsTyped(rcon)` give you a warning about data that failed validations? If so, what kind of content are you seeing from `reviewInvalidRecords(Rec)`?
-2. What is returned by `exportRecordsTyped(rcon, validation = skip_validation, cast = raw_cast)`? This is a completely raw export with no processing by the library.
-3. Do you have any project level missing data codes? `rcon$projectInformation()$missing_data_codes`
-4. Do you have a secondary id field defined? `rcon$projectInformation()$secondary_unique_field`. In earlier versions REDCap will report one even if it's been disabled later, if this column doesn't exist then the library is unable to properly handle exports as the definition of the unique key doesn't exist. If one is defined and the field doesn't exist, one will have to contact their REDCap administrator to get the project fixed.
-5. Is it an empty row filtering issue? Try the option `filter_empty_rows=FALSE` and see if that fixes it.
-6. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
-7. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
+2. Did you see 'choice string does not appear to be formatted for choices' as an error? If so see [Issue #344](https://github.com/vubiostat/redcapAPI/issues/344)
+3. What is returned by `exportRecordsTyped(rcon, validation = skip_validation, cast = raw_cast)`? This is a completely raw export with no processing by the library.
+4. Do you have any project level missing data codes? `rcon$projectInformation()$missing_data_codes`
+5. Do you have a secondary id field defined? `rcon$projectInformation()$secondary_unique_field`. In earlier versions REDCap will report one even if it's been disabled later, if this column doesn't exist then the library is unable to properly handle exports as the definition of the unique key doesn't exist. If one is defined and the field doesn't exist, one will have to contact their REDCap administrator to get the project fixed.
+6. Is it an empty row filtering issue? Try the option `filter_empty_rows=FALSE` and see if that fixes it.
+7. Search known open and closed [issues](https://github.com/vubiostat/redcapAPI/issues) to see if it's already been reported. If an issue matches your problem, then feel free to post a "me too" message with the information from the next step. Feel free to reopen a closed issue if one matches.
+8. If these steps fail to diagnose the issue, open an [issue](https://github.com/vubiostat/redcapAPI/issues)
  on github.com and we are happy to assist you. Please include your version of R, RStudio and `packageVersion('redcapAPI')`.
  
 #### What does "Project contains invalid characters. Mapped to '□'." mean?

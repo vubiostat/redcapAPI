@@ -13,7 +13,12 @@
 #'   longitudinal with more than one arm. If the arm parameter is not 
 #'   provided, the specified records will be deleted from all arms in which 
 #'   they exist. Whereas, if `arm` is provided, they will only be deleted from 
-#'   the specified arm.  
+#'   the specified arm.
+#' @param instrument `character(1)` Optional instrument to delete records from.
+#' @param event `character(1)` Optional event to delete records from.
+#' @param repeat_instance `numeric(1)` optional repeat instance to delete records from.
+#' @param delete_logging `logical`. Should the logging for this record be
+#'   delete as well. Default to FALSE. 
 #' 
 #' @return
 #' `deleteRecords` invisibly returns a character value giving the number of records deleted.
@@ -39,23 +44,32 @@
 #' @export
 
 deleteRecords <- function(rcon, 
-                          records, 
-                          arm      = NULL,
-                          ...){
+                          records,
+                          arm             = NULL,
+                          instrument      = NULL,
+                          event           = NULL,
+                          repeat_instance = NULL,
+                          delete_logging  = FALSE,
+                          ...)
+{
   UseMethod("deleteRecords")
 }
 
 #' @rdname deleteRecords
 #' @export
-
-deleteRecords.redcapApiConnection <- function(rcon, 
-                                              records, 
-                                              arm            = NULL, 
-                                              ...,
-                                              error_handling = getOption("redcap_error_handling"), 
-                                              config         = list(), 
-                                              api_param      = list()){
-  
+deleteRecords.redcapApiConnection <- function(
+  rcon, 
+  records, 
+  arm             = NULL,
+  instrument      = NULL,
+  event           = NULL,
+  repeat_instance = NULL,
+  delete_logging  = FALSE,
+  ...,
+  error_handling = getOption("redcap_error_handling"), 
+  config         = list(), 
+  api_param      = list())
+{
   if (is.numeric(records)) records <- as.character(records)
   if (is.character(arm)) arm <- as.numeric(arm)
   
@@ -69,6 +83,29 @@ deleteRecords.redcapApiConnection <- function(rcon,
                               min.len = 1,
                               add = coll)
   
+  checkmate::assert_character(x = instrument,
+                              any.missing = FALSE,
+                              len = 1,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_character(x = event,
+                              any.missing = FALSE,
+                              len = 1,
+                              null.ok = TRUE,
+                              add = coll)
+  
+  checkmate::assert_integerish(x = repeat_instance,
+                               len = 1,
+                               any.missing = FALSE,
+                               null.ok = TRUE,
+                               add = coll)
+  
+  checkmate::assert_logical(x=delete_logging,
+                            any.missing = FALSE,
+                            len = 1,
+                            add = coll)
+    
   checkmate::assert_integerish(arm,
                                len = 1, 
                                any.missing = FALSE,
@@ -104,7 +141,11 @@ deleteRecords.redcapApiConnection <- function(rcon,
   body <- list(token = rcon$token,
                content = "record",
                action = "delete", 
-               arm = arm)
+               arm = arm, 
+               instrument = instrument,
+               event = event,
+               repeat_instance = repeat_instance,
+               delete_logging = delete_logging)
   
   body <- c(body,
             vectorToApiBodyList(vector = records,

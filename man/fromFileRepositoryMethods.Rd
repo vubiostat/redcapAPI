@@ -34,7 +34,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   file,
   folder_id = numeric(0),
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -44,7 +43,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   rcon,
   doc_id,
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()

@@ -16,7 +16,6 @@ deleteFileRepository <- function(rcon,
 deleteFileRepository.redcapApiConnection <- function(rcon, 
                                                      folder_id, 
                                                      recursive      = FALSE,
-                                                     refresh        = TRUE,
                                                      ..., 
                                                      confirm        = c("ask", "no", "yes"),
                                                      error_handling = getOption("redcap_error_handling"),
@@ -35,10 +34,6 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
                                add = coll)
   
   checkmate::assert_logical(x = recursive, 
-                            len = 1, 
-                            add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
                             len = 1, 
                             add = coll)
   
@@ -99,13 +94,10 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
   
   for (i in seq_len(nrow(ToDelete))){
     deleteFromFileRepository(rcon, 
-                             doc_id = ToDelete$doc_id[i], 
-                             refresh = FALSE)
+                             doc_id = ToDelete$doc_id[i])
   }
   
-  if (refresh && rcon$has_fileRepository()){
-    rcon$refresh_fileRepository()
-  }
+  rcon$flush_fileRepository()
   
   ToDelete
 }

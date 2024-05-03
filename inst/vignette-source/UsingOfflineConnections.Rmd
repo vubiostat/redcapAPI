@@ -94,7 +94,7 @@ With all of these components in place, the offline connection can now be created
 ```{r}
 off_con <- offlineConnection(meta_data = metadata_file, 
                              records = records_file, 
-                             url = "https://redcap.vanderbilt.edu/api/",
+                             url = "https://redcap.vumc.org/api/",
                              version = "13.10.3", 
                              events = event_data, 
                              project_info = project_info)

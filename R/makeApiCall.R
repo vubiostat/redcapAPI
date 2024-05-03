@@ -199,7 +199,9 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    is_retry_eligible <- .makeApiCall_isRetryEligible(response = response)
+    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
+    
+    is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
     if (!is_retry_eligible) 
       break
@@ -223,8 +225,27 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
+.makeApiCall_handleRedirect <- function(rcon, body, config, response)
+{
+  if(response$status_code %in% c(301L, 302L))
+  {
+    if(response$status_code == 301L)
+    {
+      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$Location))
+    } else
+    {
+      message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
+    }
+    
+    # Good for a single call
+    rcon$url <- response$header$location
+    makeApiCall(rcon, body, config)
+  } else 
+    response # The not redirected case
+}
 
-.makeApiCall_isRetryEligible <- function(response){
+.makeApiCall_isRetryEligible <- function(response)
+{
   # the return from this is a logical indicating if we are ready to break the loop.
   # we want to break the loop in cases where the response is anything that does
   # not justify a retry. 
@@ -237,8 +258,6 @@ makeApiCall <- function(rcon,
   
   return(retry_eligible)
 }
-
-
 
 .makeApiCall_retryMessage <- function(rcon, 
                                       response, 
