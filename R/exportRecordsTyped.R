@@ -125,8 +125,7 @@ exportRecordsTyped.redcapApiConnection <-
                             add = coll)
 
   checkmate::reportAssertions(coll)
-  print("fields at start-------------------------")
-  print(fields)
+
   .exportRecordsTyped_validateFieldForm(rcon = rcon, 
                                         fields = fields, 
                                         drop_fields = drop_fields, 
@@ -149,8 +148,7 @@ exportRecordsTyped.redcapApiConnection <-
   if (user_requested_only_system_fields){
     fields <- rcon$metadata()$field_name[1]
   }
-  print("fields after system fields-----------------------")
-  print(fields)
+
   # Check that the events exist in the project
   
   checkmate::assert_subset(x = events, 
@@ -166,8 +164,7 @@ exportRecordsTyped.redcapApiConnection <-
                                             fields      = fields, 
                                             drop_fields = drop_fields, 
                                             forms       = forms)
-  print("fields after exportRecordsTyped_fieldsArray--------")
-  print(fields)
+
    ###################################################################
   # Call API for Raw Results
   
@@ -187,6 +184,8 @@ exportRecordsTyped.redcapApiConnection <-
   if(!is.null(date_end))   body$dateRangeEnd   = format(date_end,   format = "%Y-%m-%d %H:%M:%S")
 
   body <- body[lengths(body) > 0]
+  
+  print(body)
   
   Raw <- 
     if (length(batch_size) == 0)
@@ -551,9 +550,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
           by.y = "field_name", 
           all.x = TRUE)
   
-  print("FieldFormMap initialization --------------")
-  print(FieldFormMap[FieldFormMap$field_name == "aedecod", ])
-  
   # Assign [form]_complete fields to their forms
   FieldFormMap$form_name <- 
     ifelse(is.na(FieldFormMap$form_name) &   # if form name is missing and end in _complete
@@ -638,9 +634,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     } else {
       Fields$export_field_name
     }
-  print("fields_to_request-----------------")
-  print(fields_to_request)
-  print(fields)
+
   # Lastly, we need to ensure that the identifier fields are included.
   # We will include the record ID field if it is not already included.
   # We will also include the secondary unique ID field if one is specified.
