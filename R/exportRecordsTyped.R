@@ -551,6 +551,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
           by.y = "field_name", 
           all.x = TRUE)
   
+  print("FieldFormMap initialization --------------")
+  print(FieldFormMap[FieldFormMap$field_name == "aedecod", ])
+  
   # Assign [form]_complete fields to their forms
   FieldFormMap$form_name <- 
     ifelse(is.na(FieldFormMap$form_name) &   # if form name is missing and end in _complete
@@ -635,7 +638,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     } else {
       Fields$export_field_name
     }
-  
+  print("fields_to_request-----------------")
+  print(fields_to_request)
+  print(fields)
   # Lastly, we need to ensure that the identifier fields are included.
   # We will include the record ID field if it is not already included.
   # We will also include the secondary unique ID field if one is specified.
