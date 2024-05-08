@@ -125,7 +125,8 @@ exportRecordsTyped.redcapApiConnection <-
                             add = coll)
 
   checkmate::reportAssertions(coll)
-  
+  print("fields at start-------------------------")
+  print(fields)
   .exportRecordsTyped_validateFieldForm(rcon = rcon, 
                                         fields = fields, 
                                         drop_fields = drop_fields, 
@@ -148,7 +149,8 @@ exportRecordsTyped.redcapApiConnection <-
   if (user_requested_only_system_fields){
     fields <- rcon$metadata()$field_name[1]
   }
-  
+  print("fields after system fields-----------------------")
+  print(fields)
   # Check that the events exist in the project
   
   checkmate::assert_subset(x = events, 
@@ -164,7 +166,8 @@ exportRecordsTyped.redcapApiConnection <-
                                             fields      = fields, 
                                             drop_fields = drop_fields, 
                                             forms       = forms)
-  
+  print("fields after exportRecordsTyped_fieldsArray--------")
+  print(fields)
    ###################################################################
   # Call API for Raw Results
   
