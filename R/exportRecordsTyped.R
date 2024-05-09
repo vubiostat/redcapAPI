@@ -34,7 +34,7 @@ exportRecordsTyped.redcapApiConnection <-
     records        = NULL,
     events         = NULL,
     survey         = TRUE,
-    dag            = TRUE,
+    dag            = FALSE,
     date_begin     = NULL,
     date_end       = NULL,
     
