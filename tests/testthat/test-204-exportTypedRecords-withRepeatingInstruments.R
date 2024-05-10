@@ -84,7 +84,8 @@ test_that(
     #    Return actual fields + system fields
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = "record_id")
+                              fields = "record_id",
+                              dag=TRUE)
     expect_true(all(REDCAP_SYSTEM_FIELDS %in% names(Rec)))
 
     # 3. User requests actual fields + system fields.
@@ -126,14 +127,16 @@ test_that(
     # ID field and system fields when just the ID field is requested
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = "record_id")
+                              fields = "record_id",
+                              dag=TRUE)
     expect_equal(names(Rec),
                  minimum_field)
 
     # ID field and system fields when a single form is requested
 
     Rec <- exportRecordsTyped(rcon,
-                              forms = c("randomization"))
+                              forms = c("randomization"),
+                              dag=TRUE)
     expect_true(all(minimum_field %in% names(Rec)))
 
     # Now let's make a secondary unique field
@@ -141,7 +144,8 @@ test_that(
     importProjectInformation(rcon, NewInfo)
 
     Rec <- exportRecordsTyped(rcon,
-                              forms = c("randomization"))
+                              forms = c("randomization"),
+                              dag=TRUE)
     expect_true(all(c(minimum_field, "text_test") %in% names(Rec)))
 
     NewInfo <- data.frame(secondary_unique_field = "",

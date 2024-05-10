@@ -33,6 +33,9 @@
 #'   This flag is only viable if the user whose token is 
 #'   being used to make the API request is not in a data access group. 
 #'   If the user is in a group, then this flag will revert to its default value.
+#'   Data Access Groups privilege is required when creating/renaming/deleting
+#'   DAGs and when importing/exporting user-DAG assignments. Therefore, the 
+#'   default for this flag is FALSE. To export DAG information set this flag to TRUE.
 #' @param date_begin `POSIXct(1)` or `NULL`. Ignored if `NULL` (default). 
 #'   Otherwise, records created or modified after this date will be returned.
 #' @param date_end `POSIXct(1)` or `NULL`. Ignored if `NULL` (default). 
