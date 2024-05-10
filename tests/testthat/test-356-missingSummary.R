@@ -48,6 +48,7 @@ test_that(
     local_reproducible_output(width = 200)
     expect_identical(
       missingSummary(rcon,
+                     dag = TRUE,
                      fields = "record_id", 
                      records = as.character(1:20), 
                      forms = "branching_logic"), 
