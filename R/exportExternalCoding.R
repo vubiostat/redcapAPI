@@ -107,7 +107,7 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
     MetaData$field_name[grepl("BIOPORTAL", 
                               MetaData$select_choices_or_calculations, 
                               ignore.case = TRUE) | 
-                          MetaData$field_type == "sql"]
+                       (!is.na(MetaData$field_type) & MetaData$field_type == "sql")]
   
   if (is.null(fields)){
     fields <- external_fields

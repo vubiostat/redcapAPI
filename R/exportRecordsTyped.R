@@ -185,8 +185,6 @@ exportRecordsTyped.redcapApiConnection <-
 
   body <- body[lengths(body) > 0]
   
-  print(body)
-  
   Raw <- 
     if (length(batch_size) == 0)
     {
@@ -419,7 +417,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        coll,
                                                        warn_zero_coded,
                                                        ...)
-{
+{ 
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
