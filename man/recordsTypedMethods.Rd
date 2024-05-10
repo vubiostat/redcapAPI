@@ -30,7 +30,7 @@ exportReportsTyped(rcon, report_id, ...)
   records = NULL,
   events = NULL,
   survey = TRUE,
-  dag = TRUE,
+  dag = FALSE,
   date_begin = NULL,
   date_end = NULL,
   na = list(),
@@ -110,7 +110,10 @@ misspellings may result in unexpected results.}
 when data access groups are utilized in the project.
 This flag is only viable if the user whose token is
 being used to make the API request is not in a data access group.
-If the user is in a group, then this flag will revert to its default value.}
+If the user is in a group, then this flag will revert to its default value.
+Data Access Groups privilege is required when creating/renaming/deleting
+DAGs and when importing/exporting user-DAG assignments. Therefore, the
+default for this flag is FALSE. To export DAG information set this flag to TRUE.}
 
 \item{date_begin}{\code{POSIXct(1)} or \code{NULL}. Ignored if \code{NULL} (default).
 Otherwise, records created or modified after this date will be returned.}

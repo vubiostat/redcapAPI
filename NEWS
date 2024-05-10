@@ -13,6 +13,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.9.1
 
 * Added additional supported arguments to deleteRecords
+* Change the default for the DAG flag to FALSE for exportRecordsTyped
 
 ## 2.9.0
 
