@@ -139,6 +139,9 @@ exportRecordsTyped.redcapApiConnection <-
   user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
   system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
   
+  # dag must be set to TRUE to pull the dag field
+  if(length(fields) > 0 && "redcap_data_access_group" %in% fields) dag <- TRUE
+  
   # The REDCap API will not accept system fields in the fields argument. 
   # we have to remove them from the request.
   fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
