@@ -23,10 +23,16 @@ library(keyring)
 # Override using environment variable REDCAP_URL, REDCAP_TESTDB_NAME, REDCAP_KEYRING
 url     <- Sys.getenv("REDCAP_URL",         "https://redcap.vumc.org/api/")
 testdb  <- Sys.getenv("REDCAP_TESTDB_NAME", "TestRedcapAPI") # reference in keyring
+dqdb    <- Sys.getenv("REDCAP_DQDB_NAME",   "") # "DQTest") Data Quality REDCap project
 keyring <- Sys.getenv("REDCAP_KEYRING",     "API_KEYs")
 
+RUN_DATAQUALITY_TEST <- dqdb != ''
+databases <- if(RUN_DATAQUALITY_TEST)
+               c(rcon = testdb, dqrcon = dqdb) else
+               c(rcon = testdb)
+
 unlockREDCap(
-  c(rcon = testdb), # Open the keyring name as the variable rcon
+  databases, # Open the keyring name as the variable rcon
   url     = url,    # Using the url
   keyring = keyring,# from the defined keyring
   envir   = environment())      # in the global environment

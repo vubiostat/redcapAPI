@@ -36,7 +36,7 @@
 #'   
 #' 
 
-redcapError <- function(x, error_handling)
+redcapError <- function(x, error_handling=getOption("redcap_error_handling"))
 {
   error_message <- as.character(x)
   
