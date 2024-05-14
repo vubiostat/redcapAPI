@@ -8,14 +8,7 @@
 \usage{
 switchDag(rcon, dag, ...)
 
-\method{switchDag}{redcapApiConnection}(
-  rcon,
-  dag,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{switchDag}{redcapApiConnection}(rcon, dag, ..., config = list(), api_param = list())
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -24,10 +17,6 @@ switchDag(rcon, dag, ...)
 assign the current user. Use \code{NA} to leave the user unassigned.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

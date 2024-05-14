@@ -22,7 +22,6 @@ purgeProject(object, ...)
   purge_all = FALSE,
   flush = TRUE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list()
 )
 
@@ -44,17 +43,10 @@ restoreProject(object, ...)
   records = NULL,
   flush = TRUE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list()
 )
 
-\method{restoreProject}{list}(
-  object,
-  rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
-)
+\method{restoreProject}{list}(object, rcon, ..., config = list())
 }
 \arguments{
 \item{object, rcon}{A \code{redcapConnection} object. Except in
@@ -93,10 +85,6 @@ data elements from a project.}
 \item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
 object will be flushed after completing the operation. This is highly
 recommended.}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

@@ -40,7 +40,6 @@ exportRecords.redcapApiConnection <-
            colClasses         = character(0), 
            ...,
            batch.size         = -1,
-           error_handling     = getOption("redcap_error_handling"), 
            config             = list(), 
            api_param          = list(),
            form_complete_auto = TRUE)
@@ -121,11 +120,6 @@ exportRecords.redcapApiConnection <-
                                len = 1,
                                add = coll)
 
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -264,7 +258,6 @@ exportRecords.redcapApiConnection <-
                          body = body,
                          id = MetaData$field_name[1],
                          colClasses = colClasses,
-                         error_handling = error_handling, 
                          config = config)
   }
   else
@@ -274,7 +267,6 @@ exportRecords.redcapApiConnection <-
                        batch.size = batch.size,
                        id = MetaData$field_name[1],
                        colClasses = colClasses,
-                       error_handling = error_handling, 
                        config = config)
   }
 
@@ -318,7 +310,7 @@ exportRecords.redcapApiConnection <-
 
 
 #*** UNBATCHED EXPORT
-unbatched <- function(rcon, body, id, colClasses, error_handling, config)
+unbatched <- function(rcon, body, id, colClasses, config)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -329,14 +321,14 @@ unbatched <- function(rcon, body, id, colClasses, error_handling, config)
                           body = body, 
                           config = config)
   
-  if (response$status_code != 200) redcapError(response, error_handling = error_handling)
+  if (response$status_code != 200) redcapError(response)
   
   as.data.frame(response, colClasses=colClasses)
 }
 
 
 #*** BATCHED EXPORT
-batched <- function(rcon, body, batch.size, id, colClasses, error_handling, config)
+batched <- function(rcon, body, batch.size, id, colClasses, config)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -360,7 +352,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
                      body = body, 
                      config = config)
   
-  if (IDs$status_code != 200) redcapError(IDs, error_handling)
+  if (IDs$status_code != 200) redcapError(IDs)
   
   IDs <- as.data.frame(IDs, colClasses = colClasses[id])
 
@@ -394,7 +386,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, error_handling, conf
                                  body = body, 
                                  config = config)
     
-    if (this_response$status_code != 200) redcapError(this_response, error_handling = "error")
+    if (this_response$status_code != 200) redcapError(this_response)
     
     batch_list[[i]] <- as.data.frame(this_response, colClasses = colClasses)
 

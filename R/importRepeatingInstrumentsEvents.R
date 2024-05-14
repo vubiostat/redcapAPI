@@ -14,8 +14,7 @@ importRepeatingInstrumentsEvents <- function(rcon,
 
 importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon, 
                                                                  data,
-                                                                 ..., 
-                                                                 error_handling = getOption("redcap_error_handling"), 
+                                                                 ...,
                                                                  config         = list(), 
                                                                  api_param      = list()){
   ###################################################################
@@ -30,12 +29,7 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data, 
                                col.names = "named",
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -72,7 +66,7 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   rcon$flush_projectInformation()
   rcon$flush_repeatInstrumentEvent()
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  if (response$status_code != 200) redcapError(response)
   
   invisible(as.character(response))
 }

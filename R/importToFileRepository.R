@@ -16,8 +16,7 @@ importToFileRepository <- function(rcon,
 importToFileRepository.redcapApiConnection <- function(rcon, 
                                                        file, 
                                                        folder_id = numeric(0),
-                                                       ..., 
-                                                       error_handling = getOption("redcap_error_handling"),
+                                                       ...,
                                                        config = list(), 
                                                        api_param = list()){
   # Argument Validation ---------------------------------------------
@@ -36,12 +35,7 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                max.len = 1, 
                                any.missing = FALSE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)

@@ -15,7 +15,6 @@ exportMappings <- function(rcon,
 exportMappings.redcapApiConnection <- function(rcon, 
                                                arms           = NULL, 
                                                ...,
-                                               error_handling = getOption("redcap_error_handling"), 
                                                config         = list(), 
                                                api_param      = list()){
   if (is.character(arms)) arms <- as.numeric(arms)
@@ -33,12 +32,7 @@ exportMappings.redcapApiConnection <- function(rcon,
                               null.ok = TRUE,
                               any.missing = FALSE,
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -75,7 +69,7 @@ exportMappings.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  if (response$status_code != 200) redcapError(response)
   
   as.data.frame(response)
 }

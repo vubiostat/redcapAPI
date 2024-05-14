@@ -21,7 +21,6 @@ exportFileRepository.redcapApiConnection <- function(rcon,
                                                      dir_create = FALSE, 
                                                      recursive = FALSE, 
                                                      ...,
-                                                     error_handling = getOption("redcap_error_handling"),
                                                      config = list(), 
                                                      api_param = list()){
   # Argument Validation ---------------------------------------------
@@ -48,12 +47,7 @@ exportFileRepository.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = recursive, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+ 
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)

@@ -135,12 +135,12 @@ test_that(
     response$status_code <- 502
     response$content <- charToRaw("Recv failure: Connection reset by peer")
     
-    expect_error(redcapError(response, "null"), 
+    expect_error(redcapError(response), 
                  "A network error has occurred. This can happen when too much data is")
     
     response$content <- charToRaw(paste0("Timeout was reached: [",url,"] SSL connection timeout"))
     
-    expect_error(redcapError(response, "null"), 
+    expect_error(redcapError(response), 
                  "A network error has occurred. This can happen when too much data is")
     
   }

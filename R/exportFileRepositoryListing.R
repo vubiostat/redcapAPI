@@ -70,7 +70,6 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
                                                             folder_id = numeric(0), 
                                                             recursive = FALSE, 
                                                             ...,
-                                                            error_handling = getOption("redcap_error_handling"),
                                                             config = list(), 
                                                             api_param = list()){
   # Argument validation ---------------------------------------------
@@ -89,12 +88,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = recursive, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -121,10 +115,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
+  if (response$status_code != 200) redcapError(response)
   
   # Convert result to a data frame ----------------------------------
   FileRepository <- .fileRepositoryFrame(response, 

@@ -16,7 +16,6 @@ deleteArms <- function(rcon,
 deleteArms.redcapApiConnection <- function(rcon, 
                                            arms,
                                            ...,
-                                           error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
                                            api_param      = list()){
   
@@ -30,12 +29,7 @@ deleteArms.redcapApiConnection <- function(rcon,
   checkmate::assert_character(arms, 
                               any.missing = FALSE,
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -72,7 +66,7 @@ deleteArms.redcapApiConnection <- function(rcon,
     rcon$flush_arms()
     rcon$flush_events()
     rcon$flush_projectInformation()
-    if (response$status_code != 200) return(redcapError(response, error_handling))
+    if (response$status_code != 200) redcapError(response)
   } else {
     response <- "0"
   }

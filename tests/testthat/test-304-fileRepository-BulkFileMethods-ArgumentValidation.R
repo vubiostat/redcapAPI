@@ -72,14 +72,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportFileRepository(rcon,
-                                      folder_id = 1,
-                                      error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(exportFileRepository(rcon, 
                                       folder_id = 1,
                                       config = list(1)), 
@@ -192,14 +188,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importFileRepository(rcon,
-                                      dir = tempdir(),
-                                      error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importFileRepository(rcon,  
                                       dir = tempdir(), 
                                       config = list(1)), 
@@ -273,14 +265,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteFileRepository(rcon,
-                                      folder_id = 123, 
-                                      error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(deleteFileRepository(rcon, 
                                       folder_id = 123,
                                       config = list(1)), 

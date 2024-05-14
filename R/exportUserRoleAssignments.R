@@ -12,7 +12,6 @@ exportUserRoleAssignments <- function(rcon, ...){
 
 exportUserRoleAssignments.redcapApiConnection <- function(rcon, 
                                                           ...,
-                                                          error_handling = getOption("redcap_error_handling"), 
                                                           config = list(), 
                                                           api_param = list()){
   ###################################################################
@@ -23,12 +22,7 @@ exportUserRoleAssignments.redcapApiConnection <- function(rcon,
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -55,10 +49,7 @@ exportUserRoleAssignments.redcapApiConnection <- function(rcon,
                           body = body, 
                           config = config)
   
-  if (response$status_code != 200){
-    redcapError(response, 
-                error_handling = error_handling)
-  }
+  if (response$status_code != 200) redcapError(response)
   
   response <- as.data.frame(response)
   

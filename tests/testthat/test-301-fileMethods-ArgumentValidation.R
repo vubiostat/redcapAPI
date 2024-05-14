@@ -105,16 +105,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportFiles(rcon,
-                             record = 1, 
-                             field = "file_import_field", 
-                             dir = "dir", 
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(exportFiles(rcon, 
                              record = 1, 
                              field = "file_import_field", 
@@ -248,16 +242,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importFiles(rcon, 
-                             record = 1, 
-                             field = "file_import_field", 
-                             file = "filename",
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importFiles(rcon, 
                              record = 1, 
                              field = "file_import_field", 
@@ -337,13 +325,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteFiles(rcon, 
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(deleteFiles(rcon, 
                              config = list(1)), 
                  "'config': Must have names")

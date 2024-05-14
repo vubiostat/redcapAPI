@@ -15,8 +15,7 @@ deleteDags <- function(rcon,
 
 deleteDags.redcapApiConnection <- function(rcon, 
                                            dags,
-                                           ..., 
-                                           error_handling = getOption("redcap_error_handling"), 
+                                           ...,
                                            config         = list(), 
                                            api_param      = list()){
   ###################################################################
@@ -32,12 +31,7 @@ deleteDags.redcapApiConnection <- function(rcon,
                               min.len = 1,
                               any.missing = FALSE,
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -72,7 +66,7 @@ deleteDags.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   rcon$flush_dags()
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  if (response$status_code != 200) redcapError(response)
 
   invisible(as.character(response))
 }

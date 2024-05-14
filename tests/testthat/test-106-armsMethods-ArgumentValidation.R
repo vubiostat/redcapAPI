@@ -23,13 +23,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportArms(rcon, 
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+  
     expect_error(exportArms(rcon, 
                             config = list(1)), 
                  "'config': Must have names")
@@ -108,14 +105,10 @@ test_that(
 )
 
 test_that(
-  "Return an error when error handling isn't one of null, error", 
+  "Validations of config and api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importArms(rcon, 
-                            data = Arms,
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importArms(rcon,
                             data = Arms,
                             config = list(1)),
@@ -161,15 +154,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    
-    expect_error(deleteArms(rcon,
-                            arms = 1,
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+ 
     expect_error(deleteArms(rcon,
                             arms = 1,
                             config = list(1)), 

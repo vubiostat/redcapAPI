@@ -16,7 +16,6 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
                                                          instrument     = NULL, 
                                                          event          = NULL,
                                                          ...,
-                                                         error_handling = getOption("redcap_error_handling"),
                                                          config         = list(), 
                                                          api_param      = list()){
   
@@ -40,12 +39,7 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
                               any.miss = FALSE, 
                               null.ok = TRUE, 
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        add = coll, 
-                                        .var.name = "error_handling")
-  
+ 
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -87,7 +81,7 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  if (response$status_code != 200) redcapError(response)
   
   as.data.frame(response)
 }

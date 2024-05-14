@@ -16,8 +16,7 @@ importEvents <- function(rcon,
 importEvents.redcapApiConnection <- function(rcon, 
                                              data, 
                                              override       = FALSE,
-                                             ..., 
-                                             error_handling = getOption("redcap_error_handling"), 
+                                             ...,
                                              config         = list(), 
                                              api_param      = list()){
   
@@ -40,12 +39,7 @@ importEvents.redcapApiConnection <- function(rcon,
                             len = 1, 
                             any.missing = FALSE, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -85,7 +79,7 @@ importEvents.redcapApiConnection <- function(rcon,
   rcon$flush_arms()
   rcon$flush_projectInformation()
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  if (response$status_code != 200) redcapError(response)
   
   invisible(as.character(response))
 }

@@ -135,7 +135,6 @@ importRecords.redcapApiConnection <- function(rcon,
                                               force_auto_number = FALSE,
                                               ...,
                                               batch.size        = -1,
-                                              error_handling = getOption("redcap_error_handling"), 
                                               config = list(), 
                                               api_param = list())
 {
@@ -182,12 +181,7 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_integerish(x = batch.size,
                                len = 1,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -459,7 +453,7 @@ import_records_unbatched <- function(rcon,
     }
   }
   else 
-    redcapError(response, error_handling = "error")
+    redcapError(response)
 }
 
 #####################################################################

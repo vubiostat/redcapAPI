@@ -5,7 +5,6 @@
 #'   Not all errors should be fatal.  See Details for more
 #'   
 #' @param x Object returned by [httr::POST()].
-#' @inheritParams common-api-args
 #' 
 #' @details Maintaining consistent functionality for all types of REDCap projects 
 #'   requires that errors be handled delicately.  It is not always desirable for an
@@ -36,8 +35,10 @@
 #'   
 #' 
 
-redcapError <- function(x, error_handling=getOption("redcap_error_handling"))
+redcapError <- function(x)
 {
+  error_handling <- getOption("redcap_error_handling")
+  if(is.null(error_handling)) error_handling <- 'null'
   error_message <- as.character(x)
   
   handle <- c("ERROR: The value of the parameter \"content\" is not valid",
