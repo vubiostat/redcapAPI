@@ -15,6 +15,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Added additional supported arguments to deleteRecords.
 * Changed the default to `dag=FALSE` for exportRecordsTyped.
 * exportRecordsTyped more robust against some forms of corrupted meta data.
+* Added a new feature exportDataQuality for querying the DataQuality module.
 
 ## 2.9.0
 
