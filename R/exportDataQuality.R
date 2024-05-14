@@ -20,6 +20,7 @@ exportDataQuality <- function(rcon, prefix,
   UseMethod("exportDataQuality")
 }
 
+#' @export
 exportDataQuality.redcapApiConnection <- function(rcon, prefix,
                                                        ..., 
                                                        error_handling = getOption("redcap_error_handling"), 
