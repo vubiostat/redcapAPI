@@ -12,7 +12,7 @@ exportDataQuality(rcon, prefix, ...)
 
 \item{prefix}{A string from your REDCap institutions Data Quality module url. The
 module prefix can be found by exporting module settings under External Modules
-in REDCap.}
+in REDCap. At VUMC the prefix is 'vanderbilt_dataQuality'.}
 }
 \description{
 Exports Data Quality queries by record. The Data Quality module

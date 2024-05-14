@@ -12,6 +12,7 @@
 #' @param config `list` A list of options to be passed to [httr::POST()].
 #'   These will be appended to the `config` options included in the 
 #'   `rcon` object.
+#' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #'   
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
@@ -135,10 +136,11 @@
 #' }
 #' 
 #' @export
-
 makeApiCall <- function(rcon, 
-                        body = list(), 
-                        config = list()){
+                        body   = list(), 
+                        config = list(),
+                        url    = NULL)
+{
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -154,19 +156,25 @@ makeApiCall <- function(rcon,
                          names = "named",
                          add = coll)
   
+  checkmate::assert_character(x = url,
+                              null.ok = TRUE,
+                              len = 1,
+                              add = coll)
+    
   checkmate::reportAssertions(coll)
   
   # Functional Code -------------------------------------------------
   
-  for (i in seq_len(rcon$retries())){
+  if(is.null(url)) url <- rcon$url
+  
+  for (i in seq_len(rcon$retries()))
+  {
     response <-
       tryCatch(
       {
-        httr::POST(url = rcon$url, 
-                   body = c(list(token = rcon$token), 
-                            body),
-                   config = c(rcon$config, 
-                              config))
+        httr::POST(url    = url, 
+                   body   = c(list(token = rcon$token), body),
+                   config = c(rcon$config, config))
       },
       error=function(e)
       {
@@ -203,11 +211,11 @@ makeApiCall <- function(rcon,
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
-    if (!is_retry_eligible) 
-      break
+    if (!is_retry_eligible) break
     
     # The attempt failed. Produce a message detailing the failure (when not quiet)
-    if (!rcon$retry_quietly()){
+    if (!rcon$retry_quietly())
+    {
       .makeApiCall_retryMessage(rcon = rcon, 
                                 response = response, 
                                 iteration = i)
@@ -215,9 +223,8 @@ makeApiCall <- function(rcon,
     
     # Wait the designated time until trying again.
     # when i = rcon$retries(), we've made all our attempts, we do not need to wait to exit the loop 
-    if (i < rcon$retries()) { 
+    if (i < rcon$retries()) 
       Sys.sleep(rcon$retry_interval()[i])
-    }
   }
   
   response

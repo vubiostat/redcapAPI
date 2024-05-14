@@ -11,6 +11,14 @@ library(httr)
 
 # Test .makeApiCall_validateResponse
 
+test_that(
+  "makeApiCall will not allow a non-character url",
+  {
+    expect_error(
+      makeApiCall(rcon,  body = list(format = "csv"), url=TRUE),
+      "url.*Must be of type 'character'")
+  }
+)
 
 test_that(
   ".makeApiCall_isRetryEligible returns appropriate logical values", 

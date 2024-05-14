@@ -14,7 +14,7 @@ test_that(
   "Return error messages if Data Quality Module not enabled",
   {
     expect_error(exportDataQuality(rcon, prefix), 
-                 "Error in result: Make sure the Data Quality API module is enabled in your project.")
+                 "Make sure the Data Quality API module is enabled in your project.")
   }
 )
 
