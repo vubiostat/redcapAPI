@@ -27,7 +27,7 @@ dqdb    <- Sys.getenv("REDCAP_DQDB_NAME", "DQTest") # Data Quality REDCap projec
 keyring <- Sys.getenv("REDCAP_KEYRING",     "API_KEYs")
 
 unlockREDCap(
-  c(rcon = testdb, dqRcon = dqdb), # Open the keyring name as the variable rcon
+  c(rcon = testdb, dqrcon = dqdb), # Open the keyring name as the variable rcon
   url     = url,    # Using the url
   keyring = keyring,# from the defined keyring
   envir   = environment())      # in the global environment
