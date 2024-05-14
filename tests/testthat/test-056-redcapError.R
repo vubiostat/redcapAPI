@@ -11,7 +11,7 @@ test_that(
     lapply(return_as_null, 
            function(x) expect_null(redcapError(x)))
     
-    # and now halt execution
+    # and now halt execution for special old conditions
     options(redcap_error_handling='error')
 
     lapply(return_as_null, 

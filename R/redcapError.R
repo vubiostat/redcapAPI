@@ -40,20 +40,24 @@ redcapError <- function(x)
   error_handling <- getOption("redcap_error_handling")
   error_message <- as.character(x)
   
+  # Legacy project ignore errors unless option given to treat as errors
   handle <- c("ERROR: The value of the parameter \"content\" is not valid",
               "ERROR: You cannot export arms for classic projects",
               "ERROR: You cannot export events for classic projects",
               "ERROR: You cannot export form/event mappings for classic projects")
-  if (error_message %in% handle && is.null(error_handling)) {
-    return(NULL)
-  } else if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message)){
+  if (error_message %in% handle && is.null(error_handling)) return(NULL)
+    
+  # FIXME: This concern needs to be in file repository handling
+  if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message))
     return(FILE_REPOSITORY_EMPTY_FRAME)
-  } else if (grepl("Connection reset by peer", error_message) || 
-             grepl("Timeout was reached", error_message)){
+  
+  # Translate network error codes to user relevant message
+  if (grepl("Connection reset by peer", error_message) || 
+      grepl("Timeout was reached", error_message))
     stop(paste0(.RESET_BY_PEER, ": ", as.character(x)))
-  } else{ 
-    stop(paste0(x$status_code, ": ", as.character(x)))
-  }
+  
+  # Otherwise just stop with code
+  stop(paste0(x$status_code, ": ", as.character(x)))
 }
 
 .RESET_BY_PEER <- "A network error has occurred. This can happen when too much data is requested causing a timeout (consider batching), or when REDCap is having trouble servicing requests. It may also be a misconfigured proxy or network routing congestion."
