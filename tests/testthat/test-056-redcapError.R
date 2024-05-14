@@ -7,7 +7,7 @@ test_that(
                         "ERROR: You cannot export arms for classic projects",
                         "ERROR: You cannot export events for classic projects",
                         "ERROR: You cannot export form/event mappings for classic projects")
-    options(redcap_error_handling='null')
+    options(redcap_error_handling=NULL)
     lapply(return_as_null, 
            function(x) expect_null(redcapError(x)))
     
@@ -16,7 +16,7 @@ test_that(
 
     lapply(return_as_null, 
            function(x) expect_error(redcapError(x)))
-    options(redcap_error_handling='null')
+    options(redcap_error_handling=NULL)
   }
 )
 

@@ -17,14 +17,5 @@ packageStartupMessage(
   if (!is.null(old$options$timeout_ms) && old$options$timeout_ms != 3e+05){
     httr::set_config(old)
   }
-  
-  options(redcap_api_url = character(0),
-          redcap_error_handling = "null"
-  )
 }
 
-.onUnload <- function(libPath)
-{
-  options(redcap_api_url = NULL,
-          redcap_error_handling = NULL)
-}

@@ -38,14 +38,13 @@
 redcapError <- function(x)
 {
   error_handling <- getOption("redcap_error_handling")
-  if(is.null(error_handling)) error_handling <- 'null'
   error_message <- as.character(x)
   
   handle <- c("ERROR: The value of the parameter \"content\" is not valid",
               "ERROR: You cannot export arms for classic projects",
               "ERROR: You cannot export events for classic projects",
               "ERROR: You cannot export form/event mappings for classic projects")
-  if (error_message %in% handle && error_handling == "null") {
+  if (error_message %in% handle && is.null(error_handling)) {
     return(NULL)
   } else if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message)){
     return(FILE_REPOSITORY_EMPTY_FRAME)
