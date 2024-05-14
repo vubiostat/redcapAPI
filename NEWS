@@ -14,6 +14,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 * Added additional supported arguments to deleteRecords.
 * Changed the default to `dag=FALSE` for exportRecordsTyped.
+* exportRecordsTyped more robust against some forms of corrupted meta data.
 
 ## 2.9.0
 
