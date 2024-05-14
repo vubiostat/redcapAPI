@@ -12,6 +12,7 @@
 #' @param prefix A string from your REDCap institutions Data Quality module url. The 
 #'   module prefix can be found by exporting module settings under External Modules
 #'   in REDCap. At VUMC the prefix is 'vanderbilt_dataQuality'.
+#' @param ..., additional arguments that are ignored.
 
 #' @export
 exportDataQuality <- function(rcon, prefix, ...)
