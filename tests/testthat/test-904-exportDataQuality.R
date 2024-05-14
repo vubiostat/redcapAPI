@@ -3,6 +3,9 @@ context("exportDataQuality.R")
 prefix <- 'vanderbilt_dataQuality'
 
 test_that("Data queries can be exported",{
+  skip_if(!RUN_DATAQUALITY_TEST, 
+        "No Data Quality Project provided. Tests Skipped")
+  
   dq <- exportDataQuality(dqrcon, prefix)
   expect_gte(length(dq), 1)
 })
