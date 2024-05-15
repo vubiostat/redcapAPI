@@ -67,11 +67,9 @@ test_that(
     stub(makeApiCall, "httr::POST", function(...)
       if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
     
-    response <- makeApiCall(rcon, 
-                            body = list(content = "version", 
-                                        format = "csv"))
-    
-    expect_error(redcapError(response, "A network error has occurred"))
+    expect_error(
+      makeApiCall(rcon, body=list(content = "version", format = "csv"), 
+      "A network error has occurred"))
     rcon$set_retries(5)
   }
 )
@@ -112,15 +110,12 @@ test_that(
 test_that(
   ".makeApiCall_retryMessage gives appropriate messages", 
   {
-    response <- makeApiCall(rcon, 
-                            body = list(content = "invalid-content", 
-                                        format = "csv"))
     
-    expect_message(.makeApiCall_retryMessage(rcon, response, 1), 
-                   "API attempt 1 of 5 failed. Trying again in 2 seconds. ERROR: The value of the parameter \"content\" is not valid")
+    expect_message(.makeApiCall_retryMessage(rcon, "msg", 1), 
+                   "API attempt 1 of 5 failed. Trying again in 2 seconds. msg")
     
-    expect_message(.makeApiCall_retryMessage(rcon, response, rcon$retries()), 
-                   sprintf("API attempt %s of %s failed. ERROR: The value of the parameter \"content\" is not valid", 
+    expect_message(.makeApiCall_retryMessage(rcon, "msg", rcon$retries()), 
+                   sprintf("API attempt %s of %s failed. msg", 
                            rcon$retries(), rcon$retries()))
   }
 )

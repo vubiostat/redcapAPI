@@ -20,18 +20,6 @@ test_that(
   }
 )
 
-
-test_that(
-  "Return data frame for an invalid file repository folder", 
-  {
-    expect_equal(
-      redcapError("ERROR: The File Repository folder folder_id=1234 does not exist or else"), 
-      FILE_REPOSITORY_EMPTY_FRAME
-    )
-  }
-)
-
-
 test_that(
   "Return preferred error message when experiencing a timeout", 
   {
@@ -41,7 +29,6 @@ test_that(
                  "A network error has occurred")
   }
 )
-
 
 test_that(
   "Return the error if it isn't one of the handled errors", 

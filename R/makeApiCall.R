@@ -250,7 +250,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    rcon$url <- response$header$location
+    rcon$url <- response$headers$location
     makeApiCall(rcon, body, config)
   } else 
     response # The not redirected case
