@@ -110,10 +110,12 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   body <- body[lengths(body) > 0]
   
   # Call the API ----------------------------------------------------
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
-                          config = config)
+                          config = config,
+                          success_status_codes = c(200L, 400L))
+  if(response$status_code == 400L)
+    return(FILE_REPOSITORY_EMPTY_FRAME)
 
   # Convert result to a data frame ----------------------------------
   FileRepository <- .fileRepositoryFrame(response, 

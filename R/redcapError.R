@@ -38,7 +38,7 @@
 redcapError <- function(x)
 {
   error_handling <- getOption("redcap_error_handling")
-  error_message <- as.character(x)
+  error_message  <- as.character(x)
   
   # Legacy project ignore errors unless option given to treat as errors
   handle <- c("ERROR: The value of the parameter \"content\" is not valid",
@@ -46,10 +46,6 @@ redcapError <- function(x)
               "ERROR: You cannot export events for classic projects",
               "ERROR: You cannot export form/event mappings for classic projects")
   if (error_message %in% handle && is.null(error_handling)) return(NULL)
-    
-  # FIXME: This concern needs to be in file repository handling
-  if (grepl("ERROR[:] The File Repository folder folder_id[=]\\d+ does not exist or else", error_message))
-    return(FILE_REPOSITORY_EMPTY_FRAME)
   
   # Translate network error codes to user relevant message
   if (grepl("Connection reset by peer", error_message) || 
