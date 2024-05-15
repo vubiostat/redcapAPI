@@ -147,14 +147,10 @@ importFiles.redcapApiConnection <- function(rcon,
   
    ###########################################################################
   # Make the API Call
-  # FIXME: This is messed up. 
   response <- makeApiCall(rcon, 
                           body = c(body, 
                                    api_param), 
                           config = config)
   
-  if (response$status_code != "200") 
-    redcapError(response)
-  else 
-    invisible(TRUE)
+  invisible(response$status_code == 200L)
 }
