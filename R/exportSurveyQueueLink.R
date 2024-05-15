@@ -54,10 +54,9 @@ exportSurveyQueueLink.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  as.character(response)
+  as.character(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
 }
