@@ -1,38 +1,21 @@
-#' @name redcapError
-#' @title Handle Errors from the REDCap API
-#' 
-#' @description Determine the proper way to handle errors returned from the API.
-#'   Not all errors should be fatal.  See Details for more
-#'   
-#' @param x Object returned by [httr::POST()].
-#' 
-#' @details Maintaining consistent functionality for all types of REDCap projects 
-#'   requires that errors be handled delicately.  It is not always desirable for an
-#'   error from the API to terminate the program.  One example of such a case is when
-#'   a user executes the `exportEvents` function for a classic project; 
-#'   doing so returns an error from the API that events cannot be exported for
-#'   classic projects.  In REDCap versions earlier than 6.5.0, there is no way to
-#'   determine if a project is classic or longitudinal without attempting to export
-#'   the events.  
-#'   
-#'   For this reason, it is often preferable to have these kinds of errors return 
-#'   `NULL` so that the program does not crash if it does not need to (one such 
-#'   instance where it does not need to crash is when `exportEvents` is called
-#'   within `exportRecords`; the `events` argument is irrelevant to a 
-#'   classic project and the error can safely be ignored.
-#'   
-#'   The other common type of error that does not need to be fatal is when a 
-#'   `redcapAPI` method is sent to a REDCap instance that does not support the 
-#'   method.  For example, the `exportVersion` method is not supported in 
-#'   REDCap instances earlier than 6.0.0.  In these cases, we may prefer not to cast
-#'   a hard error.
-#'   
-#'   These two types of errors may be handled in one of two ways.  When the 
-#'   error handler is set to `"null"`, a `NULL` is returned.  When the 
-#'   error handler is set to `"error"`, the error is returned.  The option 
-#'   is set globally using `options(redcap_error_handler = "null")` and is
-#'   set to `"null"` by default.
-#'   
+  ############################################################################
+ #
+#  redcapError
+#
+#  The current intent of this is to consistently deal
+#  with API errors, and possibly translate them into
+#  a meaningful message for users.
+# 
+#  There is a legacy intent could potentially be deprecated
+#  in the future for supporting "Classic", i.e. version < 6.0.0,
+#  REDCap projects. The interface for this ignores
+#  certain errors by default which would occur when interacting
+#  with these older projects. At present it is doubtful
+#  the current framework would work with a project of this age.
+#
+#  Part of this legacy support also involved an option
+#  'redcap_error_handler' which if set to anything but
+#  NULL it will error on all cases. 
 redcapError <- function(x)
 {
   error_handling <- getOption("redcap_error_handling")
