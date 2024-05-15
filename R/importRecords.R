@@ -394,7 +394,7 @@ import_records_batched <- function(rcon,
         error=function(e) { allvalid <<- FALSE; e }
       )
   }
-  if(!allvalid) stop(paste(responses[[nchar(responses) > 4]], collapse="\n"))
+  if(!allvalid) stop(paste(responses[nchar(responses) > 4], collapse="\n"))
   
   unlist(responses)
 }
