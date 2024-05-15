@@ -33,8 +33,6 @@
 #'   is set globally using `options(redcap_error_handler = "null")` and is
 #'   set to `"null"` by default.
 #'   
-#' 
-
 redcapError <- function(x)
 {
   error_handling <- getOption("redcap_error_handling")

@@ -381,31 +381,22 @@ import_records_batched <- function(rcon,
   # Call the API
   responses <- vector("list", length = length(out))
   
-  # FIXME: Well that throws a wrench in the works.
+  allvalid <- TRUE
   for (i in seq_along(out))
   {
-    responses[[i]] <- makeApiCall(rcon, 
-                                  body = c(body, 
-                                           list(data = out[[i]])), 
-                                  config = config)
+    responses[[i]] <- 
+      tryCatch(
+        as.character(
+          makeApiCall(
+            rcon, 
+            body   = c(body, list(data = out[[i]])), 
+            config = config)),
+        error=function(e) { allvalid <<- FALSE; e }
+      )
   }
+  if(!allvalid) stop(paste(responses[[nchar(responses) > 4]], collapse="\n"))
   
-  if (all(unlist(sapply(X = responses, 
-                        FUN = function(y) y["status_code"])) == "200"))
-  {
-    vapply(responses, as.character, character(1))
-  }
-  else 
-  {
-    status.code <- unlist(sapply(X = responses, 
-                                 FUN = function(y) y["status_code"]))
-    msg <- sapply(responses, as.character)
-    
-    stop(paste(paste0(status.code[status.code != "200"], 
-                      ": ", 
-                      msg[status.code != "200"]), 
-               collapse="\n"))
-  }
+  unlist(responses)
 }
 
 
