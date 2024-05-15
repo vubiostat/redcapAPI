@@ -61,14 +61,12 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   
   body <- body[lengths(body) > 0]
   
+  # flush the cached File Repository ------------------------------
+  rcon$flush_fileRepository()
   # Make the API Call -----------------------------------------------
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  # flush the cached File Repository ------------------------------
-  rcon$flush_fileRepository()
   
   # Get the path of the file in the File Repository -----------------
   fileRepo <- rcon$fileRepository()

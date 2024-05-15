@@ -215,8 +215,6 @@ createRedcapProject.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
+
   as.character(response)
 }

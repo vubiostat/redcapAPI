@@ -162,8 +162,6 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config)
-  
-  if (response$status_code != 200) redcapError(response)
 
   # Refresh the cached file repository ------------------------------
   rcon$flush_fileRepository()

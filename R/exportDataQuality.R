@@ -60,8 +60,6 @@ exportDataQuality.redcapApiConnection <-
   
   response <- makeApiCall(rcon, body=api_param, config=config, url)
 
-  if (response$status_code != 200) redcapError(response)
- 
   tryCatch(
   {
     result <- httr::content(response, type = 'application/json')

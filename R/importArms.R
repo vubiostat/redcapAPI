@@ -76,18 +76,14 @@ importArms.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_arms()
   # Changes to arms can impact events and if the project is 
   # still considered longitudinal
   rcon$flush_events()
-  rcon$flush_projectInformation()
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  invisible(as.character(response))
+  rcon$flush_projectInformation()  
+  invisible(as.character(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  ))
 }

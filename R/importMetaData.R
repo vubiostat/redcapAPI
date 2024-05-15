@@ -120,18 +120,14 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_metadata()
   rcon$flush_instruments()
   rcon$flush_fieldnames()
-  
-  response <- as.character(response)
-  
-  invisible(as.character(response))
+  invisible(as.character(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  ))
 }
 
 #####################################################################

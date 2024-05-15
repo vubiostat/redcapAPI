@@ -231,23 +231,21 @@ purgeProject.redcapApiConnection <- function(object,
                     config = config)
   }
   
-  if (users){
-    # deleteUsers(object,
-    #             object$users()$username,
-    #             config = config)
-  }
+  # if (users){
+  # deleteUsers(object,
+  #             object$users()$username,
+  #             config = config)
+  # }
   
-  if (events){
+  if (events)
     deleteEvents(object, 
                  events = object$events()$unique_event_name, 
                  config = config)
-  }
   
-  if (arms && !is.null(object$arms()$arm_num)){
+  if (arms && !is.null(object$arms()$arm_num))
     deleteArms(object, 
                arms = object$arms()$arm_num,
                config = config)
-  }
   
   if (flush) object$flush_all()
 }

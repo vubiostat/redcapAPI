@@ -52,15 +52,12 @@ deleteEvents.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
   rcon$flush_events()
   rcon$flush_arms()
   rcon$flush_projectInformation()
-  
-  if (response$status_code != 200) redcapError(response)
-  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+
   invisible(as.character(response))
 }

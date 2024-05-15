@@ -60,14 +60,10 @@ deleteUsers.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Make the API Call                                            ####
-  
+  rcon$flush_users()
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  rcon$flush_users()
-  
-  if (response$status_code != 200) redcapError(response)
   
   invisible(as.character(response))
 }

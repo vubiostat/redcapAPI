@@ -71,14 +71,10 @@ importDags.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_dags()
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  invisible(as.character(response))
+  invisible(as.character(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  ))
 }

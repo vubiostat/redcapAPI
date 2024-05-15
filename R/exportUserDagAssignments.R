@@ -46,14 +46,11 @@ exportUserDagAssignments.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  response <- as.data.frame(response)
+  response <- as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
   
   if(nrow(response) == 0) REDCAP_DAG_ASSIGNMENT_STRUCTURE else response
-
 }

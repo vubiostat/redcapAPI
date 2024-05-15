@@ -106,9 +106,7 @@ exportReports.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
+ 
   Report <- as.data.frame(response)
   
    ##################################################################

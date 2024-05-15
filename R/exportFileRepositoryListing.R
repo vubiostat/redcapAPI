@@ -114,9 +114,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
+
   # Convert result to a data frame ----------------------------------
   FileRepository <- .fileRepositoryFrame(response, 
                                          folder_id)

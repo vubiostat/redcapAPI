@@ -76,6 +76,7 @@ exportVersion.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
+  # FIXME: How does this even work?
   if (response$status_code != 200) 
   {
     handled <- redcapError(response)

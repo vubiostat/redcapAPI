@@ -76,8 +76,6 @@ importUserRoles.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
 
-  if (response$status_code != 200) redcapError(response)
-
   # From REDCap 14.0.2 forward, caching can sometimes catch an NA role pre-definition
   roles <- c(NA)
   while(length(roles > 0) && any(is.na(roles)))

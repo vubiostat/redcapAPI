@@ -74,8 +74,6 @@ exportEvents.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
 
   response <- as.data.frame(response)
   if(nrow(response) == 0) REDCAP_EVENT_STRUCTURE else response

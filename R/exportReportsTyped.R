@@ -109,6 +109,7 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config)
   
+  # FIXME: Candidate for redcapError? 
   if (response$status_code != 200) stop(paste("No report of ID", report_id, "in project."))
   
   

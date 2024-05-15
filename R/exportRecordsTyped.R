@@ -657,8 +657,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                    api_param, 
                                    vectorToApiBodyList(records, "records")), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
 
   response <- as.data.frame(response,
                             colClasses = "character",
@@ -689,9 +687,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
- 
-    if (record_response$status_code != 200) redcapError(record_response)
-    
+
     records <- as.data.frame(record_response, sep = csv_delimiter)
     
     if (nrow(records) == 0)

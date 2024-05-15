@@ -47,11 +47,9 @@ exportProjectInformation.redcapApiConnection <- function(rcon,
    ##################################################################
   # Call the API
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  as.data.frame(response)
+  as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
 }

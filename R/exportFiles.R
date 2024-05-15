@@ -137,9 +137,7 @@ exportFiles.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-
-  if (response$status_code != 200) redcapError(response)
-  
+ 
   prefix <- 
     if (file_prefix) sprintf("%s%s%s", 
                             record,

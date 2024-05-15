@@ -63,17 +63,10 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
   body <- body[lengths(body) > 0]
   
   # Make the API Call -----------------------------------------------
-  
+  rcon$flush_fileRepository()
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response)
-  }
-  
-  # Flush cached info
-  rcon$flush_fileRepository()
   
   data.frame(directory = dirname(file_path), 
              filename = basename(file_path), 

@@ -61,12 +61,11 @@ deleteDags.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API                                                 ####
-  
+  rcon$flush_dags()
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  rcon$flush_dags()
-  if (response$status_code != 200) redcapError(response)
+
 
   invisible(as.character(response))
 }

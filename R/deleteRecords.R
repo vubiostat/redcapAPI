@@ -149,12 +149,9 @@ deleteRecords.redcapApiConnection <- function(
   
    ##################################################################
   # Call the API
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
+
   invisible(as.character(response))
 }

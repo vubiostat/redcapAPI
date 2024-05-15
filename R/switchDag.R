@@ -105,14 +105,12 @@ switchDag.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Make the API Call
-  
+  rcon$flush_dag_assignment()
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
   
-  rcon$flush_dag_assignment()
-  
-  if (response$status_code != 200) redcapError(response)
+
 
   success <- isTRUE(as.character(response) == "1")
   

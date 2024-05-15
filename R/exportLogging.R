@@ -144,13 +144,11 @@ exportLogging.redcapApiConnection <- function(rcon,
   body <- body[lengths(body) > 0]
   
   # Call to the API -------------------------------------------------
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  Log <- as.data.frame(response)
+  Log <- as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
   
   # Format and return data ------------------------------------------
   Log$timestamp <- as.POSIXct(Log$timestamp, 

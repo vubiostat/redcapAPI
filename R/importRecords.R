@@ -381,6 +381,7 @@ import_records_batched <- function(rcon,
   # Call the API
   responses <- vector("list", length = length(out))
   
+  # FIXME: Well that throws a wrench in the works.
   for (i in seq_along(out))
   {
     responses[[i]] <- makeApiCall(rcon, 
@@ -440,20 +441,13 @@ import_records_unbatched <- function(rcon,
   
    ##################################################################
   # Call the API
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
   
-  if (response$status_code == "200"){
-    if (returnContent %in% c("ids", "auto_ids")){
-      as.data.frame(response)
-    } else {
-      as.character(response)
-    }
-  }
-  else 
-    redcapError(response)
+  if (returnContent %in% c("ids", "auto_ids"))
+    as.data.frame(response) else
+    as.character(response)
 }
 
 #####################################################################

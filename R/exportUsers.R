@@ -62,14 +62,11 @@ exportUsers.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # API Call 
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  Users <- as.data.frame(response)
+  Users <- as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
   
   Users$forms_export <- 
     sub(",registration[:]\\d{1}.+$", "", Users$forms_export)

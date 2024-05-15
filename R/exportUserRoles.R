@@ -56,15 +56,12 @@ exportUserRoles.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Make API Call                                                ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
+  UserRole <- as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
 
-  UserRole <- as.data.frame(response)
-  
   if (nrow(UserRole) == 0) return(REDCAP_USER_ROLE_STRUCTURE)
  
   # The API returns the forms_export string twice.  We reduce it to once here

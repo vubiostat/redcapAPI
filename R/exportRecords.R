@@ -317,13 +317,12 @@ unbatched <- function(rcon, body, id, colClasses, config)
                                    is.na,
                                    logical(1))]
   
-  response <- makeApiCall(rcon, 
-                          body = body, 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response)
-  
-  as.data.frame(response, colClasses=colClasses)
+  as.data.frame(
+    makeApiCall(rcon, 
+                body = body, 
+                config = config),
+    colClasses=colClasses
+  )
 }
 
 
@@ -351,8 +350,6 @@ batched <- function(rcon, body, batch.size, id, colClasses, config)
   IDs <- makeApiCall(rcon, 
                      body = body, 
                      config = config)
-  
-  if (IDs$status_code != 200) redcapError(IDs)
   
   IDs <- as.data.frame(IDs, colClasses = colClasses[id])
 
@@ -385,9 +382,6 @@ batched <- function(rcon, body, batch.size, id, colClasses, config)
     this_response <- makeApiCall(rcon, 
                                  body = body, 
                                  config = config)
-    
-    if (this_response$status_code != 200) redcapError(this_response)
-    
     batch_list[[i]] <- as.data.frame(this_response, colClasses = colClasses)
 
     Sys.sleep(1)
