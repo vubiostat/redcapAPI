@@ -4,7 +4,13 @@
 \alias{makeApiCall}
 \title{Make REDCap API Calls}
 \usage{
-makeApiCall(rcon, body = list(), config = list(), url = NULL)
+makeApiCall(
+  rcon,
+  body = list(),
+  config = list(),
+  url = NULL,
+  success_status_codes = 200L
+)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -17,6 +23,9 @@ These will be appended to the \code{config} options included in the
 \code{rcon} object.}
 
 \item{url}{\code{character(1)} A url string to hit. Defaults to rcon$url.}
+
+\item{success_status_codes}{\code{integerish} A vector of success codes to ignore
+for error handling. Defaults to c(200L).}
 }
 \description{
 Constructs and executes API calls to the REDCap API. These
