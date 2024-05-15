@@ -104,21 +104,15 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config)
-  
-  # FIXME: Candidate for redcapError? 
-  if (response$status_code != 200) stop(paste("No report of ID", report_id, "in project."))
-  
-  
-  Raw <- as.data.frame(response, sep = csv_delimiter)
-  
-  if (length(drop_fields) > 0){
+  Raw <- as.data.frame(
+           makeApiCall( rcon, 
+                        body = c(body, api_param), 
+                        config),
+           sep = csv_delimiter)
+
+  if (length(drop_fields) > 0)
     Raw <- Raw[!names(Raw) %in% drop_fields]
-  }
-  
+
   ###################################################################
   # Cast the fields in the report                                ####
   
