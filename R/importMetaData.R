@@ -13,7 +13,6 @@ importMetaData <- function(rcon,
 
 importMetaData.redcapApiConnection <- function(rcon, 
                                                data,
-                                               refresh = TRUE,
                                                ..., 
                                                field_types = REDCAP_METADATA_FIELDTYPE, # see redcapDataStructure
                                                validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
@@ -31,11 +30,6 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::assert_data_frame(x = data, 
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            any.missing = FALSE,
-                            add = coll)
   
   checkmate::assert_character(x = field_types, 
                               add = coll)
@@ -79,6 +73,10 @@ importMetaData.redcapApiConnection <- function(rcon,
     coll$push(sprintf("The following have duplicate field names: {%s}", 
                       duplicate_field_name))
   }
+  
+    
+  # Convert "" to NA
+  data[data==''] <- NA
 
   isValidFieldName(field_name = data$field_name, 
                    coll = coll)
@@ -133,17 +131,11 @@ importMetaData.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
-  response <- as.character(response)
+  rcon$flush_metadata()
+  rcon$flush_instruments()
+  rcon$flush_fieldnames()
   
-  if (refresh){
-    if (rcon$has_metadata()){
-      rcon$refresh_metadata()
-    }
-    
-    if (rcon$has_instruments()){
-      rcon$refresh_instruments()
-    }
-  }
+  response <- as.character(response)
   
   invisible(as.character(response))
 }

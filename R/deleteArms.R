@@ -14,8 +14,7 @@ deleteArms <- function(rcon,
 #' @export
 
 deleteArms.redcapApiConnection <- function(rcon, 
-                                           arms, 
-                                           refresh        = TRUE,
+                                           arms,
                                            ...,
                                            error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
@@ -31,10 +30,6 @@ deleteArms.redcapApiConnection <- function(rcon,
   checkmate::assert_character(arms, 
                               any.missing = FALSE,
                               add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -70,23 +65,16 @@ deleteArms.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API
-
   if (length(arms) > 0){ # Skip the call if there are no arms to delete
     response <- makeApiCall(rcon, 
                             body = c(body, api_param), 
                             config = config)
-    
+    rcon$flush_arms()
+    rcon$flush_events()
+    rcon$flush_projectInformation()
     if (response$status_code != 200) return(redcapError(response, error_handling))
   } else {
     response <- "0"
-  }
-  
-  if (refresh && rcon$has_arms()){
-    rcon$refresh_arms()
-    # Changes to arms can impact events and if the project is 
-    # still considered longitudinal
-    rcon$refresh_events() 
-    rcon$refresh_projectInformation()
   }
   
   invisible(as.character(response))

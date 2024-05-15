@@ -192,21 +192,6 @@ test_that(
 )
 
 test_that(
-  "Return an error when refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importFileRepository(rcon, 
-                                      dir = tempdir(), 
-                                      refresh = c(TRUE, FALSE)), 
-                 "'refresh'[:] Must have length 1")
-    expect_error(importFileRepository(rcon, 
-                                      dir = tempdir(), 
-                                      refresh = "TRUE"), 
-                 "'refresh'[:] Must be of type 'logical'") 
-  }
-)
-
-test_that(
   "Validate error_handling, config, api_param", 
   {
     local_reproducible_output(width = 200)
@@ -273,21 +258,6 @@ test_that(
                                       folder_id = 123, 
                                       recursive = "TRUE"), 
                  "Variable 'recursive'[:] Must be of type 'logical'")
-  }
-)
-
-test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123, 
-                                      refresh = c(TRUE, FALSE)), 
-                 "Variable 'refresh'[:] Must have length 1")
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123, 
-                                      refresh = "TRUE"), 
-                 "Variable 'refresh'[:] Must be of type 'logical'")
   }
 )
 

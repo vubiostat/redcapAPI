@@ -34,7 +34,7 @@ exportRecordsTyped.redcapApiConnection <-
     records        = NULL,
     events         = NULL,
     survey         = TRUE,
-    dag            = TRUE,
+    dag            = FALSE,
     date_begin     = NULL,
     date_end       = NULL,
     
@@ -125,7 +125,7 @@ exportRecordsTyped.redcapApiConnection <-
                             add = coll)
 
   checkmate::reportAssertions(coll)
-  
+
   .exportRecordsTyped_validateFieldForm(rcon = rcon, 
                                         fields = fields, 
                                         drop_fields = drop_fields, 
@@ -139,6 +139,9 @@ exportRecordsTyped.redcapApiConnection <-
   user_requested_only_system_fields <- length(fields) > 0 && all(fields %in% REDCAP_SYSTEM_FIELDS)
   system_fields_user_requested <- REDCAP_SYSTEM_FIELDS[REDCAP_SYSTEM_FIELDS %in% fields]
   
+  # dag must be set to TRUE to pull the dag field
+  if(length(fields) > 0 && "redcap_data_access_group" %in% fields) dag <- TRUE
+  
   # The REDCap API will not accept system fields in the fields argument. 
   # we have to remove them from the request.
   fields <- fields[!fields %in% REDCAP_SYSTEM_FIELDS] # redcapDataStructures.R
@@ -148,7 +151,7 @@ exportRecordsTyped.redcapApiConnection <-
   if (user_requested_only_system_fields){
     fields <- rcon$metadata()$field_name[1]
   }
-  
+
   # Check that the events exist in the project
   
   checkmate::assert_subset(x = events, 
@@ -164,7 +167,7 @@ exportRecordsTyped.redcapApiConnection <-
                                             fields      = fields, 
                                             drop_fields = drop_fields, 
                                             forms       = forms)
-  
+
    ###################################################################
   # Call API for Raw Results
   
@@ -218,6 +221,15 @@ exportRecordsTyped.redcapApiConnection <-
     
     unrequested_fields <- REDCAP_SYSTEM_FIELDS[!REDCAP_SYSTEM_FIELDS %in% system_fields_user_requested]
     Raw <- Raw[!names(Raw) %in% unrequested_fields]
+  }
+  
+  if(!is.null(forms)         &&
+     nrow(rcon$mapping()) >0 &&
+     "redcap_event_name" %in% names(Raw))
+  {
+    map <- rcon$mapping()
+    form_events <- map$unique_event_name[map$form %in% forms]
+    Raw <- Raw[Raw$redcap_event_name %in% form_events,]
   }
 
   # See fieldCastingFunctions.R for definition of .castRecords
@@ -408,7 +420,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                        coll,
                                                        warn_zero_coded,
                                                        ...)
-{
+{ 
   checkmate::assert_character(x = fields, 
                               any.missing = FALSE, 
                               null.ok = TRUE,
@@ -440,6 +452,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   
   checkmate::assert_list(x = validation, 
                          names = "named", 
+                         null.ok = TRUE,
                          add = coll)
   
   checkmate::assert_list(x = cast, 
@@ -622,7 +635,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     } else {
       Fields$export_field_name
     }
-  
+
   # Lastly, we need to ensure that the identifier fields are included.
   # We will include the record ID field if it is not already included.
   # We will also include the secondary unique ID field if one is specified.
@@ -654,16 +667,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                  error_handling = error_handling)
   } 
   
-  if (trimws(as.character(response)) == ""){
-    message("No data found in the project.")
-    return(data.frame())
-  }
+  response <- as.data.frame(response,
+                            colClasses = "character",
+                            sep = csv_delimiter)
   
-  utils::read.csv(text = as.character(response), 
-                  stringsAsFactors = FALSE, 
-                  na.strings = "", 
-                  colClasses = "character", 
-                  sep = csv_delimiter)
+  if (nrow(response) == 0) message("No data found in the project.")
+  
+  response
 }
 
 # .exportRecordsTyped_Batched ---------------------------------------
@@ -693,15 +703,15 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                    error_handling = error_handling)
     }
     
-    if (trimws(as.character(record_response)) == ""){
+    records <- as.data.frame(record_response, sep = csv_delimiter)
+    
+    if (nrow(records) == 0)
+    {
       message("No data found in the project.")
       return(data.frame())
     }
     
-    records <- utils::read.csv(text = as.character(record_response), 
-                               stringsAsFactors = FALSE, 
-                               na.strings = "", 
-                               sep = csv_delimiter)
+    
     records <- unique(records[[target_field]])
   }
 

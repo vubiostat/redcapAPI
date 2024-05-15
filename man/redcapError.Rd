@@ -4,7 +4,7 @@
 \alias{redcapError}
 \title{Handle Errors from the REDCap API}
 \usage{
-redcapError(x, error_handling)
+redcapError(x, error_handling = getOption("redcap_error_handling"))
 }
 \arguments{
 \item{x}{Object returned by \code{\link[httr:POST]{httr::POST()}}.}

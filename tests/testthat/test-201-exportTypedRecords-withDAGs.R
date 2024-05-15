@@ -3,11 +3,12 @@ context("Export Typed Records with DAGs Functionality")
 # NOTE: Data for these tests was established in 
 #       test-200-exportTypedRecords-Functionality.R
 
-ImportData <- exportRecordsTyped(rcon, 
+ImportData <- exportRecordsTyped(rcon,
                                  cast = raw_cast)
 
 ImportData <- castForImport(ImportData, 
                             rcon, 
+                            validation = list(bioportal=valSkip),
                             cast = list(number_1dp = as.numeric, 
                                         number_2dp = as.numeric, 
                                         number_1dp_comma_decimal = as.numeric, 
@@ -17,16 +18,17 @@ ImportData <- castForImport(ImportData,
 #####################################################################
 # Create DAGs to use in testing                                  ####
 
-importDags(rcon, 
-           data = data.frame(data_access_group_name = c("Test DAG 1", 
-                                                        "Test DAG 2"), 
-                             unique_group_name = rep(NA_character_, 2)))
+if(!"test_dag_1" %in% rcon$dags()$unique_group_name)
+  importDags(rcon, 
+             data = data.frame(data_access_group_name = c("Test DAG 1", 
+                                                          "Test DAG 2"), 
+                               unique_group_name = rep(NA_character_, 2)))
 
 ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name, 
                                            length.out = nrow(ImportData))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
+
 
 #####################################################################
 # Export Data Access Groups
@@ -42,7 +44,7 @@ test_that(
     DagRaw <- exportRecordsTyped(rcon, 
                                  dag = TRUE, 
                                  cast = list(system = castRaw))  
-    expect_equal(unique(DagRaw$redcap_data_access_group), 
+    expect_equal(sort(unique(DagRaw$redcap_data_access_group)), 
                  c("test_dag_1", "test_dag_2"))
   }
 )

@@ -30,7 +30,7 @@ exportReportsTyped(rcon, report_id, ...)
   records = NULL,
   events = NULL,
   survey = TRUE,
-  dag = TRUE,
+  dag = FALSE,
   date_begin = NULL,
   date_end = NULL,
   na = list(),
@@ -110,7 +110,10 @@ misspellings may result in unexpected results.}
 when data access groups are utilized in the project.
 This flag is only viable if the user whose token is
 being used to make the API request is not in a data access group.
-If the user is in a group, then this flag will revert to its default value.}
+If the user is in a group, then this flag will revert to its default value.
+Data Access Groups privilege is required when creating/renaming/deleting
+DAGs and when importing/exporting user-DAG assignments. Therefore, the
+default for this flag is FALSE. To export DAG information set this flag to TRUE.}
 
 \item{date_begin}{\code{POSIXct(1)} or \code{NULL}. Ignored if \code{NULL} (default).
 Otherwise, records created or modified after this date will be returned.}
@@ -121,9 +124,9 @@ Otherwise, records created or modified before this date will be returned.}
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
-{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql, system}. The function will be provided the
+checkbox, form_complete, sql, system. The function will be provided the
 variables (x, field_name, coding). The function must return a vector of
 logicals matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
@@ -138,12 +141,14 @@ are not identified as NA will be passed to validation functions.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+vector of logical matching the input length. The cast should match the validation,
+if one is using \code{raw_cast}, then \code{validation=skip_validation} is likely
+the desired intent. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{assignment}{A named \code{list} of functions. These functions are provided, field_name,
 label, description and field_type and return a list of attributes to assign
 to the column. Defaults to creating a label attribute from the stripped
-HTML and UNICODE raw label and scanning for units={"UNITS"} in description}
+HTML and UNICODE raw label and scanning for units=\{"UNITS"\} in description}
 
 \item{filter_empty_rows}{\code{logical(1)}. Filter out empty rows post retrieval.
 Defaults to \code{TRUE}.}

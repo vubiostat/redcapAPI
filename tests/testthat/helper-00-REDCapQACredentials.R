@@ -19,9 +19,45 @@
 library(checkmate) # for additional expect_* functions.
 library(keyring)
   
-url <- "https://redcap.vanderbilt.edu/api/" # Our institutions REDCap instance
+# Defaults for our institutions institutions REDCap instance
+# Override using environment variable REDCAP_URL, REDCAP_TESTDB_NAME, REDCAP_KEYRING
+url     <- Sys.getenv("REDCAP_URL",         "https://redcap.vumc.org/api/")
+testdb  <- Sys.getenv("REDCAP_TESTDB_NAME", "TestRedcapAPI") # reference in keyring
+dqdb    <- Sys.getenv("REDCAP_DQDB_NAME",   "") # "DQTest") Data Quality REDCap project
+keyring <- Sys.getenv("REDCAP_KEYRING",     "API_KEYs")
 
-conns <- unlockREDCap(
-  c(rcon ="TestRedcapAPI"), 
-  url=url, keyring='API_KEYs', 
-  envir=globalenv())
+RUN_DATAQUALITY_TEST <- dqdb != ''
+databases <- if(RUN_DATAQUALITY_TEST)
+               c(rcon = testdb, dqrcon = dqdb) else
+               c(rcon = testdb)
+
+unlockREDCap(
+  databases, # Open the keyring name as the variable rcon
+  url     = url,    # Using the url
+  keyring = keyring,# from the defined keyring
+  envir   = environment())      # in the global environment
+
+  ############################################################################
+ #
+#  Uncomment to create all API Keys with names in keylocker,
+#  with TestRedcapAPI being ones default. This allows one to change the above
+#  rcon easily for desired target. For convenience, the REPORT_IDS
+#  for each environment is listed as well
+#
+# unlockREDCap(
+#   c(rcon = "TestRedcapAPI", # Desired default, Get REPORT_ID from below list
+#     a1   = "SandboxTest",   # pid 167416, Sys.setenv(REPORT_IDS=410354)
+#     a2   = "QATest",        # pid 167509, Sys.setenv(REPORT_IDS='357209,362756')
+#     a3   = "DevTest",       # pid 167805, Sys.setenv(REPORT_IDS='362274,375181')
+#     a4   = "ExprTest",      # pid 174218, Sys.setenv(REPORT_IDS='371898,371899')
+#     a5   = "ThomasTest",    # pid 178186, Sys.setenv(REPORT_IDS='384516,384517')
+#     a6   = "ShawnTest",     # pid 188425, Sys.setenv(REPORT_IDS=417554)
+#     a7   = "DQTest"         # pid 133406, Sys.setenv(REPORT_IDS=NULL)
+#     ), 
+#   url=url, keyring='API_KEYs')
+
+missing_codes <- rcon$projectInformation()$missing_data_codes
+
+if(!is.na(missing_codes) && nchar(missing_codes) > 0)
+  stop("The test suite will fail if missing data codes are defined in the project.")
+

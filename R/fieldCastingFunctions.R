@@ -101,8 +101,9 @@
 #' 
 #' 
 #' # Using guessCast
-#' exportRecordsTyped(rcon, 
-#'                            cast = raw_cast) |> 
+#' exportRecordsTyped(rcon,
+#'                    validation=skip_validation,
+#'                    cast = raw_cast) |> 
 #'   guessCast(rcon, 
 #'             validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
 #'             cast=as.Date,
@@ -272,6 +273,7 @@ castForImport <- function(data,
   
   checkmate::assert_list(x = validation, 
                          names = "named", 
+                         null.ok= TRUE,
                          add = coll)
   
   checkmate::assert_list(x = cast, 
@@ -287,6 +289,30 @@ castForImport <- function(data,
                                         coll = coll)
   
   checkmate::reportAssertions(coll)
+  
+  # Drop mChoice variables from frame
+  mchoices <- vapply(data, inherits, logical(1), 'mChoice')
+  if(sum(mchoices) > 0)
+  {
+    message(paste0("The following mChoice variables(s) were dropped: ",
+                   paste0(fields[mchoices], collapse=', '), '.'))
+    data   <- data[,!mchoices, drop=FALSE]
+    fields <- fields[!mchoices]
+  }
+
+  # Drop non importable field types
+  for(type in c("file", "calc"))
+  {
+    drops <- rcon$metadata()[match(fields, rcon$metadata()$field_name),'field_type'] == type
+    drops[is.na(drops)] <- FALSE
+    if(sum(drops) > 0)
+    {
+      message(paste0("The following ", type, " variables(s) were dropped: ",
+                     paste0(fields[drops], collapse=', '), '.'))
+      data   <- data[,!drops, drop=FALSE]
+      fields <- fields[!drops]
+    }
+  }
   
   Raw <- as.data.frame(lapply(data, 
                               function(x) trimws(as.character(x))))
@@ -307,6 +333,7 @@ castForImport <- function(data,
   }
   
   attr(data, "invalid") <- attr(Recast, "invalid")
+  attr(data, "castForImport") <- TRUE
   
   data
 }
@@ -557,7 +584,9 @@ mChoiceCast <- function(data,
                              correct_length = nrow(Raw))
 
   ###################################################################
-  # Run Validation Functions                                     ####
+  # Run Validation Functions
+  
+  if(is.null(validation)) validation <- skip_validation
   
   validations <- 
     .castRecords_runValidation(Raw              = Raw, 

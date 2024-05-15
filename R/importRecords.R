@@ -113,6 +113,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                               return_content     = c('count', 'ids', 'nothing', 'auto_ids'),
                                               force_auto_number  = FALSE,
                                               ...,
+<<<<<<< HEAD
                                               na                 = list(), 
                                               validation         = list(), 
                                               cast               = list(),
@@ -127,6 +128,16 @@ importRecords.redcapApiConnection <- function(rcon,
   if ("overwriteBehavior" %in% names(dots)) overwrite_behavior <- dots$overwriteBehavior
   if ("returnContent" %in% names(dots)) return_content <- dots$returnContent
   if ("batch.size" %in% names(dots)) batch_size <- dots$batch.size
+=======
+                                              batch.size        = -1,
+                                              error_handling = getOption("redcap_error_handling"), 
+                                              config = list(), 
+                                              api_param = list())
+{
+  if(is.null(attr(data, "castForImport")))
+    message("importRecords will change how it validates data in version 3.0.0.\n",
+            "We recommend preparing your data for import using castForImport .")
+>>>>>>> main
   
    ##################################################################
   # Argument Validation
@@ -178,7 +189,7 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   # Remove survey identifiers
@@ -252,14 +263,30 @@ importRecords.redcapApiConnection <- function(rcon,
 .importRecords_validateFieldNames <- function(data, rcon){
   with_complete_fields <- rcon$fieldnames()$export_field_name
   
-  unrecognized_names <- !(names(data) %in% c(with_complete_fields, REDCAP_SYSTEM_FIELDS))
+  # Remove survey identifiers and data access group fields from data
+  w.remove <- 
+    which(names(data) %in% 
+            c("redcap_survey_identifier",
+              paste0(unique(MetaData$form_name), "_timestamp")))
+  if (length(w.remove) > 0) data <- data[-w.remove]
   
+  mchoices <- which(vapply(data, inherits, logical(1), 'mChoice'))
+  if(length(mchoices) > 0)
+  {
+    coll$push(paste0(
+      "The variable(s) ", 
+      paste0(names(data)[mchoices], collapse=", "), 
+      " are mChoice formatted and cannot be imported."))
+  }
+  
+  # Validate field names
+  unrecognized_names <- !(names(data) %in% c(with_complete_fields, REDCAP_SYSTEM_FIELDS))
   if (any(unrecognized_names))
   {
-    message("The variable(s) ", 
-            paste0(names(data)[unrecognized_names], collapse=", "), 
-            " are not found in the project and/or cannot be imported. They have been removed from the imported data frame.")
-    data <- data[!unrecognized_names]
+    coll$push(paste0(
+      "The variable(s) ", 
+      paste0(names(data)[unrecognized_names], collapse=", "), 
+      " are not found in the project and/or cannot be imported."))
   }
   
   data
@@ -392,9 +419,7 @@ import_records_unbatched <- function(rcon,
   
   if (response$status_code == "200"){
     if (returnContent %in% c("ids", "auto_ids")){
-      utils::read.csv(text = as.character(response), 
-               na.strings = "", 
-               stringsAsFactors = FALSE)
+      as.data.frame(response)
     } else {
       as.character(response)
     }

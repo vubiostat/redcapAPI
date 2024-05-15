@@ -138,9 +138,7 @@ exportFieldNames.redcapApiConnection <- function(rcon,
 
   }
   
-  utils::read.csv(text = as.character(response), 
-                  stringsAsFactors = FALSE,
-                  na.strings = "")
+  as.data.frame(response)
 }
 
 # Unexported --------------------------------------------------------

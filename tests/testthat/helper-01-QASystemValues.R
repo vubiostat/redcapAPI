@@ -10,5 +10,5 @@ EXPORT_REPORTS_ID <- as.numeric(strsplit(Sys.getenv('REPORT_IDS', '362756'), ','
 RUN_USER_TESTS <- length(EXPENDABLE_USER) == 1
 RUN_REPORTS_TEST <- TRUE
 
-tryCatch( {exportReportsTyped(conns$rcon, report_id = EXPORT_REPORTS_ID) }, 
+tryCatch( {exportReportsTyped(rcon, report_id = EXPORT_REPORTS_ID[1]) }, 
           error = function(cond) RUN_REPORTS_TEST <<- FALSE)

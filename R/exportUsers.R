@@ -78,9 +78,7 @@ exportUsers.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  Users <- utils::read.csv(text = as.character(response), 
-                           stringsAsFactors = FALSE,
-                           na.strings = "")
+  Users <- as.data.frame(response)
   
   Users$forms_export <- 
     sub(",registration[:]\\d{1}.+$", "", Users$forms_export)

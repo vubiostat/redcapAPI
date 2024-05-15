@@ -13,8 +13,7 @@ importProjectInformation <- function(rcon,
 #' @export
 
 importProjectInformation.redcapApiConnection <- function(rcon, 
-                                                         data, 
-                                                         refresh = TRUE, 
+                                                         data,
                                                          ...,
                                                          error_handling = getOption("redcap_error_handling"), 
                                                          config         = list(), 
@@ -32,11 +31,6 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   checkmate::assert_data_frame(x = data,
                                nrows = 1,
                                add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            any.missing = FALSE, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -75,18 +69,17 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
   
+  rcon$flush_arms()
+  rcon$flush_events()
+  rcon$flush_projectInformation()
   
-  if (response$status_code != 200) return(redcapError(response, error_handling))
-  
-  if (refresh && rcon$has_projectInformation()){
-    rcon$refresh_projectInformation()
-  }
-  
+  if (response$status_code != 200)
+    return(redcapError(response, error_handling))
+
   invisible(as.character(response))
 }
 

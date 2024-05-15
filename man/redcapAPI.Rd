@@ -40,13 +40,20 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Savannah Obregon [contributor]
+  \item Thomas Obadia [contributor]
+  \item Marcus Lehr \email{marcus.j.lehr@gmail.com} [contributor]
+  \item Brian High [contributor]
   \item Stephen Lane [contributor]
   \item Will Beasley [contributor]
   \item Will Gray [contributor]
+  \item Nick Kennedy [contributor]
+  \item Tan Hsi-Nien [contributor]
   \item Jeremy Stephens [contributor]
-  \item Marcus Lehr \email{marcus.j.lehr@gmail.com} [contributor]
   \item Cole Beck [contributor]
-  \item Savannah Obregon [contributor]
+  \item Bradley Johnson [contributor]
+  \item Philip Chase [contributor]
+  \item Paddy Tobias [contributor]
 }
 
 }

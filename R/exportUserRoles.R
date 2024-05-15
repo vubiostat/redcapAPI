@@ -72,14 +72,10 @@ exportUserRoles.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  if (as.character(response) == ""){
-    return(REDCAP_USER_ROLE_STRUCTURE)
-  }
+  UserRole <- as.data.frame(response)
   
-  UserRole <- utils::read.csv(text = as.character(response), 
-                              na.strings = "", 
-                              stringsAsFactors = FALSE)
-  
+  if (nrow(UserRole) == 0) return(REDCAP_USER_ROLE_STRUCTURE)
+ 
   # The API returns the forms_export string twice.  We reduce it to once here
   temp <- UserRole$forms_export
   temp <- strsplit(temp, ",")

@@ -34,7 +34,8 @@
 #' may be appended as a prefix.
 #' 
 #' @seealso
-#' [exportFilesMultiple()]
+#' [exportFilesMultiple()], \cr
+#' [importFileToRecord()] (can create a record to receive the file if it does yet exist)
 #' 
 #' @return 
 #' `exportFiles` invisibly returns the file path to which the exported 

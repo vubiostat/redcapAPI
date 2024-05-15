@@ -10,12 +10,37 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.9.1
+
+* Added additional supported arguments to deleteRecords.
+* Changed the default to `dag=FALSE` for exportRecordsTyped.
+* exportRecordsTyped more robust against some forms of corrupted meta data.
+* Added a new feature exportDataQuality for pulling queries from the DataQuality module.
+
+## 2.9.0
+
+* Refactor of missingSummary to use exportRecordsTyped. This is a breaking change in prep of 3.0.0.
+* Added handling of url redirects (301,302) on makeApiCall.
+
+## 2.8.5
+
+* importRecords stops when provided fields not in the project.
+* Filtering empty records will use mapping if available 
+* Minor export optimizations for records.
+* unlockREDCap will now search for ENV variables.
+* New importFileToRecord which will import a file and create the record if it doesn't exist. 
+
+## 2.8.4
+
+* Patch to reading HTTP data. When non UTF-8 characters are sent, they get mapped to '□'.
+
 ## 2.8.3
 
 * Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server.
 * Improved speed / memory usage for empty row exclusion.
 * Checkbox field labels now follow the pattern '[field_label] (choice=[choice_label])'
 * Fixed checkbox handling to be consistent with data export tool.
+* Added `skip_validation` function to complement `raw_cast`.
 
 ## 2.8.2
 

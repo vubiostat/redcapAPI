@@ -12,6 +12,7 @@
 #' @param config `list` A list of options to be passed to [httr::POST()].
 #'   These will be appended to the `config` options included in the 
 #'   `rcon` object.
+#' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #'   
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
@@ -135,10 +136,11 @@
 #' }
 #' 
 #' @export
-
 makeApiCall <- function(rcon, 
-                        body = list(), 
-                        config = list()){
+                        body   = list(), 
+                        config = list(),
+                        url    = NULL)
+{
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -154,19 +156,25 @@ makeApiCall <- function(rcon,
                          names = "named",
                          add = coll)
   
+  checkmate::assert_character(x = url,
+                              null.ok = TRUE,
+                              len = 1,
+                              add = coll)
+    
   checkmate::reportAssertions(coll)
   
   # Functional Code -------------------------------------------------
   
-  for (i in seq_len(rcon$retries())){
+  if(is.null(url)) url <- rcon$url
+  
+  for (i in seq_len(rcon$retries()))
+  {
     response <-
       tryCatch(
       {
-        httr::POST(url = rcon$url, 
-                   body = c(list(token = rcon$token), 
-                            body),
-                   config = c(rcon$config, 
-                              config))
+        httr::POST(url    = url, 
+                   body   = c(list(token = rcon$token), body),
+                   config = c(rcon$config, config))
       },
       error=function(e)
       {
@@ -199,13 +207,15 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    is_retry_eligible <- .makeApiCall_isRetryEligible(response = response)
+    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
     
-    if (!is_retry_eligible) 
-      break
+    is_retry_eligible <- .makeApiCall_isRetryEligible(response)
+    
+    if (!is_retry_eligible) break
     
     # The attempt failed. Produce a message detailing the failure (when not quiet)
-    if (!rcon$retry_quietly()){
+    if (!rcon$retry_quietly())
+    {
       .makeApiCall_retryMessage(rcon = rcon, 
                                 response = response, 
                                 iteration = i)
@@ -213,9 +223,8 @@ makeApiCall <- function(rcon,
     
     # Wait the designated time until trying again.
     # when i = rcon$retries(), we've made all our attempts, we do not need to wait to exit the loop 
-    if (i < rcon$retries()) { 
+    if (i < rcon$retries()) 
       Sys.sleep(rcon$retry_interval()[i])
-    }
   }
   
   response
@@ -223,8 +232,27 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
+.makeApiCall_handleRedirect <- function(rcon, body, config, response)
+{
+  if(response$status_code %in% c(301L, 302L))
+  {
+    if(response$status_code == 301L)
+    {
+      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$Location))
+    } else
+    {
+      message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
+    }
+    
+    # Good for a single call
+    rcon$url <- response$header$location
+    makeApiCall(rcon, body, config)
+  } else 
+    response # The not redirected case
+}
 
-.makeApiCall_isRetryEligible <- function(response){
+.makeApiCall_isRetryEligible <- function(response)
+{
   # the return from this is a logical indicating if we are ready to break the loop.
   # we want to break the loop in cases where the response is anything that does
   # not justify a retry. 
@@ -237,8 +265,6 @@ makeApiCall <- function(rcon,
   
   return(retry_eligible)
 }
-
-
 
 .makeApiCall_retryMessage <- function(rcon, 
                                       response, 
@@ -257,4 +283,38 @@ makeApiCall <- function(rcon,
   msg_part3 <- as.character(response)
   
   message(msg_part1, msg_part2, msg_part3)
+}
+
+# Helper function to convert responses to character strings without crashing.
+as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
+{
+  # Setting defaults, necessary because cannot change S3 interface
+  extra <- list(...)
+  stringsAsFactors <- extra$stringsAsFactors
+  if(is.null(stringsAsFactors)) stringsAsFactors <- FALSE
+  na.strings <- extra$na.strings
+  if(is.null(na.strings)) na.strings <- ""
+  
+  enc <- if(grepl("charset", x$headers[["Content-Type"]]))
+    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
+    'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
+  mapped <- iconv(readBin(x$content, character()),
+                  enc, 'UTF-8', '\U25a1')
+  if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
+
+  # First check is very fast check to see if the first 10 bytes are empty space
+  # Second check is followup to see if it's entirely empty space (verify)
+  if(grepl("^\\s*$", substr(mapped, 1, 10)) &&
+     nchar(trimws(mapped,'left')) == 0)
+  {
+    data.frame()
+  }
+  else
+  {
+    utils::read.csv(
+      text             = mapped,
+      stringsAsFactors = stringsAsFactors, 
+      na.strings       = na.strings,
+      ...)
+  }
 }

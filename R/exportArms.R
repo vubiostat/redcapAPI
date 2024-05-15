@@ -69,7 +69,5 @@ exportArms.redcapApiConnection <- function(rcon,
                  error_handling = error_handling)
   }
   
-  utils::read.csv(text = as.character(response), 
-                  stringsAsFactors = FALSE,
-                  na.strings = "")
+  as.data.frame(response)
 }

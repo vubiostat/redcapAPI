@@ -1,13 +1,61 @@
 context("unlockREDCap")
 
 library(mockery)
+library(curl)
+library(httr)
+
+h <- new_handle(timeout = 1L)
+redirect <- structure(
+  list(url = "https://test.xyz/api",
+       status_code = 302L,
+       content = "",
+       headers=structure(list(
+         'content-type'="text/csv; charset=utf-8",
+         'location'=url
+       ),
+       class = c("insensitive", "list")),
+  class = "response")
+)
 
 test_that(
   ".connectAndCheck returns result of redcapConnection",
   {
-    stub(.connectAndCheck, "redcapConnection", list(metadata=function(...) TRUE))
+    stub(.connectAndCheck, "redcapConnection", rcon)
   
-    expect_true(.connectAndCheck("key", "url")$metadata())
+    expect_identical(.connectAndCheck("key", "url"), rcon)
+  }
+)
+
+test_that(
+  ".connectAndCheck deals with redirect 301 status",
+  {
+    redirectCall <- TRUE
+    stub(.connectAndCheck, "makeApiCall", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {makeApiCall(...)})
+
+    rcon <- .connectAndCheck(rcon$token, "https://test.xyz/api")
+    expect_equal(rcon$url, url)
+  }
+)
+
+test_that(
+  ".connectAndCheck deals with redirect 302 status",
+  {
+    redirectCall <- TRUE
+    stub(.connectAndCheck, "makeApiCall", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {makeApiCall(...)})
+
+    rcon <- .connectAndCheck(rcon$token, "https://test.xyz/api")
+    expect_equal(rcon$url, url)
+  }
+)
+
+test_that(
+  ".connectAndCheck does not allow for more than one redirect",
+  {
+    stub(.connectAndCheck, "makeApiCall", redirect)
+    
+    expect_error(.connectAndCheck(rcon$token, "https://test.xyz/api"))
   }
 )
 
@@ -83,7 +131,6 @@ test_that(
   }
 )
 
-
 test_that(
   ".unlockYamlOverride returns an entry for every connection",
   {
@@ -105,6 +152,46 @@ test_that(
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
+    expect_true(x$rcon)
+    expect_true(x$sand)
+  }
+)
+
+test_that(
+  ".unlockENVOverride return empty when override ENV doesn't exist",
+  {
+    stub(.unlockENVOverride, "Sys.getenv", "")
+    x <- .unlockENVOverride("TestRedcapAPI", url)
+    expect_class(x, "list")
+    expect_true(length(x$TestRedcapAPI) == 0)
+  }
+)
+
+test_that(
+  ".unlockENVOverride will stop when only one of two ENV's are found",
+  {
+    stub(.unlockENVOverride, "sapply", c("", "YO"))
+    expect_error(.unlockENVOverride(c("x", "y"), url))
+  }
+)
+
+test_that(
+  ".unlockENVOverride returns an entry for every connection",
+  {
+    stub(.unlockENVOverride, "Sys.getenv", "xyz")
+    stub(.unlockENVOverride, ".connectAndCheck", TRUE)
+    x <- .unlockENVOverride(c("TestRedcapAPI", "Sandbox"), url)
+    expect_true(x$TestRedcapAPI)
+    expect_true(x$Sandbox)
+  }
+)
+
+test_that(
+  ".unlockENVOverride returns an entry for every connection renamed as requested",
+  {
+    stub(.unlockENVOverride, "Sys.getenv", "xyz")
+    stub(.unlockENVOverride, ".connectAndCheck", TRUE)
+    x <- .unlockENVOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
     expect_true(x$rcon)
     expect_true(x$sand)
   }
@@ -226,9 +313,6 @@ test_that(
 test_that(
   ".unlockKeyring creates keyring respects user cancel",
   {
-#    skip_if(TRUE, 
-#            "At the time of writing, testthat mock framework not working in all environments")
-    
     Sys.unsetenv("REDCAPAPI_PW")
     stub(.unlockKeyring, "keyring_list", 
          data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
@@ -318,7 +402,6 @@ test_that(
     expect_true(x$rcon)
     expect_true(calls == 1) # Called to ask once
     expect_called(m, 1) # Called key_set_with_value once
-    #print(mock_args(m)[[1]])
     expect_equal(mock_args(m)[[1]], list(service="redcapAPI", username="George", password="xyz", keyring="API_KEYs"))
     expect_called(n, 1) # Called .connectAndCheck
   }

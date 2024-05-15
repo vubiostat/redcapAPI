@@ -1,0 +1,356 @@
+{
+  "access": {
+    "embargo": {
+      "active": false,
+      "reason": null
+    },
+    "files": "public",
+    "record": "public",
+    "status": "open"
+  },
+  "created": "2024-01-24T19:19:08.279065+00:00",
+  "custom_fields": {},
+  "deletion_status": {
+    "is_deleted": false,
+    "status": "P"
+  },
+  "files": {
+    "count": 1,
+    "enabled": true,
+    "entries": {
+      "vubiostat/redcapAPI-v2.8.3.zip": {
+        "checksum": "md5:9b96ec712d6eaf9b15bd38c3fdeea130",
+        "ext": "zip",
+        "id": "a59af6dd-af4a-4dcd-83a5-9d49013ced69",
+        "key": "vubiostat/redcapAPI-v2.8.3.zip",
+        "metadata": null,
+        "mimetype": "application/zip",
+        "size": 2188907
+      }
+    },
+    "order": [],
+    "total_bytes": 2188907
+  },
+  "id": "10564837",
+  "is_draft": false,
+  "is_published": true,
+  "links": {
+    "access": "https://zenodo.org/api/records/10564837/access",
+    "access_links": "https://zenodo.org/api/records/10564837/access/links",
+    "access_request": "https://zenodo.org/api/records/10564837/access/request",
+    "access_users": "https://zenodo.org/api/records/10564837/access/users",
+    "archive": "https://zenodo.org/api/records/10564837/files-archive",
+    "archive_media": "https://zenodo.org/api/records/10564837/media-files-archive",
+    "communities": "https://zenodo.org/api/records/10564837/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/10564837/communities-suggestions",
+    "doi": "https://doi.org/10.5281/zenodo.10564837",
+    "draft": "https://zenodo.org/api/records/10564837/draft",
+    "files": "https://zenodo.org/api/records/10564837/files",
+    "latest": "https://zenodo.org/api/records/10564837/versions/latest",
+    "latest_html": "https://zenodo.org/records/10564837/latest",
+    "media_files": "https://zenodo.org/api/records/10564837/media-files",
+    "parent": "https://zenodo.org/api/records/10564836",
+    "parent_doi": "https://zenodo.org/doi/10.5281/zenodo.10564836",
+    "parent_html": "https://zenodo.org/records/10564836",
+    "requests": "https://zenodo.org/api/records/10564837/requests",
+    "reserve_doi": "https://zenodo.org/api/records/10564837/draft/pids/doi",
+    "self": "https://zenodo.org/api/records/10564837",
+    "self_doi": "https://zenodo.org/doi/10.5281/zenodo.10564837",
+    "self_html": "https://zenodo.org/records/10564837",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10564837/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10564837/sequence/default",
+    "versions": "https://zenodo.org/api/records/10564837/versions"
+  },
+  "media_files": {
+    "count": 0,
+    "enabled": false,
+    "entries": {},
+    "order": [],
+    "total_bytes": 0
+  },
+  "metadata": {
+    "creators": [
+      {
+        "affiliations": [
+          {
+            "name": "Battelle Memorial Institute"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Nutter",
+          "given_name": "Benjamin",
+          "name": "Nutter, Benjamin",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Vanderbilt University Medical Center"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Garbett",
+          "given_name": "Shawn",
+          "name": "Garbett, Shawn",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "id": "05dq2gs74",
+            "name": "Vanderbilt University Medical Center"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Obregon",
+          "given_name": "Savannah",
+          "name": "Obregon, Savannah",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Institut Pasteur"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Obadia",
+          "given_name": "Thomas",
+          "name": "Obadia, Thomas",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "University of Washington (UW)"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "High",
+          "given_name": "Brian",
+          "name": "High, Brian",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "University of Oklahoma Health Sciences Center & Howard Live Oak, LLC"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Beasley",
+          "given_name": "Will",
+          "name": "Beasley, Will",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "id": "05dq2gs74",
+            "name": "Vanderbilt University Medical Center"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Gray",
+          "given_name": "Will",
+          "name": "Gray, Will",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "id": "05dq2gs74",
+            "name": "Vanderbilt University Medical Center"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Hsi-Nien",
+          "given_name": "Tan Jubilee",
+          "name": "Hsi-Nien, Tan Jubilee",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Kennedy",
+          "given_name": "Nick",
+          "name": "Kennedy, Nick",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Sophia",
+          "name": "Sophia",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Lehr",
+          "given_name": "Marcus",
+          "name": "Lehr, Marcus",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Horner",
+          "given_name": "Jeffrey",
+          "name": "Horner, Jeffrey",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Chase",
+          "given_name": "Philip",
+          "name": "Chase, Philip",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "Lane",
+          "given_name": "Steve",
+          "name": "Lane, Steve",
+          "type": "personal"
+        }
+      },
+      {
+        "person_or_org": {
+          "family_name": "johnson-bradley",
+          "name": "johnson-bradley",
+          "type": "personal"
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Social Research Centre"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Tobias",
+          "given_name": "Paddy",
+          "name": "Tobias, Paddy",
+          "type": "personal"
+        }
+      }
+    ],
+    "description": "<ul>\n<li>Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server.</li>\n<li>Improved speed / memory usage for empty row exclusion.</li>\n<li>Checkbox field labels now follow the pattern '[field_label] (choice=[choice_label])'</li>\n<li>Fixed checkbox handling to be consistent with data export tool.</li>\n<li>Added <code>skip_validation</code> list to complement <code>raw_cast</code>.</li>\n<li>Extends casting and validation to text fields validated with the BioPortal Ontology service.</li>\n<li>Extends casting and validation to sql fields.</li>\n<li>Adds <code>valSkip</code>, allowing for validation to be skipped for a field type.</li>\n<li>Adds <code>castLogical</code> casting function.</li>\n<li>Adds four vignettes for getting started with using <code>unlockREDCap</code> and <code>exportRecordsTyped</code>.</li>\n<li>Added helper function <code>changedRecords</code>.</li>\n<li>Added <code>assembleCodebook</code>, which mimics the codebook in the REDCap UI in the form of a data frame.</li>\n<li>New functions for project management: createRedcapProject, exportProjectXml</li>\n<li>Additional timeout trap for request retry strategy.</li>\n<li>Reports of data failing validation checks now include a link to the form with the failing data.</li>\n<li>Major cleanup to remove messages on successful function execution. Many return values are changed to be consistent and be TRUE/FALSE if possible.</li>\n<li>Bug fix: The repeat_instance argument of exportFiles is now included in the API call.</li>\n<li>New Vignette: vignette(&quot;redcapAPI-offline-connection&quot;)</li>\n<li>Adds <code>exportFilesMultiple</code> to facilitate exporting multiple files in a familiar interface.</li>\n<li>Bug fix: Batching records no longer has the potential to produce duplicated records when a record ID has data in multiple events. (See Issue 262)</li>\n<li>Extends <code>preserveProject</code> and adds <code>readPreservedProject</code> to assist with preparing data for offline users.</li>\n</ul>",
+    "publication_date": "2024-01-24",
+    "publisher": "Zenodo",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/vubiostat/redcapAPI/tree/v2.8.3",
+        "relation_type": {
+          "id": "issupplementto",
+          "title": {
+            "de": "Erg\u00e4nzt",
+            "en": "Is supplement to"
+          }
+        },
+        "resource_type": {
+          "id": "software",
+          "title": {
+            "de": "Software",
+            "en": "Software"
+          }
+        },
+        "scheme": "url"
+      }
+    ],
+    "resource_type": {
+      "id": "software",
+      "title": {
+        "de": "Software",
+        "en": "Software"
+      }
+    },
+    "rights": [
+      {
+        "description": {
+          "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+        },
+        "icon": "cc-by-icon",
+        "id": "cc-by-4.0",
+        "props": {
+          "scheme": "spdx",
+          "url": "https://creativecommons.org/licenses/by/4.0/legalcode"
+        },
+        "title": {
+          "en": "Creative Commons Attribution 4.0 International"
+        }
+      }
+    ],
+    "title": "vubiostat/redcapAPI: v2.8.3",
+    "version": "v2.8.3"
+  },
+  "parent": {
+    "access": {
+      "grants": [],
+      "links": [],
+      "owned_by": {
+        "user": 1058504
+      },
+      "settings": {
+        "accept_conditions_text": null,
+        "allow_guest_requests": false,
+        "allow_user_requests": false,
+        "secret_link_expiration": 0
+      }
+    },
+    "communities": {},
+    "id": "10564836",
+    "pids": {
+      "doi": {
+        "client": "datacite",
+        "identifier": "10.5281/zenodo.10564836",
+        "provider": "datacite"
+      }
+    }
+  },
+  "pids": {
+    "doi": {
+      "client": "datacite",
+      "identifier": "10.5281/zenodo.10564837",
+      "provider": "datacite"
+    },
+    "oai": {
+      "identifier": "oai:zenodo.org:10564837",
+      "provider": "oai"
+    }
+  },
+  "revision_id": 10,
+  "stats": {
+    "all_versions": {
+      "data_volume": 0.0,
+      "downloads": 0,
+      "unique_downloads": 0,
+      "unique_views": 1,
+      "views": 5
+    },
+    "this_version": {
+      "data_volume": 0.0,
+      "downloads": 0,
+      "unique_downloads": 0,
+      "unique_views": 1,
+      "views": 5
+    }
+  },
+  "status": "published",
+  "updated": "2024-01-24T20:04:12.102127+00:00",
+  "versions": {
+    "index": 1,
+    "is_latest": true,
+    "is_latest_draft": true
+  }
+}

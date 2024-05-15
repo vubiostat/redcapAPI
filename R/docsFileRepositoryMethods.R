@@ -17,8 +17,6 @@
 #'   If `dir` does not exist and `dir_create = FALSE`, an error is thrown.
 #' @param recursive `logical(1)`. When `TRUE`, export all subfolders 
 #'   and their files as well.
-#' @param refresh `logical(1)`. When `TRUE` (default), the cached 
-#'   File Repository data on `rcon` will be refreshed.
 #' @param dag_id `integerish(0/1)` The ID of a data access group. When 
 #'   provided, access to the folder will be restricted to the DAG.
 #' @param role_id `integerish(0/1)` The ID of a role. When provided, 
@@ -129,7 +127,6 @@ fileRepositoryMethods <- function(rcon,
                                   dag_id, 
                                   role_id,
                                   recursive,
-                                  refresh,
                                   confirm,
                                   ..., 
                                   error_handling, 

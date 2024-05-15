@@ -69,6 +69,10 @@ other-config-stuff2: blah blah
 other-config-stuff3: blah blah
 }
 
+For production servers the use of ENV variables is also supported. The connection
+string is converted to upper case for the search of ENV. If a YAML
+and ENV variable both exist, the YAML will take precedence.
+
 IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 as this \emph{is} writing the API_KEY to a local file in clear text because
 connection objects contain the unlocked key in memory. Tips

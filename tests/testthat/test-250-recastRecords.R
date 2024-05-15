@@ -14,7 +14,7 @@ export_fields <- c("dropdown_test",
                    "yesno_test", 
                    "truefalse_test")
 
-Records <- exportRecordsTyped(rcon, 
+Records <- exportRecordsTyped(rcon,
                               fields = fields)
 
 #####################################################################
@@ -56,10 +56,10 @@ test_that(
 test_that(
   "Handle numeric indexing appropriately", 
   {
-    local_reproducible_output(width = 200)
+    # local_reproducible_output(width = 200)
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = c(9, 10, 6), 
+                            fields = c(8, 9, 5), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -76,7 +76,7 @@ test_that(
     
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
-                            fields = c(10, 7, 12), 
+                            fields = c(9, 6, 11), 
                             cast = list(dropdown = castRaw, 
                                         radio = castRaw, 
                                         checkbox = castRaw, 
@@ -94,7 +94,7 @@ test_that(
     expect_error(recastRecords(Records, 
                                rcon = rcon, 
                                fields = c(11:17)), 
-                 "Columns [{]13, 14, 15, 16, 17[}] requested in a data frame with 12 columns")
+                 "Columns [{]12, 13, 14, 15, 16, 17[}] requested in a data frame with 11 columns")
   }
 )
 
@@ -103,7 +103,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     to_recast <- logical(ncol(Records))
-    to_recast[c(9, 10, 6)] <- TRUE
+    to_recast[c(8, 9, 5)] <- TRUE
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
                             fields = to_recast, 
@@ -122,7 +122,7 @@ test_that(
     expect_true(is.logical(Recast$truefalse_test))
     
     to_recast <- logical(ncol(Records))
-    to_recast[c(10, 7, 12)] <- TRUE
+    to_recast[c(9, 6, 11)] <- TRUE
     Recast <- recastRecords(Records, 
                             rcon = rcon, 
                             fields = to_recast, 
@@ -144,7 +144,7 @@ test_that(
                                rcon = rcon, 
                                fields = rep(c(FALSE, TRUE), 
                                             length.out = 7)), 
-                 "'fields' [(]logical[)] should be of length 12 and is length 7")
+                 "'fields' [(]logical[)] should be of length 11 and is length 7")
   }
 )
 

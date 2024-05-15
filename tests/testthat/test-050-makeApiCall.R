@@ -2,6 +2,7 @@ context("makeApiCall Argument Validation")
 
 library(mockery)
 library(curl)
+library(httr)
 
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
@@ -10,6 +11,14 @@ library(curl)
 
 # Test .makeApiCall_validateResponse
 
+test_that(
+  "makeApiCall will not allow a non-character url",
+  {
+    expect_error(
+      makeApiCall(rcon,  body = list(format = "csv"), url=TRUE),
+      "url.*Must be of type 'character'")
+  }
+)
 
 test_that(
   ".makeApiCall_isRetryEligible returns appropriate logical values", 
@@ -46,8 +55,9 @@ test_that(
   {
     h <- new_handle(timeout = 1L)
     e <- structure(
-      list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
-           call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", handle = h)
+      list(message = paste0("Timeout was reached: [", url,
+                            "] Operation timed out after 300001 milliseconds with 0 bytes received"), 
+           call = curl_fetch_memory(paste0(url,"/params"), handle = h)
       ),
       class = c("simpleError", "error", "condition")
     )
@@ -71,7 +81,7 @@ test_that(
   {
     h <- new_handle(timeout = 1L)
     goodVersionPOST <- structure(
-      list(url = "https://redcap.vanderbilt.edu/api/",
+      list(url = url,
            status_code = 200L,
            content = charToRaw("13.10.3"),
            headers=structure(list(
@@ -80,8 +90,9 @@ test_that(
            class = c("insensitive", "list")),
       class = "response")
     e <- structure(
-           list(message = "Timeout was reached: [redcap.vanderbilt.edu] Operation timed out after 300001 milliseconds with 0 bytes received", 
-                call = curl_fetch_memory("https://redcap.vanderbilt.edu/api/params", handle = h)
+           list(message = paste0("Timeout was reached: [", url,
+                            "] Operation timed out after 300001 milliseconds with 0 bytes received"),
+                call = curl_fetch_memory(paste0(url,"/params"), handle = h)
                 ),
            class = c("simpleError", "error", "condition")
     )
@@ -127,7 +138,7 @@ test_that(
     expect_error(redcapError(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
     
-    response$content <- charToRaw("Timeout was reached: [redcap.vanderbilt.edu] SSL connection timeout")
+    response$content <- charToRaw(paste0("Timeout was reached: [",url,"] SSL connection timeout"))
     
     expect_error(redcapError(response, "null"), 
                  "A network error has occurred. This can happen when too much data is")
@@ -172,5 +183,93 @@ test_that(
     expect_error(makeApiCall(rcon, 
                              config = list(1, 2, 3)), 
                  "'config': Must have names")
+  }
+)
+
+test_that(
+  "as.data.frame.response handles invalid encoded characters",
+  {
+    x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
+    x[['headers']] <- list('Content-Type'='text/csv; charset=utf-8')
+    class(x) <- c("response","list")
+    expect_warning({y <- redcapAPI:::as.data.frame.response(x)},
+                  "invalid characters")
+    expect_equal(
+      y,
+      data.frame(fa.il=as.integer(c(1,3)), joe=c("2\U25a1","4"))
+    )
+    
+    x[['headers']] <- list('Content-Type'='text/csv') # defaults to latin
+    expect_silent({y <- redcapAPI:::as.data.frame.response(x)})
+    expect_equal(
+      y,
+      data.frame(façil=as.integer(c(1,3)), joe=c("2ç","4"))
+    )
+    
+  }
+)
+
+test_that(
+  "makeApiCall handles permanent redirect",
+  {
+    local_reproducible_output(width = 200)
+    h <- new_handle(timeout = 1L)
+    redirect <- structure(
+      list(url = "https://test.xyz/api",
+           status_code = 301L,
+           content = "",
+           headers=structure(list(
+             'content-type'="text/csv; charset=utf-8",
+             'location'=url
+           ),
+           class = c("insensitive", "list")),
+      class = "response")
+    )
+    
+    redirectCall <- TRUE
+    stub(makeApiCall, "httr::POST", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    
+    expect_warning(
+      response <- makeApiCall(rcon, 
+                        body = list(content = "version", 
+                                    format = "csv")),
+      paste0("Permanent 301 redirect https://test.xyz/api to ", url)
+    )
+    
+    expect_equal(response$status_code, 200L)
+  }
+)
+
+test_that(
+  "makeApiCall handles temporary redirect",
+  {
+    local_reproducible_output(width = 200)
+
+    h <- new_handle(timeout = 1L)
+    redirect <- structure(
+      list(url = "https://test.xyz/api",
+           status_code = 302L,
+           content = "",
+           headers=structure(list(
+             'content-type'="text/csv; charset=utf-8",
+             'location'=url
+           ),
+           class = c("insensitive", "list")),
+      class = "response")
+    )
+    
+    redirectCall <- TRUE
+    stub(makeApiCall, "httr::POST", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    
+    expect_message(
+      response <- makeApiCall(rcon, 
+                        body = list(content = "version", 
+                                    format = "csv")),
+      paste0("Temporary 302 redirect https://test.xyz/api to ", url)
+    )
+    
+    expect_equal(response$status_code, 200L)
   }
 )

@@ -116,8 +116,6 @@ importEvents(rcon,
 importProjectInformation(rcon, 
                          data = data.frame(is_longitudinal = 1))
 
-rcon$refresh_arms()
-rcon$refresh_events()
 
 test_that(
   "Return an error if rcon is not a redcapConnection", 
@@ -180,22 +178,6 @@ test_that(
                  "Variable 'data[$]form': Must be a subset of")
   }
 )
-
-test_that(
-  "Return an error if refresh is not logical(1)", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(importMappings(rcon = rcon, 
-                                data = rcon$mapping(), 
-                                refresh = "TRUE"), 
-                 "'refresh': Must be of type 'logical'")
-    expect_error(importMappings(rcon = rcon, 
-                                data = rcon$mapping(), 
-                                refresh = c(FALSE, TRUE)), 
-                 "'refresh': Must have length 1")
-  }
-)
-
 
 test_that(
   "Validate error_handling, config, api_param", 

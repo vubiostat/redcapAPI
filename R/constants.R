@@ -46,23 +46,31 @@ REGEX_CHECKBOX_FIELD_NAME <- "^(.*?)___(.*)$"
 
 # REGEX_FIELD_NAME - matches the acceptable naming conventions for field names
 # Explanation
+# This regex has three parts
+# 1. ^[a-z]$   : allows a field name of a single alpha character
+# 2. ^[a-z][a-z,0-9]$ : allows a field name of two characters, an alpha followed by an alpha/numeric
+# 3. ^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$: 3 or more characters, broken down as follows
 #            ^ : start of string
 #        [a-z] : a single character that is a lower case letter
 #   (?!.*__.*) : disallow any two consecutive characters to be underscores
 # [a-z,0-9,_]+ : any number or characters that are a lower case letter, digit, or underscore
 #    [a-z,0-9] : a single character that is a lower case letter or digit
 #            $ : end of string
-REGEX_FIELD_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
+REGEX_FIELD_NAME <- "(^[a-z]$|^[a-z][a-z,0-9]$|^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$)"
 
 # REGEX_FORM_NAME - matches acceptable naming conventions for form names
 # Explanation
+# This regex has three parts
+# 1. ^[a-z]$   : allows a field name of a single alpha character
+# 2. ^[a-z][a-z,0-9]$ : allows a field name of two characters, an alpha followed by an alpha/numeric
+# 3. ^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$: 3 or more characters, broken down as follows
 #            ^ : start of string
 #        [a-z] : A single character that is a lower case letter
 #   (?!.*__.*) : disallow any two consecutive characters to be underscores
 # [a-z,0-9,_]+ : Any number of characters that are lower case letters, digits, or an underscore
 #    [a-z,0-9] : a single character that is a lower case letter or digit
 #            $ : end of string
-REGEX_FORM_NAME <- "^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$"
+REGEX_FORM_NAME <- "(^[a-z]$|^[a-z][a-z,0-9]$|^[a-z](?!.*__.*)[a-z,0-9,_]+[a-z,0-9]$)"
 
 # REGEX_MULT_CHOICE_STRICT - matches acceptable formats for multiple choice options
 # It's a good idea to trim whitespace before using this

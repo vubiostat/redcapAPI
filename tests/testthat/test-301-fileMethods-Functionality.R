@@ -71,7 +71,6 @@ NewRepeat <- data.frame(event_name = "event_1_arm_1",
                         form_name = "files_notes_descriptions")
 importRepeatingInstrumentsEvents(rcon,
                                  NewRepeat)
-rcon$flush_all()
 
 importRecords(rcon,
               data.frame(record_id = "1",

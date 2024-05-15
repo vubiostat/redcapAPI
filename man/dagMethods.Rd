@@ -28,7 +28,6 @@ deleteDags(rcon, dags, ...)
 \method{importDags}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -38,7 +37,6 @@ deleteDags(rcon, dags, ...)
 \method{deleteDags}{redcapApiConnection}(
   rcon,
   dags,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -52,9 +50,6 @@ deleteDags(rcon, dags, ...)
 
 \item{data}{A \code{data.frame} with two columns: \code{data_access_group_name}
 and \code{unique_group_name}.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached data access
-group data will be refreshed after the import.}
 
 \item{...}{Arguments to pass to other methods}
 

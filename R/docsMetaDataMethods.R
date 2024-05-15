@@ -16,14 +16,10 @@
 #'   not.  Form names should match those in the second column of the data 
 #'   dictionary, and not the display names shown on the web interface.
 #' @param data `data.frame` with the Meta Data to import. 
-#' @param refresh `logical(1)`. When `TRUE`, the cached metadata
-#'   and instruments will be refreshed after the import.
 #' @param field_types `character` giving the acceptable field types
 #'   when validating the `field_type` column. This  
 #' @param validation_types `character` giving the acceptable values 
 #'   for the `text_validation_or_show_slider_number` column.
-#' @param drop_utf8 `logical(1)`. When `TRUE`, non-ASCII characters 
-#'   will be replaced with empty characters.
 #'   
 #' @details
 #' When importing meta data, the following conditions apply:
@@ -121,9 +117,7 @@
 metaDataMethodsArgs <- function(rcon, 
                                 fields, 
                                 forms, 
-                                data, 
-                                refresh, 
-                                drop_utf8,
+                                data,
                                 ...,
                                 field_types, 
                                 validation_types, 

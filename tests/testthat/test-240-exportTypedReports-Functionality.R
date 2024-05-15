@@ -1,7 +1,5 @@
 context("Export Typed Report Functionality")
 
-report_ids = as.numeric(strsplit(Sys.getenv('REPORT_IDS', '357209,362756'), ',')[[1]])
-
 report_ids <- EXPORT_REPORTS_ID
 
 test_that(

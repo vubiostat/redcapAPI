@@ -32,7 +32,6 @@ deleteUsers(rcon, users, ...)
   rcon,
   data,
   consolidate = TRUE,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -42,7 +41,6 @@ deleteUsers(rcon, users, ...)
 \method{deleteUsers}{redcapApiConnection}(
   rcon,
   users,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -71,9 +69,6 @@ a column titled \code{username}. All other columns are optional.}
 \item{consolidate}{\code{logical(1)}. When \code{TRUE}, the form and data
 export access values will be read from the expanded columns. Otherwise,
 the consolidated values (as provided by the API export) are utilized.}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, the cached data will
-be refreshed after the API action is complete.}
 
 \item{...}{Arguments to pass to other methods}
 

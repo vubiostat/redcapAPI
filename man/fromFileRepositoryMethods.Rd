@@ -34,7 +34,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   file,
   folder_id = numeric(0),
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -44,7 +43,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   rcon,
   doc_id,
   ...,
-  refresh = TRUE,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
@@ -68,9 +66,6 @@ the file is to be saved. Defaults to the working directory.}
 \item{dir_create}{\code{logical(1)}. Create the directory \code{dir}
 if it does not already exist. Defaults to \code{FALSE}.
 If \code{dir} does not exist and \code{create = FALSE}, an error is thrown.}
-
-\item{refresh}{\code{logical(1)} When \code{TRUE}, the cached
-File Repository data on \code{rcon} will be refreshed.}
 
 \item{...}{Arguments to pass to other methods}
 

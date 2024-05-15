@@ -11,9 +11,6 @@ load(file.path(test_path("testdata"),
 importMetaData(rcon, 
                test_redcapAPI_MetaData)
 
-rcon$refresh_instruments()
-rcon$refresh_fieldnames()
-
 forms <- rcon$instruments()$instrument_name
 Mappings <- data.frame(arm_num = rep(1, length(forms)), 
                        unique_event_name = rep("event_1_arm_1", length(forms)), 
@@ -38,7 +35,6 @@ ImportData <- castForImport(test_redcapAPI_Data,
                                         bioportal = as.character))
 
 importRecords(rcon, ImportData)
-rcon$flush_externalCoding()
 
 #######################################################################
 # Export Records with Repeating Instruments                        ####
@@ -88,7 +84,8 @@ test_that(
     #    Return actual fields + system fields
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = "record_id")
+                              fields = "record_id",
+                              dag=TRUE)
     expect_true(all(REDCAP_SYSTEM_FIELDS %in% names(Rec)))
 
     # 3. User requests actual fields + system fields.
@@ -130,29 +127,30 @@ test_that(
     # ID field and system fields when just the ID field is requested
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = "record_id")
+                              fields = "record_id",
+                              dag=TRUE)
     expect_equal(names(Rec),
                  minimum_field)
 
     # ID field and system fields when a single form is requested
 
     Rec <- exportRecordsTyped(rcon,
-                              forms = c("randomization"))
+                              forms = c("randomization"),
+                              dag=TRUE)
     expect_true(all(minimum_field %in% names(Rec)))
 
     # Now let's make a secondary unique field
     NewInfo <- data.frame(secondary_unique_field = "text_test")
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
 
     Rec <- exportRecordsTyped(rcon,
-                              forms = c("randomization"))
+                              forms = c("randomization"),
+                              dag=TRUE)
     expect_true(all(c(minimum_field, "text_test") %in% names(Rec)))
 
     NewInfo <- data.frame(secondary_unique_field = "",
                           surveys_enabled = 0)
     importProjectInformation(rcon, NewInfo)
-    rcon$refresh_projectInformation()
   }
 )
 

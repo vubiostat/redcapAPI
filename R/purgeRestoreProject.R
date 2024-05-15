@@ -200,7 +200,7 @@ purgeProject.redcapApiConnection <- function(object,
                                    error_handling = error_handling, 
                                    config = config)
     
-    if (nrow(RecordId)){
+    if (nrow(RecordId)>0){
       if ("redcap_event_name" %in% names(RecordId)){
         RecordId$arm_num <- sub("^(.+)(arm_)(\\d+)$", "\\3", RecordId$redcap_event_name)
         

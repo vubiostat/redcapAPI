@@ -41,11 +41,6 @@ importProjectInformation(rcon,
                          data = data.frame(is_longitudinal = 1, 
                                            has_repeating_instruments_or_events = 1))
 
-rcon$refresh_arms()
-rcon$refresh_events()
-
-
-
 test_that(
   "Import and Export Repeating Instrument Settings", 
   {
@@ -56,9 +51,6 @@ test_that(
     n_imported <- importRepeatingInstrumentsEvents(rcon, 
                                                    data = Repeat)
     expect_equal(n_imported, "1")
-    
-    rcon$refresh_projectInformation()
-    rcon$refresh_repeatInstrumentEvent()
     
     # Now let's check that we get the setting on the export
     expect_data_frame(exportRepeatingInstrumentsEvents(rcon), 
@@ -83,8 +75,6 @@ test_that(
 purgeProject(rcon, 
              arms = TRUE, 
              events = TRUE)
-rcon$refresh_arms()
-rcon$refresh_events()
 
 test_that(
   "Functionality on a test with no events or arms", 

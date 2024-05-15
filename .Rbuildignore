@@ -13,3 +13,4 @@
 ^tests/testthat/local-token.Rdata$
 ^doc$
 ^Meta$
+^\.zenodo.json$

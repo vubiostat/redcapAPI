@@ -11,7 +11,7 @@
 \usage{
 exportMappings(rcon, arms, ...)
 
-importMappings(rcon, data, refresh = TRUE, ...)
+importMappings(rcon, data, ...)
 
 \method{exportMappings}{redcapApiConnection}(
   rcon,
@@ -25,7 +25,6 @@ importMappings(rcon, data, refresh = TRUE, ...)
 \method{importMappings}{redcapApiConnection}(
   rcon,
   data,
-  refresh = TRUE,
   ...,
   error_handling = getOption("redcap_error_handling"),
   config = list(),
@@ -40,9 +39,6 @@ given, mappings are only exported for the given arms.}
 
 \item{data}{\code{data.frame} with columns \code{arm_num}, \code{unique_event_name},
 and \code{form}. See Details}
-
-\item{refresh}{\code{logical(1)}. When \code{TRUE}, cached mappings in the \code{rcon}
-object are refreshed after the import.}
 
 \item{...}{Arguments to pass to other methods}
 

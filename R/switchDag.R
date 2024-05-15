@@ -11,8 +11,6 @@
 #' @inheritParams common-api-args
 #' @param dag `character(1)` A unique data access group to which to 
 #'   assign the current user. Use `NA` to leave the user unassigned.
-#' @param refresh `logical(1)` If `TRUE`, the cached data access
-#'   group assignments will be refreshed.
 #'   
 #' @return Invisibly returns `TRUE` when the call is completed successfully.
 #'   Otherwise an error is thrown.
@@ -39,8 +37,7 @@
 #' @order 0
 # dummy function to control the order of arguments in the help file.
 switchDagArgs <- function(rcon, 
-                          dag, 
-                          refresh, 
+                          dag,
                           ..., 
                           error_handling, 
                           config, 
@@ -61,8 +58,7 @@ switchDag <- function(rcon,
 #' @export
 
 switchDag.redcapApiConnection <- function(rcon, 
-                                          dag, 
-                                          refresh = TRUE, 
+                                          dag,
                                           ...,
                                           error_handling = getOption("redcap_error_handling"), 
                                           config         = list(), 
@@ -81,10 +77,6 @@ switchDag.redcapApiConnection <- function(rcon,
                               null.ok = FALSE, 
                               any.missing = TRUE, 
                               add = coll)
-  
-  checkmate::assert_logical(x = refresh, 
-                            len = 1, 
-                            add = coll)
   
   error_handling <- checkmate::matchArg(x = error_handling, 
                                         choices = c("null", "error"), 
@@ -125,13 +117,11 @@ switchDag.redcapApiConnection <- function(rcon,
                           body = c(body, api_param), 
                           config = config)
   
+  rcon$flush_dag_assignment()
+  
   if (response$status_code != 200) return(redcapError(response, error_handling))
 
   success <- isTRUE(as.character(response) == "1")
-  
-  if (refresh){
-    rcon$refresh_dag_assignment()
-  }
   
   if (!success) {
     message(as.character(response))
