@@ -11,7 +11,7 @@
 \alias{REDCAP_REPEAT_INSTRUMENT_STRUCTURE}
 \title{REDCap Data Structures}
 \format{
-An object of class \code{character} of length 4.
+An object of class \code{character} of length 5.
 
 An object of class \code{character} of length 5.
 
