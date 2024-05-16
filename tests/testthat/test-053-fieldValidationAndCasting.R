@@ -173,8 +173,8 @@ test_that(
     # truefalse         
     truefalse_to_validate <- c("true", 
                                "false", 
-                               "TrUe",   # FIXME: do we want to ignore case
-                               "FalSE",  # FIXME: do we want to ignore case
+                               "TrUe",
+                               "FalSE",
                                "0", 
                                "1", 
                                "00",     
