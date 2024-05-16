@@ -19,9 +19,8 @@ importFileRepository.redcapApiConnection <- function(rcon,
                                                      dag_id = numeric(0), 
                                                      role_id = numeric(0), 
                                                      recursive = FALSE,
-                                                     ..., 
-                                                     config = list(), 
-                                                     api_param = list()){
+                                                     ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -51,14 +50,6 @@ importFileRepository.redcapApiConnection <- function(rcon,
                             len = 1, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_directory_exists(x = dir, 
@@ -76,7 +67,8 @@ importFileRepository.redcapApiConnection <- function(rcon,
                                               dir = dir,
                                               folder_id = folder_id, 
                                               dag_id = dag_id, 
-                                              role_id = dag_id)
+                                              role_id = dag_id,
+                                              ...)
   
   rcon$flush_fileRepository()
   
@@ -186,7 +178,8 @@ importFileRepository.redcapApiConnection <- function(rcon,
                                            dir, 
                                            folder_id, 
                                            dag_id, 
-                                           role_id){
+                                           role_id,
+                                           ...){
   for (i in seq_len(nrow(LocalRepo))){
     this_folder_id <- 
       if (LocalRepo$parent_folder[i] == 0){
@@ -201,7 +194,8 @@ importFileRepository.redcapApiConnection <- function(rcon,
                                               name = LocalRepo$name[i], 
                                               folder_id = this_folder_id, 
                                               dag_id = dag_id, 
-                                              role_id = role_id)
+                                              role_id = role_id,
+                                              ...)
       
       LocalRepo$remote_folder_id[i] <- NewFolder$folder_id
     } else {
@@ -214,7 +208,8 @@ importFileRepository.redcapApiConnection <- function(rcon,
 
       NewFile <- importToFileRepository(rcon, 
                                         file = this_file, 
-                                        folder_id = this_folder_id)
+                                        folder_id = this_folder_id,
+                                        ...)
     }
   }
   

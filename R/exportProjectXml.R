@@ -94,9 +94,8 @@ exportProjectXml.redcapApiConnection <- function(rcon,
                                                  survey = FALSE, 
                                                  dag = FALSE, 
                                                  export_files = FALSE, 
-                                                 ...,
-                                                 config         = list(), 
-                                                 api_param      = list()){
+                                                 ...)
+{
   if (is.numeric(records)) records <- as.character(records)
   
   ###################################################################
@@ -146,14 +145,6 @@ exportProjectXml.redcapApiConnection <- function(rcon,
                             any.missing = FALSE, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   
@@ -182,15 +173,11 @@ exportProjectXml.redcapApiConnection <- function(rcon,
             vectorToApiBodyList(records, "records"), 
             vectorToApiBodyList(fields, "fields"), 
             vectorToApiBodyList(events, "events"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
 
   WriteFile <- reconstituteFileFromExport(response, 
                                           dir = dirname(file),

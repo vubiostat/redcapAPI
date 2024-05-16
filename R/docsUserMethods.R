@@ -183,8 +183,7 @@ userMethods <- function(rcon,
                         users, 
                         data, 
                         consolidate,
-                        ...,
-                        config, 
-                        api_param){
+                        ...)
+{
   NULL
 }

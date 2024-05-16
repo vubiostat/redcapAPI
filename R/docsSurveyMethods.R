@@ -80,8 +80,7 @@ surveyMethods <- function(rcon,
                           instrument, 
                           event, 
                           repeat_instance,
-                          ..., 
-                          config, 
-                          api_param){
+                          ...)
+{
   NULL
 }

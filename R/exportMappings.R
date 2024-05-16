@@ -14,9 +14,8 @@ exportMappings <- function(rcon,
 
 exportMappings.redcapApiConnection <- function(rcon, 
                                                arms           = NULL, 
-                                               ...,
-                                               config         = list(), 
-                                               api_param      = list()){
+                                               ...)
+{
   if (is.character(arms)) arms <- as.numeric(arms)
   
    ##################################################################
@@ -33,14 +32,6 @@ exportMappings.redcapApiConnection <- function(rcon,
                               any.missing = FALSE,
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
    ##################################################################
@@ -54,20 +45,13 @@ exportMappings.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # Make Body List
-  body <- list(token = rcon$token, 
-               content = 'formEventMapping', 
+  body <- list(content = 'formEventMapping', 
                format = 'csv')
   
   body <- c(body, 
             vectorToApiBodyList(arms, "arms"))
 
-  body <- body[lengths(body) > 0]
-  
    ##################################################################
   # Call the API
-  as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
+  as.data.frame(makeApiCall(rcon, body, ...))
 }

@@ -14,9 +14,8 @@ importDags <- function(rcon,
 
 importDags.redcapApiConnection <- function(rcon, 
                                            data,
-                                           ...,
-                                           config         = list(), 
-                                           api_param      = list()){
+                                           ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -30,17 +29,7 @@ importDags.redcapApiConnection <- function(rcon,
                                col.names = "named", 
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
-  
-  
   
   checkmate::assert_subset(names(data), 
                            choices = c("data_access_group_name", 
@@ -49,7 +38,6 @@ importDags.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::reportAssertions(coll)
-  
   
   
   checkmate::assert_subset(data$unique_group_name, 
@@ -66,15 +54,11 @@ importDags.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
   rcon$flush_dags()
   invisible(as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }

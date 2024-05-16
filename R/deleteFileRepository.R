@@ -13,13 +13,13 @@ deleteFileRepository <- function(rcon,
 #' @order 6
 #' @export
 
-deleteFileRepository.redcapApiConnection <- function(rcon, 
-                                                     folder_id, 
-                                                     recursive      = FALSE,
-                                                     ..., 
-                                                     confirm        = c("ask", "no", "yes"),
-                                                     config         = list(), 
-                                                     api_param      = list()){
+deleteFileRepository.redcapApiConnection <- function(
+  rcon, 
+  folder_id, 
+  recursive      = FALSE,
+  ..., 
+  confirm        = c("ask", "no", "yes"))
+{
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -41,14 +41,6 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
                                  add = coll, 
                                  .var.name = "confirm")
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   # Determine how many files will be deleted ------------------------
@@ -88,7 +80,7 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
   
   for (i in seq_len(nrow(ToDelete))){
     deleteFromFileRepository(rcon, 
-                             doc_id = ToDelete$doc_id[i])
+                             doc_id = ToDelete$doc_id[i], ...)
   }
   
   rcon$flush_fileRepository()

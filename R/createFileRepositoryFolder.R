@@ -77,9 +77,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                                                            folder_id = numeric(0), 
                                                            dag_id = numeric(0), 
                                                            role_id = numeric(0), 
-                                                           ...,
-                                                           config = list(), 
-                                                           api_param = list()){
+                                                           ...){
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -105,14 +103,6 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                                max.len = 1, 
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   FileRepo <- rcon$fileRepository()
@@ -154,14 +144,10 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                folder_id = folder_id, 
                dag_id = dag_id, 
                role_id = role_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Make the API Call -----------------------------------------------
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config)
+  response <- makeApiCall(rcon, body, ...)
 
   # Refresh the cached file repository ------------------------------
   rcon$flush_fileRepository()

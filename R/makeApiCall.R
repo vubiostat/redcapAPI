@@ -139,10 +139,21 @@
 #' @export
 makeApiCall <- function(rcon, 
                         body   = list(), 
-                        config = list(),
                         url    = NULL,
-                        success_status_codes = 200L)
+                        success_status_codes = 200L,
+                        ...)
 {
+  # Pull config, api_param from ...
+  dots      <- list(...)
+  config    <- rcon$config
+  api_param <- list()
+  
+  if("api_params" %in% names(dots)) api_param <- dots$api_param
+  if("config" %in% names(dots))     config    <- c(config,dots$config)
+  
+  body <- c(list(token = rcon$token), body, api_param)
+  body <- body[lengths(body) > 0]
+
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -153,16 +164,20 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = body, 
                          names = "named",
                          add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named",
-                         add = coll)
-  
+
   checkmate::assert_character(x = url,
                               null.ok = TRUE,
                               len = 1,
                               add = coll)
-    
+  
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+
   checkmate::reportAssertions(coll)
   
   # Functional Code -------------------------------------------------
@@ -174,9 +189,7 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        httr::POST(url    = url, 
-                   body   = c(list(token = rcon$token), body),
-                   config = c(rcon$config, config))
+        httr::POST(url = url, body = body, config = config)
       },
       error=function(e)
       {

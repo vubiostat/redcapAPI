@@ -124,8 +124,8 @@ purgeProject.redcapApiConnection <- function(object,
                                              records        = FALSE, 
                                              purge_all      = FALSE,
                                              flush          = TRUE, 
-                                             ...,
-                                             config         = list()){
+                                             ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -174,10 +174,6 @@ purgeProject.redcapApiConnection <- function(object,
                             any.missing = FALSE,
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -191,7 +187,7 @@ purgeProject.redcapApiConnection <- function(object,
     RecordId <- exportRecordsTyped(object, 
                                    fields = object$metadata()$field_name[1],
                                    cast = list(system = castRaw), 
-                                   config = config)
+                                   ...)
     
     if (nrow(RecordId)>0){
       if ("redcap_event_name" %in% names(RecordId)){
@@ -209,12 +205,12 @@ purgeProject.redcapApiConnection <- function(object,
           deleteRecords(object, 
                         records = RecordId[[i]][[1]], 
                         arm = unique(RecordId[[i]]$arm_num),
-                        config = config)
+                        ...)
         }
       } else {
         deleteRecords(object, 
                       records = RecordId[[1]],
-                      config = config)
+                      ...)
       }
     }
   }
@@ -222,13 +218,13 @@ purgeProject.redcapApiConnection <- function(object,
   if (dags && nrow(object$dags()) > 0){
     deleteDags(object,
                dags = object$dags()$unique_group_name,
-               config = config)
+               ...)
   }
 
   if (user_roles && nrow(object$user_roles()) > 0){
     deleteUserRoles(object,
                     object$user_roles()$unique_role_name,
-                    config = config)
+                    ...)
   }
   
   # if (users){
@@ -240,14 +236,12 @@ purgeProject.redcapApiConnection <- function(object,
   if (events)
     deleteEvents(object, 
                  events = object$events()$unique_event_name, 
-                 config = config)
+                 ...)
   
   if (arms && !is.null(object$arms()$arm_num))
     deleteArms(object, 
                arms = object$arms()$arm_num,
-               config = config)
-  
-  if (flush) object$flush_all()
+               ...)
 }
 
 #####################################################################
@@ -277,8 +271,8 @@ restoreProject.redcapApiConnection <- function(object,
                                                dag_assignments       = NULL,
                                                records               = NULL, 
                                                flush                 = TRUE, 
-                                               ...,
-                                               config                = list()){
+                                               ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -347,10 +341,6 @@ restoreProject.redcapApiConnection <- function(object,
                                col.names = "named",
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -359,19 +349,19 @@ restoreProject.redcapApiConnection <- function(object,
   if (!is.null(project_information)){
     importProjectInformation(object, 
                              data = project_information,
-                             config = config)
+                             ...)
   }
   
   if (!is.null(arms) && nrow(arms) > 0){
     importArms(object, 
                arms_data = arms, 
-               config = config)
+               ...)
   }
   
   if (!is.null(events) && nrow(events) > 0){
     importEvents(object, 
                  event_data = events,
-                 config = config)
+                 ...)
   }
   
   if (!is.null(meta_data)){

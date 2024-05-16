@@ -14,9 +14,8 @@ exportSurveyQueueLink <- function(rcon,
 
 exportSurveyQueueLink.redcapApiConnection <- function(rcon, 
                                                       record, 
-                                                      ...,
-                                                      config         = list(), 
-                                                      api_param      = list()){
+                                                      ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
   ###################################################################
@@ -33,14 +32,6 @@ exportSurveyQueueLink.redcapApiConnection <- function(rcon,
                               any.missing = FALSE, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -49,14 +40,8 @@ exportSurveyQueueLink.redcapApiConnection <- function(rcon,
   body <- list(content = "surveyQueueLink", 
                record = record, 
                returnFormat = "csv")
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
+  as.character(makeApiCall(rcon, body, ...))
 }

@@ -14,9 +14,8 @@ deleteUsers <- function(rcon,
 
 deleteUsers.redcapApiConnection <- function(rcon, 
                                             users, 
-                                            ..., 
-                                            config = list(), 
-                                            api_param = list()){
+                                            ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -31,14 +30,6 @@ deleteUsers.redcapApiConnection <- function(rcon,
                               any.missing = FALSE,
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   User <- rcon$users()
@@ -55,15 +46,9 @@ deleteUsers.redcapApiConnection <- function(rcon,
   body <- c(list(content = "user", 
                  action = "delete"),
             vectorToApiBodyList(users, "users"))
-            
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_users()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  invisible(as.character(response))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }

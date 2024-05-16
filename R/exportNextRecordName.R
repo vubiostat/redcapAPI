@@ -13,9 +13,8 @@ exportNextRecordName <- function(rcon,
 
 
 exportNextRecordName.redcapApiConnection <- function(rcon, 
-                                                     ...,
-                                                     config         = list(), 
-                                                     api_param      = list()){
+                                                     ...)
+{
    ##################################################################
   # Argument Validation
   
@@ -25,29 +24,13 @@ exportNextRecordName.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection",
                           add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
    ##################################################################
   # Make the Body List
-  
-  body <- list(token = rcon$token, 
-               content = 'generateNextRecordName')
-  
-  body <- body[length(body) > 0]
-  
+  body <- list(content = 'generateNextRecordName')
+
    ##################################################################
   # Call the API
-  as.numeric(rawToChar(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)$content
-  ))
+  as.numeric(as.character(makeApiCall(rcon, body, ...)))
 }

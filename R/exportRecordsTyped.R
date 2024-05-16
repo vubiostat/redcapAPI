@@ -47,8 +47,6 @@ exportRecordsTyped.redcapApiConnection <-
     filter_empty_rows = TRUE,
     warn_zero_coded = TRUE,
     ...,
-    config         = list(),
-    api_param      = list(),
     csv_delimiter  = ",",
     batch_size     = NULL)
 {
@@ -109,15 +107,7 @@ exportRecordsTyped.redcapApiConnection <-
                                        choices   = c(",", "\t", ";", "|", "^"),
                                        .var.name = "csv_delimiter",
                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::assert_logical(x = filter_empty_rows, 
                             len = 1, 
                             any.missing = FALSE,
@@ -185,26 +175,22 @@ exportRecordsTyped.redcapApiConnection <-
   if(!is.null(date_begin)) body$dateRangeBegin = format(date_begin, format = "%Y-%m-%d %H:%M:%S")
   if(!is.null(date_end))   body$dateRangeEnd   = format(date_end,   format = "%Y-%m-%d %H:%M:%S")
 
-  body <- body[lengths(body) > 0]
-  
   Raw <- 
     if (length(batch_size) == 0)
     {
       .exportRecordsTyped_Unbatched( rcon           = rcon, 
                                      body           = body, 
-                                     records        = records, 
-                                     config         = config, 
-                                     api_param      = api_param, 
-                                     csv_delimiter  = csv_delimiter)
+                                     records        = records,  
+                                     csv_delimiter  = csv_delimiter,
+                                     ...)
     } else
     {
       .exportRecordsTyped_Batched(  rcon           = rcon, 
                                     body           = body, 
                                     records        = records, 
-                                    config         = config, 
-                                    api_param      = api_param, 
                                     csv_delimiter  = csv_delimiter, 
-                                    batch_size     = batch_size)
+                                    batch_size     = batch_size,
+                                    ...)
     }
   
   if (identical(Raw, data.frame())){
@@ -648,15 +634,13 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 .exportRecordsTyped_Unbatched <- function( rcon, 
                                            body, 
                                            records, 
-                                           config, 
-                                           api_param, 
-                                           csv_delimiter)
+                                           csv_delimiter,
+                                           ...)
 {
   response <- makeApiCall(rcon, 
                           body = c(body, 
-                                   api_param, 
                                    vectorToApiBodyList(records, "records")), 
-                          config = config)
+                          ...)
 
   response <- as.data.frame(response,
                             colClasses = "character",
@@ -671,10 +655,9 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
 .exportRecordsTyped_Batched <- function( rcon, 
                                          body, 
                                          records, 
-                                         config, 
-                                         api_param, 
                                          csv_delimiter, 
-                                         batch_size)
+                                         batch_size,
+                                         ...)
 {
   # If records were not provided, get all the record IDs from the project
   if (length(records) == 0)
@@ -686,7 +669,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  format = "csv", 
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
-                                                                "fields")))
+                                                                "fields")),
+                                   ...)
 
     records <- as.data.frame(record_response, sep = csv_delimiter)
     
@@ -695,7 +679,6 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
       message("No data found in the project.")
       return(data.frame())
     }
-    
     
     records <- unique(records[[target_field]])
   }
@@ -716,9 +699,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
              .exportRecordsTyped_Unbatched(rcon = rcon, 
                                            body = body, 
                                            records = r, 
-                                           config = config, 
-                                           api_param = api_param, 
-                                           csv_delimiter = csv_delimiter)})
+                                           csv_delimiter = csv_delimiter,
+                                           ...)})
   
   # Combine the data
   Batched <- do.call("rbind", Batched)

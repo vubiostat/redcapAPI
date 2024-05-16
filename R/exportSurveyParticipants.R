@@ -15,10 +15,8 @@ exportSurveyParticipants <- function(rcon,
 exportSurveyParticipants.redcapApiConnection <- function(rcon, 
                                                          instrument     = NULL, 
                                                          event          = NULL,
-                                                         ...,
-                                                         config         = list(), 
-                                                         api_param      = list()){
-  
+                                                         ...)
+{
    ##################################################################
   # Argument Validation
   
@@ -39,15 +37,7 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
                               any.miss = FALSE, 
                               null.ok = TRUE, 
                               add = coll)
- 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = instrument, 
@@ -65,21 +55,13 @@ exportSurveyParticipants.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token=rcon$token, 
-               instrument = instrument,
+  body <- list(instrument = instrument,
                event = event,
                content = 'participantList',
                format = 'csv', 
                returnFormat = 'csv')
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
-  
-  as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
+  as.data.frame(makeApiCall(rcon, body, ...))
 }

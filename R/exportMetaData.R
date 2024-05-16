@@ -13,9 +13,8 @@ exportMetaData <- function(rcon, ...){
 exportMetaData.redcapApiConnection <- function(rcon, 
                                                fields = character(0), 
                                                forms = character(0),
-                                               ...,
-                                               config = list(), 
-                                               api_param = list()){
+                                               ...)
+{
   # Argument validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -29,14 +28,6 @@ exportMetaData.redcapApiConnection <- function(rcon,
   checkmate::assert_character(x = forms, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   if (!is.null(fields)){
@@ -54,21 +45,14 @@ exportMetaData.redcapApiConnection <- function(rcon,
   checkmate::reportAssertions(coll)
   
   # Build the Body List ---------------------------------------------
-  body <- c(list(token = rcon$token,
-               content = "metadata",
+  body <- c(list(content = "metadata",
                format = "csv",
                returnFormat = "csv"), 
             vectorToApiBodyList(fields, 
                                 parameter_name = "fields"), 
             vectorToApiBodyList(forms, 
                                 parameter_name = "forms"))
-  
-  body <- body[lengths(body) > 0]
- 
+
   # API Call --------------------------------------------------------
-  as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
+  as.data.frame(makeApiCall(rcon, body, ...))
 }
