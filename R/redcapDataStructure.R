@@ -49,7 +49,8 @@ validateRedcapData <- function(data, redcap_data){
 REDCAP_SYSTEM_FIELDS <- c("redcap_event_name", 
                           "redcap_data_access_group", 
                           "redcap_repeat_instrument", 
-                          "redcap_repeat_instance")
+                          "redcap_repeat_instance",
+                          "redcap_survey_identifier")
 
 #' @rdname redcapDataStructures
 #' @export

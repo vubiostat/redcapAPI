@@ -22,10 +22,12 @@ test_that(
 test_that(
   "Only requested fields are returned", 
   {
-    these_fields <- c("record_id", "dropdown_test", "integer_test")
+    these_fields <-  c("record_id", "redcap_event_name", "redcap_repeat_instrument", 
+                       "redcap_repeat_instance", "redcap_data_access_group",
+                       "dropdown_test", "integer_test")
     Rec <- exportRecordsTyped(roff, 
                               fields = these_fields)
-    expect_true(all(c(these_fields, REDCAP_SYSTEM_FIELDS) %in% names(Rec)))
+    expect_true(all(c(these_fields) %in% names(Rec)))
   }
 )
 

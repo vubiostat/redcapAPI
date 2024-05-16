@@ -102,7 +102,9 @@ misspellings may result in unexpected results.}
 \item{survey}{\code{logical(1)}. When \code{TRUE}, the survey identifier field
 (e.g., \code{redcap_survey_identifier}) and survey timestamp fields
 (e.g., \verb{[form_name]_timestamp}) will be exported
-(relevant only when surveys are utilized in the project).}
+(relevant only when surveys are utilized in the project). If these
+fields are specified in the fields argument and this flag is set to
+FALSE the requested fields will not be exported.}
 
 \item{dag}{\code{logical(1)}. When \code{TRUE} the
 \code{redcap_data_access_group} field will be included in the export \
