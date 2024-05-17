@@ -52,7 +52,7 @@ deleteArms.redcapApiConnection <- function(rcon,
       rcon$flush_arms()
       rcon$flush_events()
       rcon$flush_projectInformation()
-      makeApiCall(rcon, body, ...)
+      as.character(makeApiCall(rcon, body, ...))
     } else
     {
       "0"
