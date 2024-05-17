@@ -8,7 +8,8 @@ exportFiles <- function(rcon,
                         event       = NULL, 
                         dir         = getwd(), 
                         file_prefix = TRUE, 
-                        ...){
+                        ...)
+{
   UseMethod("exportFiles")
 }
 
@@ -121,7 +122,6 @@ exportFiles.redcapApiConnection <- function(rcon,
 
    ###########################################################################
   # Make the API Call
-  
   response <- makeApiCall(rcon, body, ...)
 
   prefix <- 

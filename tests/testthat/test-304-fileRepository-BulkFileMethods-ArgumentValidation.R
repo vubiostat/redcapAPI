@@ -71,31 +71,6 @@ test_that(
   }
 )
 
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-
-    expect_error(exportFileRepository(rcon, 
-                                      folder_id = 1,
-                                      config = list(1)), 
-                 "'config': Must have names")
-    expect_error(exportFileRepository(rcon, 
-                                      folder_id = 1,
-                                      config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(exportFileRepository(rcon, 
-                                      folder_id = 1,
-                                      api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(exportFileRepository(rcon, 
-                                      folder_id = 1,
-                                      api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)
-
 
 #####################################################################
 # importFileRepository
@@ -187,31 +162,6 @@ test_that(
   }
 )
 
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-
-    expect_error(importFileRepository(rcon,  
-                                      dir = tempdir(), 
-                                      config = list(1)), 
-                 "'config': Must have names")
-    expect_error(importFileRepository(rcon,  
-                                      dir = tempdir(), 
-                                      config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(importFileRepository(rcon,  
-                                      dir = tempdir(), 
-                                      api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(importFileRepository(rcon,  
-                                      dir = tempdir(), 
-                                      api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)
-
 #####################################################################
 # deleteFileRepository
 
@@ -261,30 +211,5 @@ test_that(
                                       folder_id = 123,
                                       confirm = "different"),
                  "'confirm'[:] Must be element of set")
-  }
-)
-
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-   
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123,
-                                      config = list(1)), 
-                 "'config': Must have names")
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123,
-                                      config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123,
-                                      api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(deleteFileRepository(rcon, 
-                                      folder_id = 123,
-                                      api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
   }
 )

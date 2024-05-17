@@ -100,7 +100,8 @@ exportFilesMultiple <- function(rcon,
                                 event       = NULL, 
                                 dir, 
                                 file_prefix = TRUE, 
-                                ...){
+                                ...)
+{
   UseMethod("exportFilesMultiple")
 }
 
