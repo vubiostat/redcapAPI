@@ -40,8 +40,6 @@ exportReportsTyped(rcon, report_id, ...)
   filter_empty_rows = TRUE,
   warn_zero_coded = TRUE,
   ...,
-  config = list(),
-  api_param = list(),
   csv_delimiter = ",",
   batch_size = NULL
 )
@@ -71,8 +69,6 @@ exportReportsTyped(rcon, report_id, ...)
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
   warn_zero_coded = TRUE,
   ...,
-  config = list(),
-  api_param = list(),
   csv_delimiter = ","
 )
 }
@@ -164,14 +160,6 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 potentially problematic zero coded fields. Defaults to \code{TRUE}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportRecordsTyped} returns a data frame with the formatted data.

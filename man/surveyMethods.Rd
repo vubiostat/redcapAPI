@@ -29,14 +29,7 @@ exportSurveyReturnCode(
   ...
 )
 
-\method{exportSurveyParticipants}{redcapApiConnection}(
-  rcon,
-  instrument = NULL,
-  event = NULL,
-  ...,
-  config = list(),
-  api_param = list()
-)
+\method{exportSurveyParticipants}{redcapApiConnection}(rcon, instrument = NULL, event = NULL, ...)
 
 \method{exportSurveyLink}{redcapApiConnection}(
   rcon,
@@ -44,12 +37,10 @@ exportSurveyReturnCode(
   instrument,
   event = NULL,
   repeat_instance = 1,
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 
-\method{exportSurveyQueueLink}{redcapApiConnection}(rcon, record, ..., config = list(), api_param = list())
+\method{exportSurveyQueueLink}{redcapApiConnection}(rcon, record, ...)
 
 \method{exportSurveyReturnCode}{redcapApiConnection}(
   rcon,
@@ -57,9 +48,7 @@ exportSurveyReturnCode(
   instrument,
   event = NULL,
   repeat_instance = 1,
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 }
 \arguments{
@@ -77,14 +66,6 @@ participant information should be exported.}
 instrument is designated as a repeating instrument. Default value is \code{1}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportSurveyParticipants} returns a data frame with the columns:\tabular{ll}{

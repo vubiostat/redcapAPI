@@ -145,15 +145,10 @@ makeApiCall <- function(rcon,
 {
   # Pull config, api_param from ...
   dots      <- list(...)
-  config    <- rcon$config
-  api_param <- list()
   
-  if("api_params" %in% names(dots)) api_param <- dots$api_param
-  if("config" %in% names(dots))     config    <- c(config,dots$config)
+  api_param <- if("api_param" %in% names(dots)) dots$api_param else list()
+  config    <- if("config"    %in% names(dots)) dots$config    else list()
   
-  body <- c(list(token = rcon$token), body, api_param)
-  body <- body[lengths(body) > 0]
-
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -179,6 +174,10 @@ makeApiCall <- function(rcon,
                          add = coll)
 
   checkmate::reportAssertions(coll)
+  
+  body <- c(list(token = rcon$token), body, api_param)
+  body <- body[lengths(body) > 0]
+  config  <- c(rcon$config, config)
   
   # Functional Code -------------------------------------------------
   
@@ -222,7 +221,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
+    response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -250,7 +249,7 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
-.makeApiCall_handleRedirect <- function(rcon, body, config, response)
+.makeApiCall_handleRedirect <- function(rcon, body, response, ...)
 {
   if(response$status_code %in% c(301L, 302L))
   {
@@ -263,8 +262,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    rcon$url <- response$headers$location
-    makeApiCall(rcon, body, config)
+    makeApiCall(rcon, body, response$headers$location, ...)
   } else 
     response # The not redirected case
 }

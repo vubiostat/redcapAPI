@@ -45,7 +45,7 @@ exportUserRoles.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Make API Call                                                ####
-  UserRole <- as.data.frame(rcon, body, ...)
+  UserRole <- as.data.frame(makeApiCall(rcon, body, ...))
 
   if (nrow(UserRole) == 0) return(REDCAP_USER_ROLE_STRUCTURE)
  
