@@ -48,5 +48,5 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_user_roles()
-  invisible(as.character(makeApiCall(rcon, body)))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }
