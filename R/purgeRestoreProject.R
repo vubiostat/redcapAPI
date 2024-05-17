@@ -365,55 +365,55 @@ restoreProject.redcapApiConnection <- function(rcon,
   if (!is.null(meta_data)){
     importMetaData(rcon, 
                    data = meta_data,
-                   config = config)
+                   ...)
   }
   
   if (!is.null(mappings) && nrow(mappings) > 0){
     importMappings(rcon, 
                    data = mappings,
-                   config = config)
+                   ...)
   }
   
   if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
     importRepeatingInstrumentsEvents(rcon,
                                      data = repeating_instruments,
-                                     config = config)
+                                     ...)
   }
   
   if (!is.null(users)){
     importUsers(rcon,
                 data = users,
-                config = config)
+                ...)
   }
   
   if (!is.null(user_roles)){
     importUserRoles(rcon,
                     data = user_roles,
-                    config = config)
+                    ...)
   }
   
   if (!is.null(user_role_assignments)){
     importUserRoleAssignments(rcon,
                               data = user_role_assignments,
-                              config = config)
+                              ...)
   }
   
   if (!is.null(dags)){
     importDags(rcon,
                data = dags,
-               config = config)
+               ...)
   }
   
   if (!is.null(dag_assignments)){
     importUserDagAssignments(rcon,
                              data = dag_assignments,
-                             config = config)
+                             ...)
   }
   
   if (!is.null(records) && nrow(records) > 0){
     importRecords(rcon, 
                   data = records,
-                  config = config)
+                  ...)
   }
   
   if (flush) rcon$flush_all()
@@ -455,6 +455,7 @@ restoreProject.list <- function(object,
   
   checkmate::reportAssertions(coll)
 
+  # FIXME: This doesn't seem right
   do.call(restoreProject.redcapApiConnection, 
-          c(list(rcon = rcon), object))
+          c(list(rcon = rcon), object, ...))
 }

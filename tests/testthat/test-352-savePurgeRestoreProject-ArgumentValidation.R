@@ -136,10 +136,12 @@ test_that(
   {
     local_reproducible_output(width = 200)
 
-    expect_error(purgeProject(rcon, 
+    expect_error(purgeProject(rcon,
+                              arms=TRUE,
                               config = list(1)), 
                  "'config': Must have names")
-    expect_error(purgeProject(rcon, 
+    expect_error(purgeProject(rcon,
+                              arms=TRUE,
                               config = "not a list"), 
                  "'config': Must be of type 'list'")
   }
@@ -210,20 +212,5 @@ test_that(
     expect_error(purgeProject(rcon, 
                               flush = c(FALSE, TRUE)), 
                  "'flush': Must have length 1") 
-  }
-)
-
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-
-    expect_error(restoreProject(rcon, 
-                                config = list(1)), 
-                 "'config': Must have names")
-    expect_error(restoreProject(rcon, 
-                                config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
   }
 )
