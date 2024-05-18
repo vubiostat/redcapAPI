@@ -175,10 +175,10 @@ makeApiCall <- function(rcon,
 
   checkmate::reportAssertions(coll)
   
-  body <- c(list(token = rcon$token), body, api_param)
+  body <- utils::modifyList(body, list(token = rcon$token))
+  body <- utils::modifyList(body, api_param)
   body <- body[lengths(body) > 0]
-  config  <- c(rcon$config, config)
-  
+
   # Functional Code -------------------------------------------------
   
   if(is.null(url)) url <- rcon$url
