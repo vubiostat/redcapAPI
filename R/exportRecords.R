@@ -243,7 +243,6 @@ exportRecords.redcapApiConnection <-
                          body = body,
                          id = MetaData$field_name[1],
                          colClasses = colClasses,
-                         config = config,
                          ...)
   }
   else
@@ -253,7 +252,6 @@ exportRecords.redcapApiConnection <-
                        batch.size = batch.size,
                        id = MetaData$field_name[1],
                        colClasses = colClasses,
-                       config = config,
                        ...)
   }
 
@@ -297,7 +295,7 @@ exportRecords.redcapApiConnection <-
 
 
 #*** UNBATCHED EXPORT
-unbatched <- function(rcon, body, id, colClasses, config, ...)
+unbatched <- function(rcon, body, id, colClasses, ...)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -312,7 +310,7 @@ unbatched <- function(rcon, body, id, colClasses, config, ...)
 
 
 #*** BATCHED EXPORT
-batched <- function(rcon, body, batch.size, id, colClasses, config, ...)
+batched <- function(rcon, body, batch.size, id, colClasses, ...)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -334,7 +332,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, config, ...)
   
   IDs <- makeApiCall(rcon, 
                      body = body, 
-                     config = config)
+                     ...)
   
   IDs <- as.data.frame(IDs, colClasses = colClasses[id])
 

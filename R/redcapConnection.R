@@ -170,7 +170,7 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = httr::config(), 
+                             config = httr::config(), # FIXME: Doesn't return a list for merging?
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
                              retry_quietly = TRUE)
