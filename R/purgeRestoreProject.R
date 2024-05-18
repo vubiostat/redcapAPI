@@ -12,9 +12,11 @@
 #'   practice to back up your data and project structure before purging
 #'   a project. 
 #'
-#' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
+#' @param object,rcon A `redcapConnection` object. Except in 
+#'   `restoreProject.list`, where `object` is a list of data frames
+#'   to use in restoring the project. 
 #' @param project_information `data.frame` for restoring data. Provides the 
 #'   project settings to load via `importProjectInformation`. 
 #' @param arms Either `logical(1)` indicating if arms data should be
@@ -248,14 +250,14 @@ purgeProject.redcapApiConnection <- function(rcon,
 #' @rdname purgeRestoreProject
 #' @export
 
-restoreProject <- function(rcon, ...){
+restoreProject <- function(object, ...){
   UseMethod("restoreProject")
 }
 
 #' @rdname purgeRestoreProject
 #' @export
 
-restoreProject.redcapApiConnection <- function(rcon, 
+restoreProject.redcapApiConnection <- function(object, 
                                                project_information   = NULL,
                                                arms                  = NULL, 
                                                events                = NULL, 
@@ -271,6 +273,7 @@ restoreProject.redcapApiConnection <- function(rcon,
                                                flush                 = TRUE, 
                                                ...)
 {
+  rcon <- object
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
@@ -422,9 +425,9 @@ restoreProject.redcapApiConnection <- function(rcon,
 #' @rdname purgeRestoreProject
 #' @export
 
-restoreProject.list <- function(object, 
-                                rcon,
-                                ...)
+restoreProject.list <- function(object,
+                                ...,
+                                rcon)
 {
   coll <- checkmate::makeAssertCollection()
   
@@ -454,8 +457,9 @@ restoreProject.list <- function(object,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  object$rcon <- rcon
 
-  # FIXME: This doesn't seem right
-  do.call(restoreProject.redcapApiConnection, 
-          c(list(rcon = rcon), object, ...))
+  do.call(restoreProject.redcapApiConnection,
+          utils::modifyList(list(...), object))
 }

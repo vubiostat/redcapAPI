@@ -24,10 +24,10 @@ purgeProject(rcon, ...)
   ...
 )
 
-restoreProject(rcon, ...)
+restoreProject(object, ...)
 
 \method{restoreProject}{redcapApiConnection}(
-  rcon,
+  object,
   project_information = NULL,
   arms = NULL,
   events = NULL,
@@ -44,11 +44,9 @@ restoreProject(rcon, ...)
   ...
 )
 
-\method{restoreProject}{list}(object, rcon, ...)
+\method{restoreProject}{list}(object, ..., rcon)
 }
 \arguments{
-\item{rcon}{A \code{redcapConnection} object.}
-
 \item{...}{Arguments to pass to other methods}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
@@ -81,6 +79,10 @@ data elements from a project.}
 \item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
 object will be flushed after completing the operation. This is highly
 recommended.}
+
+\item{object, rcon}{A \code{redcapConnection} object. Except in
+\code{restoreProject.list}, where \code{object} is a list of data frames
+to use in restoring the project.}
 
 \item{project_information}{\code{data.frame} for restoring data. Provides the
 project settings to load via \code{importProjectInformation}.}

@@ -170,7 +170,7 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = httr::config(), # FIXME: Doesn't return a list for merging?
+                             config = .get_httr_config(),
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
                              retry_quietly = TRUE)
@@ -1049,4 +1049,13 @@ print.redcapOfflineConnection <- function(x, ...){
   } else {
     file
   }
+}
+
+#' @importFrom httr config
+.get_httr_config <- function()
+{
+  config <- httr::config()
+  class(config) <- "list"
+  
+  config[lengths(config) > 0]
 }

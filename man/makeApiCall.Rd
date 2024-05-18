@@ -17,9 +17,9 @@ makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
 \item{success_status_codes}{\code{integerish} A vector of success codes to ignore
 for error handling. Defaults to c(200L).}
 
-\item{config}{\code{list} A list of options to be passed to \code{\link[httr:POST]{httr::POST()}}.
-These will be appended to the \code{config} options included in the
-\code{rcon} object.}
+\item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
+the specified body of the request. It also captures \code{config} which will get
+passed to httr::POST.}
 }
 \description{
 Constructs and executes API calls to the REDCap API. These
@@ -148,5 +148,4 @@ returns that response.
                       
  
 }
-
 }

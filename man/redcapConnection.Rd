@@ -10,7 +10,7 @@
 redcapConnection(
   url = getOption("redcap_api_url"),
   token,
-  config = httr::config(),
+  config = .get_httr_config(),
   retries = 5,
   retry_interval = 2^(seq_len(retries)),
   retry_quietly = TRUE

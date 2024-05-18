@@ -9,12 +9,12 @@
 #' @inheritParams common-rcon-arg
 #' @param body `list` List of parameters to be passed to [httr::POST()]'s 
 #'   `body` argument
-#' @param config `list` A list of options to be passed to [httr::POST()].
-#'   These will be appended to the `config` options included in the 
-#'   `rcon` object.
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #' @param success_status_codes `integerish` A vector of success codes to ignore
 #'   for error handling. Defaults to c(200L).
+#' @param ... This will capture `api_param` (if specified) which will modify the body of the 
+#'   the specified body of the request. It also captures `config` which will get
+#'   passed to httr::POST.
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
@@ -135,6 +135,7 @@
 #'                       
 #'  
 #' }
+#' @importFrom utils modifyList
 #' 
 #' @export
 makeApiCall <- function(rcon, 
@@ -181,6 +182,8 @@ makeApiCall <- function(rcon,
   body <- utils::modifyList(body, list(token = rcon$token))
   body <- utils::modifyList(body, api_param)
   body <- body[lengths(body) > 0]
+  
+  config <- utils::modifyList(rcon$config, config)
 
   # Functional Code -------------------------------------------------
   
