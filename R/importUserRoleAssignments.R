@@ -14,9 +14,8 @@ importUserRoleAssignments <- function(rcon,
 
 importUserRoleAssignments.redcapApiConnection <- function(rcon, 
                                                           data, 
-                                                          ...,
-                                                          config         = list(), 
-                                                          api_param      = list()){
+                                                          ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -30,14 +29,6 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
                                col.names = "named", 
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   
@@ -79,16 +70,12 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_users()
   rcon$flush_user_role_assignment()
   invisible(as.character(
-    makeApiCall(rcon, 
-    body = body, 
-    config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }

@@ -65,9 +65,7 @@ deleteRecords.redcapApiConnection <- function(
   event           = NULL,
   repeat_instance = NULL,
   delete_logging  = FALSE,
-  ...,
-  config         = list(), 
-  api_param      = list())
+  ...)
 {
   if (is.numeric(records)) records <- as.character(records)
   if (is.character(arm)) arm <- as.numeric(arm)
@@ -111,14 +109,6 @@ deleteRecords.redcapApiConnection <- function(
                                null.ok = TRUE,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   Arms <- rcon$arms()
@@ -132,8 +122,7 @@ deleteRecords.redcapApiConnection <- function(
    ##################################################################
   # Build the Body List
   
-  body <- list(token = rcon$token,
-               content = "record",
+  body <- list(content = "record",
                action = "delete", 
                arm = arm, 
                instrument = instrument,
@@ -145,13 +134,7 @@ deleteRecords.redcapApiConnection <- function(
             vectorToApiBodyList(vector = records,
                                 parameter_name = "records"))
 
-  body <- body[lengths(body) > 0]
-  
    ##################################################################
   # Call the API
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-  invisible(as.character(response))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }

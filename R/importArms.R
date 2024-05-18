@@ -16,10 +16,8 @@ importArms <- function(rcon,
 importArms.redcapApiConnection <- function(rcon, 
                                            data,  
                                            override       = FALSE,
-                                           ...,
-                                           config         = list(), 
-                                           api_param      = list()){
-  
+                                           ...)
+{
   dots <- list(...)
   if ("arms_data" %in% names(dots)) data <- dots$arms_data
   
@@ -36,14 +34,6 @@ importArms.redcapApiConnection <- function(rcon,
                             len = 1,
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = names(data),
@@ -65,15 +55,12 @@ importArms.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token,
-               content = "arm",
+  body <- list(content = "arm",
                override = as.numeric(override),
                action = "import",
                format = "csv",
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # API Call
   rcon$flush_arms()
@@ -82,8 +69,6 @@ importArms.redcapApiConnection <- function(rcon,
   rcon$flush_events()
   rcon$flush_projectInformation()  
   invisible(as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }

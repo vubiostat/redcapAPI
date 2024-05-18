@@ -139,10 +139,16 @@
 #' @export
 makeApiCall <- function(rcon, 
                         body   = list(), 
-                        config = list(),
                         url    = NULL,
-                        success_status_codes = 200L)
+                        success_status_codes = 200L,
+                        ...)
 {
+  # Pull config, api_param from ...
+  dots      <- list(...)
+  
+  api_param <- if("api_param" %in% names(dots)) dots$api_param else list()
+  config    <- if("config"    %in% names(dots)) dots$config    else list()
+  
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -153,11 +159,7 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = body, 
                          names = "named",
                          add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named",
-                         add = coll)
-  
+
   checkmate::assert_character(x = url,
                               null.ok = TRUE,
                               len = 1,
@@ -166,8 +168,20 @@ makeApiCall <- function(rcon,
   checkmate::assert_integerish(x = success_status_codes,
                                add = coll)
     
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+
   checkmate::reportAssertions(coll)
   
+  body <- utils::modifyList(body, list(token = rcon$token))
+  body <- utils::modifyList(body, api_param)
+  body <- body[lengths(body) > 0]
+
   # Functional Code -------------------------------------------------
   
   if(is.null(url)) url <- rcon$url
@@ -177,9 +191,7 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        httr::POST(url    = url, 
-                   body   = c(list(token = rcon$token), body),
-                   config = c(rcon$config, config))
+        httr::POST(url = url, body = body, config = config)
       },
       error=function(e)
       {
@@ -212,7 +224,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
+    response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -240,7 +252,7 @@ makeApiCall <- function(rcon,
 
 ####################################################################
 # Unexported
-.makeApiCall_handleRedirect <- function(rcon, body, config, response)
+.makeApiCall_handleRedirect <- function(rcon, body, response, ...)
 {
   if(response$status_code %in% c(301L, 302L))
   {
@@ -253,8 +265,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    rcon$url <- response$headers$location
-    makeApiCall(rcon, body, config)
+    makeApiCall(rcon, body, response$headers$location, ...)
   } else 
     response # The not redirected case
 }

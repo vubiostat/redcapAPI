@@ -30,9 +30,7 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   dir = getwd(),
   dir_create = FALSE,
   recursive = FALSE,
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 
 \method{importFileRepository}{redcapApiConnection}(
@@ -42,9 +40,7 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   dag_id = numeric(0),
   role_id = numeric(0),
   recursive = FALSE,
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 
 \method{deleteFileRepository}{redcapApiConnection}(
@@ -52,9 +48,7 @@ deleteFileRepository(rcon, folder_id, recursive = FALSE, ...)
   folder_id,
   recursive = FALSE,
   ...,
-  confirm = c("ask", "no", "yes"),
-  config = list(),
-  api_param = list()
+  confirm = c("ask", "no", "yes")
 )
 }
 \arguments{
@@ -86,14 +80,6 @@ When \code{"no"}, the function will terminate with no action. When
 for automated processes).}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportFileRepository} returns a data frame with the locations to which

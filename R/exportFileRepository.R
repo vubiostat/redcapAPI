@@ -20,9 +20,8 @@ exportFileRepository.redcapApiConnection <- function(rcon,
                                                      dir = getwd(), 
                                                      dir_create = FALSE, 
                                                      recursive = FALSE, 
-                                                     ...,
-                                                     config = list(), 
-                                                     api_param = list()){
+                                                     ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -47,15 +46,7 @@ exportFileRepository.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = recursive, 
                             len = 1, 
                             add = coll)
- 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   if (!dir_create){
@@ -100,7 +91,8 @@ exportFileRepository.redcapApiConnection <- function(rcon,
       ExportedFiles[[i]] <- exportFromFileRepository(rcon, 
                                                      doc_id = this_doc, 
                                                      dir = file.path(dir, this_dir), 
-                                                     dir_create = TRUE)
+                                                     dir_create = TRUE,
+                                                     ...)
     } else {
       this_folder <- FileRepo$folder_id[i]
       this_dir <- fileRepositoryPath(folder_id = this_folder,

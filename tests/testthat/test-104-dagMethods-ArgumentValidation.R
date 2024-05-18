@@ -131,27 +131,3 @@ test_that(
   }
 )
 
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-   
-    expect_error(deleteDags(rcon, 
-                            dags = character(0),
-                            config = list(1)), 
-                 "'config': Must have names")
-    expect_error(deleteDags(rcon, 
-                            dags = character(0),
-                            config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(deleteDags(rcon, 
-                            dags = character(0), 
-                            api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(deleteDags(rcon, 
-                            dags = character(0), 
-                            api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)

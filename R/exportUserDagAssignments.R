@@ -12,9 +12,8 @@ exportUserDagAssignments <- function(rcon,
 #' @export
 
 exportUserDagAssignments.redcapApiConnection <- function(rcon, 
-                                                         ..., 
-                                                         config = list(), 
-                                                         api_param = list()){
+                                                         ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -24,14 +23,6 @@ exportUserDagAssignments.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection", 
                           add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -40,17 +31,11 @@ exportUserDagAssignments.redcapApiConnection <- function(rcon,
   body <- list(content = "userDagMapping", 
                format = "csv", 
                returnFormat = "csv")
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   
-  response <- as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
-  
+  response <- as.data.frame(makeApiCall(rcon, body, ...))
+
   if(nrow(response) == 0) REDCAP_DAG_ASSIGNMENT_STRUCTURE else response
 }

@@ -14,9 +14,8 @@ deleteUserRoles <- function(rcon,
 
 deleteUserRoles.redcapApiConnection <- function(rcon, 
                                                 user_roles,
-                                                ...,
-                                                config = list(), 
-                                                api_param = list()){
+                                                ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -31,17 +30,7 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
                               any.missing = FALSE, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
-  
-  
   
   checkmate::assert_subset(x = user_roles, 
                            choices = rcon$user_roles()$unique_role_name, 
@@ -55,15 +44,9 @@ deleteUserRoles.redcapApiConnection <- function(rcon,
   body <- c(list(content = "userRole", 
                action = "delete"), 
             vectorToApiBodyList(user_roles, "roles"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_user_roles()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-  invisible(as.character(response))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }

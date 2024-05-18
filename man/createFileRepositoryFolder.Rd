@@ -20,9 +20,7 @@ createFileRepositoryFolder(
   folder_id = numeric(0),
   dag_id = numeric(0),
   role_id = numeric(0),
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 }
 \arguments{
@@ -41,14 +39,6 @@ provided, access to the folder will be restricted to the DAG.}
 access to the folder will be restricted to users with that role.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame with the columns\tabular{ll}{

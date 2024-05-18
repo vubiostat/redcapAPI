@@ -38,10 +38,8 @@ exportVersion <- function(rcon, ...){
 #' @export
 
 exportVersion.redcapApiConnection <- function(rcon, 
-                                              ...,
-                                              config         = list(), 
-                                              api_param      = list()){
-  
+                                              ...)
+{
    ##################################################################
   # Argument Validation 
   
@@ -51,30 +49,17 @@ exportVersion.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection",
                           add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
    ##################################################################
   # Make the API Body List
   
-  body <- list(token=rcon$token, 
-               content='version')
-  
-  body <- body[lengths(body) > 0]
-  
+  body <- list(content='version')
+
    ##################################################################
   # Call the API
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
+  response <- makeApiCall(rcon, body, ...)
+
   if (response$status_code != 200  &&
       is.null(redcapError(response)))
     return("5.12.2")

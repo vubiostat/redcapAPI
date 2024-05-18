@@ -18,9 +18,8 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                                                          doc_id, 
                                                          dir = getwd(), 
                                                          dir_create = FALSE, 
-                                                         ...,
-                                                         config = list(), 
-                                                         api_param = list()){
+                                                         ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -42,14 +41,6 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                             len = 1, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   if (!dir_create){
@@ -66,15 +57,11 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                action = "export", 
                returnFormat = "csv", 
                doc_id = doc_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Make the API Call -----------------------------------------------
 
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
- 
+  response <- makeApiCall(rcon, body, ...)
+
   ExportedFile <- reconstituteFileFromExport(response = response, 
                                              dir = dir, 
                                              dir_create = dir_create)

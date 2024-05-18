@@ -13,9 +13,8 @@ importUsers <- function(rcon, data, ...){
 importUsers.redcapApiConnection <- function(rcon, 
                                             data,
                                             consolidate = TRUE, 
-                                            ...,
-                                            config = list(), 
-                                            api_param = list()){
+                                            ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -34,14 +33,6 @@ importUsers.redcapApiConnection <- function(rcon,
                             null.ok = FALSE, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   form_names <- rcon$instruments()$instrument_name
@@ -76,18 +67,14 @@ importUsers.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_users()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
+  
   ###################################################################
   # Restore and refresh                                          ####
-  
   if (user_conflict_exists){
     importUserRoleAssignments(rcon, 
                               data = OrigUserRoleAssign[1:2])

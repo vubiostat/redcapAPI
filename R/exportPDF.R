@@ -66,10 +66,8 @@ exportPdf.redcapApiConnection <- function(rcon,
                                           events         = NULL,
                                           instruments    = NULL, 
                                           all_records    = FALSE, 
-                                          ...,
-                                          config         = list(), 
-                                          api_param      = list()){
-
+                                          ...)
+{
   if (is.numeric(record)) record <- as.character(record)
     
    ##################################################################
@@ -113,15 +111,7 @@ exportPdf.redcapApiConnection <- function(rcon,
                             len = 1,
                             any.missing = FALSE,
                             add = coll)
- 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_directory_exists(x = dir, 
@@ -145,22 +135,17 @@ exportPdf.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make the Body List
   
-  body <- list(token = rcon$token, 
-               content = 'pdf', 
+  body <- list(content = 'pdf', 
                returnFormat = 'csv', 
                allRecords = if (all_records) as.numeric(all_records) else NULL, 
                record = record, 
                event = events, 
                instrument = instruments)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
   filename <- 
     if (all_records)
       paste0(filename, "_all_records.pdf")

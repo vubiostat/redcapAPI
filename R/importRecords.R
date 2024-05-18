@@ -134,9 +134,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                               logfile           = "", 
                                               force_auto_number = FALSE,
                                               ...,
-                                              batch.size        = -1,
-                                              config = list(), 
-                                              api_param = list())
+                                              batch.size        = -1)
 {
   if(is.null(attr(data, "castForImport")))
     message("importRecords will change how it validates data in version 3.0.0.\n",
@@ -182,16 +180,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                len = 1,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-
   checkmate::reportAssertions(coll)
-  
   
   MetaData <- rcon$metadata()
 
@@ -308,8 +297,7 @@ importRecords.redcapApiConnection <- function(rcon,
                            overwriteBehavior = overwriteBehavior,
                            returnContent = returnContent, 
                            force_auto_number = force_auto_number,
-                           config = config, 
-                           api_param = api_param)
+                           ...)
   }
   else
   {
@@ -318,8 +306,7 @@ importRecords.redcapApiConnection <- function(rcon,
                              overwriteBehavior = overwriteBehavior,
                              returnContent = returnContent, 
                              force_auto_number = force_auto_number,
-                             config = config, 
-                             api_param = api_param)
+                             ...)
   }
 }
 
@@ -333,8 +320,7 @@ import_records_batched <- function(rcon,
                                    overwriteBehavior,
                                    returnContent, 
                                    force_auto_number,
-                                   config, 
-                                   api_param)
+                                   ...)
 {
   n.batch <- nrow(data) %/% batch.size + 1
   
@@ -364,19 +350,14 @@ import_records_batched <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token, 
-               content = 'record', 
+  body <- list(content = 'record', 
                format = 'csv',
                type = 'flat', 
                overwriteBehavior = overwriteBehavior,
                returnContent = returnContent,
                forceAutoNumber = tolower(force_auto_number),
                returnFormat = 'csv')
-  body <- c(body, api_param)
-  
-  body <- body[lengths(body) > 0]
-  
-  
+
    ##################################################################
   # Call the API
   responses <- vector("list", length = length(out))
@@ -390,7 +371,7 @@ import_records_batched <- function(rcon,
           makeApiCall(
             rcon, 
             body   = c(body, list(data = out[[i]])), 
-            config = config)),
+            ...)),
         error=function(e) { allvalid <<- FALSE; e }
       )
   }
@@ -405,8 +386,7 @@ import_records_unbatched <- function(rcon,
                                      overwriteBehavior,
                                      returnContent, 
                                      force_auto_number,
-                                     config, 
-                                     api_param)
+                                     ...)
 {
   out <- data_frame_to_string(data)
   
@@ -418,8 +398,7 @@ import_records_unbatched <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token, 
-               content = 'record', 
+  body <- list(content = 'record', 
                format = 'csv',
                type = 'flat', 
                overwriteBehavior = overwriteBehavior,
@@ -427,15 +406,11 @@ import_records_unbatched <- function(rcon,
                returnFormat = 'csv', 
                forceAutoNumber = tolower(force_auto_number),
                data = out)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
+  response <- makeApiCall(rcon, body, ...)
+
   if (returnContent %in% c("ids", "auto_ids"))
     as.data.frame(response) else
     as.character(response)

@@ -255,8 +255,7 @@ recordsTypedMethods <- function(rcon,
                                 csv_delimiter, 
                                 batch_size,
                                 warn_zero_coded,
-                                ...,
-                                config, 
-                                api_param){
+                                ...)
+{
   NULL
 }

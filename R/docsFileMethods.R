@@ -93,8 +93,7 @@ fileMethods <- function(rcon,
                         overwrite, 
                         dir, 
                         file_prefix, 
-                        ...,
-                        config, 
-                        api_param){
+                        ...)
+{
   NULL
 }

@@ -13,9 +13,9 @@ exportUserDagAssignments(rcon, ...)
 
 importUserDagAssignments(rcon, data, ...)
 
-\method{exportUserDagAssignments}{redcapApiConnection}(rcon, ..., config = list(), api_param = list())
+\method{exportUserDagAssignments}{redcapApiConnection}(rcon, ...)
 
-\method{importUserDagAssignments}{redcapApiConnection}(rcon, data, ..., config = list(), api_param = list())
+\method{importUserDagAssignments}{redcapApiConnection}(rcon, data, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -25,14 +25,6 @@ importUserDagAssignments(rcon, data, ...)
 user name.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportUserDagAssignments} method returns a data frame with two columns:\tabular{ll}{

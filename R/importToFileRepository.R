@@ -16,9 +16,8 @@ importToFileRepository <- function(rcon,
 importToFileRepository.redcapApiConnection <- function(rcon, 
                                                        file, 
                                                        folder_id = numeric(0),
-                                                       ...,
-                                                       config = list(), 
-                                                       api_param = list()){
+                                                       ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -36,14 +35,6 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                any.missing = FALSE,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_file_exists(x = file, 
@@ -58,15 +49,11 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                returnFormat = "csv",
                file = httr::upload_file(file), 
                folder_id = folder_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # flush the cached File Repository ------------------------------
   rcon$flush_fileRepository()
   # Make the API Call -----------------------------------------------
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
   
   # Get the path of the file in the File Repository -----------------
   fileRepo <- rcon$fileRepository()

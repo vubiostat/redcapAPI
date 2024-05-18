@@ -15,10 +15,8 @@ deleteArms <- function(rcon,
 
 deleteArms.redcapApiConnection <- function(rcon, 
                                            arms,
-                                           ...,
-                                           config         = list(), 
-                                           api_param      = list()){
-  
+                                           ...)
+{
   if (is.numeric(arms)) arms <- as.character(arms)
 
    ##################################################################
@@ -30,14 +28,6 @@ deleteArms.redcapApiConnection <- function(rcon,
                               any.missing = FALSE,
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   Arms <- rcon$arms()
@@ -50,27 +40,22 @@ deleteArms.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Make API Body List
-  body <- c(list(token = rcon$token,
-                 content = "arm",
+  body <- c(list(content = "arm",
                  action = "delete"),
             vectorToApiBodyList(arms, "arms"))
 
-  body <- body[lengths(body) > 0]
-  
   ###################################################################
   # Call the API
-  response <- if (length(arms) > 0)
-  { # Skip the call if there are no arms to delete
-    rcon$flush_arms()
-    rcon$flush_events()
-    rcon$flush_projectInformation()
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  } else
-  {
-    "0"
-  }
-  
-  invisible(as.character(response))
+  invisible(
+    if (length(arms) > 0)
+    { # Skip the call if there are no arms to delete
+      rcon$flush_arms()
+      rcon$flush_events()
+      rcon$flush_projectInformation()
+      as.character(makeApiCall(rcon, body, ...))
+    } else
+    {
+      "0"
+    }
+  )
 }

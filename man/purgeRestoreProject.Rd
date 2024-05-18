@@ -9,10 +9,10 @@
 \alias{restoreProject.list}
 \title{Purge and Restore Project Data}
 \usage{
-purgeProject(object, ...)
+purgeProject(rcon, ...)
 
 \method{purgeProject}{redcapApiConnection}(
-  object,
+  rcon,
   arms = FALSE,
   events = FALSE,
   users = FALSE,
@@ -21,14 +21,13 @@ purgeProject(object, ...)
   records = FALSE,
   purge_all = FALSE,
   flush = TRUE,
-  ...,
-  config = list()
+  ...
 )
 
-restoreProject(object, ...)
+restoreProject(rcon, ...)
 
 \method{restoreProject}{redcapApiConnection}(
-  object,
+  rcon,
   project_information = NULL,
   arms = NULL,
   events = NULL,
@@ -42,16 +41,13 @@ restoreProject(object, ...)
   dag_assignments = NULL,
   records = NULL,
   flush = TRUE,
-  ...,
-  config = list()
+  ...
 )
 
-\method{restoreProject}{list}(object, rcon, ..., config = list())
+\method{restoreProject}{list}(object, rcon, ...)
 }
 \arguments{
-\item{object, rcon}{A \code{redcapConnection} object. Except in
-\code{restoreProject.list}, where \code{object} is a list of data frames
-to use in restoring the project.}
+\item{rcon}{A \code{redcapConnection} object.}
 
 \item{...}{Arguments to pass to other methods}
 
@@ -85,10 +81,6 @@ data elements from a project.}
 \item{flush}{\code{logical(1)}. When \code{TRUE}, all caches in the connection
 object will be flushed after completing the operation. This is highly
 recommended.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
 
 \item{project_information}{\code{data.frame} for restoring data. Provides the
 project settings to load via \code{importProjectInformation}.}

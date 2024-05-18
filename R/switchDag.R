@@ -38,9 +38,8 @@
 # dummy function to control the order of arguments in the help file.
 switchDagArgs <- function(rcon, 
                           dag,
-                          ...,
-                          config, 
-                          api_param){
+                          ...)
+{
   NULL
 }
 
@@ -58,9 +57,8 @@ switchDag <- function(rcon,
 
 switchDag.redcapApiConnection <- function(rcon, 
                                           dag,
-                                          ...,
-                                          config         = list(), 
-                                          api_param      = list()){
+                                          ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -76,14 +74,6 @@ switchDag.redcapApiConnection <- function(rcon,
                               any.missing = TRUE, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = dag, 
@@ -100,23 +90,15 @@ switchDag.redcapApiConnection <- function(rcon,
   body <- list(content = "dag", 
                action = "switch", 
                dag = dag)
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call
   rcon$flush_dag_assignment()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-
+  response <- makeApiCall(rcon, body, ...)
 
   success <- isTRUE(as.character(response) == "1")
   
-  if (!success) {
-    message(as.character(response))
-  }
+  if (!success) message(as.character(response))
   
   invisible(success)
 }

@@ -16,10 +16,8 @@ importEvents <- function(rcon,
 importEvents.redcapApiConnection <- function(rcon, 
                                              data, 
                                              override       = FALSE,
-                                             ...,
-                                             config         = list(), 
-                                             api_param      = list()){
-  
+                                             ...)
+{
   dots <- list(...)
   if ("event_data" %in% names(dots)) data <- dots$event_data
   
@@ -40,14 +38,6 @@ importEvents.redcapApiConnection <- function(rcon,
                             any.missing = FALSE, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = names(data), 
@@ -65,17 +55,13 @@ importEvents.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API
   rcon$flush_events()
   rcon$flush_arms()
   rcon$flush_projectInformation()
   invisible(as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }

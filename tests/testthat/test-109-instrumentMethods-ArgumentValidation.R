@@ -56,27 +56,6 @@ test_that(
   }
 )
 
-test_that(
-  "Validate config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-   
-    expect_error(exportMappings(rcon, 
-                                config = list(1)), 
-                 "'config': Must have names")
-    expect_error(exportMappings(rcon, 
-                                config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(exportMappings(rcon, 
-                                api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(exportMappings(rcon, 
-                                api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)
-
 #####################################################################
 # importMappings                                                 ####
 
@@ -292,35 +271,6 @@ test_that(
                            instruments = "branching_logic", 
                            all_records = "TRUE"), 
                  "'all_records': Must be of type 'logical'")
-    
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
-                           instruments = "branching_logic",
-                           config = list(1)), 
-                 "'config': Must have names")
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
-                           instruments = "branching_logic",
-                           config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
-                           instruments = "branching_logic",
-                           api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
-                           instruments = "branching_logic",
-                           api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
+
   }
 )

@@ -29,6 +29,28 @@ test_that(
     expect_true("A different name" %in% rcon$dags()$data_access_group_name)
     expect_true("a_different_name" %in% rcon$dags()$unique_group_name)
     
+    local_reproducible_output(width = 200)
+   
+    # Refactor of makeApiCall made these tests need and actual dag exist,
+    # so these argument validation tests have moved here.
+    expect_error(deleteDags(rcon, 
+                            dags = "testing_dag_2",
+                            config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteDags(rcon, 
+                            dags = "testing_dag_2",
+                            config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteDags(rcon, 
+                            dags = "testing_dag_2", 
+                            api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteDags(rcon, 
+                            dags = "testing_dag_2", 
+                            api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+    
     deleted_groups <- rcon$dags()$unique_group_name
     n_deleted <- deleteDags(rcon, 
                             deleted_groups)

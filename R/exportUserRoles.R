@@ -13,9 +13,8 @@ exportUserRoles <- function(rcon, ...){
 exportUserRoles.redcapApiConnection <- function(rcon, 
                                                 labels         = TRUE, 
                                                 form_rights    = TRUE, 
-                                                ...,
-                                                config         = list(), 
-                                                api_param      = list()){
+                                                ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -35,14 +34,6 @@ exportUserRoles.redcapApiConnection <- function(rcon,
                             null.ok = FALSE, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -52,15 +43,9 @@ exportUserRoles.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv")
   
-  body <- body[lengths(body) > 0]
-  
   ###################################################################
   # Make API Call                                                ####
-  UserRole <- as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
+  UserRole <- as.data.frame(makeApiCall(rcon, body, ...))
 
   if (nrow(UserRole) == 0) return(REDCAP_USER_ROLE_STRUCTURE)
  

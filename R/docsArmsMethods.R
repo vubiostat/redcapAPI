@@ -97,8 +97,7 @@ armsMethods <- function(rcon,
                         arms, 
                         data, 
                         override,  
-                        ..., 
-                        config, 
-                        api_param){
+                        ...)
+{
   NULL
 }

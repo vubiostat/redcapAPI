@@ -18,10 +18,8 @@ deleteFiles.redcapApiConnection <- function(rcon,
                                             field           = NULL, 
                                             event           = NULL, 
                                             repeat_instance = NULL,
-                                            ..., 
-                                            config          = list(), 
-                                            api_param       = list()){
-  
+                                            ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
   ###########################################################################
@@ -55,14 +53,6 @@ deleteFiles.redcapApiConnection <- function(rcon,
                                null.ok = TRUE,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   # make sure 'field' exist in the project and are 'file' fields
@@ -107,14 +97,9 @@ deleteFiles.redcapApiConnection <- function(rcon,
                returnFormat = 'csv', 
                event = event, 
                repeat_instance = repeat_instance)
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###########################################################################
   # Make the API Call
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
+  makeApiCall(rcon, body, ...)
   invisible(TRUE)
 }

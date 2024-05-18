@@ -40,6 +40,27 @@ test_that(
                                   data = UpdateRole)
     expect_equal(n_imported, "1")
     
+    # Move api_param, config here due to project state dependency
+    local_reproducible_output(width = 200)
+
+    expect_error(deleteUserRoles(rcon, 
+                                 user_roles = UserRoles$unique_role_name[1],
+                                 config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteUserRoles(rcon, 
+                                 user_roles = UserRoles$unique_role_name[1],
+                                 config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteUserRoles(rcon, 
+                                 user_roles = UserRoles$unique_role_name[1],
+                                 api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteUserRoles(rcon, 
+                                 user_roles = UserRoles$unique_role_name[1],
+                                 api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+    
     UserRoles <- exportUserRoles(rcon)
     
     expect_equal(as.character(UserRoles$design), 

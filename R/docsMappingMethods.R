@@ -70,8 +70,7 @@
 mappingMethods <- function(rcon, 
                            arms, 
                            data, 
-                           ..., 
-                           config, 
-                           api_param){
+                           ...)
+{
   NULL
 }
