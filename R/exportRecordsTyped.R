@@ -50,8 +50,7 @@ exportRecordsTyped.redcapApiConnection <-
     config         = list(),
     api_param      = list(),
     csv_delimiter  = ",",
-    batch_size     = NULL, 
-    error_handling = getOption("redcap_error_handling"))
+    batch_size     = NULL)
 {
   if (is.numeric(records)) records <- as.character(records)
 
@@ -196,8 +195,7 @@ exportRecordsTyped.redcapApiConnection <-
                                      records        = records, 
                                      config         = config, 
                                      api_param      = api_param, 
-                                     csv_delimiter  = csv_delimiter, 
-                                     error_handling = error_handling)
+                                     csv_delimiter  = csv_delimiter)
     } else
     {
       .exportRecordsTyped_Batched(  rcon           = rcon, 
@@ -206,8 +204,7 @@ exportRecordsTyped.redcapApiConnection <-
                                     config         = config, 
                                     api_param      = api_param, 
                                     csv_delimiter  = csv_delimiter, 
-                                    batch_size     = batch_size, 
-                                    error_handling = error_handling)
+                                    batch_size     = batch_size)
     }
   
   if (identical(Raw, data.frame())){
@@ -653,20 +650,14 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                            records, 
                                            config, 
                                            api_param, 
-                                           csv_delimiter, 
-                                           error_handling)
+                                           csv_delimiter)
 {
   response <- makeApiCall(rcon, 
                           body = c(body, 
                                    api_param, 
                                    vectorToApiBodyList(records, "records")), 
                           config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
+
   response <- as.data.frame(response,
                             colClasses = "character",
                             sep = csv_delimiter)
@@ -683,8 +674,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                          config, 
                                          api_param, 
                                          csv_delimiter, 
-                                         batch_size, 
-                                         error_handling)
+                                         batch_size)
 {
   # If records were not provided, get all the record IDs from the project
   if (length(records) == 0)
@@ -697,12 +687,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  outputFormat = "csv"), 
                                             vectorToApiBodyList(target_field, 
                                                                 "fields")))
- 
-    if (record_response$status_code != 200){
-      redcapError(record_response, 
-                   error_handling = error_handling)
-    }
-    
+
     records <- as.data.frame(record_response, sep = csv_delimiter)
     
     if (nrow(records) == 0)

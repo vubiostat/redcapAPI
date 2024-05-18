@@ -118,8 +118,7 @@ eventsMethods <- function(rcon,
                           events, 
                           data, 
                           override, 
-                          ..., 
-                          error_handling, 
+                          ...,
                           config, 
                           api_param){
   NULL

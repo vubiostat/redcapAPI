@@ -19,7 +19,6 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                                                          dir = getwd(), 
                                                          dir_create = FALSE, 
                                                          ...,
-                                                         error_handling = getOption("redcap_error_handling"),
                                                          config = list(), 
                                                          api_param = list()){
   # Argument Validation ---------------------------------------------
@@ -42,12 +41,7 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = dir_create, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -80,12 +74,7 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
+ 
   ExportedFile <- reconstituteFileFromExport(response = response, 
                                              dir = dir, 
                                              dir_create = dir_create)

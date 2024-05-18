@@ -43,8 +43,7 @@ exportReportsTyped(rcon, report_id, ...)
   config = list(),
   api_param = list(),
   csv_delimiter = ",",
-  batch_size = NULL,
-  error_handling = getOption("redcap_error_handling")
+  batch_size = NULL
 )
 
 \method{exportRecordsTyped}{redcapOfflineConnection}(
@@ -165,10 +164,6 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 potentially problematic zero coded fields. Defaults to \code{TRUE}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

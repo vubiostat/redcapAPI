@@ -37,13 +37,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportMetaData(rcon, 
-                                error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(exportMetaData(rcon, 
                                 config = list(1)), 
                  "'config': Must have names")
@@ -102,14 +99,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importMetaData(rcon, 
-                                data = REDCAP_METADATA_STRUCTURE,
-                                error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importMetaData(rcon, 
                                 data = REDCAP_METADATA_STRUCTURE,
                                 config = list(1)), 

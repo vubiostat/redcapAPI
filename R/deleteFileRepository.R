@@ -18,7 +18,6 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
                                                      recursive      = FALSE,
                                                      ..., 
                                                      confirm        = c("ask", "no", "yes"),
-                                                     error_handling = getOption("redcap_error_handling"),
                                                      config         = list(), 
                                                      api_param      = list()){
   # Argument Validation ---------------------------------------------
@@ -41,12 +40,7 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
                                  choices = c("ask", "no", "yes"), 
                                  add = coll, 
                                  .var.name = "confirm")
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)

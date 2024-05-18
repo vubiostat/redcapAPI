@@ -67,7 +67,6 @@ exportPdf.redcapApiConnection <- function(rcon,
                                           instruments    = NULL, 
                                           all_records    = FALSE, 
                                           ...,
-                                          error_handling = getOption("redcap_error_handling"), 
                                           config         = list(), 
                                           api_param      = list()){
 
@@ -114,12 +113,7 @@ exportPdf.redcapApiConnection <- function(rcon,
                             len = 1,
                             any.missing = FALSE,
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+ 
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -167,9 +161,6 @@ exportPdf.redcapApiConnection <- function(rcon,
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-              
-  if (response$status_code != 200) return(redcapError(response, error_handling))
-  
   filename <- 
     if (all_records)
       paste0(filename, "_all_records.pdf")

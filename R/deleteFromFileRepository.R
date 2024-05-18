@@ -15,7 +15,6 @@ deleteFromFileRepository <- function(rcon,
 deleteFromFileRepository.redcapApiConnection <- function(rcon, 
                                                          doc_id, 
                                                          ...,
-                                                         error_handling = getOption("redcap_error_handling"),
                                                          config = list(), 
                                                          api_param = list()){
   # Argument Validation ---------------------------------------------
@@ -30,12 +29,7 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                                len = 1, 
                                any.missing = FALSE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -69,18 +63,10 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
   body <- body[lengths(body) > 0]
   
   # Make the API Call -----------------------------------------------
-  
+  rcon$flush_fileRepository()
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
-  
-  # Flush cached info
-  rcon$flush_fileRepository()
   
   data.frame(directory = dirname(file_path), 
              filename = basename(file_path), 

@@ -16,8 +16,7 @@ importToFileRepository <- function(rcon,
 importToFileRepository.redcapApiConnection <- function(rcon, 
                                                        file, 
                                                        folder_id = numeric(0),
-                                                       ..., 
-                                                       error_handling = getOption("redcap_error_handling"),
+                                                       ...,
                                                        config = list(), 
                                                        api_param = list()){
   # Argument Validation ---------------------------------------------
@@ -36,12 +35,7 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                max.len = 1, 
                                any.missing = FALSE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -67,14 +61,12 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   
   body <- body[lengths(body) > 0]
   
+  # flush the cached File Repository ------------------------------
+  rcon$flush_fileRepository()
   # Make the API Call -----------------------------------------------
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  # flush the cached File Repository ------------------------------
-  rcon$flush_fileRepository()
   
   # Get the path of the file in the File Repository -----------------
   fileRepo <- rcon$fileRepository()

@@ -24,7 +24,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   dir = getwd(),
   dir_create = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -34,7 +33,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   file,
   folder_id = numeric(0),
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -43,7 +41,6 @@ deleteFromFileRepository(rcon, doc_id, ...)
   rcon,
   doc_id,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -68,10 +65,6 @@ if it does not already exist. Defaults to \code{FALSE}.
 If \code{dir} does not exist and \code{create = FALSE}, an error is thrown.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

@@ -43,7 +43,6 @@ deleteFiles(rcon, record, field, event, ...)
   file_prefix = TRUE,
   repeat_instance = NULL,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -57,7 +56,6 @@ deleteFiles(rcon, record, field, event, ...)
   overwrite = TRUE,
   repeat_instance = NULL,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -69,7 +67,6 @@ deleteFiles(rcon, record, field, event, ...)
   event = NULL,
   repeat_instance = NULL,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -105,10 +102,6 @@ to the file name.  The prefix takes the form \verb{[record_id]-[event_name]-[fil
 The file name is always the same name of the file as it exists in REDCap.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

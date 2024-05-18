@@ -14,7 +14,6 @@ exportNextRecordName <- function(rcon,
 
 exportNextRecordName.redcapApiConnection <- function(rcon, 
                                                      ...,
-                                                     error_handling = getOption("redcap_error_handling"), 
                                                      config         = list(), 
                                                      api_param      = list()){
    ##################################################################
@@ -25,12 +24,7 @@ exportNextRecordName.redcapApiConnection <- function(rcon,
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -51,12 +45,9 @@ exportNextRecordName.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response, error_handling)
-  
-  as.numeric(rawToChar(response$content))
+  as.numeric(rawToChar(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)$content
+  ))
 }

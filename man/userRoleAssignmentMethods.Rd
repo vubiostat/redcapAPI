@@ -13,22 +13,9 @@ exportUserRoleAssignments(rcon, ...)
 
 importUserRoleAssignments(rcon, data, ...)
 
-\method{exportUserRoleAssignments}{redcapApiConnection}(
-  rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportUserRoleAssignments}{redcapApiConnection}(rcon, ..., config = list(), api_param = list())
 
-\method{importUserRoleAssignments}{redcapApiConnection}(
-  rcon,
-  data,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{importUserRoleAssignments}{redcapApiConnection}(rcon, data, ..., config = list(), api_param = list())
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -39,10 +26,6 @@ Users without a \code{unique_role_name} will not be assigned to
 a user role.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

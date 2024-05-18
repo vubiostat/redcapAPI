@@ -7,28 +7,18 @@ test_that(
                         "ERROR: You cannot export arms for classic projects",
                         "ERROR: You cannot export events for classic projects",
                         "ERROR: You cannot export form/event mappings for classic projects")
-    
+    options(redcap_error_handling=NULL)
     lapply(return_as_null, 
-           function(x) expect_null(redcapError(x, "null")))
+           function(x) expect_null(redcapError(x)))
     
-    # and now return them as errors
-    
+    # and now halt execution for special old conditions
+    options(redcap_error_handling='error')
+
     lapply(return_as_null, 
-           function(x) expect_error(redcapError(x, "error")))
+           function(x) expect_error(redcapError(x)))
+    options(redcap_error_handling=NULL)
   }
 )
-
-
-test_that(
-  "Return data frame for an invalid file repository folder", 
-  {
-    expect_equal(
-      redcapError("ERROR: The File Repository folder folder_id=1234 does not exist or else"), 
-      FILE_REPOSITORY_EMPTY_FRAME
-    )
-  }
-)
-
 
 test_that(
   "Return preferred error message when experiencing a timeout", 
@@ -39,7 +29,6 @@ test_that(
                  "A network error has occurred")
   }
 )
-
 
 test_that(
   "Return the error if it isn't one of the handled errors", 

@@ -84,7 +84,6 @@ fromFileRepositoryMethods <- function(rcon,
                                       dir, 
                                       dir_create,
                                       ..., 
-                                      error_handling, 
                                       config, 
                                       api_param){
   NULL

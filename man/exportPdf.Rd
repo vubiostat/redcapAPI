@@ -25,7 +25,6 @@ exportPdf(
   instruments = NULL,
   all_records = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -52,10 +51,6 @@ should be downloaded}
 are downloaded. When \code{TRUE}, this overrides the \code{records} argument.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

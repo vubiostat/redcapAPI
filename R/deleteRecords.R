@@ -66,7 +66,6 @@ deleteRecords.redcapApiConnection <- function(
   repeat_instance = NULL,
   delete_logging  = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling"), 
   config         = list(), 
   api_param      = list())
 {
@@ -111,12 +110,7 @@ deleteRecords.redcapApiConnection <- function(
                                any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -155,14 +149,9 @@ deleteRecords.redcapApiConnection <- function(
   
    ##################################################################
   # Call the API
-  
   response <- makeApiCall(rcon, 
                           body = c(body, api_param), 
                           config = config)
-  
-  if (response$status_code != 200){
-    return(redcapError(response, error_handling))
-  } 
-  
+
   invisible(as.character(response))
 }

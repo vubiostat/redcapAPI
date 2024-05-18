@@ -59,7 +59,6 @@ recordsManagementMethods <- function(rcon,
                                      new_record_name, 
                                      arm, 
                                      ..., 
-                                     error_handling, 
                                      config, 
                                      api_param){
   NULL

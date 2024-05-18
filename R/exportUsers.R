@@ -16,7 +16,6 @@ exportUsers.redcapApiConnection <- function(rcon,
                                             labels = TRUE, 
                                             form_rights = TRUE, 
                                             ...,
-                                            error_handling = getOption("redcap_error_handling"), 
                                             config = list(), 
                                             api_param = list()){
   
@@ -40,12 +39,7 @@ exportUsers.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = form_rights, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -68,17 +62,11 @@ exportUsers.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # API Call 
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
-  
-  Users <- as.data.frame(response)
+  Users <- as.data.frame(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  )
   
   Users$forms_export <- 
     sub(",registration[:]\\d{1}.+$", "", Users$forms_export)

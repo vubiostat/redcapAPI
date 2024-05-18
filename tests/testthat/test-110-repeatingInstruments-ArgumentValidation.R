@@ -13,13 +13,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportRepeatingInstrumentsEvents(rcon, 
-                                                  error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(exportRepeatingInstrumentsEvents(rcon, 
                                                   config = list(1)), 
                  "'config': Must have names")
@@ -50,14 +47,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importRepeatingInstrumentsEvents(rcon, 
-                                                  data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE,
-                                                  error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importRepeatingInstrumentsEvents(rcon, 
                                                   data = REDCAP_REPEAT_INSTRUMENT_STRUCTURE,
                                                   config = list(1)), 

@@ -68,7 +68,6 @@ exportReports(
   colClasses = character(0),
   ...,
   batch.size = -1,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list(),
   form_complete_auto = TRUE
@@ -83,7 +82,6 @@ exportReports(
   drop = NULL,
   checkboxLabels = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
@@ -162,10 +160,6 @@ of the dataset downloaded from REDCap.  This should be the raw
 downloaded from REDCap.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

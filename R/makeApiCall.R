@@ -13,7 +13,8 @@
 #'   These will be appended to the `config` options included in the 
 #'   `rcon` object.
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
-#'   
+#' @param success_status_codes `integerish` A vector of success codes to ignore
+#'   for error handling. Defaults to c(200L).
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
@@ -139,7 +140,8 @@
 makeApiCall <- function(rcon, 
                         body   = list(), 
                         config = list(),
-                        url    = NULL)
+                        url    = NULL,
+                        success_status_codes = 200L)
 {
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
@@ -160,6 +162,9 @@ makeApiCall <- function(rcon,
                               null.ok = TRUE,
                               len = 1,
                               add = coll)
+  
+  checkmate::assert_integerish(x = success_status_codes,
+                               add = coll)
     
   checkmate::reportAssertions(coll)
   
@@ -227,6 +232,9 @@ makeApiCall <- function(rcon,
       Sys.sleep(rcon$retry_interval()[i])
   }
   
+  if(!response$status_code %in% success_status_codes)
+    redcapError(response)
+  
   response
 }
 
@@ -245,7 +253,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    rcon$url <- response$header$location
+    rcon$url <- response$headers$location
     makeApiCall(rcon, body, config)
   } else 
     response # The not redirected case

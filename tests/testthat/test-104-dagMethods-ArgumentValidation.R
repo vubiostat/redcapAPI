@@ -13,13 +13,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportDags(rcon, 
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(exportDags(rcon, 
                             config = list(1)), 
                  "'config': Must have names")
@@ -77,14 +74,10 @@ test_that(
 
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importDags(rcon, 
-                            data = REDCAP_DAG_STRUCTURE, 
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(importDags(rcon, 
                             data = REDCAP_DAG_STRUCTURE, 
                             config = list(1)), 
@@ -139,14 +132,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteDags(rcon, 
-                            dags = character(0), 
-                            error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(deleteDags(rcon, 
                             dags = character(0),
                             config = list(1)), 

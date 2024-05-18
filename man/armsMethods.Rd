@@ -17,33 +17,18 @@ importArms(rcon, data, override = FALSE, ...)
 
 deleteArms(rcon, arms, ...)
 
-\method{exportArms}{redcapApiConnection}(
-  rcon,
-  arms = character(0),
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportArms}{redcapApiConnection}(rcon, arms = character(0), ..., config = list(), api_param = list())
 
 \method{importArms}{redcapApiConnection}(
   rcon,
   data,
   override = FALSE,
   ...,
-  error_handling = getOption("redcap_error_handling"),
   config = list(),
   api_param = list()
 )
 
-\method{deleteArms}{redcapApiConnection}(
-  rcon,
-  arms,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{deleteArms}{redcapApiConnection}(rcon, arms, ..., config = list(), api_param = list())
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -61,10 +46,6 @@ existing arms data. When \code{TRUE}, all the existing arms data is
 deleted and replaced with the contents of \code{data}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
 
 \item{config}{A named \code{list}. Additional configuration parameters to pass to
 \code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in

@@ -15,7 +15,6 @@ deleteEvents <- function(rcon,
 deleteEvents.redcapApiConnection <- function(rcon, 
                                              events         = NULL,
                                              ..., 
-                                             error_handling = getOption("redcap_error_handling"), 
                                              config         = list(), 
                                              api_param      = list()){
   ###################################################################
@@ -31,12 +30,7 @@ deleteEvents.redcapApiConnection <- function(rcon,
                               any.missing = FALSE, 
                               null.ok = TRUE, 
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -58,15 +52,12 @@ deleteEvents.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
   rcon$flush_events()
   rcon$flush_arms()
   rcon$flush_projectInformation()
-  
-  if (response$status_code != 200) return(redcapError(response, error_handling))
-  
+  response <- makeApiCall(rcon, 
+                          body = c(body, api_param), 
+                          config = config)
+
   invisible(as.character(response))
 }

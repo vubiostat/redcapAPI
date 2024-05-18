@@ -81,16 +81,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportFromFileRepository(rcon, 
-                                          doc_id = 123,
-                                          dir = tempdir(), 
-                                          dir_create = FALSE, 
-                                          error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(exportFromFileRepository(rcon, 
                                           doc_id = 123,
                                           dir = tempdir(), 
@@ -176,15 +170,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importToFileRepository(rcon, 
-                                        file = "somefile.pdf",
-                                        folder_id = 10,  
-                                        error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importToFileRepository(rcon,  
                                         file = "somefile.pdf",
                                         folder_id = 10, 
@@ -237,14 +226,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteFromFileRepository(rcon, 
-                                          doc_id = 10,
-                                          error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(deleteFromFileRepository(rcon,   
                                           doc_id = 10, 
                                           config = list(1)), 

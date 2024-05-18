@@ -116,7 +116,6 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
                                                     repeat_instance = NULL,
                                                     ...,
                                                     quiet = TRUE,
-                                                    error_handling  = getOption("redcap_error_handling"),
                                                     config          = list(), 
                                                     api_param       = list()){
 
@@ -161,12 +160,7 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = quiet, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -203,8 +197,7 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
         event = ResultsFrame$event[i], 
         repeat_instance = ResultsFrame$repeat_instance[i], 
         dir = dir, 
-        file_prefix = file_prefix, 
-        error_handling = error_handling, 
+        file_prefix = file_prefix,
         config = config, 
         api_param = api_param, 
         ...

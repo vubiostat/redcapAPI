@@ -128,8 +128,7 @@ fileRepositoryMethods <- function(rcon,
                                   role_id,
                                   recursive,
                                   confirm,
-                                  ..., 
-                                  error_handling, 
+                                  ...,
                                   config, 
                                   api_param){
   NULL

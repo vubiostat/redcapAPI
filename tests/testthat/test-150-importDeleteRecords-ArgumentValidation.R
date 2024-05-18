@@ -212,14 +212,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importRecords(rcon, 
-                               data = ImportData,
-                               error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importRecords(rcon, 
                                data = ImportData,
                                config = list(1)), 
@@ -338,14 +334,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteRecords(rcon, 
-                               records = 1,
-                               error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(deleteRecords(rcon, 
                                records = 1,
                                config = list(1)), 

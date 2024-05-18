@@ -17,7 +17,6 @@ importArms.redcapApiConnection <- function(rcon,
                                            data,  
                                            override       = FALSE,
                                            ...,
-                                           error_handling = getOption("redcap_error_handling"), 
                                            config         = list(), 
                                            api_param      = list()){
   
@@ -36,12 +35,7 @@ importArms.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = override,
                             len = 1,
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
+
   checkmate::assert_list(x = config, 
                          names = "named", 
                          add = coll)
@@ -82,19 +76,14 @@ importArms.redcapApiConnection <- function(rcon,
   
    ##################################################################
   # API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_arms()
   # Changes to arms can impact events and if the project is 
   # still considered longitudinal
   rcon$flush_events()
-  rcon$flush_projectInformation()
-  
-  if (response$status_code != 200)
-    return(redcapError(response, error_handling))
-  
-  invisible(as.character(response))
+  rcon$flush_projectInformation()  
+  invisible(as.character(
+    makeApiCall(rcon, 
+                body = c(body, api_param), 
+                config = config)
+  ))
 }

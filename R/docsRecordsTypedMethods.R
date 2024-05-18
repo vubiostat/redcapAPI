@@ -256,7 +256,6 @@ recordsTypedMethods <- function(rcon,
                                 batch_size,
                                 warn_zero_coded,
                                 ...,
-                                error_handling, 
                                 config, 
                                 api_param){
   NULL
