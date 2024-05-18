@@ -162,6 +162,9 @@ makeApiCall <- function(rcon,
                               null.ok = TRUE,
                               len = 1,
                               add = coll)
+  
+  checkmate::assert_integerish(x = success_status_codes,
+                               add = coll)
     
   checkmate::reportAssertions(coll)
   

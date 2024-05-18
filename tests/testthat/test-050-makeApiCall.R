@@ -182,6 +182,14 @@ test_that(
 )
 
 test_that(
+  "success_status_codes must be integerish",
+  {
+    expect_error(makeApiCall(rcon, success_status_code = TRUE),
+                 "'success_status_codes': Must be of type 'integerish'")
+  }
+)
+
+test_that(
   "as.data.frame.response handles invalid encoded characters",
   {
     x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
