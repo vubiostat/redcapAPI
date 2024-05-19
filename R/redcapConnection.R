@@ -185,6 +185,10 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                               len = 1, 
                               add = coll)
   
+  checkmate::assert_list(x = config,
+                         names = 'named',
+                         add = coll)
+  
   checkmate::assert_integerish(x = retries, 
                                len = 1, 
                                lower = 1, 
