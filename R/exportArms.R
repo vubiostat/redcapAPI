@@ -12,9 +12,7 @@ exportArms <- function(rcon, ...){
 
 exportArms.redcapApiConnection <- function(rcon, 
                                            arms = character(0), 
-                                           ..., 
-                                           config = list(), 
-                                           api_param = list())
+                                           ...)
 {
   if (is.numeric(arms)) arms <- as.character(arms)
   
@@ -27,15 +25,7 @@ exportArms.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = arms,
                               add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   if(rcon$projectInformation()$is_longitudinal == 0){
@@ -43,19 +33,12 @@ exportArms.redcapApiConnection <- function(rcon,
   }
   
   # Build the body list ---------------------------------------------
-  body <- c(list(token = rcon$token, 
-                 content = 'arm', 
+  body <- c(list(content = 'arm', 
                  format = 'csv', 
                  returnFormat = 'csv'), 
             vectorToApiBodyList(arms, 
                                 parameter_name = "arms"))
-  
-  body <- body[lengths(body) > 0]
-  
-  
+
   # API Call --------------------------------------------------------
-  as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config))
+  as.data.frame(makeApiCall(rcon, body, ...))
 }

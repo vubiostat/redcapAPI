@@ -12,9 +12,8 @@ exportRepeatingInstrumentsEvents <- function(rcon,
 #' @export
 
 exportRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon, 
-                                                                  ..., 
-                                                                  config = list(), 
-                                                                  api_param = list()){
+                                                                  ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -24,14 +23,6 @@ exportRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
                           classes = c("redcapApiConnection"), 
                           add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::reportAssertions(coll)
@@ -48,15 +39,8 @@ exportRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   
   body <- list(content = "repeatingFormsEvents", 
                format = "csv")
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-  as.data.frame(response)
+  as.data.frame(makeApiCall(rcon, body, ...))
 }

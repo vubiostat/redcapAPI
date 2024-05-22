@@ -14,9 +14,8 @@ deleteEvents <- function(rcon,
 
 deleteEvents.redcapApiConnection <- function(rcon, 
                                              events         = NULL,
-                                             ..., 
-                                             config         = list(), 
-                                             api_param      = list()){
+                                             ...)
+{
   ###################################################################
   # Argument validation
   
@@ -31,14 +30,6 @@ deleteEvents.redcapApiConnection <- function(rcon,
                               null.ok = TRUE, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -47,17 +38,11 @@ deleteEvents.redcapApiConnection <- function(rcon,
   body <- c(list(content = 'event', 
                  action = 'delete'), 
             vectorToApiBodyList(events, "events"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API
   rcon$flush_events()
   rcon$flush_arms()
   rcon$flush_projectInformation()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-  invisible(as.character(response))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }

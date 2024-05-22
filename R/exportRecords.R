@@ -40,8 +40,6 @@ exportRecords.redcapApiConnection <-
            colClasses         = character(0), 
            ...,
            batch.size         = -1,
-           config             = list(), 
-           api_param          = list(),
            form_complete_auto = TRUE)
 {
   message("Please use exportRecordsTyped instead. exportRecords is will undergo breaking changes in version 3.0.0.")
@@ -120,21 +118,13 @@ exportRecords.redcapApiConnection <-
                                len = 1,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   if (is.list(colClasses)){
     colClasses <- unlist(colClasses)
   }
   
-    checkmate::assert_character(x = colClasses, 
-                                names = "named", 
-                                add = coll)
+  checkmate::assert_character(x = colClasses, 
+                              names = "named", 
+                              add = coll)
 
   checkmate::reportAssertions(coll)
   
@@ -233,8 +223,7 @@ exportRecords.redcapApiConnection <-
 
    ##################################################################
   # Make API Body List
-  body <- list(token = rcon$token,
-               content = 'record',
+  body <- list(content = 'record',
                format = 'csv',
                type = 'flat',
                exportSurveyFields = tolower(survey),
@@ -245,20 +234,16 @@ exportRecords.redcapApiConnection <-
             vectorToApiBodyList(field_names, "fields"), 
             vectorToApiBodyList(forms, "forms"), 
             vectorToApiBodyList(events, "events"), 
-            vectorToApiBodyList(records, "records"), 
-            api_param)
-  
-  body <- body[lengths(body) > 0]
+            vectorToApiBodyList(records, "records"))
 
    ##################################################################
   # Call API
-  
   if (batch.size < 1){
     Records <- unbatched(rcon = rcon,
                          body = body,
                          id = MetaData$field_name[1],
                          colClasses = colClasses,
-                         config = config)
+                         ...)
   }
   else
   {
@@ -267,7 +252,7 @@ exportRecords.redcapApiConnection <-
                        batch.size = batch.size,
                        id = MetaData$field_name[1],
                        colClasses = colClasses,
-                       config = config)
+                       ...)
   }
 
   #* synchronize underscore codings between records and meta data
@@ -310,7 +295,7 @@ exportRecords.redcapApiConnection <-
 
 
 #*** UNBATCHED EXPORT
-unbatched <- function(rcon, body, id, colClasses, config)
+unbatched <- function(rcon, body, id, colClasses, ...)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -318,16 +303,14 @@ unbatched <- function(rcon, body, id, colClasses, config)
                                    logical(1))]
   
   as.data.frame(
-    makeApiCall(rcon, 
-                body = body, 
-                config = config),
+    makeApiCall(rcon, body, ...),
     colClasses=colClasses
   )
 }
 
 
 #*** BATCHED EXPORT
-batched <- function(rcon, body, batch.size, id, colClasses, config)
+batched <- function(rcon, body, batch.size, id, colClasses, ...)
 {
   colClasses[[id]] <- "character"
   colClasses <- colClasses[!vapply(colClasses,
@@ -349,7 +332,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, config)
   
   IDs <- makeApiCall(rcon, 
                      body = body, 
-                     config = config)
+                     ...)
   
   IDs <- as.data.frame(IDs, colClasses = colClasses[id])
 
@@ -379,9 +362,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, config)
     this_body <- c(body[!grepl("^records", names(body))], 
                    vectorToApiBodyList(unique_id[batch.number == i], "records"))
     
-    this_response <- makeApiCall(rcon, 
-                                 body = body, 
-                                 config = config)
+    this_response <- makeApiCall(rcon, body, ...)
     batch_list[[i]] <- as.data.frame(this_response, colClasses = colClasses)
 
     Sys.sleep(1)

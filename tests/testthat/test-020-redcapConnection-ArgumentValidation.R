@@ -6,6 +6,22 @@ API_KEY <- rcon$token
 # Argument Validation                                            ####
 
 test_that(
+  "redcapConnection throws an  error if config is not a named list",
+  {
+    local_reproducible_output(width = 200)
+
+    expect_error(redcapConnection(url = url, 
+                                  token = API_KEY, 
+                                  config = list(1)), 
+                 "'config': Must have names")
+    expect_error(redcapConnection(url = url, 
+                                  token = API_KEY, 
+                                  config = "not a list"), 
+                 "'config': Must be of type 'list'")
+  }
+)
+
+test_that(
   "redcapConnection throws an error if url is missing",
   {
     local_reproducible_output(width = 200)

@@ -14,9 +14,8 @@ deleteFromFileRepository <- function(rcon,
 
 deleteFromFileRepository.redcapApiConnection <- function(rcon, 
                                                          doc_id, 
-                                                         ...,
-                                                         config = list(), 
-                                                         api_param = list()){
+                                                         ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -30,14 +29,6 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                                any.missing = FALSE,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   FileRepo <- rcon$fileRepository()
@@ -59,14 +50,10 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
                action = "delete", 
                returnFormat = "csv", 
                doc_id = doc_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Make the API Call -----------------------------------------------
   rcon$flush_fileRepository()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  makeApiCall(rcon, body, ...)
   
   data.frame(directory = dirname(file_path), 
              filename = basename(file_path), 

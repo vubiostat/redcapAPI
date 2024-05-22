@@ -99,6 +99,37 @@ test_that(
     expect_equal(exportEvents(rcon)[1:2], # we didn't provide a full specification for Events 
                  Events)
     
+    local_reproducible_output(width = 200)
+ 
+    expect_error(deleteArms(rcon,
+                            arms = 1,
+                            config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteArms(rcon,
+                            arms = 1,
+                            config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteArms(rcon, 
+                            arms = 1,
+                            api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteArms(rcon, 
+                            arms = 1,
+                            api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+    expect_error(exportArms(rcon, 
+                            config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportArms(rcon, 
+                            config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    expect_error(exportArms(rcon, 
+                            api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportArms(rcon, 
+                            api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
     # And now we clean up from our testing.
     
     purgeProject(rcon, 

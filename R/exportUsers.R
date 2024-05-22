@@ -15,10 +15,8 @@ exportUsers.redcapApiConnection <- function(rcon,
                                             dates = TRUE, 
                                             labels = TRUE, 
                                             form_rights = TRUE, 
-                                            ...,
-                                            config = list(), 
-                                            api_param = list()){
-  
+                                            ...)
+{
    ##################################################################
   # Argument Validation
   
@@ -40,34 +38,19 @@ exportUsers.redcapApiConnection <- function(rcon,
                             len = 1, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
    ##################################################################
   # Build the Body List 
   
-  body <- list(token = rcon$token, 
-               content = 'user', 
+  body <- list(content = 'user', 
                format = 'csv', 
                returnFormat = 'csv')
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # API Call 
-  Users <- as.data.frame(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
-  )
-  
+  Users <- as.data.frame(makeApiCall(rcon, body, ...))
+
   Users$forms_export <- 
     sub(",registration[:]\\d{1}.+$", "", Users$forms_export)
   

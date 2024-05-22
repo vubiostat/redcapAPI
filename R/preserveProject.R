@@ -141,8 +141,8 @@ preserveProject.redcapApiConnection <- function(rcon,
                                                 ..., 
                                                 save_as = NULL,
                                                 dir,
-                                                dir_create = TRUE,
-                                                config         = list()){
+                                                dir_create = TRUE)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -151,10 +151,6 @@ preserveProject.redcapApiConnection <- function(rcon,
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
-
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
   
   checkmate::assert_choice(x = save_as, 
                            choices = c("Rdata", "csv"), 
@@ -184,33 +180,22 @@ preserveProject.redcapApiConnection <- function(rcon,
   # Make the List object                                         ####
   
   RedcapList <- 
-    list(project_information   = exportProjectInformation(rcon, 
-                                                          config = config),
-         arms                  = exportArms(rcon,
-                                            config = config), 
-         events                = exportEvents(rcon,
-                                              config = config), 
-         meta_data             = exportMetaData(rcon,
-                                                config = config),
-         mappings              = exportMappings(rcon,
-                                                config = config), 
-         repeating_instruments = exportRepeatingInstrumentsEvents(rcon,
-                                                                  config = config),
-         users                 = exportUsers(rcon,
-                                             config = config), 
-         user_roles            = exportUserRoles(rcon,
-                                                 config = config), 
-         user_role_assignments = exportUserRoleAssignments(rcon,
-                                                           config = config),
-         dags                  = exportDags(rcon,
-                                            config = config),
-         dag_assignments       = exportUserDagAssignments(rcon,
-                                                          config = config),
+    list(project_information   = exportProjectInformation(rcon, ...),
+         arms                  = exportArms(rcon, ...), 
+         events                = exportEvents(rcon, ...), 
+         meta_data             = exportMetaData(rcon, ...),
+         mappings              = exportMappings(rcon, ...),
+         repeating_instruments = exportRepeatingInstrumentsEvents(rcon, ...),
+         users                 = exportUsers(rcon, ...),
+         user_roles            = exportUserRoles(rcon, ...),
+         user_role_assignments = exportUserRoleAssignments(rcon, ...),
+         dags                  = exportDags(rcon, ...),
+         dag_assignments       = exportUserDagAssignments(rcon, ...),
          records               = exportRecordsTyped(rcon,
                                                     validation = skip_validation,
-                                                    cast = raw_cast, 
-                                                    config = config), 
-         external_coding        = exportExternalCoding(rcon)
+                                                    cast = raw_cast,
+                                                    ...),
+         external_coding        = exportExternalCoding(rcon, ...)
     )
   
   if (is.null(save_as)){

@@ -15,9 +15,8 @@ deleteDags <- function(rcon,
 
 deleteDags.redcapApiConnection <- function(rcon, 
                                            dags,
-                                           ...,
-                                           config         = list(), 
-                                           api_param      = list()){
+                                           ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -32,17 +31,7 @@ deleteDags.redcapApiConnection <- function(rcon,
                               any.missing = FALSE,
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
-  
-  
   
   checkmate::assert_subset(dags, 
                            choices = rcon$dags()$unique_group_name, 
@@ -56,16 +45,9 @@ deleteDags.redcapApiConnection <- function(rcon,
   body <- c(list(content = "dag",
                  action = "delete"),
             vectorToApiBodyList(dags, "dags"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
   rcon$flush_dags()
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-
-  invisible(as.character(response))
+  invisible(as.character(makeApiCall(rcon, body, ...)))
 }

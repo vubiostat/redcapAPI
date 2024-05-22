@@ -15,9 +15,9 @@ importMetaData.redcapApiConnection <- function(rcon,
                                                data,
                                                ..., 
                                                field_types = REDCAP_METADATA_FIELDTYPE, # see redcapDataStructure
-                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
-                                               config = list(), 
-                                               api_param = list()){
+                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE # see redcapDataStructure
+                                               )
+{
   ###################################################################
   # Argument Validation 
   
@@ -36,14 +36,6 @@ importMetaData.redcapApiConnection <- function(rcon,
   checkmate::assert_character(x = validation_types, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -115,18 +107,14 @@ importMetaData.redcapApiConnection <- function(rcon,
                format = 'csv', 
                returnFormat = 'csv', 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API
   rcon$flush_metadata()
   rcon$flush_instruments()
   rcon$flush_fieldnames()
   invisible(as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }
 

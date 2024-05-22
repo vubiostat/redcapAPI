@@ -100,7 +100,8 @@ exportFilesMultiple <- function(rcon,
                                 event       = NULL, 
                                 dir, 
                                 file_prefix = TRUE, 
-                                ...){
+                                ...)
+{
   UseMethod("exportFilesMultiple")
 }
 
@@ -115,10 +116,8 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
                                                     file_prefix     = TRUE, 
                                                     repeat_instance = NULL,
                                                     ...,
-                                                    quiet = TRUE,
-                                                    config          = list(), 
-                                                    api_param       = list()){
-
+                                                    quiet = TRUE)
+{
   if (is.numeric(record)) record <- as.character(record)
 
   ###################################################################
@@ -161,14 +160,6 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
                             len = 1, 
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -198,8 +189,6 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
         repeat_instance = ResultsFrame$repeat_instance[i], 
         dir = dir, 
         file_prefix = file_prefix,
-        config = config, 
-        api_param = api_param, 
         ...
       )
     

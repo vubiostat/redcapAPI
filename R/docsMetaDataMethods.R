@@ -120,8 +120,7 @@ metaDataMethodsArgs <- function(rcon,
                                 data,
                                 ...,
                                 field_types, 
-                                validation_types, 
-                                config, 
-                                api_param){
+                                validation_types)
+{
   NULL
 }

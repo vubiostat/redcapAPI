@@ -20,10 +20,8 @@ exportSurveyLink.redcapApiConnection <- function(rcon,
                                                  instrument, 
                                                  event           = NULL, 
                                                  repeat_instance = 1, 
-                                                 ...,
-                                                 config          = list(), 
-                                                 api_param       = list()){
-  
+                                                 ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
   ###################################################################
@@ -56,14 +54,6 @@ exportSurveyLink.redcapApiConnection <- function(rcon,
                                any.missing = FALSE, 
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = instrument, 
@@ -87,12 +77,8 @@ exportSurveyLink.redcapApiConnection <- function(rcon,
                event = event, 
                repeat_instance = repeat_instance, 
                returnFormat = "csv")
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  as.character(makeApiCall(rcon, 
-                           body = c(body, api_param), 
-                           config = config))
+  as.character(makeApiCall(rcon, body, ...))
 }

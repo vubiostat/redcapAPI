@@ -73,8 +73,7 @@
 dagMethods <- function(rcon, 
                        dags, 
                        data, 
-                       ...,
-                       config, 
-                       api_param){
+                       ...)
+{
   NULL
 }

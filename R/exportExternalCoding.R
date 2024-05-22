@@ -53,9 +53,8 @@ exportExternalCoding <- function(rcon,
 exportExternalCoding.redcapApiConnection <- function(rcon, 
                                                      fields         = NULL, 
                                                      ..., 
-                                                     batch_size     = 1000,  
-                                                     config         = list(), 
-                                                     api_param      = list()){
+                                                     batch_size     = 1000)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -77,14 +76,6 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
                                any.missing = FALSE, 
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = fields, 
@@ -119,25 +110,21 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
                  type = "flat", 
                  rawOrLabel = "raw"), 
             vectorToApiBodyList(fields, "fields"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   Code <- 
     if (!is.null(batch_size)){
       .exportRecordsTyped_Batched(rcon = rcon, 
                                   body = body, 
-                                  records = NULL, 
-                                  config = config, 
-                                  api_param = api_param, 
+                                  records = NULL,
                                   csv_delimiter = ",", 
-                                  batch_size = batch_size)
+                                  batch_size = batch_size,
+                                  ...)
     } else {
       .exportRecordsTyped_Unbatched(rcon = rcon, 
                                     body = body, 
-                                    records = NULL, 
-                                    config = config, 
-                                    api_param = api_param,
-                                    csv_delimiter = ",")
+                                    records = NULL,
+                                    csv_delimiter = ",",
+                                    ...)
     }
   
   body$rawOrLabel <- "label"
@@ -146,18 +133,16 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
     if (!is.null(batch_size)){
       .exportRecordsTyped_Batched(rcon = rcon, 
                                   body = body, 
-                                  records = NULL, 
-                                  config = config, 
-                                  api_param = api_param, 
+                                  records = NULL,
                                   csv_delimiter = ",", 
-                                  batch_size = batch_size)
+                                  batch_size = batch_size,
+                                  ...)
     } else {
       .exportRecordsTyped_Unbatched(rcon = rcon, 
                                     body = body, 
                                     records = NULL, 
-                                    config = config, 
-                                    api_param = api_param,
-                                    csv_delimiter = ",")
+                                    csv_delimiter = ",",
+                                    ...)
     }
   
   External <- vector("list", length(fields))

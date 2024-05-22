@@ -59,9 +59,8 @@
 # dummy function to control the order of arguments in the help file.
 exportFieldNamesArgs <- function(rcon, 
                                  fields, 
-                                 ...,
-                                 config, 
-                                 api_param){
+                                 ...)
+{
   NULL
 }
 
@@ -80,10 +79,8 @@ exportFieldNames <- function(rcon,
 
 exportFieldNames.redcapApiConnection <- function(rcon, 
                                                  fields         = character(0), 
-                                                 ...,
-                                                 config         = list(), 
-                                                 api_param      = list()){
- 
+                                                 ...)
+{
   # Argument validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -95,14 +92,6 @@ exportFieldNames.redcapApiConnection <- function(rcon,
                               max.len = 1,
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   if (length(fields) > 0){
@@ -112,20 +101,13 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   }
 
   # Build the Body List ---------------------------------------------
-  body <- list(token = rcon$token, 
-               content = 'exportFieldNames', 
+  body <- list(content = 'exportFieldNames', 
                format = 'csv',
                returnFormat = 'csv', 
                field = fields)
   
-  body <- body[lengths(body) > 0]
-  
   # Make the API Call -----------------------------------------------
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-
-  as.data.frame(response)
+  as.data.frame(makeApiCall(rcon, body, ...))
 }
 
 # Unexported --------------------------------------------------------

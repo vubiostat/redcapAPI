@@ -13,9 +13,9 @@ exportUserRoleAssignments(rcon, ...)
 
 importUserRoleAssignments(rcon, data, ...)
 
-\method{exportUserRoleAssignments}{redcapApiConnection}(rcon, ..., config = list(), api_param = list())
+\method{exportUserRoleAssignments}{redcapApiConnection}(rcon, ...)
 
-\method{importUserRoleAssignments}{redcapApiConnection}(rcon, data, ..., config = list(), api_param = list())
+\method{importUserRoleAssignments}{redcapApiConnection}(rcon, data, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -26,14 +26,6 @@ Users without a \code{unique_role_name} will not be assigned to
 a user role.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportUserRoleAssignments} returns a data frame with the columns:\tabular{ll}{

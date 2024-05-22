@@ -170,7 +170,7 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = httr::config(), 
+                             config = .get_httr_config(),
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
                              retry_quietly = TRUE)
@@ -184,6 +184,10 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   checkmate::assert_character(x = token, 
                               len = 1, 
                               add = coll)
+  
+  checkmate::assert_list(x = config,
+                         names = 'named',
+                         add = coll)
   
   checkmate::assert_integerish(x = retries, 
                                len = 1, 
@@ -1049,4 +1053,13 @@ print.redcapOfflineConnection <- function(x, ...){
   } else {
     file
   }
+}
+
+#' @importFrom httr config
+.get_httr_config <- function()
+{
+  config <- httr::config()
+  class(config) <- "list"
+  
+  config[lengths(config) > 0]
 }

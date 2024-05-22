@@ -14,10 +14,8 @@ importProjectInformation <- function(rcon,
 
 importProjectInformation.redcapApiConnection <- function(rcon, 
                                                          data,
-                                                         ...,
-                                                         config         = list(), 
-                                                         api_param      = list()){
-  
+                                                         ...)
+{
   ###################################################################
   # Argument Validation
   
@@ -31,14 +29,6 @@ importProjectInformation.redcapApiConnection <- function(rcon,
                                nrows = 1,
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   # Remove uneditable fields.
@@ -58,18 +48,14 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   body <- list(content = "project_settings", 
                format = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API
   rcon$flush_arms()
   rcon$flush_events()
   rcon$flush_projectInformation()
   invisible(as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config)
+    makeApiCall(rcon, body, ...)
   ))
 }
 

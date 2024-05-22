@@ -17,25 +17,11 @@ importUserRoles(rcon, data, ...)
 
 deleteUserRoles(rcon, user_roles, ...)
 
-\method{exportUserRoles}{redcapApiConnection}(
-  rcon,
-  labels = TRUE,
-  form_rights = TRUE,
-  ...,
-  config = list(),
-  api_param = list()
-)
+\method{exportUserRoles}{redcapApiConnection}(rcon, labels = TRUE, form_rights = TRUE, ...)
 
-\method{importUserRoles}{redcapApiConnection}(
-  rcon,
-  data,
-  consolidate = TRUE,
-  ...,
-  config = list(),
-  api_param = list()
-)
+\method{importUserRoles}{redcapApiConnection}(rcon, data, consolidate = TRUE, ...)
 
-\method{deleteUserRoles}{redcapApiConnection}(rcon, user_roles, ..., config = list(), api_param = list())
+\method{deleteUserRoles}{redcapApiConnection}(rcon, user_roles, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -59,14 +45,6 @@ export access values will be read from the expanded columns. Otherwise,
 the consolidated values (as provided by the API export) are utilized.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportUserRoles} returns a data frame with the columns:\tabular{ll}{

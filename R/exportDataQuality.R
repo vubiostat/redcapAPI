@@ -22,9 +22,7 @@ exportDataQuality <- function(rcon, prefix, ...)
 exportDataQuality.redcapApiConnection <-
   function(rcon,
            prefix,
-           ..., 
-           config = list(), 
-           api_param = list())
+           ...)
 {
   ###################################################################
   # Argument Validation                                          ####
@@ -39,14 +37,6 @@ exportDataQuality.redcapApiConnection <-
                           classes = "character", 
                           add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -58,7 +48,7 @@ exportDataQuality.redcapApiConnection <-
                 "&page=export&type=module&NOAUTH&pid=",
                 rcon$projectInformation()$project_id)
   
-  response <- makeApiCall(rcon, body=api_param, config=config, url)
+  response <- makeApiCall(rcon, url=url, ...)
 
   tryCatch(
   {

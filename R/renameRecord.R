@@ -18,9 +18,7 @@ renameRecord.redcapApiConnection <- function(rcon,
                                              record_name, 
                                              new_record_name, 
                                              arm = NULL, 
-                                             ...,
-                                             config         = list(), 
-                                             api_param      = list()){
+                                             ...){
   
   if (is.numeric(record_name)) record_name <- as.character(record_name)
   if (is.numeric(new_record_name)) new_record_name <- as.character(new_record_name)
@@ -48,14 +46,6 @@ renameRecord.redcapApiConnection <- function(rcon,
                               null.ok = TRUE, 
                               add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -66,14 +56,8 @@ renameRecord.redcapApiConnection <- function(rcon,
                record = record_name, 
                new_record_name = new_record_name, 
                arm = arm)
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  invisible('1' == as.character(
-    makeApiCall(rcon, 
-                body = c(body, api_param), 
-                config = config) 
-  ))
+  invisible('1' == as.character(makeApiCall(rcon, body, ...)))
 }

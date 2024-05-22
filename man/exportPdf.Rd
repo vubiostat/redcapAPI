@@ -24,9 +24,7 @@ exportPdf(
   events = NULL,
   instruments = NULL,
   all_records = FALSE,
-  ...,
-  config = list(),
-  api_param = list()
+  ...
 )
 }
 \arguments{
@@ -51,14 +49,6 @@ should be downloaded}
 are downloaded. When \code{TRUE}, this overrides the \code{records} argument.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportPdf} invisibly returns the location on the local system

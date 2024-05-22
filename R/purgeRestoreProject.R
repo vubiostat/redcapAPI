@@ -11,7 +11,7 @@
 #'   potentially destructive and may result in data loss. It is a good 
 #'   practice to back up your data and project structure before purging
 #'   a project. 
-#'   
+#'
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @param object,rcon A `redcapConnection` object. Except in 
@@ -107,7 +107,7 @@
 #' @rdname purgeRestoreProject
 #' @export
 
-purgeProject <- function(object, ...){
+purgeProject <- function(rcon, ...){
   UseMethod("purgeProject")
 }
 
@@ -115,7 +115,7 @@ purgeProject <- function(object, ...){
 #' @rdname purgeRestoreProject
 #' @export
 
-purgeProject.redcapApiConnection <- function(object, 
+purgeProject.redcapApiConnection <- function(rcon, 
                                              arms           = FALSE, 
                                              events         = FALSE, 
                                              users          = FALSE, 
@@ -124,13 +124,13 @@ purgeProject.redcapApiConnection <- function(object,
                                              records        = FALSE, 
                                              purge_all      = FALSE,
                                              flush          = TRUE, 
-                                             ...,
-                                             config         = list()){
+                                             ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = object, 
+  checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -174,10 +174,6 @@ purgeProject.redcapApiConnection <- function(object,
                             any.missing = FALSE,
                             add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -188,10 +184,10 @@ purgeProject.redcapApiConnection <- function(object,
   }
   
   if (records){
-    RecordId <- exportRecordsTyped(object, 
-                                   fields = object$metadata()$field_name[1],
+    RecordId <- exportRecordsTyped(rcon, 
+                                   fields = rcon$metadata()$field_name[1],
                                    cast = list(system = castRaw), 
-                                   config = config)
+                                   ...)
     
     if (nrow(RecordId)>0){
       if ("redcap_event_name" %in% names(RecordId)){
@@ -206,48 +202,46 @@ purgeProject.redcapApiConnection <- function(object,
         
         # Delete records from each arm individually
         for (i in seq_along(RecordId)){
-          deleteRecords(object, 
+          deleteRecords(rcon, 
                         records = RecordId[[i]][[1]], 
                         arm = unique(RecordId[[i]]$arm_num),
-                        config = config)
+                        ...)
         }
       } else {
-        deleteRecords(object, 
+        deleteRecords(rcon, 
                       records = RecordId[[1]],
-                      config = config)
+                      ...)
       }
     }
   }
   
-  if (dags && nrow(object$dags()) > 0){
-    deleteDags(object,
-               dags = object$dags()$unique_group_name,
-               config = config)
+  if (dags && nrow(rcon$dags()) > 0){
+    deleteDags(rcon,
+               dags = rcon$dags()$unique_group_name,
+               ...)
   }
 
-  if (user_roles && nrow(object$user_roles()) > 0){
-    deleteUserRoles(object,
-                    object$user_roles()$unique_role_name,
-                    config = config)
+  if (user_roles && nrow(rcon$user_roles()) > 0){
+    deleteUserRoles(rcon,
+                    rcon$user_roles()$unique_role_name,
+                    ...)
   }
   
   # if (users){
-  # deleteUsers(object,
-  #             object$users()$username,
+  # deleteUsers(rcon,
+  #             rcon$users()$username,
   #             config = config)
   # }
   
   if (events)
-    deleteEvents(object, 
-                 events = object$events()$unique_event_name, 
-                 config = config)
+    deleteEvents(rcon, 
+                 events = rcon$events()$unique_event_name, 
+                 ...)
   
-  if (arms && !is.null(object$arms()$arm_num))
-    deleteArms(object, 
-               arms = object$arms()$arm_num,
-               config = config)
-  
-  if (flush) object$flush_all()
+  if (arms && !is.null(rcon$arms()$arm_num))
+    deleteArms(rcon, 
+               arms = rcon$arms()$arm_num,
+               ...)
 }
 
 #####################################################################
@@ -277,13 +271,14 @@ restoreProject.redcapApiConnection <- function(object,
                                                dag_assignments       = NULL,
                                                records               = NULL, 
                                                flush                 = TRUE, 
-                                               ...,
-                                               config                = list()){
+                                               ...)
+{
+  rcon <- object
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = object, 
+  checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -347,97 +342,93 @@ restoreProject.redcapApiConnection <- function(object,
                                col.names = "named",
                                add = coll)
 
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
   ###################################################################
   # Functional Code                                              ####
   
   if (!is.null(project_information)){
-    importProjectInformation(object, 
+    importProjectInformation(rcon, 
                              data = project_information,
-                             config = config)
+                             ...)
   }
   
   if (!is.null(arms) && nrow(arms) > 0){
-    importArms(object, 
+    importArms(rcon, 
                arms_data = arms, 
-               config = config)
+               ...)
   }
   
   if (!is.null(events) && nrow(events) > 0){
-    importEvents(object, 
+    importEvents(rcon, 
                  event_data = events,
-                 config = config)
+                 ...)
   }
   
   if (!is.null(meta_data)){
-    importMetaData(object, 
+    importMetaData(rcon, 
                    data = meta_data,
-                   config = config)
+                   ...)
   }
   
   if (!is.null(mappings) && nrow(mappings) > 0){
-    importMappings(object, 
+    importMappings(rcon, 
                    data = mappings,
-                   config = config)
+                   ...)
   }
   
   if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
-    importRepeatingInstrumentsEvents(object,
+    importRepeatingInstrumentsEvents(rcon,
                                      data = repeating_instruments,
-                                     config = config)
+                                     ...)
   }
   
   if (!is.null(users)){
-    importUsers(object,
+    importUsers(rcon,
                 data = users,
-                config = config)
+                ...)
   }
   
   if (!is.null(user_roles)){
-    importUserRoles(object,
+    importUserRoles(rcon,
                     data = user_roles,
-                    config = config)
+                    ...)
   }
   
   if (!is.null(user_role_assignments)){
-    importUserRoleAssignments(object,
+    importUserRoleAssignments(rcon,
                               data = user_role_assignments,
-                              config = config)
+                              ...)
   }
   
   if (!is.null(dags)){
-    importDags(object,
+    importDags(rcon,
                data = dags,
-               config = config)
+               ...)
   }
   
   if (!is.null(dag_assignments)){
-    importUserDagAssignments(object,
+    importUserDagAssignments(rcon,
                              data = dag_assignments,
-                             config = config)
+                             ...)
   }
   
   if (!is.null(records) && nrow(records) > 0){
-    importRecords(object, 
+    importRecords(rcon, 
                   data = records,
-                  config = config)
+                  ...)
   }
   
-  if (flush) object$flush_all()
+  if (flush) rcon$flush_all()
 }
 
 #' @rdname purgeRestoreProject
 #' @export
 
-restoreProject.list <- function(object, 
-                                rcon, 
+restoreProject.list <- function(object,
                                 ...,
-                                config         = list()){
+                                rcon)
+{
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_list(x = object, 
@@ -466,7 +457,9 @@ restoreProject.list <- function(object,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  object$rcon <- rcon
 
-  do.call(restoreProject.redcapApiConnection, 
-          c(list(object = rcon), object))
+  do.call(restoreProject.redcapApiConnection,
+          utils::modifyList(list(...), object))
 }
