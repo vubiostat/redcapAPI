@@ -14,6 +14,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 * Refactored error handling on API calls to reduce code footprint.
 * Added `redcap_survey_identifier` to system field list.
+* Bug fix for handling fields ending in '_complete' that are not form related.
 
 ## 2.9.1
 
