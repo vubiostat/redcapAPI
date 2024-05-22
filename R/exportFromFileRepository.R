@@ -18,10 +18,8 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                                                          doc_id, 
                                                          dir = getwd(), 
                                                          dir_create = FALSE, 
-                                                         ...,
-                                                         error_handling = getOption("redcap_error_handling"),
-                                                         config = list(), 
-                                                         api_param = list()){
+                                                         ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -42,20 +40,7 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = dir_create, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   if (!dir_create){
@@ -72,20 +57,11 @@ exportFromFileRepository.redcapApiConnection <- function(rcon,
                action = "export", 
                returnFormat = "csv", 
                doc_id = doc_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Make the API Call -----------------------------------------------
 
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
+  response <- makeApiCall(rcon, body, ...)
+
   ExportedFile <- reconstituteFileFromExport(response = response, 
                                              dir = dir, 
                                              dir_create = dir_create)

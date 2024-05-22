@@ -24,10 +24,9 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                                                    assignment    = list(label=stripHTMLandUnicode,
                                                                         units=unitsFieldAnnotation),
                                                    warn_zero_coded = TRUE,
-                                                   ..., 
-                                                   config        = list(),
-                                                   api_param     = list(),
-                                                   csv_delimiter = ","){
+                                                   ...,
+                                                   csv_delimiter = ",")
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -54,23 +53,11 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
   checkmate::assert_list(x = cast, 
                          names = "named", 
                          add = coll)
-  
-  checkmate::assert_list(x = cast, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::assert_list(x = assignment, 
                          names = "named", 
                          add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
                                        choices = c(",", "\t", ";", "|", "^"),
                                        .var.name = "csv_delimiter",
@@ -99,25 +86,16 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                csvDelimiter = csv_delimiter)
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config)
-  
-  if (response$status_code != 200) stop(paste("No report of ID", report_id, "in project."))
-  
-  
-  Raw <- as.data.frame(response, sep = csv_delimiter)
-  
-  if (length(drop_fields) > 0){
+  Raw <- as.data.frame(
+           makeApiCall(rcon, body, ...),
+           sep = csv_delimiter)
+
+  if (length(drop_fields) > 0)
     Raw <- Raw[!names(Raw) %in% drop_fields]
-  }
-  
+
   ###################################################################
   # Cast the fields in the report                                ####
   

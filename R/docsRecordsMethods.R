@@ -175,9 +175,7 @@ recordsMethods <- function(rcon,
                            batch.size,
                            dataFile, 
                            metaDataFile,
-                           ..., 
-                           error_handling, 
-                           config, 
-                           api_param){
+                           ...)
+{
   NULL
 }

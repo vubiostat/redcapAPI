@@ -111,9 +111,7 @@
 
 projectInformationMethods <- function(rcon, 
                                       data,
-                                      ..., 
-                                      error_handling, 
-                                      config, 
-                                      api_param){
+                                      ...)
+{
   NULL
 }

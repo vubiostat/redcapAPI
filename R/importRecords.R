@@ -134,10 +134,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                               logfile           = "", 
                                               force_auto_number = FALSE,
                                               ...,
-                                              batch.size        = -1,
-                                              error_handling = getOption("redcap_error_handling"), 
-                                              config = list(), 
-                                              api_param = list())
+                                              batch.size        = -1)
 {
   if(is.null(attr(data, "castForImport")))
     message("importRecords will change how it validates data in version 3.0.0.\n",
@@ -182,22 +179,8 @@ importRecords.redcapApiConnection <- function(rcon,
   checkmate::assert_integerish(x = batch.size,
                                len = 1,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
 
   checkmate::reportAssertions(coll)
-  
   
   MetaData <- rcon$metadata()
 
@@ -314,8 +297,7 @@ importRecords.redcapApiConnection <- function(rcon,
                            overwriteBehavior = overwriteBehavior,
                            returnContent = returnContent, 
                            force_auto_number = force_auto_number,
-                           config = config, 
-                           api_param = api_param)
+                           ...)
   }
   else
   {
@@ -324,8 +306,7 @@ importRecords.redcapApiConnection <- function(rcon,
                              overwriteBehavior = overwriteBehavior,
                              returnContent = returnContent, 
                              force_auto_number = force_auto_number,
-                             config = config, 
-                             api_param = api_param)
+                             ...)
   }
 }
 
@@ -339,8 +320,7 @@ import_records_batched <- function(rcon,
                                    overwriteBehavior,
                                    returnContent, 
                                    force_auto_number,
-                                   config, 
-                                   api_param)
+                                   ...)
 {
   n.batch <- nrow(data) %/% batch.size + 1
   
@@ -370,47 +350,34 @@ import_records_batched <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token, 
-               content = 'record', 
+  body <- list(content = 'record', 
                format = 'csv',
                type = 'flat', 
                overwriteBehavior = overwriteBehavior,
                returnContent = returnContent,
                forceAutoNumber = tolower(force_auto_number),
                returnFormat = 'csv')
-  body <- c(body, api_param)
-  
-  body <- body[lengths(body) > 0]
-  
-  
+
    ##################################################################
   # Call the API
   responses <- vector("list", length = length(out))
   
+  allvalid <- TRUE
   for (i in seq_along(out))
   {
-    responses[[i]] <- makeApiCall(rcon, 
-                                  body = c(body, 
-                                           list(data = out[[i]])), 
-                                  config = config)
+    responses[[i]] <- 
+      tryCatch(
+        as.character(
+          makeApiCall(
+            rcon, 
+            body   = c(body, list(data = out[[i]])), 
+            ...)),
+        error=function(e) { allvalid <<- FALSE; e }
+      )
   }
+  if(!allvalid) stop(paste(responses[nchar(responses) > 4], collapse="\n"))
   
-  if (all(unlist(sapply(X = responses, 
-                        FUN = function(y) y["status_code"])) == "200"))
-  {
-    vapply(responses, as.character, character(1))
-  }
-  else 
-  {
-    status.code <- unlist(sapply(X = responses, 
-                                 FUN = function(y) y["status_code"]))
-    msg <- sapply(responses, as.character)
-    
-    stop(paste(paste0(status.code[status.code != "200"], 
-                      ": ", 
-                      msg[status.code != "200"]), 
-               collapse="\n"))
-  }
+  unlist(responses)
 }
 
 
@@ -419,8 +386,7 @@ import_records_unbatched <- function(rcon,
                                      overwriteBehavior,
                                      returnContent, 
                                      force_auto_number,
-                                     config, 
-                                     api_param)
+                                     ...)
 {
   out <- data_frame_to_string(data)
   
@@ -432,8 +398,7 @@ import_records_unbatched <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token, 
-               content = 'record', 
+  body <- list(content = 'record', 
                format = 'csv',
                type = 'flat', 
                overwriteBehavior = overwriteBehavior,
@@ -441,25 +406,14 @@ import_records_unbatched <- function(rcon,
                returnFormat = 'csv', 
                forceAutoNumber = tolower(force_auto_number),
                data = out)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code == "200"){
-    if (returnContent %in% c("ids", "auto_ids")){
-      as.data.frame(response)
-    } else {
-      as.character(response)
-    }
-  }
-  else 
-    redcapError(response, error_handling = "error")
+  response <- makeApiCall(rcon, body, ...)
+
+  if (returnContent %in% c("ids", "auto_ids"))
+    as.data.frame(response) else
+    as.character(response)
 }
 
 #####################################################################

@@ -38,10 +38,8 @@
 # dummy function to control the order of arguments in the help file.
 switchDagArgs <- function(rcon, 
                           dag,
-                          ..., 
-                          error_handling, 
-                          config, 
-                          api_param){
+                          ...)
+{
   NULL
 }
 
@@ -59,10 +57,8 @@ switchDag <- function(rcon,
 
 switchDag.redcapApiConnection <- function(rcon, 
                                           dag,
-                                          ...,
-                                          error_handling = getOption("redcap_error_handling"), 
-                                          config         = list(), 
-                                          api_param      = list()){
+                                          ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -77,20 +73,7 @@ switchDag.redcapApiConnection <- function(rcon,
                               null.ok = FALSE, 
                               any.missing = TRUE, 
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = dag, 
@@ -107,25 +90,15 @@ switchDag.redcapApiConnection <- function(rcon,
   body <- list(content = "dag", 
                action = "switch", 
                dag = dag)
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_dag_assignment()
-  
-  if (response$status_code != 200) return(redcapError(response, error_handling))
+  response <- makeApiCall(rcon, body, ...)
 
   success <- isTRUE(as.character(response) == "1")
   
-  if (!success) {
-    message(as.character(response))
-  }
+  if (!success) message(as.character(response))
   
   invisible(success)
 }

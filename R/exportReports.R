@@ -24,11 +24,8 @@ exportReports.redcapApiConnection <- function(rcon,
                                               dates          = TRUE, 
                                               drop           = NULL, 
                                               checkboxLabels = FALSE, 
-                                              ...,
-                                              error_handling = getOption("redcap_error_handling"),
-                                              config         = list(), 
-                                              api_param      = list()){
-  
+                                              ...)
+{
   if (!is.numeric(report_id)) report_id <- as.numeric(report_id)
   
    ##################################################################
@@ -68,20 +65,7 @@ exportReports.redcapApiConnection <- function(rcon,
                               any.missing = FALSE,
                               null.ok = TRUE, 
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
    ##################################################################
@@ -98,24 +82,14 @@ exportReports.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token, 
-               content = 'report',
+  body <- list(content = 'report',
                format = 'csv', 
                returnFormat = 'csv',
                report_id = report_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) redcapError(response, error_handling)
-  
-  Report <- as.data.frame(response)
+  Report <- as.data.frame(makeApiCall(rcon, body, ...))
   
    ##################################################################
   # Process the data
@@ -125,7 +99,6 @@ exportReports.redcapApiConnection <- function(rcon,
   if (utils::compareVersion(version, "6.0.0") == -1) 
     MetaData <- syncUnderscoreCodings(Report, MetaData)
   
-
   Report <- fieldToVar(records = Report, 
                        meta_data = MetaData, 
                        factors = factors, 

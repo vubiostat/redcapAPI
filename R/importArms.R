@@ -16,11 +16,8 @@ importArms <- function(rcon,
 importArms.redcapApiConnection <- function(rcon, 
                                            data,  
                                            override       = FALSE,
-                                           ...,
-                                           error_handling = getOption("redcap_error_handling"), 
-                                           config         = list(), 
-                                           api_param      = list()){
-  
+                                           ...)
+{
   dots <- list(...)
   if ("arms_data" %in% names(dots)) data <- dots$arms_data
   
@@ -36,20 +33,7 @@ importArms.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = override,
                             len = 1,
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = names(data),
@@ -71,30 +55,20 @@ importArms.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make API Body List
   
-  body <- list(token = rcon$token,
-               content = "arm",
+  body <- list(content = "arm",
                override = as.numeric(override),
                action = "import",
                format = "csv",
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_arms()
   # Changes to arms can impact events and if the project is 
   # still considered longitudinal
   rcon$flush_events()
-  rcon$flush_projectInformation()
-  
-  if (response$status_code != 200)
-    return(redcapError(response, error_handling))
-  
-  invisible(as.character(response))
+  rcon$flush_projectInformation()  
+  invisible(as.character(
+    makeApiCall(rcon, body, ...)
+  ))
 }

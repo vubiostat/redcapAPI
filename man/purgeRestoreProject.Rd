@@ -9,10 +9,10 @@
 \alias{restoreProject.list}
 \title{Purge and Restore Project Data}
 \usage{
-purgeProject(object, ...)
+purgeProject(rcon, ...)
 
 \method{purgeProject}{redcapApiConnection}(
-  object,
+  rcon,
   arms = FALSE,
   events = FALSE,
   users = FALSE,
@@ -21,9 +21,7 @@ purgeProject(object, ...)
   records = FALSE,
   purge_all = FALSE,
   flush = TRUE,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
+  ...
 )
 
 restoreProject(object, ...)
@@ -43,24 +41,12 @@ restoreProject(object, ...)
   dag_assignments = NULL,
   records = NULL,
   flush = TRUE,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
+  ...
 )
 
-\method{restoreProject}{list}(
-  object,
-  rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
-)
+\method{restoreProject}{list}(object, ..., rcon)
 }
 \arguments{
-\item{object, rcon}{A \code{redcapConnection} object. Except in
-\code{restoreProject.list}, where \code{object} is a list of data frames
-to use in restoring the project.}
-
 \item{...}{Arguments to pass to other methods}
 
 \item{arms}{Either \code{logical(1)} indicating if arms data should be
@@ -94,13 +80,9 @@ data elements from a project.}
 object will be flushed after completing the operation. This is highly
 recommended.}
 
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
+\item{object, rcon}{A \code{redcapConnection} object. Except in
+\code{restoreProject.list}, where \code{object} is a list of data frames
+to use in restoring the project.}
 
 \item{project_information}{\code{data.frame} for restoring data. Provides the
 project settings to load via \code{importProjectInformation}.}

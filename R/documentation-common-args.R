@@ -21,9 +21,6 @@ NULL
 #' @keywords internal
 #' @description Common API arguments
 #' 
-#' @param error_handling `character(1)`. One of `c("error", "null")`.
-#'   An option for how to handle errors returned by the API.
-#'   see [redcapError()].
 #' @param config A named `list`. Additional configuration parameters to pass to
 #'   [httr::POST()]. These are appended to any parameters in
 #'   `rcon$config`.

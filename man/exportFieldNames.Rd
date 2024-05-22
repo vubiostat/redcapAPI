@@ -8,14 +8,7 @@
 \usage{
 exportFieldNames(rcon, ...)
 
-\method{exportFieldNames}{redcapApiConnection}(
-  rcon,
-  fields = character(0),
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportFieldNames}{redcapApiConnection}(rcon, fields = character(0), ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -24,18 +17,6 @@ exportFieldNames(rcon, ...)
 default, all fields are returned.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportFieldNames} returns a data frame with the columns:\tabular{ll}{

@@ -9,11 +9,12 @@
 #' @inheritParams common-rcon-arg
 #' @param body `list` List of parameters to be passed to [httr::POST()]'s 
 #'   `body` argument
-#' @param config `list` A list of options to be passed to [httr::POST()].
-#'   These will be appended to the `config` options included in the 
-#'   `rcon` object.
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
-#'   
+#' @param success_status_codes `integerish` A vector of success codes to ignore
+#'   for error handling. Defaults to c(200L).
+#' @param ... This will capture `api_param` (if specified) which will modify the body of the 
+#'   the specified body of the request. It also captures `config` which will get
+#'   passed to httr::POST.
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
@@ -134,13 +135,21 @@
 #'                       
 #'  
 #' }
+#' @importFrom utils modifyList
 #' 
 #' @export
 makeApiCall <- function(rcon, 
                         body   = list(), 
-                        config = list(),
-                        url    = NULL)
+                        url    = NULL,
+                        success_status_codes = 200L,
+                        ...)
 {
+  # Pull config, api_param from ...
+  dots      <- list(...)
+  
+  api_param <- if("api_param" %in% names(dots)) dots$api_param else list()
+  config    <- if("config"    %in% names(dots)) dots$config    else list()
+  
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -151,18 +160,31 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = body, 
                          names = "named",
                          add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named",
-                         add = coll)
-  
+
   checkmate::assert_character(x = url,
                               null.ok = TRUE,
                               len = 1,
                               add = coll)
+  
+  checkmate::assert_integerish(x = success_status_codes,
+                               add = coll)
     
+  checkmate::assert_list(x = config, 
+                         names = "named", 
+                         add = coll)
+  
+  checkmate::assert_list(x = api_param, 
+                         names = "named", 
+                         add = coll)
+
   checkmate::reportAssertions(coll)
   
+  body <- utils::modifyList(body, list(token = rcon$token))
+  body <- utils::modifyList(body, api_param)
+  body <- body[lengths(body) > 0]
+  
+  config <- utils::modifyList(rcon$config, config)
+
   # Functional Code -------------------------------------------------
   
   if(is.null(url)) url <- rcon$url
@@ -172,9 +194,7 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        httr::POST(url    = url, 
-                   body   = c(list(token = rcon$token), body),
-                   config = c(rcon$config, config))
+        httr::POST(url = url, body = body, config = config)
       },
       error=function(e)
       {
@@ -207,7 +227,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, body, config, response)
+    response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -227,12 +247,15 @@ makeApiCall <- function(rcon,
       Sys.sleep(rcon$retry_interval()[i])
   }
   
+  if(!response$status_code %in% success_status_codes)
+    redcapError(response)
+  
   response
 }
 
 ####################################################################
 # Unexported
-.makeApiCall_handleRedirect <- function(rcon, body, config, response)
+.makeApiCall_handleRedirect <- function(rcon, body, response, ...)
 {
   if(response$status_code %in% c(301L, 302L))
   {
@@ -245,8 +268,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    rcon$url <- response$header$location
-    makeApiCall(rcon, body, config)
+    makeApiCall(rcon, body, response$headers$location, ...)
   } else 
     response # The not redirected case
 }

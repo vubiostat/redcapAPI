@@ -8,7 +8,8 @@ exportFiles <- function(rcon,
                         event       = NULL, 
                         dir         = getwd(), 
                         file_prefix = TRUE, 
-                        ...){
+                        ...)
+{
   UseMethod("exportFiles")
 }
 
@@ -23,11 +24,8 @@ exportFiles.redcapApiConnection <- function(rcon,
                                             dir             = getwd(), 
                                             file_prefix     = TRUE, 
                                             repeat_instance = NULL,
-                                            ...,
-                                            error_handling  = getOption("redcap_error_handling"),
-                                            config          = list(), 
-                                            api_param       = list()){
-
+                                            ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
   dots <- list(...)
@@ -71,20 +69,7 @@ exportFiles.redcapApiConnection <- function(rcon,
                                any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
  
   checkmate::assert_directory_exists(x = dir, 
@@ -134,18 +119,11 @@ exportFiles.redcapApiConnection <- function(rcon,
                field = field, 
                event = event, 
                repeat_instance = repeat_instance)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ###########################################################################
   # Make the API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
 
-  if (response$status_code != 200) redcapError(response, error_handling)
-  
   prefix <- 
     if (file_prefix) sprintf("%s%s%s", 
                             record,

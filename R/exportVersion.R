@@ -38,11 +38,8 @@ exportVersion <- function(rcon, ...){
 #' @export
 
 exportVersion.redcapApiConnection <- function(rcon, 
-                                              ...,
-                                              error_handling = getOption("redcap_error_handling"), 
-                                              config         = list(), 
-                                              api_param      = list()){
-  
+                                              ...)
+{
    ##################################################################
   # Argument Validation 
   
@@ -51,46 +48,21 @@ exportVersion.redcapApiConnection <- function(rcon,
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
    ##################################################################
   # Make the API Body List
   
-  body <- list(token=rcon$token, 
-               content='version')
-  
-  body <- body[lengths(body) > 0]
-  
+  body <- list(content='version')
+
    ##################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) 
-  {
-    handled <- redcapError(response, error_handling)
-    #* If the export version API method is not supported by the REDCap instance,
-    #* return "5.12.2".  For convenience, we will treat all pre 6.0.0 
-    #* versions the same.  The only inefficiency this will generate is 
-    #* in choosing when to run `syncUnderscoreCodings`.
-    if (is.null(handled)) return("5.12.2")
-  }
+  response <- makeApiCall(rcon, body, ...)
+
+  if (response$status_code != 200  &&
+      is.null(redcapError(response)))
+    return("5.12.2")
 
   as.character(response)
 }

@@ -78,11 +78,8 @@ exportLogging.redcapApiConnection <- function(rcon,
                                               dag = character(0), 
                                               beginTime = as.POSIXct(character(0)), 
                                               endTime = as.POSIXct(character(0)), 
-                                              ...,
-                                              error_handling = getOption("redcap_error_handling"),
-                                              config = list(), 
-                                              api_param = list()){
-  
+                                              ...)
+{
   # Argument checks -------------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -118,20 +115,7 @@ exportLogging.redcapApiConnection <- function(rcon,
   checkmate::assert_posixct(x = endTime, 
                             max.len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   # Build the Body List ---------------------------------------------
@@ -147,21 +131,10 @@ exportLogging.redcapApiConnection <- function(rcon,
                                   format = "%Y-%m-%d %H:%M"), 
                endTime = format(endTime, 
                                 format= "%Y-%m-%d %H:%M"))
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Call to the API -------------------------------------------------
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
-  Log <- as.data.frame(response)
-  
+  Log <- as.data.frame(makeApiCall(rcon, body, ...))
+
   # Format and return data ------------------------------------------
   Log$timestamp <- as.POSIXct(Log$timestamp, 
                               format = "%Y-%m-%d %H:%M")

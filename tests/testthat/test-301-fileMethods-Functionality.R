@@ -6,6 +6,7 @@ test_that(
   "import, export, and delete a file in a longitudinal project",
   {
     local_reproducible_output(width = 200)
+    
     expect_true(
       importFiles(rcon,
                   file = local_file,
@@ -95,6 +96,46 @@ test_that(
 
 
     temp_dir <- tempdir()
+    
+    local_reproducible_output(width = 200)
+   
+    expect_error(exportFiles(rcon,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1,
+                             dir = temp_dir,
+                             file_prefix = TRUE,
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(exportFiles(rcon,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1,
+                             dir = temp_dir,
+                             file_prefix = TRUE, 
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(exportFiles(rcon,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1,
+                             dir = temp_dir,
+                             file_prefix = TRUE, 
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(exportFiles(rcon,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1,
+                             dir = temp_dir,
+                             file_prefix = TRUE,
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
 
     # Export the file
     save_to <- exportFiles(rcon,
@@ -108,6 +149,46 @@ test_that(
       grepl(".+1-event_1_arm_1-FileForImportExportTesting.txt", 
             save_to)
     )
+    
+    local_reproducible_output(width = 200)
+
+    expect_error(importFiles(rcon,
+                             file = local_file,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             overwrite = TRUE,
+                             repeat_instance = 1,
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(importFiles(rcon,
+                             file = local_file,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             overwrite = TRUE,
+                             repeat_instance = 1,
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(importFiles(rcon,
+                             file = local_file,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             overwrite = TRUE,
+                             repeat_instance = 1,
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(importFiles(rcon,
+                             file = local_file,
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             overwrite = TRUE,
+                             repeat_instance = 1,
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
 
     # And now import it again with an overwrite
     expect_true(
@@ -132,6 +213,37 @@ test_that(
       "A file exists and overwrite [=] FALSE"
     )
 
+    local_reproducible_output(width = 200)
+    expect_error(deleteFiles(rcon, 
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1, 
+                             config = list(1)), 
+                 "'config': Must have names")
+    expect_error(deleteFiles(rcon, 
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1, 
+                             config = "not a list"), 
+                 "'config': Must be of type 'list'")
+    
+    expect_error(deleteFiles(rcon, 
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1, 
+                             api_param = list(1)), 
+                 "'api_param': Must have names")
+    expect_error(deleteFiles(rcon, 
+                             record = "1",
+                             field = "file_upload_test",
+                             event = "event_1_arm_1",
+                             repeat_instance = 1,
+                             api_param = "not a list"), 
+                 "'api_param': Must be of type 'list'")
+    
     # Delete the file
     expect_true(
       deleteFiles(rcon,

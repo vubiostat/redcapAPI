@@ -114,9 +114,7 @@ userRoleMethods <- function(rcon,
                             user_roles, 
                             data, 
                             consolidate,
-                            ..., 
-                            error_handling, 
-                            config, 
-                            api_param){
+                            ...)
+{
   NULL
 }

@@ -10,15 +10,7 @@
 \usage{
 preserveProject(rcon, ..., save_as = NULL, dir, dir_create = TRUE)
 
-\method{preserveProject}{redcapApiConnection}(
-  rcon,
-  ...,
-  save_as = NULL,
-  dir,
-  dir_create = TRUE,
-  error_handling = getOption("redcap_error_handling"),
-  config = list()
-)
+\method{preserveProject}{redcapApiConnection}(rcon, ..., save_as = NULL, dir, dir_create = TRUE)
 
 readPreservedProject(x, ...)
 
@@ -44,15 +36,6 @@ objects (or files) will be saved. Must be provided if \code{save_as} is not
 \item{dir_create}{\code{logical(1)}. When \code{TRUE}, an attempt will be made to
 create the directory at \code{dir} if it does not already exist. When \code{FALSE},
 and the directory does not exist, an error is returned.}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A list to be passed to \code{\link[httr:POST]{httr::POST()}}.  This allows the
-user to set additional configurations for the API calls, such as
-certificates, SSL version, etc. For the majority of users, this does
-not need to be altered.}
 
 \item{x}{\code{list} or \code{character}. If a \code{list}, the list returned (or saved)
 by \code{preserveProject}. If \code{character}, the directory to which the

@@ -17,33 +17,11 @@ importEvents(rcon, data, override = FALSE, ...)
 
 deleteEvents(rcon, events = NULL, ...)
 
-\method{exportEvents}{redcapApiConnection}(
-  rcon,
-  arms = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportEvents}{redcapApiConnection}(rcon, arms = NULL, ...)
 
-\method{importEvents}{redcapApiConnection}(
-  rcon,
-  data,
-  override = FALSE,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{importEvents}{redcapApiConnection}(rcon, data, override = FALSE, ...)
 
-\method{deleteEvents}{redcapApiConnection}(
-  rcon,
-  events = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{deleteEvents}{redcapApiConnection}(rcon, events = NULL, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -64,18 +42,6 @@ existing arms data. When \code{TRUE}, all the existing arms data is
 deleted and replaced with the contents of \code{data}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportEvents} returns a data frame with the columns:\tabular{ll}{

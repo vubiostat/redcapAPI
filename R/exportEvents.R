@@ -13,11 +13,8 @@ exportEvents <- function(rcon,
 
 exportEvents.redcapApiConnection <- function(rcon, 
                                              arms           = NULL, 
-                                             ...,
-                                             error_handling = getOption("redcap_error_handling"), 
-                                             config         = list(), 
-                                             api_param      = list()){
-  
+                                             ...)
+{
   if (is.character(arms)) arms <- as.numeric(arms)
   
    ##################################################################
@@ -31,20 +28,7 @@ exportEvents.redcapApiConnection <- function(rcon,
   checkmate::assert_integerish(x = arms,
                                null.ok = TRUE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   Arms <- rcon$arms()
@@ -65,24 +49,15 @@ exportEvents.redcapApiConnection <- function(rcon,
    ##################################################################
   # Make the Body List
   
-  body <- list(token = rcon$token, 
-               content = 'event', 
+  body <- list(content = 'event', 
                format = 'csv', 
                returnFormat = 'csv')
   body <- c(body, 
             vectorToApiBodyList(arms, "arms"))
-  
-  body <- body[lengths(body) > 0]
-  
+
    ##################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) return(redcapError(response, error_handling))
 
-  response <- as.data.frame(response)
+  response <- as.data.frame(makeApiCall(rcon, body, ...))
   if(nrow(response) == 0) REDCAP_EVENT_STRUCTURE else response
 }

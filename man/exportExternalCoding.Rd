@@ -7,15 +7,7 @@
 \usage{
 exportExternalCoding(rcon, fields, ...)
 
-\method{exportExternalCoding}{redcapApiConnection}(
-  rcon,
-  fields = NULL,
-  ...,
-  batch_size = 1000,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportExternalCoding}{redcapApiConnection}(rcon, fields = NULL, ..., batch_size = 1000)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -27,18 +19,6 @@ all fields are returned (unless \code{forms} is specified).}
 
 \item{batch_size}{\code{integerish(1)} or \code{NULL}. When \code{NULL},
 all records are pulled. Otherwise, the records all pulled in batches of this size.}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a named list of named character vectors.

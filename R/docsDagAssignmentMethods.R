@@ -68,9 +68,7 @@
 # dummy function to control the order of arguments in the help file.
 dagAssignmentMethods <- function(rcon, 
                                  data,
-                                 ..., 
-                                 error_handling, 
-                                 config, 
-                                 api_param){
+                                 ...)
+{
   NULL
 }

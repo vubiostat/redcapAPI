@@ -24,7 +24,9 @@
       rcon    <- redcapConnection(token=key, url=url, ...)
       version <- list(content = "version", format = "csv")
       # Test connection by checking version
-      response <- makeApiCall(rcon, body = version)
+      response <- makeApiCall(rcon, body = version,
+        success_status_codes=c(200L, 301L, 302L)
+      )
       
       # No redirect, this is success
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
@@ -33,7 +35,8 @@
       rcon <- redcapConnection(token=key, url=response$header$location, ...)
       
       # Test connection by checking version post redirect
-      response <- makeApiCall(rcon, body = version)
+      response <- makeApiCall(rcon, body = version,
+        success_status_codes=c(200L, 301L, 302L))
 
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))
@@ -46,7 +49,7 @@
          grepl("Could not connect to server", e))
         stop("Unable to connect to url '",url,"'. ", e$message)
         
-      if(grepl("403", e)) return(NULL)
+      if(grepl("403", e)) return(NULL) # Forbidden, i.e. bad API_KEY
       
       stop(e)
     }

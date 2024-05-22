@@ -12,10 +12,7 @@ exportArms <- function(rcon, ...){
 
 exportArms.redcapApiConnection <- function(rcon, 
                                            arms = character(0), 
-                                           ...,
-                                           error_handling = getOption("redcap_error_handling"), 
-                                           config = list(), 
-                                           api_param = list())
+                                           ...)
 {
   if (is.numeric(arms)) arms <- as.character(arms)
   
@@ -28,20 +25,7 @@ exportArms.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = arms,
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   if(rcon$projectInformation()$is_longitudinal == 0){
@@ -49,25 +33,12 @@ exportArms.redcapApiConnection <- function(rcon,
   }
   
   # Build the body list ---------------------------------------------
-  body <- c(list(token = rcon$token, 
-                 content = 'arm', 
+  body <- c(list(content = 'arm', 
                  format = 'csv', 
                  returnFormat = 'csv'), 
             vectorToApiBodyList(arms, 
                                 parameter_name = "arms"))
-  
-  body <- body[lengths(body) > 0]
-  
-  
+
   # API Call --------------------------------------------------------
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
-  
-  as.data.frame(response)
+  as.data.frame(makeApiCall(rcon, body, ...))
 }
