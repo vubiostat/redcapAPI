@@ -57,7 +57,7 @@ test_that(
     e <- structure(
       list(message = paste0("Timeout was reached: [", url,
                             "] Operation timed out after 300001 milliseconds with 0 bytes received"), 
-           call = curl_fetch_memory(paste0(url,"/params"), handle = h)
+           call = 'curl_fetch_memory(paste0(url,"/params"), handle = h)'
       ),
       class = c("simpleError", "error", "condition")
     )
@@ -92,7 +92,7 @@ test_that(
     e <- structure(
            list(message = paste0("Timeout was reached: [", url,
                             "] Operation timed out after 300001 milliseconds with 0 bytes received"),
-                call = curl_fetch_memory(paste0(url,"/params"), handle = h)
+                call = 'curl_fetch_memory(paste0(url,"/params"), handle = h)'
                 ),
            class = c("simpleError", "error", "condition")
     )
