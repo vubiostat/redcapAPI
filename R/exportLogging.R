@@ -73,6 +73,7 @@ exportLogging <- function(
 }
 
 #' @rdname exportLogging
+#' @importFrom lubridate days
 #' @export
 exportLogging.redcapApiConnection <- function(
   rcon, 
@@ -135,9 +136,9 @@ exportLogging.redcapApiConnection <- function(
   {
     return(do.call(rbind,
       lapply(
-        seq(beginTime,
-            to=if(length(endTime) == 1) endTime else Sys.time(),
-            by=paste(batchInterval, "days")),
+        rev(seq(beginTime,
+                to=if(length(endTime) == 1) endTime else Sys.time(),
+                by=paste(batchInterval, "days"))),
         function(x) exportLogging(
           rcon, 
           logtype,
