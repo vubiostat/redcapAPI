@@ -21,7 +21,10 @@
 #' @param beginTime `POSIXct(0/1)`. When given, only 
 #'   logs recorded after this time will be returned.
 #' @param endTime `POSIXct(0/1)`. When given, only logs
-#'   recorded before this time will be returned. 
+#'   recorded before this time will be returned.
+#' @param batchInterval `integerish(1)`. When provided will
+#'   batch log pulls to intervals of this many days. Requires
+#'   that beginTime is specified.
 #'   
 #' @return 
 #' Returns a data frame with columns
@@ -54,31 +57,33 @@
 #'              logtype = "record_delete")
 #' }
 #' @export
-
-exportLogging <- function(rcon, 
-                          logtype = character(0), 
-                          user = character(0), 
-                          record = character(0), 
-                          dag = character(0), 
-                          beginTime = .POSIXct(character(0)), 
-                          endTime = .POSIXct(character(0)), 
-                          ...){
-  
+#' 
+exportLogging <- function(
+  rcon, 
+  logtype       = character(0), 
+  user          = character(0), 
+  record        = character(0), 
+  dag           = character(0), 
+  beginTime     = as.POSIXct(character(0)), 
+  endTime       = as.POSIXct(character(0)),
+  batchInterval = NULL,
+  ...)
+{
   UseMethod("exportLogging")
-  
 }
 
 #' @rdname exportLogging
 #' @export
-
-exportLogging.redcapApiConnection <- function(rcon, 
-                                              logtype = character(0), 
-                                              user = character(0), 
-                                              record = character(0), 
-                                              dag = character(0), 
-                                              beginTime = as.POSIXct(character(0)), 
-                                              endTime = as.POSIXct(character(0)), 
-                                              ...)
+exportLogging.redcapApiConnection <- function(
+  rcon, 
+  logtype       = character(0), 
+  user          = character(0), 
+  record        = character(0), 
+  dag           = character(0), 
+  beginTime     = as.POSIXct(character(0)), 
+  endTime       = as.POSIXct(character(0)),
+  batchInterval = NULL,
+  ...)
 {
   # Argument checks -------------------------------------------------
   coll <- checkmate::makeAssertCollection()
@@ -87,7 +92,8 @@ exportLogging.redcapApiConnection <- function(rcon,
                           classes = "redcapApiConnection",
                           add = coll)
   
-  if (length(logtype) == 1){
+  if (length(logtype) == 1)
+  {
     logtype <- checkmate::matchArg(x = logtype, 
                                    choices = c("export", "manage", "user", "record", 
                                                "record_add", "record_edit", "record_delete", 
@@ -108,34 +114,54 @@ exportLogging.redcapApiConnection <- function(rcon,
                               max.len = 1,
                               add = coll)
   
-  checkmate::assert_posixct(x = beginTime, 
+  checkmate::assert_posixct(x = beginTime,
+                            min.len = if(is.null(batchInterval)) NULL else 1,
                             max.len = 1, 
                             add = coll)
   
   checkmate::assert_posixct(x = endTime, 
                             max.len = 1, 
                             add = coll)
+  
+  checkmate::assert_integerish(x = batchInterval,
+                               max.len = 1,
+                               null.ok = TRUE,
+                               add = coll)
 
   checkmate::reportAssertions(coll)
   
-  # Build the Body List ---------------------------------------------
+  # Batch call
+  if(!is.null(batchInterval))
+  {
+    return(do.call(rbind,
+      lapply(
+        seq(as.Date(beginTime), to=Sys.Date(), by=batchInterval),
+        function(x) exportLogging(
+          rcon, 
+          logtype,
+          user,
+          record,
+          dag,
+          beginTime = as.POSIXct(x),
+          endTime   = as.POSIXct(x+batchInterval))
+      )
+    ))
+  }
   
-  body <- list(content = 'log', 
-               format = 'csv', 
-               returnFormat = 'csv', 
-               logtype = logtype, 
-               user = user, 
-               record = record, 
-               dag = dag, 
-               beginTime = format(beginTime, 
-                                  format = "%Y-%m-%d %H:%M"), 
-               endTime = format(endTime, 
-                                format= "%Y-%m-%d %H:%M"))
+  body <- list(
+    content      = 'log', 
+    format       = 'csv', 
+    returnFormat = 'csv', 
+    logtype      = logtype, 
+    user         = user, 
+    record       = record, 
+    dag          = dag, 
+    beginTime    = format(beginTime, format = "%Y-%m-%d %H:%M"), 
+    endTime      = format(endTime,   format = "%Y-%m-%d %H:%M")
+  )
 
-  # Call to the API -------------------------------------------------
   Log <- as.data.frame(makeApiCall(rcon, body, ...))
 
-  # Format and return data ------------------------------------------
   Log$timestamp <- as.POSIXct(Log$timestamp, 
                               format = "%Y-%m-%d %H:%M")
   

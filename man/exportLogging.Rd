@@ -11,8 +11,9 @@ exportLogging(
   user = character(0),
   record = character(0),
   dag = character(0),
-  beginTime = .POSIXct(character(0)),
-  endTime = .POSIXct(character(0)),
+  beginTime = as.POSIXct(character(0)),
+  endTime = as.POSIXct(character(0)),
+  batchInterval = NULL,
   ...
 )
 
@@ -24,6 +25,7 @@ exportLogging(
   dag = character(0),
   beginTime = as.POSIXct(character(0)),
   endTime = as.POSIXct(character(0)),
+  batchInterval = NULL,
   ...
 )
 }
@@ -49,6 +51,10 @@ logs recorded after this time will be returned.}
 
 \item{endTime}{\code{POSIXct(0/1)}. When given, only logs
 recorded before this time will be returned.}
+
+\item{batchInterval}{\code{integerish(1)}. When provided will
+batch log pulls to intervals of this many days. Requires
+that beginTime is specified.}
 
 \item{...}{Arguments to pass to other methods}
 }
