@@ -144,8 +144,9 @@ exportLogging.redcapApiConnection <- function(
           user,
           record,
           dag,
-          beginTime = as.POSIXct(x),
-          endTime   = as.POSIXct(x+batchInterval))
+          beginTime = x,
+          endTime   = x+days(batchInterval)
+        )
       )
     ))
   }
