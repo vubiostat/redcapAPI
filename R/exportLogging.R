@@ -135,7 +135,9 @@ exportLogging.redcapApiConnection <- function(
   {
     return(do.call(rbind,
       lapply(
-        seq(as.Date(beginTime), to=Sys.Date(), by=batchInterval),
+        seq(beginTime,
+            to=if(length(endTime) == 1) endTime else Sys.time(),
+            by=paste(batchInterval, "days")),
         function(x) exportLogging(
           rcon, 
           logtype,

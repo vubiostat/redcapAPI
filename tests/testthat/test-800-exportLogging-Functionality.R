@@ -3,8 +3,7 @@ context("Export Logging Functionality")
 
 BEGIN_TIME <- tail(seq(Sys.time(), by = "-7 days", length.out = 2), 1)
 
-RecentLog <- exportLogging(rcon, 
-                         beginTime = BEGIN_TIME)
+RecentLog <- exportLogging(rcon, beginTime = BEGIN_TIME)
 
 test_that(
   "Logs can be batched and match unbatched",
