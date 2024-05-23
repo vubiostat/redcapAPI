@@ -17,7 +17,7 @@ An object of class \code{character} of length 5.
 
 An object of class \code{character} of length 11.
 
-An object of class \code{character} of length 23.
+An object of class \code{character} of length 25.
 
 An object of class \code{data.frame} with 0 rows and 3 columns.
 }
