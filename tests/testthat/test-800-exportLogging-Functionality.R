@@ -3,18 +3,25 @@ context("Export Logging Functionality")
 
 BEGIN_TIME <- tail(seq(Sys.time(), by = "-7 days", length.out = 2), 1)
 
-FullLog <- exportLogging(rcon, 
+RecentLog <- exportLogging(rcon, 
                          beginTime = BEGIN_TIME)
 
 test_that(
-  "Logs are returned when all arguments are default", 
+  "Logs can be batched and match unbatched",
   {
-    checkmate::expect_data_frame(
-      exportLogging(rcon)
-    )
+    BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, batchInterval=1)
+    BatchedLog <- BatchedLog[2:(nrow(RecentLog)+1),] # Drop the last exportLoggging call
+    expect_equal(sort(BatchedLog$timestamp), sort(RecentLog$timestamp))
+    expect_equal(sort(BatchedLog$action),    sort(RecentLog$action))
   }
 )
 
+test_that(
+  "Logs are returned for the last 7 days", 
+  {
+    checkmate::expect_data_frame(RecentLog)
+  }
+)
 
 test_that(
   "Logs are returned for logtype = 'export'",
@@ -130,7 +137,7 @@ test_that(
 test_that(
   "Logs are returned for an existing user", 
   {
-    user_in_log <- unique(FullLog$username)
+    user_in_log <- unique(RecentLog$username)
     user_for_test <- sample(user_in_log, 1)
     skip_if(length(user_for_test) == 0)
     
@@ -158,8 +165,8 @@ test_that(
 test_that(
   "Logs are returned for an existing record", 
   {
-    Records <- FullLog[!is.na(FullLog$record) & !grepl("user", FullLog$action), ]
-    records <- FullLog$record
+    Records <- RecentLog[!is.na(RecentLog$record) & !grepl("user", RecentLog$action), ]
+    records <- RecentLog$record
     records <- trimws(records)
     records <- unique(records)
     
@@ -177,7 +184,7 @@ test_that(
 test_that(
   "Empty logs are returned for a non-existing user", 
   {
-    records <- FullLog$record
+    records <- RecentLog$record
     records <- records[!is.na(records)]
     records <- trimws(records)
     records <- unique(records)
@@ -216,7 +223,7 @@ test_that(
 test_that(
   "Logs are returned after a beginTime", 
   {
-    times <- FullLog$timestamp
+    times <- RecentLog$timestamp
     times <- sort(times)
     index <- seq_along(times)
     index <- median(index)
@@ -235,7 +242,7 @@ test_that(
 test_that(
   "Logs are returned before an endTime", 
   {
-    times <- FullLog$timestamp
+    times <- RecentLog$timestamp
     times <- sort(times)
     index <- seq_along(times)
     index <- median(index)
