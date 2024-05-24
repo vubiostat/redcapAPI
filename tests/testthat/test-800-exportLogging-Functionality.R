@@ -7,7 +7,7 @@ RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 test_that(
   "Logs can be batched and match unbatched",
   {
-    endTime <- BEGIN_TIME+3*24*60*60-27*60 # End time is 27min less than 3 days to test final boundary
+    endTime <- BEGIN_TIME+6*24*60*60-27*60 # End time is 27min less than 6 days to test final boundary
     BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, endTime=endTime, batchInterval=1)
     SameLog <- RecentLog[RecentLog$timestamp >= BEGIN_TIME & RecentLog$timestamp < endTime,]
     expect_equal(BatchedLog$timestamp, SameLog$timestamp)
