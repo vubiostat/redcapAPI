@@ -1,17 +1,19 @@
 context("Export Logging Functionality")
 
-
-BEGIN_TIME <- tail(seq(Sys.time(), by = "-7 days", length.out = 2), 1)
-
-RecentLog <- exportLogging(rcon, beginTime = BEGIN_TIME)
+BEGIN_TIME <- as.POSIXct(format(Sys.time(), format = "%Y-%m-%d %H:%M")) - 7*24*60*60
+RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
 test_that(
   "Logs can be batched and match unbatched",
   {
-    BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, batchInterval=1)
-    BatchedLog <- BatchedLog[2:(nrow(RecentLog)+1),] # Drop the last exportLoggging call
-    expect_equal(sort(BatchedLog$timestamp), sort(RecentLog$timestamp))
-    expect_equal(sort(BatchedLog$action),    sort(RecentLog$action))
+    endTime <- BEGIN_TIME+3*24*60*60-27*60 # End time is 27min less than 3 days to test final boundary
+    BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, endTime=endTime, batchInterval=1)
+    SameLog <- RecentLog[RecentLog$timestamp >= BEGIN_TIME & RecentLog$timestamp < endTime,]
+    expect_equal(BatchedLog$timestamp, SameLog$timestamp)
+    expect_equal(BatchedLog$action,    SameLog$action)
+    expect_equal(BatchedLog$username,  SameLog$username)
+    expect_equal(BatchedLog$details,   SameLog$details)
+    expect_equal(BatchedLog$record,    SameLog$record)
   }
 )
 

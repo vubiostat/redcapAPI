@@ -73,7 +73,6 @@ exportLogging <- function(
 }
 
 #' @rdname exportLogging
-#' @importFrom lubridate days
 #' @export
 exportLogging.redcapApiConnection <- function(
   rcon, 
@@ -139,15 +138,21 @@ exportLogging.redcapApiConnection <- function(
         rev(seq(beginTime,
                 to=if(length(endTime) == 1) endTime else Sys.time(),
                 by=paste(batchInterval, "days"))),
-        function(x) exportLogging(
-          rcon, 
-          logtype,
-          user,
-          record,
-          dag,
-          beginTime = x,
-          endTime   = x+days(batchInterval)
-        )
+        function(x)
+        {
+          cutTime <- min(x+24*60*60*batchInterval, endTime)
+          data <- exportLogging(
+            rcon, 
+            logtype,
+            user,
+            record,
+            dag,
+            beginTime = x-60, 
+            endTime   = cutTime+60
+          )
+          # Compenstation for poor interface design
+          data[data$timestamp >= beginTime & data$timestamp < cutTime,]
+        }
       )
     ))
   }
