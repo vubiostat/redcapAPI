@@ -1,5 +1,6 @@
 context("Export Logging Functionality")
 
+# API works versus "minute" so current time is rounded to minute
 BEGIN_TIME <- as.POSIXct(format(Sys.time(), format = "%Y-%m-%d %H:%M")) - 7*24*60*60
 RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
