@@ -343,7 +343,7 @@ test_that(
             "CI cannot test user interactions")
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
  
-    expect_silent(x <- unlockREDCap(c(rcon="TestRedcapAPI"), url, keyring="API_KEYs"))
+    expect_silent(x <- unlockREDCap(c(rcon=testdb), url, keyring="API_KEYs"))
     expect_true("rcon" %in% names(x))
     expect_class(x$rcon, "redcapApiConnection")
   }
@@ -362,7 +362,7 @@ test_that(
     e <- new.env()
     
     expect_silent(unlockREDCap(
-      c(rcon="TestRedcapAPI"), url, keyring="API_KEYs",
+      c(rcon=testdb), url, keyring="API_KEYs",
       envir=e, passwordFUN=passwordFUN))
     
     expect_true(exists("rcon", envir=e))

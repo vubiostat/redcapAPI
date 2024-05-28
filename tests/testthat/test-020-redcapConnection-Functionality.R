@@ -9,7 +9,7 @@ API_KEY <-
     config$redcapAPI$keys$TestRedcapAPI
   } else 
   {
-    keyring::key_get('redcapAPI', 'TestRedcapAPI', 'API_KEYs')
+    keyring::key_get('redcapAPI', testdb, 'API_KEYs')
   }
 
 
