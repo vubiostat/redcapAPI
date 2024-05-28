@@ -14,6 +14,14 @@ test_that(
   }
 )
 
+test_that(
+  "Return an error when batchInterval is given without beginTime",
+  expect_error(
+    exportLogging(rcon, batchInterval=7),
+    "Variable 'beginTime': Must have length >= 1, but has length 0"
+  )
+)
+
 
 test_that(
   "Return an error when log_type is not one of event types",
