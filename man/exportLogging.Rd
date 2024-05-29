@@ -47,10 +47,16 @@ By default, logs are returned for all records.}
 By default, logs are returned for all data access groups.}
 
 \item{beginTime}{\code{POSIXct(0/1)}. When given, only
-logs recorded after this time will be returned.}
+logs recorded on or after this time will be returned. The time specified
+is rounded to minutes and ignores the timezone. This can cause issues
+if the caller and server computers are configured in different timezones.
+Least surprising behavior is making sure the date specified is encoded
+in the timezone of the REDCap server.}
 
 \item{endTime}{\code{POSIXct(0/1)}. When given, only logs
-recorded before this time will be returned.}
+recorded on or before this time will be returned. If using batchInterval
+it will only be before this time. See \code{beginTime} for details on time
+encoding.}
 
 \item{batchInterval}{\code{integerish(1)}. When provided will
 batch log pulls to intervals of this many days. Requires

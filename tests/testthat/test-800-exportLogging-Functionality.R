@@ -3,8 +3,9 @@ context("Export Logging Functionality")
 # API works versus "minute" so current time is rounded to minute
 # Also, this needs to be in the timezone of the server, which ours is CDT
 # If another user wishes to automate these test this could be an ENV variable.
+systime <- as.POSIXct(Sys.time(), tz="America/Chicago")
 BEGIN_TIME <- as.POSIXct(
-  format(Sys.time(), format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
+  format(x, format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
 RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
 test_that(
