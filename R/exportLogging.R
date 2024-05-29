@@ -177,7 +177,8 @@ exportLogging.redcapApiConnection <- function(
 
   Log <- as.data.frame(makeApiCall(rcon, body, ...))
 
-  Log$timestamp <- as.POSIXct(Log$timestamp, 
+  Log$timestamp <- as.POSIXct(Log$timestamp,
+                              tz = attr(beginTime, "tzone"),
                               format = "%Y-%m-%d %H:%M")
   
   Log
