@@ -562,9 +562,10 @@ default_cast_character <- default_cast_no_factor
 # Unexported - default lists for exportRecordsTyped              ####
 
 .default_validate <- list(
-  date_              = valRx(REGEX_DATE),              # REGEX values defined in constants.R
-  datetime_          = valRx(REGEX_DATETIME),
-  datetime_seconds_  = valRx(REGEX_DATETIME_SECONDS),
+  # REGEX values defined in constants.R
+  date_              = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d")),              
+  datetime_          = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d HH:MM")), 
+  datetime_seconds_  = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d %H:%M:%S")),
   time_mm_ss         = valRx(REGEX_TIME_MMSS),
   time_hh_mm_ss      = valRx(REGEX_TIME_HHMMSS),
   time               = valRx(REGEX_TIME),
