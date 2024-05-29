@@ -5,7 +5,7 @@ context("Export Logging Functionality")
 # If another user wishes to automate these test this could be an ENV variable.
 systime <- as.POSIXct(Sys.time(), tz="America/Chicago")
 BEGIN_TIME <- as.POSIXct(
-  format(x, format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
+  format(systime, format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
 RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
 test_that(
