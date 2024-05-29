@@ -563,9 +563,9 @@ default_cast_character <- default_cast_no_factor
 
 .default_validate <- list(
   # REGEX values defined in constants.R
-  date_              = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d")),              
-  datetime_          = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d HH:MM")), 
-  datetime_seconds_  = !is.na(as.POSIXct('2020-10-40 15:15', format = "%Y-%m-%d %H:%M:%S")),
+  date_              = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d")),              
+  datetime_          = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d HH:MM")), 
+  datetime_seconds_  = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S")),
   time_mm_ss         = valRx(REGEX_TIME_MMSS),
   time_hh_mm_ss      = valRx(REGEX_TIME_HHMMSS),
   time               = valRx(REGEX_TIME),
