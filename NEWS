@@ -12,6 +12,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.9.2
 
+* Improved date and datetime validation
 * Bug fix for importMetaData validation
 * Refactored error handling on API calls to reduce code footprint.
 * Added `redcap_survey_identifier` to system field list.

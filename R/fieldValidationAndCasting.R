@@ -562,9 +562,10 @@ default_cast_character <- default_cast_no_factor
 # Unexported - default lists for exportRecordsTyped              ####
 
 .default_validate <- list(
-  date_              = valRx(REGEX_DATE),              # REGEX values defined in constants.R
-  datetime_          = valRx(REGEX_DATETIME),
-  datetime_seconds_  = valRx(REGEX_DATETIME_SECONDS),
+  # REGEX values defined in constants.R
+  date_              = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d")),              
+  datetime_          = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d %H:%M")), 
+  datetime_seconds_  = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S")),
   time_mm_ss         = valRx(REGEX_TIME_MMSS),
   time_hh_mm_ss      = valRx(REGEX_TIME_HHMMSS),
   time               = valRx(REGEX_TIME),
@@ -617,9 +618,9 @@ default_cast_character <- default_cast_no_factor
 # Default Lists for recastForImport                              ####
 
 .default_validate_import <- list(
-  date_                    = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATE)(x),
-  datetime_                = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME)(x),
-  datetime_seconds_        = function(x, ...) valRx(REGEX_POSIXCT)(x) | valRx(REGEX_DATETIME_SECONDS)(x),
+  date_                    = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d")),
+  datetime_                = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d %H:%M")),
+  datetime_seconds_        = function(x, ...) !is.na(as.POSIXct(x, format = "%Y-%m-%d %H:%M:%S")),
   time_mm_ss               = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_MMSS)(x),
   time_hh_mm_ss            = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME_HHMMSS)(x),
   time                     = function(x, ...) valRx(REGEX_HHMMSS)(x) | valRx(REGEX_TIME)(x),
