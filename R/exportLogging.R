@@ -177,8 +177,23 @@ exportLogging.redcapApiConnection <- function(
 
   Log <- as.data.frame(makeApiCall(rcon, body, ...))
 
+  timezone <-
+    if(length(beginTime) > 0 &&
+       !is.null(attr(beginTime, "tzone")))
+    {
+      attr(beginTime, "tzone")
+    } else if(length(beginTime) == 0 && 
+              length(endTime > 0)    &&
+              !is.null(attr(endTime, "tzone")))
+    {
+      attr(endTime, "tzone")
+    } else 
+    {
+      Sys.timezone()
+    }
+
   Log$timestamp <- as.POSIXct(Log$timestamp,
-                              tz = attr(beginTime, "tzone"),
+                              tz = timezone,
                               format = "%Y-%m-%d %H:%M")
   
   Log
