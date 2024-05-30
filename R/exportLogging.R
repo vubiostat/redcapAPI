@@ -157,7 +157,7 @@ exportLogging.redcapApiConnection <- function(
             endTime   = cutTime+60
           )
           # Compensation for poor interface design
-          data[data$timestamp >= beginTime & data$timestamp < cutTime,]
+          data[data$timestamp >= x & data$timestamp < cutTime,]
         }
       )
     ))
