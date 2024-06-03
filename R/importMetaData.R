@@ -86,7 +86,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   .isPropertyOnAppropriateField(field_name = data$field_name, 
                                 field_type = data$field_type, 
-                                permissible_field_type = c("text", "slider", "file"),
+                                permissible_field_type = c("text", "slider", "file", "autocomplete", "vmrn"),
                                 property = data$text_validation_type_or_show_slider_number, 
                                 property_name = "text_validation_type_or_show_slider_number", 
                                 coll = coll)
