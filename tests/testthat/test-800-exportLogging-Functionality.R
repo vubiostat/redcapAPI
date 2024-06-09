@@ -14,6 +14,9 @@ test_that(
     endTime <- BEGIN_TIME+6*24*60*60-27*60 # End time is 27min less than 6 days to test final boundary
     BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, endTime=endTime, batchInterval=1)
     SameLog <- RecentLog[RecentLog$timestamp >= BEGIN_TIME & RecentLog$timestamp < endTime,]
+    
+    skip_if(nrow(BatchedLog) == 0, "No logs for test window in past")
+    
     expect_equal(BatchedLog$timestamp, SameLog$timestamp)
     expect_equal(BatchedLog$action,    SameLog$action)
     expect_equal(BatchedLog$username,  SameLog$username)
@@ -188,21 +191,9 @@ test_that(
 
 
 test_that(
-  "Empty logs are returned for a non-existing user", 
+  "Empty logs are returned for a non-existing record", 
   {
-    records <- RecentLog$record
-    records <- records[!is.na(records)]
-    records <- trimws(records)
-    records <- unique(records)
-    # by appending abc, to all of the existing record, we guarantee
-    # that the record used doesn't exist
-    records <- sprintf("%s-abc", 
-                       records)
-    
-    record_for_test <- sample(records, 1)
-    
-    record_for_test <- sprintf("%s-abc", 
-                               record_for_test)
+    record_for_test <- "thisisprobablynotarecordid"
     
     Logs <- exportLogging(rcon, 
                           record = record_for_test, 
