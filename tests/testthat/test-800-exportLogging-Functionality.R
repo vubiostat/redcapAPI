@@ -21,7 +21,7 @@ test_that(
     expect_equal(BatchedLog$action,    SameLog$action)
     expect_equal(BatchedLog$username,  SameLog$username)
     expect_equal(BatchedLog$details,   SameLog$details)
-    expect_equal(BatchedLog$record,    SameLog$record)
+    expect_equal(as.character(BatchedLog$record), as.character(SameLog$record))
   }
 )
 
