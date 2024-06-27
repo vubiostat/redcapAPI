@@ -32,7 +32,7 @@ offlineConnection(
   dags = NULL,
   dag_assignment = NULL,
   project_info = NULL,
-  version = NULL,
+  version = "14.4.0",
   file_repo = NULL,
   records = NULL,
   url = NULL,
