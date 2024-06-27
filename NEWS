@@ -13,6 +13,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.9.3
 
 * REDCap 14.4.0 changed user role structure.
+* (evaluating) Validate data structure and version with `.getStructure`
+  * including "data_form.csv" in inst/extdata
 
 ## 2.9.2
 

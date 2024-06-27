@@ -38,6 +38,58 @@ validateRedcapData <- function(data, redcap_data){
   return(data)
 }
 
+#' @keywords internal
+#' @importFrom utils read.csv
+.getDataForm <- function() {
+  fn <- system.file("extdata", "data_form.csv", package = "redcapAPI")
+  x <- read.csv(fn,
+    colClasses = c(
+      field = 'character',
+	  type = 'character',
+	  v_start = 'character',
+	  v_stop = 'character'
+    )
+  )
+  rm_na_cols <- setdiff(names(x), c('v_start','v_stop'))
+  for(i in rm_na_cols) x[is.na(x[,i]),i] <- 0
+  x[x[,'v_start'] == '', 'v_start'] <- NA
+  x[x[,'v_stop'] == '', 'v_stop'] <- NA
+  x
+}
+
+data_form <- .getDataForm()
+
+#' @keywords internal
+.getStructure <- function(area, version) {
+  coi <- c('field','type','v_start','v_stop')
+  if(!(area %in% names(data_form))) stop('unknown structure type provided')
+  df <- data_form[data_form[,area] == 1, coi]
+  mk_type <- function(t) {
+    switch(t,
+      N = numeric(0),
+	  T = as.POSIXct(character(0)),
+	  character(0)
+    )
+  }
+  r <- do.call(data.frame, c(mapply(mk_type, df[,'type']), stringsAsFactors = FALSE))
+  names(r) <- df[,'field']
+  torm <- logical(nrow(df))
+  ix <- which(!is.na(df[,'v_start']))
+  if(length(ix)) {
+    cv <- vapply(df[ix,'v_start'], utils::compareVersion, numeric(1), a = version)
+    torm[ix[cv < 0]] <- TRUE
+  }
+  ix <- which(!is.na(df[,'v_stop']))
+  if(length(ix)) {
+    cv <- vapply(df[ix,'v_stop'], utils::compareVersion, numeric(1), a = version)
+    torm[ix[cv > 0]] <- TRUE
+  }
+  if(grepl('^f_', area)) {
+    return(names(r)[!torm])
+  }
+  r[,!torm]
+}
+
 #' @rdname redcapDataStructures
 #' @export
 
@@ -46,11 +98,7 @@ validateRedcapData <- function(data, redcap_data){
 # It would not hurt to contemplate how these could be obtained 
 # dynamically rather than relying up updating constants.
 
-REDCAP_SYSTEM_FIELDS <- c("redcap_event_name", 
-                          "redcap_data_access_group", 
-                          "redcap_repeat_instrument", 
-                          "redcap_repeat_instance",
-                          "redcap_survey_identifier")
+REDCAP_SYSTEM_FIELDS <- .getStructure('f_SYSTEM', '14.4.0')
 
 #' @rdname redcapDataStructures
 #' @export
@@ -67,100 +115,45 @@ REDCAP_PROJECT_PURPOSE <- c("Practice/just for fun",
 # Arms --------------------------------------------------------------
 # Arms - Data Frame Structure
 
-REDCAP_ARMS_STRUCTURE <- 
-  data.frame(arm_num = numeric(0), 
-             name = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_ARMS_STRUCTURE <- .getStructure('ARMS', '14.4.0')
 
 # Data Access Groups ------------------------------------------------
 # DAG Structure
 
-REDCAP_DAG_STRUCTURE <- 
-  data.frame(data_access_group_name = character(0), 
-             unique_group_name = character(0), 
-             data_access_group_id = numeric(0), 
-             stringsAsFactors = FALSE)
+REDCAP_DAG_STRUCTURE <- .getStructure('DAG', '14.4.0')
 
 # DAG Assignment Structure
 
-REDCAP_DAG_ASSIGNMENT_STRUCTURE <- 
-  data.frame(username = character(0), 
-             redcap_data_access_group = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_DAG_ASSIGNMENT_STRUCTURE <- .getStructure('DAG_ASSN', '14.4.0')
 
 # Events ------------------------------------------------------------
 # Event Structure
 
-REDCAP_EVENT_STRUCTURE <- 
-  data.frame(event_name = character(0), 
-             arm_num = numeric(0), 
-             unique_event_name = character(0), 
-             custom_event_label = character(0), 
-             event_id = numeric(0),
-             days_offset = numeric(0), 
-             offset_min = numeric(0), 
-             offset_max = numeric(0),
-             stringsAsFactors = FALSE)
+REDCAP_EVENT_STRUCTURE <- .getStructure('EVENT', '14.4.0')
 
 # Field Names -------------------------------------------------------
 # Field Name Structure 
 
-REDCAP_FIELDNAME_STRUCTURE <- 
-  data.frame(original_field_name = character(0), 
-             choice_value = character(0), 
-             export_field_name = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_FIELDNAME_STRUCTURE <- .getStructure('FIELDNAME', '14.4.0')
 
 # Instruments -------------------------------------------------------
 # Instrument Structure
 
-REDCAP_INSTRUMENT_STRUCTURE <- 
-  data.frame(instrument_name = character(0), 
-             instrument_label = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_INSTRUMENT_STRUCTURE <- .getStructure('INSTRUMENT', '14.4.0')
 
 # Instrument Mapping Structure 
 
-REDCAP_INSTRUMENT_MAPPING_STRUCTURE <- 
-  data.frame(arm_num = numeric(0), 
-             unique_event_name = character(0), 
-             form = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_INSTRUMENT_MAPPING_STRUCTURE <- .getStructure('INSTRUMENT_MAP', '14.4.0')
 
 # Logging -----------------------------------------------------------
 # Logging Structure
 
-REDCAP_LOGGING_STRUCTURE <- 
-  data.frame(timestamp = as.POSIXct(character(0)), 
-             username = character(0), 
-             action = character(0), 
-             details = character(0), 
-             record = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_LOGGING_STRUCTURE <- .getStructure('LOGGING', '14.4.0')
 
 # Meta Data ---------------------------------------------------------
 # Meta Data - Data Frame Structure 
 
-REDCAP_METADATA_STRUCTURE <- 
-  data.frame(field_name = character(0),
-             form_name = character(0),
-             section_header = character(0),
-             field_type = character(0),
-             field_label = character(0),
-             select_choices_or_calculations = character(0),
-             field_note = character(0),
-             text_validation_type_or_show_slider_number = character(0),
-             text_validation_min = character(0),
-             text_validation_max = character(0),
-             identifier = character(0),
-             branching_logic = character(0),
-             required_field = character(0),
-             custom_alignment = character(0),
-             question_number = character(0),
-             matrix_group_name = character(0),
-             matrix_ranking = character(0),
-             field_annotation = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_METADATA_STRUCTURE <- .getStructure('METADATA', '14.4.0')
 
 REDCAP_METADATA_API_UI_MAPPING <- 
   c("Variable...Field.Name" = "field_name", 
@@ -233,229 +226,60 @@ REDCAP_METADATA_VALIDATION_TYPE <- c(
 # Project Information -----------------------------------------------
 # Project Information Structure 
 
-REDCAP_PROJECT_INFORMATION_STRUCTURE <- 
-  data.frame(project_id = character(0),
-             project_title = character(0),
-             creation_time = character(0),
-             production_time = character(0),
-             in_production = character(0),
-             project_language = character(0),
-             purpose = character(0),
-             purpose_other = character(0),
-             project_notes = character(0),
-             custom_record_label = character(0),
-             secondary_unique_field = character(0),
-             is_longitudinal = character(0),
-             has_repeating_instruments_or_events = character(0),
-             surveys_enabled = character(0),
-             scheduling_enabled = character(0),
-             record_autonumbering_enabled = character(0),
-             randomization_enabled = character(0),
-             ddp_enabled = character(0),
-             project_irb_number = character(0),
-             project_grant_number = character(0),
-             project_pi_firstname = character(0),
-             project_pi_lastname = character(0),
-             display_today_now_button = character(0),
-             missing_data_codes = character(0),
-             external_modules = character(0),
-             bypass_branching_erase_field_prompt = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_PROJECT_INFORMATION_STRUCTURE <- .getStructure('PROJ_INFO', '14.4.0')
 
 # This is the list of fields recognized for updates in importProjectInformation
 
-PROJECT_INFO_FIELDS_EDITABLE <- 
-  c("project_title", 
-    "project_language", 
-    "purpose", 
-    "purpose_other", 
-    "project_notes", 
-    "custom_record_label",
-    "secondary_unique_field", 
-    "is_longitudinal", 
-    "surveys_enabled", 
-    "scheduling_enabled", 
-    "record_autonumbering_enabled", 
-    "randomization_enabled", 
-    "project_irb_number", 
-    "project_grant_number", 
-    "project_pi_firstname", 
-    "project_pi_lastname", 
-    "display_today_now_button", 
-    "bypass_branching_erase_field_prompt")
+PROJECT_INFO_FIELDS_EDITABLE <- .getStructure('f_PROJ_INFO_EDIT', '14.4.0')
 
-PROJECT_INFO_FIELDS_FIXED <- # These cannot be updated via the API
-  c("project_id",
-    "creation_time",
-    "production_time",
-    "in_production",
-    "has_repeating_instruments_or_events",
-    "ddp_enabled",
-    "missing_data_codes",
-    "external_modules")
+# These cannot be updated via the API
+PROJECT_INFO_FIELDS_FIXED <- .getStructure('f_PROJ_INFO_FIXED', '14.4.0')
 
 # Repeating Instruments and Events ----------------------------------
 
 #' @rdname redcapDataStructures
 #' @export
 
-REDCAP_REPEAT_INSTRUMENT_STRUCTURE <- 
-  data.frame(event_name = character(0), 
-             form_name = character(0), 
-             custom_form_label = character(0))
+REDCAP_REPEAT_INSTRUMENT_STRUCTURE <- .getStructure('REPEAT_INSTRUMENT', '14.4.0')
 
 # Users -------------------------------------------------------------
 # Users Structure
 
-redcapUserStructure <- function(version)
-{
-  data.frame(username = character(0),
-             email = character(0),
-             firstname = character(0),
-             lastname = character(0),
-             expiration = as.POSIXct(character(0)),
-             data_access_group = character(0),
-             data_access_group_id = character(0),
-             design = character(0),
-             alerts = character(0),
-             user_rights = character(0),
-             data_access_groups = character(0),
-             reports = character(0),
-             stats_and_charts = character(0),
-             manage_survey_participants = character(0),
-             calendar = character(0),
-             data_import_tool = character(0),
-             data_comparison_tool = character(0),
-             logging = character(0),
-             email_logging = if(is.null(version) || utils::compareVersion(version, "14.4.0") < 0) NULL else character(0),
-             file_repository = character(0),
-             data_quality_create = character(0),
-             data_quality_execute = character(0),
-             api_export = character(0),
-             api_import = character(0),
-             api_modules=if(is.null(version) || utils::compareVersion(version, "14.0.3") < 0) NULL else character(0),
-             mobile_app = character(0),
-             mobile_app_download_data = character(0),
-             record_create = character(0),
-             record_rename = character(0),
-             record_delete = character(0),
-             lock_records_all_forms = character(0),
-             lock_records = character(0),
-             lock_records_customization = character(0),
-             mycap_participants = character(0),
-             random_setup = character(0),
-             random_dashboard = character(0),
-             random_perform = character(0),
-             forms = character(0),
-             forms_export = character(0), 
-             stringsAsFactors = FALSE)
-}
+redcapUserStructure <- function(v) .getStructure('USER', v)
 
 # These are variables in the Users table coded as 0 = No Access, 1 = Access
-REDCAP_USER_TABLE_ACCESS_VARIABLES <- 
-  c("design", 
-    "alerts",
-    "user_rights", 
-    "data_access_group", 
-    "reports", 
-    "stats_and_charts", 
-    "manage_survey_participants", 
-    "calendar", 
-    "data_import_tool", 
-    "data_comparison_tool", 
-    "logging", 
-    "email_logging",
-    "file_repository", 
-    "data_quality_create", 
-    "data_quality_execute", 
-    "api_export", 
-    "api_import", 
-    "mobile_app", 
-    "mobile_app_download_data", 
-    "record_create", 
-    "record_rename", 
-    "record_delete", 
-    "lock_records_all_forms", 
-    "lock_records", 
-    "lock_records_customization", 
-    "mycap_participants", 
-    "random_setup", 
-    "random_dashboard", 
-    "random_perform")
+REDCAP_USER_TABLE_ACCESS_VARIABLES <- .getStructure('f_USER', '14.4.0')
 
 # User Roles --------------------------------------------------------
 # User Role Structure
 
-redcapUserRoleStructure <- function(version)
-{
-  data.frame(unique_role_name = character(0),	
-             role_label = character(0), 
-             design = character(0),	
-             user_rights = character(0),	
-             data_access_groups = character(0),
-             # data_export = character(0),
-             reports = character(0),
-             stats_and_charts = character(0),
-             manage_survey_participants = character(0),
-             calendar = character(0),
-             data_import_tool = character(0),
-             data_comparison_tool = character(0),
-             logging = character(0),
-             email_logging = if(is.null(version) || utils::compareVersion(version, "14.4.0") < 0) NULL else character(0),
-             file_repository = character(0),
-             data_quality_create = character(0),
-             data_quality_execute = character(0),
-             api_export = character(0),
-             api_import = character(0),	
-             mobile_app = character(0),
-             mobile_app_download_data = character(0),
-             record_create = character(0),
-             record_rename = character(0),
-             record_delete = character(0),
-             lock_records_customization = character(0),
-             lock_records = character(0),
-             lock_records_all_forms = character(0),
-             mycap_participants = character(0),
-             forms = character(0),
-             forms_export = character(0),
-             random_setup = character(0),
-             random_dashboard = character(0),
-             random_perform = character(0),
-             stringsAsFactors = FALSE)
-}
+redcapUserRoleStructure <- function(v) .getStructure('USER_ROLE', v)
+
 # User Role Table Access Variables
 
-REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- 
-  c("design", 
-    "alerts", 
-    "user_rights", 
-    "data_access_groups", 
-    # "data_export",
-    "reports", 
-    "stats_and_charts", 
-    "manage_survey_participants", 
-    "calendar", 
-    "data_import_tool", 
-    "data_comparison_tool", 
-    "logging", 
-    "email_logging",
-    "file_repository", 
-    "data_quality_create", 
-    "data_quality_execute", 
-    "api_export", 
-    "api_import", 
-    "mobile_app", 
-    "mobile_app_download_data", 
-    "record_create", 
-    "record_rename", 
-    "record_delete", 
-    "lock_records_customization", 
-    "lock_records", 
-    "lock_records_all_forms")
+REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- .getStructure('f_USER_ROLE', '14.4.0')
 
 # User-Role Assignment Structure 
 
-REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <- 
-  data.frame(username = character(0), 
-             unique_role_name = character(0), 
-             stringsAsFactors = FALSE)
+REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <- .getStructure('USER_ROLE_ASSN', '14.4.0')
+
+# find in code and replace with `.getStructure`
+#REDCAP_SYSTEM_FIELDS
+#PROJECT_INFO_FIELDS_EDITABLE
+#PROJECT_INFO_FIELDS_FIXED
+#REDCAP_USER_TABLE_ACCESS_VARIABLES
+#REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES
+#REDCAP_ARMS_STRUCTURE
+#REDCAP_DAG_STRUCTURE
+#REDCAP_DAG_ASSIGNMENT_STRUCTURE
+#REDCAP_EVENT_STRUCTURE
+#REDCAP_FIELDNAME_STRUCTURE
+#REDCAP_INSTRUMENT_STRUCTURE
+#REDCAP_INSTRUMENT_MAPPING_STRUCTURE
+#REDCAP_LOGGING_STRUCTURE
+#REDCAP_METADATA_STRUCTURE
+#REDCAP_PROJECT_INFORMATION_STRUCTURE
+#REDCAP_REPEAT_INSTRUMENT_STRUCTURE
+#REDCAP_USER_STRUCTURE
+#REDCAP_USER_ROLE_STRUCTURE
+#REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE
