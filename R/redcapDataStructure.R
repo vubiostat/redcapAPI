@@ -386,7 +386,8 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
 # User Roles --------------------------------------------------------
 # User Role Structure
 
-REDCAP_USER_ROLE_STRUCTURE <- 
+redcapUserRoleStructure <- function(version)
+{
   data.frame(unique_role_name = character(0),	
              role_label = character(0), 
              design = character(0),	
@@ -421,7 +422,7 @@ REDCAP_USER_ROLE_STRUCTURE <-
              random_dashboard = character(0),
              random_perform = character(0),
              stringsAsFactors = FALSE)
-
+}
 # User Role Table Access Variables
 
 REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- 

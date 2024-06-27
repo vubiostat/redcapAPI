@@ -40,7 +40,7 @@ importUserRoles.redcapApiConnection <- function(rcon,
   
   
   checkmate::assert_subset(x = names(data), 
-                           choices = names(REDCAP_USER_ROLE_STRUCTURE), 
+                           choices = names(redcapUserRoleStructure(rcon$version())), 
                            add = coll)
   
   checkmate::reportAssertions(coll)

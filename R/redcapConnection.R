@@ -788,7 +788,7 @@ offlineConnection <- function(meta_data = NULL,
                        redcap_data = redcapUserStructure(version))
   this_user_roles <- 
     validateRedcapData(data = .offlineConnection_readFile(user_roles), 
-                       redcap_data = REDCAP_USER_ROLE_STRUCTURE)
+                       redcap_data = redcapUserRoleStructure(rcon$version()))
   this_user_role_assignment <- 
     validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
                        redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
@@ -901,7 +901,7 @@ offlineConnection <- function(meta_data = NULL,
       has_user_roles = function() !is.null(this_user_roles), 
       flush_user_roles = function() this_user_roles <<- NULL, 
       refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                               redcap_data = REDCAP_USER_ROLE_STRUCTURE)}, 
+                                                                               redcap_data = redcapUserRoleStructure(rcon$version()))}, 
       
       users_role_assignment = function(){ this_user_role_assignment }, 
       has_user_role_assignment = function() !is.null(this_user_role_assignment), 
