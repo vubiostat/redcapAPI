@@ -901,7 +901,7 @@ offlineConnection <- function(meta_data = NULL,
       has_user_roles = function() !is.null(this_user_roles), 
       flush_user_roles = function() this_user_roles <<- NULL, 
       refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                               redcap_data = redcapUserRoleStructure(rcon$version()))}, 
+                                                                               redcap_data = redcapUserRoleStructure("14.4.0"))}, 
       
       users_role_assignment = function(){ this_user_role_assignment }, 
       has_user_role_assignment = function() !is.null(this_user_role_assignment), 
