@@ -788,7 +788,7 @@ offlineConnection <- function(meta_data = NULL,
                        redcap_data = redcapUserStructure(version))
   this_user_roles <- 
     validateRedcapData(data = .offlineConnection_readFile(user_roles), 
-                       redcap_data = redcapUserRoleStructure(rcon$version()))
+                       redcap_data = redcapUserRoleStructure("14.4.0"))
   this_user_role_assignment <- 
     validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
                        redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
