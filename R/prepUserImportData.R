@@ -85,7 +85,7 @@ prepUserImportData <- function(data,
                                           primary_fields)]
   
   checkmate::assert_subset(x = primary_fields, 
-                           choices = c(if (user_role) names(REDCAP_USER_ROLE_STRUCTURE) else names(redcapUserStructure(rcon$version())), 
+                           choices = c(if (user_role) names(redcapUserRoleStructure(rcon$version())) else names(redcapUserStructure(rcon$version())), 
                                        "data_export"), 
                            add = coll)
   

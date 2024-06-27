@@ -67,7 +67,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importUserRoles("not an rcon", 
-                                 data = REDCAP_USER_ROLE_STRUCTURE), 
+                                 data = redcapUserRoleStructure(rcon$version())), 
                  "no applicable method for 'importUserRoles'")
   }
 )
@@ -91,11 +91,11 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  consolidate = "TRUE"), 
                  "'consolidate': Must be of type 'logical'")
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  consolidate = c(TRUE, FALSE)), 
                  "'consolidate': Must have length 1")
   }
@@ -108,20 +108,20 @@ test_that(
     local_reproducible_output(width = 200)
    
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  config = list(1)), 
                  "'config': Must have names")
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  config = "not a list"), 
                  "'config': Must be of type 'list'")
     
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  api_param = list(1)), 
                  "'api_param': Must have names")
     expect_error(importUserRoles(rcon, 
-                                 data = REDCAP_USER_ROLE_STRUCTURE,
+                                 data = redcapUserRoleStructure(rcon$version()),
                                  api_param = "not a list"), 
                  "'api_param': Must be of type 'list'")
   }
