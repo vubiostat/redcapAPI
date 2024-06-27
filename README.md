@@ -163,8 +163,8 @@ Rules:
   - Does the VERSION need bumped?
   - Was documentation properly updated?
   - Was roxygen2 run on the updated documentation?
-  - Does R CMD CHECK pass?
-  - Does the test suite pass with no warnings?
+  - Does R CMD CHECK pass? (reviewer should run)
+  - Does the test suite pass with no warnings? (reviewer should run)
 
 ### License
 
