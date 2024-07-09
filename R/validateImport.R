@@ -1,5 +1,4 @@
 #' @name validateImport
-#' @importFrom chron times
 #' 
 #' @title Validate Data Frames for Import
 #' @description Validates the variables in a data frame prior to attempting 
