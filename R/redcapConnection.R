@@ -1055,7 +1055,6 @@ print.redcapOfflineConnection <- function(x, ...){
   }
 }
 
-#' @importFrom httr config
 .get_httr_config <- function()
 {
   config <- httr::config()
