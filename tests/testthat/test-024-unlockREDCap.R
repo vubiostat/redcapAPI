@@ -283,8 +283,7 @@ test_that(
   ".unlockKeyring creates keyring if it doesn't exist",
   {
     Sys.unsetenv("REDCAPAPI_PW")
-    stub(.unlockKeyring, "keyring::keyring_list",
-                  data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
+    ukr <- mock(data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
     m <- mock(TRUE)
@@ -295,9 +294,11 @@ test_that(
     with_mocked_bindings(
       {
         .unlockKeyring("MakeMe", passwordFUN)
-        expect_call(m, 1, keyring_create(keyring,password))
+        expect_call(m, 1, keyring::keyring_create(keyring,password))
       },
-      keyring_create = m
+      keyring_create = m,
+      keyring_list = ukr,
+      .package = "keyring"
     )
     
     expect_equal(mock_args(m)[[1]], list("MakeMe", "xyz"))
@@ -374,15 +375,17 @@ test_that(
     skip_if(Sys.getenv("CI") == "1",
             "CI cannot test user interactions")
     
+    m <- mock(TRUE)
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
     stub(unlockREDCap, "keyring::key_list",
          data.frame(service="recapAPI", username="Nadda"))
+    stub(unlockREDCap, "keyring::key_set_with_value", m)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
     
-    m <- mock(TRUE)
+
     n <- mock(TRUE)
 
     with_mocked_bindings(
@@ -391,8 +394,7 @@ test_that(
           c(rcon="George"), url, keyring="API_KEYs",
           passwordFUN=passwordFUN)
       },
-      key_set_with_value = m,
-      .connectAndCheck = n
+      .connectAndCheck = n,
     )
 
     expect_true("rcon" %in% names(x))
