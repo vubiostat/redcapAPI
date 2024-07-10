@@ -88,7 +88,7 @@ test_that(
   ".unlockYamlOverride stops if no redcapAPI entry is found",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml", list())
+    stub(.unlockYamlOverride, "yaml::read_yaml", list())
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
                  "does not contain required 'redcapAPI' entry")
@@ -99,7 +99,7 @@ test_that(
   ".unlockYamlOverride stops if no redcapAPI$keys entry is found",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list()))
+    stub(.unlockYamlOverride, "yaml::read_yaml", list(redcapAPI=list()))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
@@ -111,7 +111,7 @@ test_that(
   ".unlockYamlOverride stops if a list redcapAPI$keys entry is found",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=list()))))
+    stub(.unlockYamlOverride, "yaml::read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=list()))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
@@ -123,7 +123,7 @@ test_that(
   ".unlockYamlOverride stops if a non string redcapAPI$keys entry is found",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=TRUE))))
+    stub(.unlockYamlOverride, "yaml::read_yaml", list(redcapAPI=list(keys=list(TestRedcapAPI=TRUE))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     
     expect_error(.unlockYamlOverride("TestRedcapAPI", url),
@@ -135,7 +135,7 @@ test_that(
   ".unlockYamlOverride returns an entry for every connection",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml",
+    stub(.unlockYamlOverride, "yaml::read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c("TestRedcapAPI", "Sandbox"), url)
@@ -148,7 +148,7 @@ test_that(
   ".unlockYamlOverride returns an entry for every connection renamed as requested",
   {
     stub(.unlockYamlOverride, "file.exists", TRUE)
-    stub(.unlockYamlOverride, "read_yaml",
+    stub(.unlockYamlOverride, "yaml::read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
     stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
     x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
@@ -200,12 +200,12 @@ test_that(
 test_that(
   ".unlockKeyring pulls password from env and writes back",
   {
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring::keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "xyz")
-    stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "keyring::keyring_unlock", NULL)
 
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1}
@@ -220,12 +220,12 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password when not in env, unlocks and writes to env",
   {
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring::keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "")
-    stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "keyring::keyring_unlock", NULL)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -240,12 +240,12 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password and aborts when they cancel",
   {
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring::keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
     stub(.unlockKeyring, ".getPWGlobalEnv", "")
-    stub(.unlockKeyring, "keyring_unlock", NULL)
+    stub(.unlockKeyring, "keyring::keyring_unlock", NULL)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
@@ -260,13 +260,13 @@ test_that(
 test_that(
   ".unlockKeyring asks user for password when one in env fails, unlocks and writes to env",
   {
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring::keyring_list", 
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
     stub(.unlockKeyring, "Sys.getenv", 
                   mock("fail", ""))
-    stub(.unlockKeyring, "keyring_unlock",
+    stub(.unlockKeyring, "keyring::keyring_unlock",
                   mock(stop("fail"), "joe"))
     
     calls <- 0
@@ -282,11 +282,8 @@ test_that(
 test_that(
   ".unlockKeyring creates keyring if it doesn't exist",
   {
-#    skip_if(TRUE, 
-#            "At the time of writing, testthat mock framework not working in all environments")
-    
     Sys.unsetenv("REDCAPAPI_PW")
-    stub(.unlockKeyring, "keyring_list",
+    stub(.unlockKeyring, "keyring::keyring_list",
                   data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                              num_secrets=0:2,
                              locked=rep(TRUE, 3)))
@@ -314,7 +311,7 @@ test_that(
   ".unlockKeyring creates keyring respects user cancel",
   {
     Sys.unsetenv("REDCAPAPI_PW")
-    stub(.unlockKeyring, "keyring_list", 
+    stub(.unlockKeyring, "keyring::keyring_list", 
          data.frame(keyring=c("Elsewhere", "API_KEYs", "JoesGarage"),
                     num_secrets=0:2,
                     locked=rep(TRUE, 3)))
@@ -379,7 +376,7 @@ test_that(
     
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
-    stub(unlockREDCap, "key_list",
+    stub(unlockREDCap, "keyring::key_list",
          data.frame(service="recapAPI", username="Nadda"))
     
     calls <- 0
