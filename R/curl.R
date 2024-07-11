@@ -44,13 +44,13 @@
     if (seconds < 0.001) {
         stop("Timeout cannot be less than 1 ms", call. = FALSE)
     }
-    config(timeout_ms = seconds * 1000)
+    .curlConfig(timeout_ms = seconds * 1000)
 }
 
 .curlContent <- function(x, ...)
 {
     stopifnot(inherits(x, "response"))
-    if (is.path(x$content)) {
+    if (inherits(x$content, 'path')) {
         raw <- readBin(x$content, "raw", file.info(x$content)$size)
     } else {
         raw <- x$content
@@ -62,7 +62,7 @@
       toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["content-type"]]))
     else
       'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
-    x <- iconv(readBin(raw, character()), from = env, to = 'UTF-8', '\U25a1')
+    x <- iconv(readBin(raw, character()), from = enc, to = 'UTF-8', '\U25a1')
     if(grepl('\U25a1', x)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
     jsonlite::fromJSON(x, simplifyVector = FALSE, ...)
 }
