@@ -16,5 +16,16 @@
 #' 
 #' @name redcapAPI
 #' @keywords internal
+#' @import checkmate 
+#' @importFrom chron times
+#' @importFrom getPass getPass
+#' @importFrom httr config content POST set_config upload_file
+#' @importFrom keyring key_delete key_get key_list key_set_with_value keyring_create keyring_list keyring_unlock
+#' @importFrom labelVector get_label is.labelled set_label
+#' @importFrom lubridate parse_date_time
+#' @importFrom stats reshape
+#' @importFrom utils capture.output compareVersion head modifyList
+#' osVersion packageVersion read.csv tail write.csv write.table
+#' @importFrom yaml read_yaml
 
 "_PACKAGE"

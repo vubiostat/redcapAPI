@@ -10,6 +10,14 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.9.4
+
+* Minor code refactoring
+
+## 2.9.3
+
+* REDCap 14.4.0 changed user role structure.
+
 ## 2.9.2
 
 * Improved date and datetime validation

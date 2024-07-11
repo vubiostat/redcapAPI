@@ -138,6 +138,7 @@ test_that(
           meta_data = file.path(offline_files, "TestRedcapAPI_DataDictionary.csv"), 
           records = file.path(offline_files, "TestRedcapAPI_Records.csv"), 
           events = Evt,
+          version = NULL,
           project_info = data.frame(project_id = rcon$projectInformation()$project_id, 
                                     is_longitudinal = 1), 
           url = url

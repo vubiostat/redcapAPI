@@ -142,6 +142,30 @@ This package was originally created by [Jeffrey Horner](https://github.com/jeffr
 
 The current package was developed under REDCap Version 14+. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
 
+### Issue Review Process for Pull Requests
+
+Goals:
+
+* Reproducibility
+* Test Driven
+* Robust checking of user inputs
+
+Rules:
+
+* Hotfixes or documentation changes can skip this process.
+* The majority author on a pull request must not be the approving reviewer.
+* Each commit should include the issue number as a link.
+* The approving reviewer should check the following:
+  - Visual review of code in pull request.
+  - Was the NEWS updated?
+  - Were tests written?
+  - Were user inputs checked?
+  - Does the VERSION need bumped?
+  - Was documentation properly updated?
+  - Was roxygen2 run on the updated documentation?
+  - Does R CMD CHECK pass? (reviewer should run)
+  - Does the test suite pass with no warnings? (reviewer should run)
+
 ### License
 
 redcapAPI A rich API client for interfacing REDCap to R

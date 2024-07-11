@@ -485,7 +485,7 @@ offlineConnection <- function(meta_data = NULL,
                               dags = NULL, 
                               dag_assignment = NULL,
                               project_info = NULL, 
-                              version = NULL, 
+                              version = "14.4.0", 
                               file_repo = NULL,
                               records = NULL, 
                               url = NULL, 
@@ -788,7 +788,7 @@ offlineConnection <- function(meta_data = NULL,
                        redcap_data = redcapUserStructure(version))
   this_user_roles <- 
     validateRedcapData(data = .offlineConnection_readFile(user_roles), 
-                       redcap_data = REDCAP_USER_ROLE_STRUCTURE)
+                       redcap_data = redcapUserRoleStructure(version))
   this_user_role_assignment <- 
     validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
                        redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
@@ -895,13 +895,13 @@ offlineConnection <- function(meta_data = NULL,
       has_users = function() !is.null(this_user), 
       flush_users = function() this_user <<- NULL, 
       refresh_users = function(x) {this_user <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                    redcap_data = redcapUserStructure(this_version))}, 
+                                                                    redcap_data = redcapUserStructure(version))}, 
       
       user_roles = function(){ this_user_roles }, 
       has_user_roles = function() !is.null(this_user_roles), 
       flush_user_roles = function() this_user_roles <<- NULL, 
       refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                               redcap_data = REDCAP_USER_ROLE_STRUCTURE)}, 
+                                                                               redcap_data = redcapUserRoleStructure(version))}, 
       
       users_role_assignment = function(){ this_user_role_assignment }, 
       has_user_role_assignment = function() !is.null(this_user_role_assignment), 
@@ -1055,7 +1055,6 @@ print.redcapOfflineConnection <- function(x, ...){
   }
 }
 
-#' @importFrom httr config
 .get_httr_config <- function()
 {
   config <- httr::config()
