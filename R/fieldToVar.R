@@ -1,5 +1,4 @@
 #' @name fieldToVar
-#' @importFrom chron times
 #' 
 #' @title Convert a REDCap Data Field to an R Vector
 #' @description Converts a field exported from REDCap into a valid R vector

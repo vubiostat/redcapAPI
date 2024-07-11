@@ -135,7 +135,6 @@
 #'                       
 #'  
 #' }
-#' @importFrom utils modifyList
 #' 
 #' @export
 makeApiCall <- function(rcon, 
@@ -305,6 +304,7 @@ makeApiCall <- function(rcon,
 }
 
 # Helper function to convert responses to character strings without crashing.
+#' @keywords internal
 as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
 {
   # Setting defaults, necessary because cannot change S3 interface
