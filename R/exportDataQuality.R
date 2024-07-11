@@ -52,7 +52,7 @@ exportDataQuality.redcapApiConnection <-
 
   tryCatch(
   {
-    result <- httr::content(response, type = 'application/json')
+    result <- .curlContent(response, type = 'application/json')
   },
   error = function(e)
   {

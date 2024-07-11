@@ -194,7 +194,7 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        httr::POST(url = url, body = body, config = config)
+        .curlPost(url = url, body = body, config = config)
       },
       error=function(e)
       {
@@ -202,12 +202,9 @@ makeApiCall <- function(rcon,
         {
           structure(
             list(
-              status_code=408L,
-              content=charToRaw(e$message),
-              headers=structure(
-                list('Content-Type'="text/csv; charset=utf-8"),
-                class = c("insensitive", "list")
-              )
+              status_code = 408L,
+              content = charToRaw(e$message),
+              headers = list('content-type' = "text/csv; charset=utf-8")
             ),
             class="response")
         } else
@@ -261,10 +258,10 @@ makeApiCall <- function(rcon,
   {
     if(response$status_code == 301L)
     {
-      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$Location))
+      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$location))
     } else
     {
-      message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
+      message(paste("Temporary 302 redirect", response$url, "to", response$headers$location))
     }
     
     # Good for a single call
@@ -317,8 +314,8 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
   na.strings <- extra$na.strings
   if(is.null(na.strings)) na.strings <- ""
   
-  enc <- if(grepl("charset", x$headers[["Content-Type"]]))
-    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
+  enc <- if(grepl("charset", x$headers[["content-type"]]))
+    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["content-type"]])) else
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')

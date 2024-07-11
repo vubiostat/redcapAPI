@@ -16,5 +16,7 @@
 #' 
 #' @name redcapAPI
 #' @keywords internal
+#' @importFrom mime guess_type
+#' @importFrom jsonlite fromJSON
 
 "_PACKAGE"
