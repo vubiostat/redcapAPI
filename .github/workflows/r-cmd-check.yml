@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - main
+      - vubiostat:main
 
 name: R-CMD-check
 
