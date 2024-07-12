@@ -12,7 +12,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.9.5
 
-* Replace "httr" dependency with "curl"
+* Update `missingSummary` to support "missing checkbox" under special branching scenario.
 
 ## 2.9.4
 
