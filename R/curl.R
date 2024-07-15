@@ -117,7 +117,7 @@
     if(is.null(nms) || any(is.na(nms) | nms == '')) {
         stop("All components of body must be named", call. = FALSE)
     }
-    flds <- lapply(body, function(x) x)
+    flds <- lapply(body, function(x) as.character(x))
 
     req <- structure(list(
         method = "POST",
