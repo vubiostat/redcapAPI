@@ -230,8 +230,10 @@ test_that(
     )
     
     redirectCall <- TRUE
-    stub(makeApiCall, "httr::POST", function(...)
-      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else 
+                       { redcapAPI:::.curlPost(...) }
+    )
     
     expect_warning(
       response <- makeApiCall(rcon, 
@@ -263,9 +265,11 @@ test_that(
     )
     
     redirectCall <- TRUE
-    stub(makeApiCall, "httr::POST", function(...)
-      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
-    
+    stub(makeApiCall, ".curlPost", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else 
+                       { redcapAPI:::.curlPost(...) }
+    )
+   
     expect_message(
       response <- makeApiCall(rcon, 
                         body = list(content = "version", 
