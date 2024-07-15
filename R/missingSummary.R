@@ -233,7 +233,7 @@ missingSummary_offline <- function(records,
               cb_no_checks <- rowSums(cb_dat != "0", na.rm = TRUE) == 0
               cb_logic_grp[[cb_grp_name]]$missing <- unname(cb_no_checks)
             }
-            records[[i]] <- cb_logic_grp[[cb_grp_name]]$missing
+            ans[ans_ix] <- cb_logic_grp[[cb_grp_name]]$missing
           } else {
             ans[ans_ix] <- is.na(records_orig[[i]][ans_ix])
           }
