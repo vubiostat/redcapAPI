@@ -55,9 +55,8 @@ Here's a typical call for these two:
 ```
 library(redcapAPI)
 
-# Put the following line in .Rprofile `usethis::edit_r_profile()`
+# IMPORTANT: Put the following line in .Rprofile `usethis::edit_r_profile()`
 options(keyring_backend=keyring::backend_file)
-
 
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
