@@ -175,6 +175,8 @@ missingSummary_offline <- function(records,
   is_cb <- !is.na(md_row) & meta_data[md_row, "field_type"] == "checkbox"
   cb_grp <- unique(rec_name_cb[is_cb])
   cb_grp_id <- match(rec_name_cb, cb_grp, nomatch = 0)
+  cb_logic_grp <- vector('list', length(cb_grp))
+  names(cb_logic_grp) <- cb_grp
   # get the name of the form on which the field is saved
   form_comp <- paste0(meta_data[md_row, "form_name"], "_complete")
   # is this always true? rec_name_cb == rec_name_clean
@@ -224,9 +226,14 @@ missingSummary_offline <- function(records,
           if(is_cb[i]) {
             # special case for checkbox group
             # examine all columns
-            cb_dat <- records_orig[ans_ix, cb_grp_id == cb_grp_id[i], drop = FALSE]
-            # return TRUE if nothing is checked
-            records[[i]] <- rowSums(cb_dat != "0", na.rm = TRUE) == 0
+            cb_grp_name <- cb_grp[cb_grp_id[i]]
+            if(is.null(cb_logic_grp[[cb_grp_name]]$missing)) {
+              cb_dat <- records_orig[ans_ix, cb_grp_id == cb_grp_id[i], drop = FALSE]
+              # return TRUE if nothing is checked
+              cb_no_checks <- rowSums(cb_dat != "0", na.rm = TRUE) == 0
+              cb_logic_grp[[cb_grp_name]]$missing <- unname(cb_no_checks)
+            }
+            records[[i]] <- cb_logic_grp[[cb_grp_name]]$missing
           } else {
             ans[ans_ix] <- is.na(records_orig[[i]][ans_ix])
           }
@@ -234,6 +241,18 @@ missingSummary_offline <- function(records,
         records[[i]] <- ans
       }
     }
+  }
+  # only post-logic checkbox groups will have length; remove others
+  cb_logic_grp <- cb_logic_grp[lengths(cb_logic_grp) > 0L]
+  # remove redundant records and rename
+  if(length(cb_logic_grp) > 0L) {
+    coi <- lapply(names(cb_logic_grp), function(i) which(match(i, cb_grp) == cb_grp_id))
+    noi <- lapply(coi, function(i) rec_name[i])
+    cnoi <- vapply(coi, function(i) rec_name_cb[i][1], character(1))
+    c_rm <- unlist(lapply(coi, function(i) i[-1]))
+    records <- records[,-c_rm]
+    c_rename <- match(vapply(noi, `[`, character(1), 1), names(records))
+    names(records)[c_rename] <- cnoi
   }
   records
 }
