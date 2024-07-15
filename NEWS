@@ -13,6 +13,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.9.4
 
 * Minor code refactoring
+* Implemented GitHub Actions for automated source code checks.
 
 ## 2.9.3
 
