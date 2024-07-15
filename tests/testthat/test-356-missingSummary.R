@@ -131,7 +131,7 @@ md <- data.frame(
 )
 logic <- list(record_id = NA, cb1 = NA, cb2 = expression(TRUE), cb3 = expression(TRUE))
 r <- data.frame(record_id = 1:2, cb1___1 = 0, cb1___2 = 0:1, cb2___1 = 0, cb2___2 = 0:1, cb3___1 = 0, cb3___2 = 0:1, test_complete = 2)
-o <- data.frame(record_id = 1:2, cb1___1 = FALSE, cb1___2 = FALSE, cb2 = c(TRUE, FALSE), cb3 = c(TRUE, FALSE), test_complete = FALSE)
+o <- data.frame(record_id = 1:2, cb1___1 = FALSE, cb1___2 = FALSE, cb2 = c(TRUE, FALSE), cb3 = c(TRUE, FALSE), test_complete = 2)
 
 test_that(
   "Missing values in checkbox groups are correctly identified around branching logic",
