@@ -193,7 +193,7 @@ test_that(
   "as.data.frame.response handles invalid encoded characters",
   {
     x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
-    x[['headers']] <- list('Content-Type'='text/csv; charset=utf-8')
+    x[['headers']] <- list('content-type'='text/csv; charset=utf-8')
     class(x) <- c("response","list")
     expect_warning({y <- redcapAPI:::as.data.frame.response(x)},
                   "invalid characters")
@@ -202,7 +202,7 @@ test_that(
       data.frame(fa.il=as.integer(c(1,3)), joe=c("2\U25a1","4"))
     )
     
-    x[['headers']] <- list('Content-Type'='text/csv') # defaults to latin
+    x[['headers']] <- list('content-type'='text/csv') # defaults to latin
     expect_silent({y <- redcapAPI:::as.data.frame.response(x)})
     expect_equal(
       y,
