@@ -70,7 +70,7 @@ as.character.response <- function(x, ...) {
       'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
     x <- iconv(readBin(raw, character()), from = enc, to = 'UTF-8', '\U25a1')
     if(grepl('\U25a1', x)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
-    if(type == 'text/cvs') {
+    if(type == 'text/csv') {
         utils::read.csv(x, ...)
     } else if(type == 'application/json') {
         jsonlite::fromJSON(x, simplifyVector = FALSE, ...)
