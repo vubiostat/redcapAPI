@@ -25,7 +25,9 @@
     stopifnot(inherits(config, "request"))
     old <- getOption("httr_config")
     if(is.null(old)) old <- .curlConfig()
-    if(!override) config <- c(old, config)
+    if(!override) {
+      config <- .curlRequestCombine(old, config)
+    }
     options(httr_config = config)
     invisible(old)
 }
@@ -86,7 +88,7 @@
     h <- c(x$headers, y$headers)
     o <- c(x$options, y$options)
     z$headers <- h[!duplicated(names(h), fromLast = TRUE)]
-    z$options <- o[!duplicated(names(h), fromLast = TRUE)]
+    z$options <- o[!duplicated(names(o), fromLast = TRUE)]
     for(i in c('method','url','auth_token','output')) {
         if(!is.null(y[[i]])) {
             z[[i]] <- y[[i]]
