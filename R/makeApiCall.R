@@ -337,3 +337,7 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
       ...)
   }
 }
+
+as.character.response <- function(x, ...) {
+  .curlContent(x, ...)
+}

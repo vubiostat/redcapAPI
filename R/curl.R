@@ -49,10 +49,6 @@
     .curlConfig(timeout_ms = seconds * 1000)
 }
 
-as.character.response <- function(x, ...) {
-  .curlContent(x, ...)
-}
-
 .curlContent <- function(x, type = 'text/plain', ...)
 {
     stopifnot(inherits(x, "response"))
@@ -61,9 +57,8 @@ as.character.response <- function(x, ...) {
     } else {
         raw <- x$content
     }
-    if (length(raw) == 0) {
-        return(NULL)
-    }
+    if (length(raw) == 0) return("")
+
     enc <- if(grepl("charset", x$headers[["content-type"]]))
       toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["content-type"]]))
     else
