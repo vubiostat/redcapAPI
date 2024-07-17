@@ -2,7 +2,6 @@ context("makeApiCall Argument Validation")
 
 library(mockery)
 library(curl)
-library(httr)
 
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
@@ -64,9 +63,10 @@ test_that(
     
     rcon$set_retries(1)
     x <- 1
-    stub(makeApiCall, "httr::POST", function(...)
-      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {x <<- 3; goodVersionPOST})
     
+    expect_equal(x, 2)
     expect_error(
       makeApiCall(rcon, body=list(content = "version", format = "csv"), 
       "A network error has occurred"))
@@ -96,13 +96,14 @@ test_that(
     )
     
     x <- 1
-    stub(makeApiCall, "httr::POST", function(...)
-      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {x <<- 3; goodVersionPOST})
     
     response <- makeApiCall(rcon, 
                             body = list(content = "version", 
                                         format = "csv"))
     
+    expect_equal(x, 3)
     expect_true(response$status==200)
   }
 )
