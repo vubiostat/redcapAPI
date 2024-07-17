@@ -66,10 +66,10 @@ test_that(
     stub(makeApiCall, ".curlPost", function(...)
       if(x==1) { x <<- 2; stop(e) } else {x <<- 3; goodVersionPOST})
     
-    expect_equal(x, 2)
     expect_error(
       makeApiCall(rcon, body=list(content = "version", format = "csv"), 
       "A network error has occurred"))
+    expect_equal(x, 2)
     rcon$set_retries(5)
   }
 )
