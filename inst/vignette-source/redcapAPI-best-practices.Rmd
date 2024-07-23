@@ -103,7 +103,7 @@ solution.*
 ```{r unlock}
 library(redcapAPI)
 suppressWarnings(library(Hmisc))
-library(httr)
+library(curl)
 
 options(keyring_backend=keyring::backend_file) # Put in .Rprofile
 
@@ -942,25 +942,11 @@ vectorToApiBodyList(c(1, 3, 4), "arms")
 A call to export only a selection of arms from a project would look like this:
 
 ```{r, eval = FALSE}
-makeApiCall(test_conn, 
-            body = c(list(content = 'arm', 
-                          format = 'csv', 
-                          returnFormat = 'csv'), 
-                     vectorToApiBodyList(c(1, 3, 4), "arms")))
-```
-
-## Debugging Raw Connection
-
-The library from 2.7.3 up supports `httr` debugging. 
-
-```{r, echo=TRUE, message=TRUE, warning=TRUE, error=TRUE }
-library(httr)
-capture.output(
-with_config(verbose(data_out=FALSE, data_in=TRUE, ssl=TRUE),
-            { test <- exportRecordsTyped(test_conn, 
-                              records = 10:20, 
-                              forms = "text_fields") }),
-type="message")
+as.character(makeApiCall(test_conn, 
+                         body = c(list(content = 'arm', 
+                                  format = 'csv', 
+                                  returnFormat = 'csv'), 
+                         vectorToApiBodyList(c(1, 3, 4), "arms"))))
 ```
 
 

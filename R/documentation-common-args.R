@@ -22,7 +22,7 @@ NULL
 #' @description Common API arguments
 #' 
 #' @param config A named `list`. Additional configuration parameters to pass to
-#'   [httr::POST()]. These are appended to any parameters in
+#'   [curl::handle_setopt]. These are appended to any parameters in
 #'   `rcon$config`.
 #' @param api_param A named `list`. Additional API parameters to pass into the
 #'   body of the API call. This provides users to execute calls with options

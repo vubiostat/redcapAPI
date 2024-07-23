@@ -6,7 +6,7 @@
 #' 
 #' @param url `character(1)`. URL for the user's REDCap database API.  
 #' @param token `character(1)` REDCap API token
-#' @param config A list to be passed to [httr::POST()].  This allows the 
+#' @param config A list to be passed to [curl::handle_setopt].  This allows the 
 #'   user to set additional configurations for the API calls, such as 
 #'   certificates, SSL version, etc. For the majority of users, this does 
 #'   not need to be altered.
@@ -81,7 +81,7 @@
 #' project for which the user wishes to use the API.
 #' 
 #' Additional Curl option can be set in the `config` argument.  See the documentation
-#' for [httr::config()] and [httr::httr_options()] for more Curl options.
+#' for [curl::handle_setopt] for more curl options.
 #' 
 #' ## Specific to Offline Connections
 #' 

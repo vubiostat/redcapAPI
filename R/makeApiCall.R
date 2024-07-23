@@ -14,7 +14,7 @@
 #'   for error handling. Defaults to c(200L).
 #' @param ... This will capture `api_param` (if specified) which will modify the body of the 
 #'   the specified body of the request. It also captures `config` which will get
-#'   passed to httr::POST.
+#'   passed to curl::handle_setopt.
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
@@ -28,7 +28,7 @@
 #'   `vectorToApiBodyList`; options that are not an array can be entered
 #'   directly (see examples). 
 #'   
-#'   The config list is a list of parameters to pass to [httr::POST()]. 
+#'   The config list is a list of parameters to pass to [curl::handle_setopt]. 
 #'   Refer to documentation there for details.
 #'   
 #'   Using the settings stored in the `redcapConnection` object, a response
@@ -338,6 +338,14 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
   }
 }
 
+#' @name as.character.response
+#' @title S3 method to turn curl response into character
+#' 
+#' @description Converts a raw curl response into a character string.
+#' @export
+#' @param x response from curl to render to character
+#' @param ... If type='text/csv' this is passed to read.csv. If type='application/json'
+#'            this is sent to jsonlite::fromJSON
 as.character.response <- function(x, ...) {
   .curlContent(x, ...)
 }
