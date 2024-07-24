@@ -5,31 +5,43 @@
   x[vapply(x, length, numeric(1)) != 0]
 }
 
-.curlConfig <- function(...,
-                        token = NULL)
+.curlDefaultUa <- function()
 {
+  versions <- c(libcurl = curl::curl_version()$version, `r-curl` = as.character(utils::packageVersion("curl")))
+  paste0(names(versions), "/", versions, collapse = " ")
+}
+
+.curlConfig <- function(url, token)
+{
+  cfg <- getOption('curl_config')
+  
+  if(is.null(cfg)) cfg <- list(headers=list(), fields=NULL, options=list())
+  if(is.null(cfg$options)) cfg$options <- list()
+   
   structure(list(
-    method     = NULL,
-    url        = NULL,
-    headers    = NULL,
-    fields     = NULL,
-    options    = .curlCompact(list(...)),
+    method     = 'POST',
+    url        = url,
+    headers    = c(cfg$headers, Accept = "application/json, text/xml, application/xml, */*"),
+    fields     = cfg$fields,
+    options    = modifyList(list(timeout_ms = 3e5,
+                                 useragent  = .curlDefaultUa(),
+                                 post       = TRUE),
+                            cfg$options),
     auth_token = token,
-    output     = NULL
+    output     = structure(list(), class = c("write_memory", "write_function"))
   ), class = "request")
 }
 
-.curlSetConfig <- function(config,
-                           override = FALSE)
+.curlMergeConfig <- function(x, 
+                             y)
 {
-  stopifnot(inherits(config, "request"))
-  old <- getOption("httr_config")
-  
-  if(is.null(old)) old    <- .curlConfig()
-  if(!override)    config <- .curlRequestCombine(old, config)
-
-  options(httr_config = config)
-  invisible(old)
+  if(!is.null(y))
+  {
+    if(!is.null(y$options)) x$options <- modifyList(x$options, y$options)
+    if(!is.null(y$headers)) x$headers[names(y$headers)] <- y$headers
+    if(!is.null(y$fields))  x$fields[names(y$fields)] <- y$fields
+  }
+  x
 }
 
 .curlUploadFile <- function(path,
@@ -41,13 +53,6 @@
 }
 
 as.character.form_file <- function(x, ...) x
-
-.curlTimeout <- function(seconds)
-{
-  if (seconds < 0.001) stop("Timeout cannot be less than 1 ms", call. = FALSE)
-
-  .curlConfig(timeout_ms = seconds * 1000)
-}
 
 .curlContent <- function(x, 
                          type = 'text/plain',
@@ -85,65 +90,18 @@ as.character.form_file <- function(x, ...) x
   }
 }
 
-.curlDefaultUa <- function()
-{
-  # cache this?
-  versions <- c(libcurl = curl::curl_version()$version, `r-curl` = as.character(utils::packageVersion("curl")))
-  paste0(names(versions), "/", versions, collapse = " ")
-}
-
-.curlRequestCombine <- function(x, 
-                                y)
-{
-  z <- structure(list(
-    method     = NULL,
-    url        = NULL,
-    headers    = NULL,
-    fields     = c(x$fields, y$fields),
-    options    = NULL,
-    auth_token = NULL,
-    output     = NULL
-  ), class = "request")
-  h <- c(x$headers, y$headers)
-  o <- c(x$options, y$options)
-  z$headers <- h[!duplicated(names(h), fromLast = TRUE)]
-  z$options <- o[!duplicated(names(o), fromLast = TRUE)]
-  for(i in c('method','url','auth_token','output'))
-  {
-    if(!is.null(y[[i]]))
-    {
-      z[[i]] <- y[[i]]
-    } else if(!is.null(x[[i]]))
-    {
-      z[[i]] <- x[[i]]
-    }
-  }
-  z
-}
-
-.curlRequestDefault <- function()
-{
-  dr <- structure(list(
-    method     = NULL,
-    url        = NULL,
-    headers    = c(Accept = "application/json, text/xml, application/xml, */*"),
-    fields     = NULL,
-    options    = list(useragent = .curlDefaultUa()),
-    auth_token = NULL,
-    output     = structure(list(), class = c("write_memory", "write_function"))
-  ), class = "request")
-  .curlRequestCombine(dr, getOption("httr_config"))
-}
-
-.curlPost <- function(url, 
-                      body,
-                      config = list())
+.curlPost <- function(body,
+                      config)
 {
   h    <- curl::new_handle()
   body <- .curlCompact(body)
-  nms  <- names(body)
-  if(is.null(nms) || any(is.na(nms) | nms == '')) 
-    stop("All components of body must be named", call. = FALSE)
+  
+  # Argument Validation ---------------------------------------------
+  coll <- checkmate::makeAssertCollection()
+  checkmate::assert_list(x = body, 
+                         names = "named",
+                         add = coll)
+  checkmate::reportAssertions(coll)
 
   flds <- lapply(body, function(x) 
   {
@@ -155,26 +113,16 @@ as.character.form_file <- function(x, ...) x
       as.character(x)
     }
   })
+  
+  config$fields <- c(flds, config$fields)
 
-  req <- structure(list(
-    method     = "POST",
-    url        = url,
-    headers    = config$headers,
-    fields     = c(flds, config$fields),
-    options    = config$options,
-    auth_token = config$auth_token,
-    output     = config$output
-  ), class     = "request")
-  req <- .curlRequestCombine(.curlRequestDefault(), req)
-  req$options$post <- TRUE
+  curl::handle_setopt(h, .list = config$options)
+  if (!is.null(config$fields)) curl::handle_setform(h, .list = config$fields)
 
-  curl::handle_setopt(h, .list = req$options)
-  if (!is.null(req$fields)) curl::handle_setform(h, .list = req$fields)
-
-  curl::handle_setheaders(h, .list = req$headers)
+  curl::handle_setheaders(h, .list = config$headers)
   on.exit(curl::handle_reset(h), add = TRUE)
 
-  resp <- curl::curl_fetch_memory(req$url, h)
+  resp <- curl::curl_fetch_memory(config$url, h)
   rh   <- curl::parse_headers_list(resp$headers)
   structure(list(
     url         = resp$url,
@@ -184,7 +132,7 @@ as.character.form_file <- function(x, ...) x
     cookies     = curl::handle_cookies(h),
     content     = resp$content,
     times       = resp$times,
-    request     = req,
+    request     = config,
     handle      = h
   ), class = "response")
 }

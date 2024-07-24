@@ -181,19 +181,18 @@ makeApiCall <- function(rcon,
   body <- utils::modifyList(body, list(token = rcon$token))
   body <- utils::modifyList(body, api_param)
   body <- body[lengths(body) > 0]
-  
-  config <- utils::modifyList(rcon$config, config)
+
+  config <- .curlMergeConfig(rcon$config, config)
+  if(!is.null(url)) config$url <- url
 
   # Functional Code -------------------------------------------------
-  
-  if(is.null(url)) url <- rcon$url
   
   for (i in seq_len(rcon$retries()))
   {
     response <-
       tryCatch(
       {
-        .curlPost(url = url, body = body, config = config)
+        .curlPost(body = body, config = config)
       },
       error=function(e)
       {
@@ -212,12 +211,10 @@ makeApiCall <- function(rcon,
         }
       })
     
-    httr_config <- getOption("httr_config")
-    if(!is.null(httr_config)                     &&
-       "options" %in% names(httr_config)         &&
-       "verbose" %in% names(httr_config$options) &&
-       is.logical(httr_config$options$verbose)   &&
-       httr_config$options$verbose
+    if("options" %in% names(config)         &&
+       "verbose" %in% names(config$options) &&
+       is.logical(config$options$verbose)   &&
+       config$options$verbose
       )
     {
       message(paste0(">>>\n", as.character(response), "<<<\n"))
