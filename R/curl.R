@@ -40,6 +40,8 @@
   curl::form_file(path, type)
 }
 
+as.character.form_file <- function(x, ...) x
+
 .curlTimeout <- function(seconds)
 {
   if (seconds < 0.001) stop("Timeout cannot be less than 1 ms", call. = FALSE)
@@ -143,7 +145,16 @@
   if(is.null(nms) || any(is.na(nms) | nms == '')) 
     stop("All components of body must be named", call. = FALSE)
 
-  flds <- lapply(body, function(x) as.character(x))
+  flds <- lapply(body, function(x) 
+  {
+    if(inherits(x, 'list') || inherits(x, 'character'))
+    {
+      x
+    } else
+    {
+      as.character(x)
+    }
+  })
 
   req <- structure(list(
     method     = "POST",

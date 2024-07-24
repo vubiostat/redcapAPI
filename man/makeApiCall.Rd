@@ -19,7 +19,7 @@ for error handling. Defaults to c(200L).}
 
 \item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
 the specified body of the request. It also captures \code{config} which will get
-passed to httr::POST.}
+passed to curl::handle_setopt.}
 }
 \description{
 Constructs and executes API calls to the REDCap API. These
@@ -41,7 +41,7 @@ options to the API that require an array need to be built using
 \code{vectorToApiBodyList}; options that are not an array can be entered
 directly (see examples).
 
-The config list is a list of parameters to pass to \code{\link[httr:POST]{httr::POST()}}.
+The config list is a list of parameters to pass to \link[curl:handle]{curl::handle_setopt}.
 Refer to documentation there for details.
 
 Using the settings stored in the \code{redcapConnection} object, a response
