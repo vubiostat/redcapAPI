@@ -10,7 +10,7 @@
 redcapConnection(
   url = getOption("redcap_api_url"),
   token,
-  config = .get_httr_config(),
+  config = NULL,
   retries = 5,
   retry_interval = 2^(seq_len(retries)),
   retry_quietly = TRUE
