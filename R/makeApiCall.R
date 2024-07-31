@@ -7,7 +7,7 @@
 #'   execute calls for new REDCap features that are not yet implemented.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param body `list` List of parameters to be passed to [httr::POST()]'s 
+#' @param body `list` List of parameters to be passed to [curl::]'s 
 #'   `body` argument
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #' @param success_status_codes `integerish` A vector of success codes to ignore
@@ -28,8 +28,9 @@
 #'   `vectorToApiBodyList`; options that are not an array can be entered
 #'   directly (see examples). 
 #'   
-#'   The config list is a list of parameters to pass to [curl::handle_setopt]. 
-#'   Refer to documentation there for details.
+#'   The config list is a list of parameter overrides that reflect the curl
+#'   request object. The most commonly used elements of this list 
+#'   is `options` or maybe `headers`. 
 #'   
 #'   Using the settings stored in the `redcapConnection` object, a response
 #'   code of 408 (Request Timeout), 500 (Internal Server Error), 
