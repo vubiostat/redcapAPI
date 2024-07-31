@@ -372,9 +372,6 @@ test_that(
 test_that(
   "unlockREDCap asks for API_KEY if not stored, opens connection and stores",
   {
-    skip_if(Sys.getenv("CI") == "1",
-            "CI cannot test user interactions")
-    
     m <- mock(TRUE)
     stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
     
@@ -399,7 +396,7 @@ test_that(
 
     expect_true("rcon" %in% names(x))
     expect_true(x$rcon)
-    expect_true(calls == 1) # Called to ask once
+    expect_equal(calls, ifelse(Sys.getenv("CI") == "1", 2, 1)) # Called to ask once
     expect_called(m, 1) # Called key_set_with_value once
     expect_equal(mock_args(m)[[1]], list(service="redcapAPI", username="George", password="xyz", keyring="API_KEYs"))
     expect_called(n, 1) # Called .connectAndCheck
