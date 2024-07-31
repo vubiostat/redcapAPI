@@ -2,7 +2,6 @@ context("unlockREDCap")
 
 library(mockery)
 library(curl)
-library(httr)
 
 h <- new_handle(timeout = 1L)
 redirect <- structure(

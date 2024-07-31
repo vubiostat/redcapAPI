@@ -9,7 +9,7 @@ makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{body}{\code{list} List of parameters to be passed to \code{\link[httr:POST]{httr::POST()}}'s
+\item{body}{\code{list} List of parameters to be passed to \link[curl:curl]{curl::curl}'s
 \code{body} argument}
 
 \item{url}{\code{character(1)} A url string to hit. Defaults to rcon$url.}
@@ -19,7 +19,7 @@ for error handling. Defaults to c(200L).}
 
 \item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
 the specified body of the request. It also captures \code{config} which will get
-passed to httr::POST.}
+passed to curl::handle_setopt.}
 }
 \description{
 Constructs and executes API calls to the REDCap API. These
@@ -41,8 +41,9 @@ options to the API that require an array need to be built using
 \code{vectorToApiBodyList}; options that are not an array can be entered
 directly (see examples).
 
-The config list is a list of parameters to pass to \code{\link[httr:POST]{httr::POST()}}.
-Refer to documentation there for details.
+The config list is a list of parameter overrides that reflect the curl
+request object. The most commonly used elements of this list
+is \code{options} or maybe \code{headers}.
 
 Using the settings stored in the \code{redcapConnection} object, a response
 code of 408 (Request Timeout), 500 (Internal Server Error),

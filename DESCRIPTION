@@ -1,7 +1,7 @@
 Package: redcapAPI
 Type: Package
 Title: Interface to 'REDCap'
-Version: 2.9.4
+Version: 2.10.0
 Authors@R: c(
     person("Benjamin", "Nutter", email = "benjamin.nutter@gmail.com", 
            role = c("ctb", "aut")),
@@ -40,9 +40,11 @@ Depends:
 Imports:
     checkmate,
     chron,
-    httr,
+    curl,
+    jsonlite,
     labelVector,
     lubridate,
+    mime,
     keyring,
     getPass,
     yaml

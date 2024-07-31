@@ -7,14 +7,14 @@
 #'   execute calls for new REDCap features that are not yet implemented.
 #'   
 #' @inheritParams common-rcon-arg
-#' @param body `list` List of parameters to be passed to [httr::POST()]'s 
+#' @param body `list` List of parameters to be passed to [curl::]'s 
 #'   `body` argument
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #' @param success_status_codes `integerish` A vector of success codes to ignore
 #'   for error handling. Defaults to c(200L).
 #' @param ... This will capture `api_param` (if specified) which will modify the body of the 
 #'   the specified body of the request. It also captures `config` which will get
-#'   passed to httr::POST.
+#'   passed to curl::handle_setopt.
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly, 
 #'   this provides a framework for making calls to the API using features that
@@ -28,8 +28,9 @@
 #'   `vectorToApiBodyList`; options that are not an array can be entered
 #'   directly (see examples). 
 #'   
-#'   The config list is a list of parameters to pass to [httr::POST()]. 
-#'   Refer to documentation there for details.
+#'   The config list is a list of parameter overrides that reflect the curl
+#'   request object. The most commonly used elements of this list 
+#'   is `options` or maybe `headers`. 
 #'   
 #'   Using the settings stored in the `redcapConnection` object, a response
 #'   code of 408 (Request Timeout), 500 (Internal Server Error), 
@@ -181,19 +182,18 @@ makeApiCall <- function(rcon,
   body <- utils::modifyList(body, list(token = rcon$token))
   body <- utils::modifyList(body, api_param)
   body <- body[lengths(body) > 0]
-  
-  config <- utils::modifyList(rcon$config, config)
+
+  config <- .curlMergeConfig(rcon$config, config)
+  if(!is.null(url)) config$url <- url
 
   # Functional Code -------------------------------------------------
-  
-  if(is.null(url)) url <- rcon$url
   
   for (i in seq_len(rcon$retries()))
   {
     response <-
       tryCatch(
       {
-        httr::POST(url = url, body = body, config = config)
+        .curlPost(body = body, config = config)
       },
       error=function(e)
       {
@@ -201,12 +201,9 @@ makeApiCall <- function(rcon,
         {
           structure(
             list(
-              status_code=408L,
-              content=charToRaw(e$message),
-              headers=structure(
-                list('Content-Type'="text/csv; charset=utf-8"),
-                class = c("insensitive", "list")
-              )
+              status_code = 408L,
+              content = charToRaw(e$message),
+              headers = list('content-type' = "text/csv; charset=utf-8")
             ),
             class="response")
         } else
@@ -215,12 +212,10 @@ makeApiCall <- function(rcon,
         }
       })
     
-    httr_config <- getOption("httr_config")
-    if(!is.null(httr_config)                     &&
-       "options" %in% names(httr_config)         &&
-       "verbose" %in% names(httr_config$options) &&
-       is.logical(httr_config$options$verbose)   &&
-       httr_config$options$verbose
+    if("options" %in% names(config)         &&
+       "verbose" %in% names(config$options) &&
+       is.logical(config$options$verbose)   &&
+       config$options$verbose
       )
     {
       message(paste0(">>>\n", as.character(response), "<<<\n"))
@@ -260,10 +255,10 @@ makeApiCall <- function(rcon,
   {
     if(response$status_code == 301L)
     {
-      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$Location))
+      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$location))
     } else
     {
-      message(paste("Temporary 302 redirect", response$url, "to", response$headers$Location))
+      message(paste("Temporary 302 redirect", response$url, "to", response$headers$location))
     }
     
     # Good for a single call
@@ -317,8 +312,8 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
   na.strings <- extra$na.strings
   if(is.null(na.strings)) na.strings <- ""
   
-  enc <- if(grepl("charset", x$headers[["Content-Type"]]))
-    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["Content-Type"]])) else
+  enc <- if(grepl("charset", x$headers[["content-type"]]))
+    toupper(sub('.*charset=([^;]+).*', '\\1', x$headers[["content-type"]])) else
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')
@@ -339,4 +334,16 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
       na.strings       = na.strings,
       ...)
   }
+}
+
+#' @name as.character.response
+#' @title S3 method to turn curl response into character
+#' 
+#' @description Converts a raw curl response into a character string.
+#' @export
+#' @param x response from curl to render to character
+#' @param ... If type='text/csv' this is passed to read.csv. If type='application/json'
+#'            this is sent to jsonlite::fromJSON
+as.character.response <- function(x, ...) {
+  .curlContent(x, ...)
 }

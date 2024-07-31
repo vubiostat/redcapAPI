@@ -47,7 +47,7 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   body <- list(content = "fileRepository", 
                action = "import", 
                returnFormat = "csv",
-               file = httr::upload_file(file), 
+               file = .curlUploadFile(file),
                folder_id = folder_id)
 
   # flush the cached File Repository ------------------------------

@@ -10,7 +10,7 @@
 redcapConnection(
   url = getOption("redcap_api_url"),
   token,
-  config = .get_httr_config(),
+  config = NULL,
   retries = 5,
   retry_interval = 2^(seq_len(retries)),
   retry_quietly = TRUE
@@ -46,7 +46,7 @@ offlineConnection(
 
 \item{token}{\code{character(1)} REDCap API token}
 
-\item{config}{A list to be passed to \code{\link[httr:POST]{httr::POST()}}.  This allows the
+\item{config}{A list to be passed to \link[curl:handle]{curl::handle_setopt}.  This allows the
 user to set additional configurations for the API calls, such as
 certificates, SSL version, etc. For the majority of users, this does
 not need to be altered.}
@@ -190,7 +190,7 @@ Tokens are specific to a project, and a token must be created for each
 project for which the user wishes to use the API.
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
-for \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}} for more Curl options.
+for \link[curl:handle]{curl::handle_setopt} for more curl options.
 }
 
 \subsection{Specific to Offline Connections}{

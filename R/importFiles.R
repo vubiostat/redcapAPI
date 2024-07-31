@@ -128,7 +128,7 @@ importFiles.redcapApiConnection <- function(rcon,
                action = 'import', 
                record = record,
                field = field, 
-               file = httr::upload_file(file), 
+               file = .curlUploadFile(file),
                returnFormat = 'csv', 
                event = event, 
                repeat_instance = repeat_instance)
