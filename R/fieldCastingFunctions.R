@@ -547,14 +547,31 @@ mChoiceCast <- function(data,
   ###################################################################
   # Derive field information                                     ####
   MetaData <- rcon$metadata()
-  
-  field_names <- names(Raw) 
-  
+
+  field_names <- names(Raw)
+
   field_bases <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
                      "\\1", field_names, perl = TRUE)
-  field_text_types <- MetaData$text_validation_type_or_show_slider_number[match(field_bases, MetaData$field_name)]
   field_map <- match(field_bases, MetaData$field_name)
-  
+  field_text_types <- MetaData$text_validation_type_or_show_slider_number[field_map]
+
+  ###################################################################
+  # Recalculate Values from "calc" fields                        ####
+  calc_data <- NULL
+  calc_fields <- MetaData[MetaData[,'field_type'] == 'calc',]
+  nr <- nrow(calc_fields)
+  if(nr > 0L) {
+    calc_data <- Raw[,'record_id', drop = FALSE]
+    raw_name <- field_names[match(calc_fields[,'field_name'], field_bases)]
+    calc_data[,paste0(raw_name, '_recalc')] <- NA
+    for(i in seq_len(nr)) {
+      expr_i <- calc_fields[i,'select_choices_or_calculations']
+      calc_i <- .redcapCalculation(expr_i, Raw)
+      calc_data[,i+1] <- calc_i
+    }
+    calc_data <- calc_data[, -1, drop = FALSE]
+  }
+
   field_types <- .castRecords_getFieldTypes(rcon             = rcon, 
                                             field_map        = field_map,
                                             field_bases      = field_bases, 
@@ -628,6 +645,12 @@ mChoiceCast <- function(data,
                                         field_names = field_names,
                                         field_types = field_types)
   
+  ###################################################################
+  # Recalculated Values                                          ####
+  if(!is.null(calc_data)) {
+    Records <- cbind(Records, calc_data)
+  }
+
   ###################################################################
   # Return Results                                               ####
   Records
