@@ -14,25 +14,14 @@ exportMetaData(rcon, ...)
 
 importMetaData(rcon, data, ...)
 
-\method{exportMetaData}{redcapApiConnection}(
-  rcon,
-  fields = character(0),
-  forms = character(0),
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportMetaData}{redcapApiConnection}(rcon, fields = character(0), forms = character(0), ...)
 
 \method{importMetaData}{redcapApiConnection}(
   rcon,
   data,
   ...,
   field_types = REDCAP_METADATA_FIELDTYPE,
-  validation_types = REDCAP_METADATA_VALIDATION_TYPE,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  validation_types = REDCAP_METADATA_VALIDATION_TYPE
 )
 }
 \arguments{
@@ -56,18 +45,6 @@ when validating the \code{field_type} column. This}
 
 \item{validation_types}{\code{character} giving the acceptable values
 for the \code{text_validation_or_show_slider_number} column.}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportMetaData} returns a data frame. Not all 18 (or more) columns are

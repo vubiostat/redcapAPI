@@ -77,10 +77,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                                                            folder_id = numeric(0), 
                                                            dag_id = numeric(0), 
                                                            role_id = numeric(0), 
-                                                           ...,  
-                                                           error_handling = getOption("redcap_error_handling"),
-                                                           config = list(), 
-                                                           api_param = list()){
+                                                           ...){
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -105,20 +102,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   checkmate::assert_integerish(x = role_id, 
                                max.len = 1, 
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   FileRepo <- rcon$fileRepository()
@@ -160,20 +144,11 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
                folder_id = folder_id, 
                dag_id = dag_id, 
                role_id = role_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Make the API Call -----------------------------------------------
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
+  response <- makeApiCall(rcon, body, ...)
+
   # Refresh the cached file repository ------------------------------
   rcon$flush_fileRepository()
 

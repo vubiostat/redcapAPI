@@ -6,7 +6,7 @@
 #' 
 #' @param url `character(1)`. URL for the user's REDCap database API.  
 #' @param token `character(1)` REDCap API token
-#' @param config A list to be passed to [httr::POST()].  This allows the 
+#' @param config A list to be passed to [curl::handle_setopt].  This allows the 
 #'   user to set additional configurations for the API calls, such as 
 #'   certificates, SSL version, etc. For the majority of users, this does 
 #'   not need to be altered.
@@ -81,7 +81,7 @@
 #' project for which the user wishes to use the API.
 #' 
 #' Additional Curl option can be set in the `config` argument.  See the documentation
-#' for [httr::config()] and [httr::httr_options()] for more Curl options.
+#' for [curl::handle_setopt] for more curl options.
 #' 
 #' ## Specific to Offline Connections
 #' 
@@ -170,7 +170,7 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = httr::config(), 
+                             config = NULL,
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
                              retry_quietly = TRUE)
@@ -184,6 +184,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   checkmate::assert_character(x = token, 
                               len = 1, 
                               add = coll)
+  
+  checkmate::assert_list(x = config,
+                         names = 'named',
+                         add = coll,
+                         null.ok=TRUE)
   
   checkmate::assert_integerish(x = retries, 
                                len = 1, 
@@ -202,6 +207,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                             add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  config <- if(is.null(config)) .curlConfig(url, token) else
+                                .curlMergeConfig(.curlConfig(url, token), config)
   
   u <- url
   t <- token
@@ -481,7 +489,7 @@ offlineConnection <- function(meta_data = NULL,
                               dags = NULL, 
                               dag_assignment = NULL,
                               project_info = NULL, 
-                              version = NULL, 
+                              version = "14.4.0", 
                               file_repo = NULL,
                               records = NULL, 
                               url = NULL, 
@@ -784,7 +792,7 @@ offlineConnection <- function(meta_data = NULL,
                        redcap_data = redcapUserStructure(version))
   this_user_roles <- 
     validateRedcapData(data = .offlineConnection_readFile(user_roles), 
-                       redcap_data = REDCAP_USER_ROLE_STRUCTURE)
+                       redcap_data = redcapUserRoleStructure(version))
   this_user_role_assignment <- 
     validateRedcapData(data = .offlineConnection_readFile(user_role_assignment), 
                        redcap_data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE)
@@ -891,13 +899,13 @@ offlineConnection <- function(meta_data = NULL,
       has_users = function() !is.null(this_user), 
       flush_users = function() this_user <<- NULL, 
       refresh_users = function(x) {this_user <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                    redcap_data = redcapUserStructure(this_version))}, 
+                                                                    redcap_data = redcapUserStructure(version))}, 
       
       user_roles = function(){ this_user_roles }, 
       has_user_roles = function() !is.null(this_user_roles), 
       flush_user_roles = function() this_user_roles <<- NULL, 
       refresh_user_roles = function(x) {this_user_roles <<- validateRedcapData(data = .offlineConnection_readFile(x), 
-                                                                               redcap_data = REDCAP_USER_ROLE_STRUCTURE)}, 
+                                                                               redcap_data = redcapUserRoleStructure(version))}, 
       
       users_role_assignment = function(){ this_user_role_assignment }, 
       has_user_role_assignment = function() !is.null(this_user_role_assignment), 

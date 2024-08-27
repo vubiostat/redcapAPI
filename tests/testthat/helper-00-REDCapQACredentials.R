@@ -19,8 +19,15 @@
 library(checkmate) # for additional expect_* functions.
 library(keyring)
   
-# Defaults for our institutions institutions REDCap instance
-# Override using environment variable REDCAP_URL, REDCAP_TESTDB_NAME, REDCAP_KEYRING
+# usethis::edit_r_profile() # <== This will always find .Rprofile
+  
+# Override using the environment variables:
+#
+# * REDCAP_URL: Your institutions URL
+# * REDCAP_TESTDB_NAME: The name in your keyring for the test project instance
+# * REDCAP_DQDBNAME: The name in your keyring for the data quality project instance
+# * REDCAP_KEYRING: The name of your keyring
+#
 url     <- Sys.getenv("REDCAP_URL",         "https://redcap.vumc.org/api/")
 testdb  <- Sys.getenv("REDCAP_TESTDB_NAME", "TestRedcapAPI") # reference in keyring
 dqdb    <- Sys.getenv("REDCAP_DQDB_NAME",   "") # "DQTest") Data Quality REDCap project

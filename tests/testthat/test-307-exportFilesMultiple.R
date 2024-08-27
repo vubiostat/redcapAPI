@@ -91,45 +91,6 @@ test_that(
   }
 )
 
-test_that(
-  "Validate error_handling, config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(exportFilesMultiple(rcon,
-                                     record = 1, 
-                                     field = "file_import_field", 
-                                     dir = "dir", 
-                                     error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
-    expect_error(exportFilesMultiple(rcon, 
-                                     record = 1, 
-                                     field = "file_import_field", 
-                                     dir = "dir", 
-                                     config = list(1)), 
-                 "'config': Must have names")
-    expect_error(exportFilesMultiple(rcon, 
-                                     record = 1, 
-                                     field = "file_import_field", 
-                                     dir = "dir", 
-                                     config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(exportFilesMultiple(rcon, 
-                                     record = 1, 
-                                     field = "file_import_field", 
-                                     dir = "dir", 
-                                     api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(exportFilesMultiple(rcon, 
-                                     record = 1, 
-                                     field = "file_import_field", 
-                                     dir = "dir", 
-                                     api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)
-
 #####################################################################
 # Functionality                                                  ####
 

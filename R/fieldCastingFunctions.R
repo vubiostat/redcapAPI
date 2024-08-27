@@ -641,7 +641,10 @@ mChoiceCast <- function(data,
                                        field_text_types){
 
   field_types <- rcon$metadata()$field_type[field_map]
-  field_types[grepl("_complete$", field_bases)] <- "form_complete"
+  
+  # only select form_name with _complete, avoid fields that end in _complete
+  form_complete_names <- paste0(unique(rcon$metadata()$form_name), "_complete")
+  field_types[field_bases %in% form_complete_names] <- "form_complete"
   
   choices <- rcon$metadata()$select_choices_or_calculations[field_map]
   

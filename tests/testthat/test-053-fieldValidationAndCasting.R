@@ -11,6 +11,43 @@ test_that(
   }
 )
 
+test_that(
+  "Default datetime validations",
+  {
+    default <- redcapAPI:::.default_validate
+    # date_
+    date_to_validate <- c("2023-04-01", 
+                          "2023-13-01", 
+                          "2023-04-31",
+                          "2023-00-17", 
+                          "23-01-01")
+    expect_equal(default$date_(date_to_validate), 
+                 c(TRUE, FALSE, FALSE, FALSE, TRUE))
+    
+    #datetime_  
+    datetime_to_validate <- c("2023-04-01 00:00",
+                              "2023-04-31 10:30",
+                              "2023-04-01 25:00", 
+                              "2023-04-01 12:60", 
+                              "2023-04 01 12:00", 
+                              "2023-04-01 12 00") 
+    expect_equal(default$datetime_(datetime_to_validate), 
+                 c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE))
+    
+    # datetime_seconds_  
+    datetime_to_validate <- c("2023-04-01 00:00:00", 
+                              "2023-02-30 00:00:00",
+                              "2023-04-01 25:00:00", 
+                              "2023-04-01 12:60:00", 
+                              "2023-04-01 12:00:61", 
+                              "2023-04 01 12:00:00", 
+                              "2023-04-01 12 00:00", 
+                              "2023-04-01 12:00 00")
+    expect_equal(default$datetime_seconds_(datetime_to_validate),
+                 c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE))
+  }
+)
+
 #####################################################################
 # valRx                                                          ####
 
@@ -20,7 +57,7 @@ test_that(
     # date_
     date_to_validate <- c("2023-04-01", 
                           "2023-13-01", 
-                          "2023-04-31",  # FIXME This isn't really a valid date 
+                          "2023-04-31",
                           "2023-00-17", 
                           "23-01-01")
     expect_equal(valRx(REGEX_DATE)(date_to_validate), 
@@ -173,8 +210,8 @@ test_that(
     # truefalse         
     truefalse_to_validate <- c("true", 
                                "false", 
-                               "TrUe",   # FIXME: do we want to ignore case
-                               "FalSE",  # FIXME: do we want to ignore case
+                               "TrUe",
+                               "FalSE",
                                "0", 
                                "1", 
                                "00",     

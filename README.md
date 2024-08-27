@@ -3,6 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10602052.svg)](https://doi.org/10.5281/zenodo.10602052)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+![r-cmd-check.yml](https://github.com/vubiostat/redcapAPI/actions/workflows/r-cmd-check.yml/badge.svg?branch=main)
 
 redcapAPI
 =========
@@ -55,7 +56,8 @@ Here's a typical call for these two:
 ```
 library(redcapAPI)
 
-options(keyring_backend=keyring::backend_file) # Put in .Rprofile
+# IMPORTANT: Put the following line in .Rprofile `usethis::edit_r_profile()`
+options(keyring_backend=keyring::backend_file)
 
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
@@ -141,6 +143,30 @@ The research community owes a big thanks to [Benjamin Nutter](https://github.com
 This package was originally created by [Jeffrey Horner](https://github.com/jeffreyhorner).
 
 The current package was developed under REDCap Version 14+. Institutions can be a little behind on updating REDCap and so some features of the API may not always work.
+
+### Issue Review Process for Pull Requests
+
+Goals:
+
+* Reproducibility
+* Test Driven
+* Robust checking of user inputs
+
+Rules:
+
+* Hotfixes or documentation changes can skip this process.
+* The majority author on a pull request must not be the approving reviewer.
+* Each commit should include the issue number as a link.
+* The approving reviewer should check the following:
+  - Visual review of code in pull request.
+  - Was the NEWS updated?
+  - Were tests written?
+  - Were user inputs checked?
+  - Does the VERSION need bumped?
+  - Was documentation properly updated?
+  - Was roxygen2 run on the updated documentation?
+  - Does R CMD CHECK pass? (reviewer should run)
+  - Does the test suite pass with no warnings? (reviewer should run)
 
 ### License
 

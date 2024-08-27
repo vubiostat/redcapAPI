@@ -2,7 +2,6 @@ context("makeApiCall Argument Validation")
 
 library(mockery)
 library(curl)
-library(httr)
 
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
@@ -57,21 +56,20 @@ test_that(
     e <- structure(
       list(message = paste0("Timeout was reached: [", url,
                             "] Operation timed out after 300001 milliseconds with 0 bytes received"), 
-           call = curl_fetch_memory(paste0(url,"/params"), handle = h)
+           call = 'curl_fetch_memory(paste0(url,"/params"), handle = h)'
       ),
       class = c("simpleError", "error", "condition")
     )
     
     rcon$set_retries(1)
     x <- 1
-    stub(makeApiCall, "httr::POST", function(...)
-      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {x <<- 3; goodVersionPOST})
     
-    response <- makeApiCall(rcon, 
-                            body = list(content = "version", 
-                                        format = "csv"))
-    
-    expect_error(redcapError(response, "A network error has occurred"))
+    expect_error(
+      makeApiCall(rcon, body=list(content = "version", format = "csv"), 
+      "A network error has occurred"))
+    expect_equal(x, 2)
     rcon$set_retries(5)
   }
 )
@@ -92,19 +90,20 @@ test_that(
     e <- structure(
            list(message = paste0("Timeout was reached: [", url,
                             "] Operation timed out after 300001 milliseconds with 0 bytes received"),
-                call = curl_fetch_memory(paste0(url,"/params"), handle = h)
+                call = 'curl_fetch_memory(paste0(url,"/params"), handle = h)'
                 ),
            class = c("simpleError", "error", "condition")
     )
     
     x <- 1
-    stub(makeApiCall, "httr::POST", function(...)
-      if(x==1) { x <<- 2; stop(e) } else {goodVersionPOST})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(x==1) { x <<- 2; stop(e) } else {x <<- 3; goodVersionPOST})
     
     response <- makeApiCall(rcon, 
                             body = list(content = "version", 
                                         format = "csv"))
     
+    expect_equal(x, 3)
     expect_true(response$status==200)
   }
 )
@@ -112,15 +111,12 @@ test_that(
 test_that(
   ".makeApiCall_retryMessage gives appropriate messages", 
   {
-    response <- makeApiCall(rcon, 
-                            body = list(content = "invalid-content", 
-                                        format = "csv"))
     
-    expect_message(.makeApiCall_retryMessage(rcon, response, 1), 
-                   "API attempt 1 of 5 failed. Trying again in 2 seconds. ERROR: The value of the parameter \"content\" is not valid")
+    expect_message(.makeApiCall_retryMessage(rcon, "msg", 1), 
+                   "API attempt 1 of 5 failed. Trying again in 2 seconds. msg")
     
-    expect_message(.makeApiCall_retryMessage(rcon, response, rcon$retries()), 
-                   sprintf("API attempt %s of %s failed. ERROR: The value of the parameter \"content\" is not valid", 
+    expect_message(.makeApiCall_retryMessage(rcon, "msg", rcon$retries()), 
+                   sprintf("API attempt %s of %s failed. msg", 
                            rcon$retries(), rcon$retries()))
   }
 )
@@ -135,12 +131,12 @@ test_that(
     response$status_code <- 502
     response$content <- charToRaw("Recv failure: Connection reset by peer")
     
-    expect_error(redcapError(response, "null"), 
+    expect_error(redcapError(response), 
                  "A network error has occurred. This can happen when too much data is")
     
     response$content <- charToRaw(paste0("Timeout was reached: [",url,"] SSL connection timeout"))
     
-    expect_error(redcapError(response, "null"), 
+    expect_error(redcapError(response), 
                  "A network error has occurred. This can happen when too much data is")
     
   }
@@ -187,10 +183,18 @@ test_that(
 )
 
 test_that(
+  "success_status_codes must be integerish",
+  {
+    expect_error(makeApiCall(rcon, success_status_code = TRUE),
+                 "'success_status_codes': Must be of type 'integerish'")
+  }
+)
+
+test_that(
   "as.data.frame.response handles invalid encoded characters",
   {
     x <- list(content=charToRaw("fa\xE7il,joe\n1,2\xE7\n3,4"))
-    x[['headers']] <- list('Content-Type'='text/csv; charset=utf-8')
+    x[['headers']] <- list('content-type'='text/csv; charset=utf-8')
     class(x) <- c("response","list")
     expect_warning({y <- redcapAPI:::as.data.frame.response(x)},
                   "invalid characters")
@@ -199,7 +203,7 @@ test_that(
       data.frame(fa.il=as.integer(c(1,3)), joe=c("2\U25a1","4"))
     )
     
-    x[['headers']] <- list('Content-Type'='text/csv') # defaults to latin
+    x[['headers']] <- list('content-type'='text/csv') # defaults to latin
     expect_silent({y <- redcapAPI:::as.data.frame.response(x)})
     expect_equal(
       y,
@@ -227,8 +231,10 @@ test_that(
     )
     
     redirectCall <- TRUE
-    stub(makeApiCall, "httr::POST", function(...)
-      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
+    stub(makeApiCall, ".curlPost", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else 
+                       { redcapAPI:::.curlPost(...) }
+    )
     
     expect_warning(
       response <- makeApiCall(rcon, 
@@ -260,9 +266,11 @@ test_that(
     )
     
     redirectCall <- TRUE
-    stub(makeApiCall, "httr::POST", function(...)
-      if(redirectCall) { redirectCall <<- FALSE; redirect  } else {httr:::POST(...)})
-    
+    stub(makeApiCall, ".curlPost", function(...)
+      if(redirectCall) { redirectCall <<- FALSE; redirect  } else 
+                       { redcapAPI:::.curlPost(...) }
+    )
+   
     expect_message(
       response <- makeApiCall(rcon, 
                         body = list(content = "version", 

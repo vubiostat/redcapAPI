@@ -1,20 +1,36 @@
 context("Export Logging Functionality")
 
-
-BEGIN_TIME <- tail(seq(Sys.time(), by = "-7 days", length.out = 2), 1)
-
-FullLog <- exportLogging(rcon, 
-                         beginTime = BEGIN_TIME)
+# API works versus "minute" so current time is rounded to minute
+# Also, this needs to be in the timezone of the server, which ours is CDT
+# If another user wishes to automate these test this could be an ENV variable.
+systime <- as.POSIXct(Sys.time(), tz="America/Chicago")
+BEGIN_TIME <- as.POSIXct(
+  format(systime, format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
+RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
 test_that(
-  "Logs are returned when all arguments are default", 
+  "Logs can be batched and match unbatched",
   {
-    checkmate::expect_data_frame(
-      exportLogging(rcon)
-    )
+    endTime <- BEGIN_TIME+6*24*60*60-27*60 # End time is 27min less than 6 days to test final boundary
+    BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, endTime=endTime, batchInterval=1)
+    SameLog <- RecentLog[RecentLog$timestamp >= BEGIN_TIME & RecentLog$timestamp < endTime,]
+    
+    skip_if(nrow(BatchedLog) == 0, "No logs for test window in past")
+    
+    expect_equal(BatchedLog$timestamp, SameLog$timestamp)
+    expect_equal(BatchedLog$action,    SameLog$action)
+    expect_equal(BatchedLog$username,  SameLog$username)
+    expect_equal(BatchedLog$details,   SameLog$details)
+    expect_equal(as.character(BatchedLog$record), as.character(SameLog$record))
   }
 )
 
+test_that(
+  "Logs are returned for the last 7 days", 
+  {
+    checkmate::expect_data_frame(RecentLog)
+  }
+)
 
 test_that(
   "Logs are returned for logtype = 'export'",
@@ -130,7 +146,7 @@ test_that(
 test_that(
   "Logs are returned for an existing user", 
   {
-    user_in_log <- unique(FullLog$username)
+    user_in_log <- unique(RecentLog$username)
     user_for_test <- sample(user_in_log, 1)
     skip_if(length(user_for_test) == 0)
     
@@ -158,8 +174,8 @@ test_that(
 test_that(
   "Logs are returned for an existing record", 
   {
-    Records <- FullLog[!is.na(FullLog$record) & !grepl("user", FullLog$action), ]
-    records <- FullLog$record
+    Records <- RecentLog[!is.na(RecentLog$record) & !grepl("user", RecentLog$action), ]
+    records <- RecentLog$record
     records <- trimws(records)
     records <- unique(records)
     
@@ -175,21 +191,9 @@ test_that(
 
 
 test_that(
-  "Empty logs are returned for a non-existing user", 
+  "Empty logs are returned for a non-existing record", 
   {
-    records <- FullLog$record
-    records <- records[!is.na(records)]
-    records <- trimws(records)
-    records <- unique(records)
-    # by appending abc, to all of the existing record, we guarantee
-    # that the record used doesn't exist
-    records <- sprintf("%s-abc", 
-                       records)
-    
-    record_for_test <- sample(records, 1)
-    
-    record_for_test <- sprintf("%s-abc", 
-                               record_for_test)
+    record_for_test <- "thisisprobablynotarecordid"
     
     Logs <- exportLogging(rcon, 
                           record = record_for_test, 
@@ -216,7 +220,7 @@ test_that(
 test_that(
   "Logs are returned after a beginTime", 
   {
-    times <- FullLog$timestamp
+    times <- RecentLog$timestamp
     times <- sort(times)
     index <- seq_along(times)
     index <- median(index)
@@ -235,7 +239,7 @@ test_that(
 test_that(
   "Logs are returned before an endTime", 
   {
-    times <- FullLog$timestamp
+    times <- RecentLog$timestamp
     times <- sort(times)
     index <- seq_along(times)
     index <- median(index)

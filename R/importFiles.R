@@ -24,11 +24,8 @@ importFiles.redcapApiConnection <- function(rcon,
                                             event           = NULL, 
                                             overwrite       = TRUE,
                                             repeat_instance = NULL, 
-                                            ...,
-                                            error_handling  = getOption("redcap_error_handling"),
-                                            config          = list(), 
-                                            api_param       = list()){
-  
+                                            ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
    ##################################################################
@@ -71,20 +68,7 @@ importFiles.redcapApiConnection <- function(rcon,
                                any.missing = FALSE,
                                null.ok = TRUE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_file_exists(x = file,
@@ -144,23 +128,14 @@ importFiles.redcapApiConnection <- function(rcon,
                action = 'import', 
                record = record,
                field = field, 
-               file = httr::upload_file(file), 
+               file = .curlUploadFile(file),
                returnFormat = 'csv', 
                event = event, 
                repeat_instance = repeat_instance)
-  
-  body <- body[lengths(body) > 0]
-  
+
    ###########################################################################
   # Make the API Call
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, 
-                                   api_param), 
-                          config = config)
-  
-  if (response$status_code != "200") 
-    redcapError(response, error_handling)
-  else 
-    invisible(TRUE)
+  response <- makeApiCall(rcon, body, ...)
+
+  invisible(response$status_code == 200L)
 }

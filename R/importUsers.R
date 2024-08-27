@@ -13,10 +13,8 @@ importUsers <- function(rcon, data, ...){
 importUsers.redcapApiConnection <- function(rcon, 
                                             data,
                                             consolidate = TRUE, 
-                                            ...,
-                                            error_handling = getOption("redcap_error_handling"), 
-                                            config = list(), 
-                                            api_param = list()){
+                                            ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -34,20 +32,7 @@ importUsers.redcapApiConnection <- function(rcon,
                             len = 1, 
                             null.ok = FALSE, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   form_names <- rcon$instruments()$instrument_name
@@ -82,26 +67,14 @@ importUsers.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_users()
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
+  response <- makeApiCall(rcon, body, ...)
   
   ###################################################################
   # Restore and refresh                                          ####
-  
   if (user_conflict_exists){
     importUserRoleAssignments(rcon, 
                               data = OrigUserRoleAssign[1:2])

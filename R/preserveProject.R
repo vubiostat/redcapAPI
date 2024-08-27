@@ -141,9 +141,8 @@ preserveProject.redcapApiConnection <- function(rcon,
                                                 ..., 
                                                 save_as = NULL,
                                                 dir,
-                                                dir_create = TRUE,
-                                                error_handling = getOption("redcap_error_handling"), 
-                                                config         = list()){
+                                                dir_create = TRUE)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -152,15 +151,6 @@ preserveProject.redcapApiConnection <- function(rcon,
   checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
   
   checkmate::assert_choice(x = save_as, 
                            choices = c("Rdata", "csv"), 
@@ -190,45 +180,22 @@ preserveProject.redcapApiConnection <- function(rcon,
   # Make the List object                                         ####
   
   RedcapList <- 
-    list(project_information   = exportProjectInformation(rcon, 
-                                                          error_handling = error_handling, 
-                                                          config = config),
-         arms                  = exportArms(rcon, 
-                                            error_handling = error_handling, 
-                                            config = config), 
-         events                = exportEvents(rcon, 
-                                              error_handling = error_handling, 
-                                              config = config), 
-         meta_data             = exportMetaData(rcon, 
-                                                error_handling = error_handling, 
-                                                config = config),
-         mappings              = exportMappings(rcon, 
-                                                error_handling = error_handling, 
-                                                config = config), 
-         repeating_instruments = exportRepeatingInstrumentsEvents(rcon, 
-                                                                  error_handling = error_handling, 
-                                                                  config = config),
-         users                 = exportUsers(rcon, 
-                                             error_handling = error_handling, 
-                                             config = config), 
-         user_roles            = exportUserRoles(rcon,
-                                                 error_handling = error_handling, 
-                                                 config = config), 
-         user_role_assignments = exportUserRoleAssignments(rcon, 
-                                                           error_handling = error_handling, 
-                                                           config = config),
-         dags                  = exportDags(rcon, 
-                                            error_handling = error_handling, 
-                                            config = config),
-         dag_assignments       = exportUserDagAssignments(rcon, 
-                                                          error_handling = error_handling, 
-                                                          config = config),
+    list(project_information   = exportProjectInformation(rcon, ...),
+         arms                  = exportArms(rcon, ...), 
+         events                = exportEvents(rcon, ...), 
+         meta_data             = exportMetaData(rcon, ...),
+         mappings              = exportMappings(rcon, ...),
+         repeating_instruments = exportRepeatingInstrumentsEvents(rcon, ...),
+         users                 = exportUsers(rcon, ...),
+         user_roles            = exportUserRoles(rcon, ...),
+         user_role_assignments = exportUserRoleAssignments(rcon, ...),
+         dags                  = exportDags(rcon, ...),
+         dag_assignments       = exportUserDagAssignments(rcon, ...),
          records               = exportRecordsTyped(rcon,
                                                     validation = skip_validation,
                                                     cast = raw_cast,
-                                                    error_handling = error_handling, 
-                                                    config = config), 
-         external_coding        = exportExternalCoding(rcon)
+                                                    ...),
+         external_coding        = exportExternalCoding(rcon, ...)
     )
   
   if (is.null(save_as)){

@@ -39,7 +39,12 @@ Depends:
     R (>= 3.5.0)
 Imports:
     checkmate,
-    httr,
+    chron,
+    curl,
+    jsonlite,
+    labelVector,
+    lubridate,
+    mime,
     keyring,
     getPass,
     yaml

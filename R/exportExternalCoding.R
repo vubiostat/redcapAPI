@@ -53,10 +53,8 @@ exportExternalCoding <- function(rcon,
 exportExternalCoding.redcapApiConnection <- function(rcon, 
                                                      fields         = NULL, 
                                                      ..., 
-                                                     batch_size     = 1000, 
-                                                     error_handling = getOption("redcap_error_handling"), 
-                                                     config         = list(), 
-                                                     api_param      = list()){
+                                                     batch_size     = 1000)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -77,20 +75,7 @@ exportExternalCoding.redcapApiConnection <- function(rcon,
                                null.ok = TRUE, 
                                any.missing = FALSE, 
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = fields, 

@@ -26,7 +26,9 @@
 #' @param survey `logical(1)`. When `TRUE`, the survey identifier field 
 #'   (e.g., `redcap_survey_identifier`) and survey timestamp fields 
 #'   (e.g., `[form_name]_timestamp`) will be exported 
-#'   (relevant only when surveys are utilized in the project). 
+#'   (relevant only when surveys are utilized in the project). If these
+#'   fields are specified in the fields argument and this flag is set to 
+#'   FALSE the requested fields will not be exported.
 #' @param dag `logical(1)`. When `TRUE` the 
 #'   `redcap_data_access_group` field will be included in the export \
 #'   when data access groups are utilized in the project. 
@@ -253,9 +255,7 @@ recordsTypedMethods <- function(rcon,
                                 csv_delimiter, 
                                 batch_size,
                                 warn_zero_coded,
-                                ...,
-                                error_handling, 
-                                config, 
-                                api_param){
+                                ...)
+{
   NULL
 }

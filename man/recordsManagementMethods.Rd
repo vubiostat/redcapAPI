@@ -13,24 +13,9 @@ exportNextRecordName(rcon, ...)
 
 renameRecord(rcon, record_name, new_record_name, arm = NULL, ...)
 
-\method{exportNextRecordName}{redcapApiConnection}(
-  rcon,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{exportNextRecordName}{redcapApiConnection}(rcon, ...)
 
-\method{renameRecord}{redcapApiConnection}(
-  rcon,
-  record_name,
-  new_record_name,
-  arm = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
-)
+\method{renameRecord}{redcapApiConnection}(rcon, record_name, new_record_name, arm = NULL, ...)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -48,18 +33,6 @@ renamed to new record name, otherwise it will rename the record
 only in the specified arm.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportNextRecordName} returns an integerish value. The value is

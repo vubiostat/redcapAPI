@@ -17,4 +17,4 @@ sample_data
 vignettes/*.aux
 vignettes/*.log
 vignettes/*.tex
-vignettes/*.pdf
+vignettes/redcapAPI-*.pdf

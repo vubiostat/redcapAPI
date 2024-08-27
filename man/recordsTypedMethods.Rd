@@ -40,11 +40,8 @@ exportReportsTyped(rcon, report_id, ...)
   filter_empty_rows = TRUE,
   warn_zero_coded = TRUE,
   ...,
-  config = list(),
-  api_param = list(),
   csv_delimiter = ",",
-  batch_size = NULL,
-  error_handling = getOption("redcap_error_handling")
+  batch_size = NULL
 )
 
 \method{exportRecordsTyped}{redcapOfflineConnection}(
@@ -72,8 +69,6 @@ exportReportsTyped(rcon, report_id, ...)
   assignment = list(label = stripHTMLandUnicode, units = unitsFieldAnnotation),
   warn_zero_coded = TRUE,
   ...,
-  config = list(),
-  api_param = list(),
   csv_delimiter = ","
 )
 }
@@ -103,7 +98,9 @@ misspellings may result in unexpected results.}
 \item{survey}{\code{logical(1)}. When \code{TRUE}, the survey identifier field
 (e.g., \code{redcap_survey_identifier}) and survey timestamp fields
 (e.g., \verb{[form_name]_timestamp}) will be exported
-(relevant only when surveys are utilized in the project).}
+(relevant only when surveys are utilized in the project). If these
+fields are specified in the fields argument and this flag is set to
+FALSE the requested fields will not be exported.}
 
 \item{dag}{\code{logical(1)}. When \code{TRUE} the
 \code{redcap_data_access_group} field will be included in the export \
@@ -163,18 +160,6 @@ all records are pulled. Otherwise, the records all pulled in batches of this siz
 potentially problematic zero coded fields. Defaults to \code{TRUE}.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportRecordsTyped} returns a data frame with the formatted data.

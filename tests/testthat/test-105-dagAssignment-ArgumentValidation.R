@@ -13,14 +13,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportUserDagAssignments(rcon, 
-                                          error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
-    expect_error(exportUserDagAssignments(rcon, 
+   expect_error(exportUserDagAssignments(rcon, 
                                           config = list(1)), 
                  "'config': Must have names")
     expect_error(exportUserDagAssignments(rcon, 
@@ -85,14 +81,10 @@ test_that(
 )
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importUserDagAssignments(rcon,
-                                          data = REDCAP_DAG_ASSIGNMENT_STRUCTURE, 
-                                          error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+   
     expect_error(importUserDagAssignments(rcon,
                                           data = REDCAP_DAG_ASSIGNMENT_STRUCTURE, 
                                           config = list(1)), 

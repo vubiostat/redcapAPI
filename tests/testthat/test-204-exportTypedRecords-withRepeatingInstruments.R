@@ -86,7 +86,9 @@ test_that(
     Rec <- exportRecordsTyped(rcon,
                               fields = "record_id",
                               dag=TRUE)
-    expect_true(all(REDCAP_SYSTEM_FIELDS %in% names(Rec)))
+    expect_equal(names(Rec),
+                 c("record_id", "redcap_event_name", "redcap_repeat_instrument", 
+                  "redcap_repeat_instance", "redcap_data_access_group"))
 
     # 3. User requests actual fields + system fields.
     #    Return only the requested fields

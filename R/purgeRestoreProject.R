@@ -11,7 +11,7 @@
 #'   potentially destructive and may result in data loss. It is a good 
 #'   practice to back up your data and project structure before purging
 #'   a project. 
-#'   
+#'
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
 #' @param object,rcon A `redcapConnection` object. Except in 
@@ -107,7 +107,7 @@
 #' @rdname purgeRestoreProject
 #' @export
 
-purgeProject <- function(object, ...){
+purgeProject <- function(rcon, ...){
   UseMethod("purgeProject")
 }
 
@@ -115,7 +115,7 @@ purgeProject <- function(object, ...){
 #' @rdname purgeRestoreProject
 #' @export
 
-purgeProject.redcapApiConnection <- function(object, 
+purgeProject.redcapApiConnection <- function(rcon, 
                                              arms           = FALSE, 
                                              events         = FALSE, 
                                              users          = FALSE, 
@@ -124,14 +124,13 @@ purgeProject.redcapApiConnection <- function(object,
                                              records        = FALSE, 
                                              purge_all      = FALSE,
                                              flush          = TRUE, 
-                                             ..., 
-                                             error_handling = getOption("redcap_error_handling"), 
-                                             config         = list()){
+                                             ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = object, 
+  checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -174,16 +173,7 @@ purgeProject.redcapApiConnection <- function(object,
                             len = 1, 
                             any.missing = FALSE,
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -194,11 +184,10 @@ purgeProject.redcapApiConnection <- function(object,
   }
   
   if (records){
-    RecordId <- exportRecordsTyped(object, 
-                                   fields = object$metadata()$field_name[1],
-                                   cast = list(system = castRaw),
-                                   error_handling = error_handling, 
-                                   config = config)
+    RecordId <- exportRecordsTyped(rcon, 
+                                   fields = rcon$metadata()$field_name[1],
+                                   cast = list(system = castRaw), 
+                                   ...)
     
     if (nrow(RecordId)>0){
       if ("redcap_event_name" %in% names(RecordId)){
@@ -213,57 +202,46 @@ purgeProject.redcapApiConnection <- function(object,
         
         # Delete records from each arm individually
         for (i in seq_along(RecordId)){
-          deleteRecords(object, 
+          deleteRecords(rcon, 
                         records = RecordId[[i]][[1]], 
                         arm = unique(RecordId[[i]]$arm_num),
-                        error_handling = error_handling, 
-                        config = config)
+                        ...)
         }
       } else {
-        deleteRecords(object, 
-                      records = RecordId[[1]], 
-                      error_handling = error_handling, 
-                      config = config)
+        deleteRecords(rcon, 
+                      records = RecordId[[1]],
+                      ...)
       }
     }
   }
   
-  if (dags && nrow(object$dags()) > 0){
-    deleteDags(object,
-               dags = object$dags()$unique_group_name,
-               error_handling = error_handling,
-               config = config)
+  if (dags && nrow(rcon$dags()) > 0){
+    deleteDags(rcon,
+               dags = rcon$dags()$unique_group_name,
+               ...)
   }
 
-  if (user_roles && nrow(object$user_roles()) > 0){
-    deleteUserRoles(object,
-                    object$user_roles()$unique_role_name,
-                    error_handling = error_handling,
-                    config = config)
+  if (user_roles && nrow(rcon$user_roles()) > 0){
+    deleteUserRoles(rcon,
+                    rcon$user_roles()$unique_role_name,
+                    ...)
   }
   
-  if (users){
-    # deleteUsers(object,
-    #             object$users()$username,
-    #             error_handling = error_handling,
-    #             config = config)
-  }
+  # if (users){
+  # deleteUsers(rcon,
+  #             rcon$users()$username,
+  #             config = config)
+  # }
   
-  if (events){
-    deleteEvents(object, 
-                 events = object$events()$unique_event_name, 
-                 error_handling = error_handling, 
-                 config = config)
-  }
+  if (events)
+    deleteEvents(rcon, 
+                 events = rcon$events()$unique_event_name, 
+                 ...)
   
-  if (arms && !is.null(object$arms()$arm_num)){
-    deleteArms(object, 
-               arms = object$arms()$arm_num, 
-               error_handling = error_handling, 
-               config = config)
-  }
-  
-  if (flush) object$flush_all()
+  if (arms && !is.null(rcon$arms()$arm_num))
+    deleteArms(rcon, 
+               arms = rcon$arms()$arm_num,
+               ...)
 }
 
 #####################################################################
@@ -293,14 +271,14 @@ restoreProject.redcapApiConnection <- function(object,
                                                dag_assignments       = NULL,
                                                records               = NULL, 
                                                flush                 = TRUE, 
-                                               ..., 
-                                               error_handling        = getOption("redcap_error_handling"), 
-                                               config                = list()){
+                                               ...)
+{
+  rcon <- object
   ###################################################################
   # Argument Validation                                          ####
   coll <- checkmate::makeAssertCollection()
   
-  checkmate::assert_class(x = object, 
+  checkmate::assert_class(x = rcon, 
                           classes = "redcapApiConnection", 
                           add = coll)
   
@@ -363,116 +341,94 @@ restoreProject.redcapApiConnection <- function(object,
                                null.ok = TRUE,
                                col.names = "named",
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
   # Functional Code                                              ####
   
   if (!is.null(project_information)){
-    importProjectInformation(object, 
-                             data = project_information, 
-                             error_handling = error_handling, 
-                             config = config)
+    importProjectInformation(rcon, 
+                             data = project_information,
+                             ...)
   }
   
   if (!is.null(arms) && nrow(arms) > 0){
-    importArms(object, 
+    importArms(rcon, 
                arms_data = arms, 
-               error_handling = error_handling, 
-               config = config)
+               ...)
   }
   
   if (!is.null(events) && nrow(events) > 0){
-    importEvents(object, 
-                 event_data = events, 
-                 error_handling = error_handling, 
-                 config = config)
+    importEvents(rcon, 
+                 event_data = events,
+                 ...)
   }
   
   if (!is.null(meta_data)){
-    importMetaData(object, 
-                   data = meta_data, 
-                   error_handling = error_handling, 
-                   config = config)
+    importMetaData(rcon, 
+                   data = meta_data,
+                   ...)
   }
   
   if (!is.null(mappings) && nrow(mappings) > 0){
-    importMappings(object, 
-                   data = mappings, 
-                   error_handling = error_handling, 
-                   config = config)
+    importMappings(rcon, 
+                   data = mappings,
+                   ...)
   }
   
   if (!is.null(repeating_instruments) && nrow(repeating_instruments) > 0){
-    importRepeatingInstrumentsEvents(object,
+    importRepeatingInstrumentsEvents(rcon,
                                      data = repeating_instruments,
-                                     error_handling = error_handling,
-                                     config = config)
+                                     ...)
   }
   
   if (!is.null(users)){
-    importUsers(object,
+    importUsers(rcon,
                 data = users,
-                error_handling = error_handling,
-                config = config)
+                ...)
   }
   
   if (!is.null(user_roles)){
-    importUserRoles(object,
+    importUserRoles(rcon,
                     data = user_roles,
-                    error_handling = error_handling,
-                    config = config)
+                    ...)
   }
   
   if (!is.null(user_role_assignments)){
-    importUserRoleAssignments(object,
+    importUserRoleAssignments(rcon,
                               data = user_role_assignments,
-                              error_handling = error_handling,
-                              config = config)
+                              ...)
   }
   
   if (!is.null(dags)){
-    importDags(object,
+    importDags(rcon,
                data = dags,
-               error_handling = error_handling,
-               config = config)
+               ...)
   }
   
   if (!is.null(dag_assignments)){
-    importUserDagAssignments(object,
+    importUserDagAssignments(rcon,
                              data = dag_assignments,
-                             error_handling = error_handling,
-                             config = config)
+                             ...)
   }
   
   if (!is.null(records) && nrow(records) > 0){
-    importRecords(object, 
-                  data = records, 
-                  error_handling = error_handling, 
-                  config = config)
+    importRecords(rcon, 
+                  data = records,
+                  ...)
   }
   
-  if (flush) object$flush_all()
+  if (flush) rcon$flush_all()
 }
 
 #' @rdname purgeRestoreProject
 #' @export
 
-restoreProject.list <- function(object, 
-                                rcon, 
-                                ..., 
-                                error_handling = getOption("redcap_error_handling"), 
-                                config         = list()){
+restoreProject.list <- function(object,
+                                ...,
+                                rcon)
+{
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_list(x = object, 
@@ -501,7 +457,9 @@ restoreProject.list <- function(object,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  object$rcon <- rcon
 
-  do.call(restoreProject.redcapApiConnection, 
-          c(list(object = rcon), object))
+  do.call(restoreProject.redcapApiConnection,
+          utils::modifyList(list(...), object))
 }

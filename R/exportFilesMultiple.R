@@ -100,7 +100,8 @@ exportFilesMultiple <- function(rcon,
                                 event       = NULL, 
                                 dir, 
                                 file_prefix = TRUE, 
-                                ...){
+                                ...)
+{
   UseMethod("exportFilesMultiple")
 }
 
@@ -115,11 +116,8 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
                                                     file_prefix     = TRUE, 
                                                     repeat_instance = NULL,
                                                     ...,
-                                                    quiet = TRUE,
-                                                    error_handling  = getOption("redcap_error_handling"),
-                                                    config          = list(), 
-                                                    api_param       = list()){
-
+                                                    quiet = TRUE)
+{
   if (is.numeric(record)) record <- as.character(record)
 
   ###################################################################
@@ -161,20 +159,7 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = quiet, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -203,10 +188,7 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
         event = ResultsFrame$event[i], 
         repeat_instance = ResultsFrame$repeat_instance[i], 
         dir = dir, 
-        file_prefix = file_prefix, 
-        error_handling = error_handling, 
-        config = config, 
-        api_param = api_param, 
+        file_prefix = file_prefix,
         ...
       )
     

@@ -42,10 +42,7 @@ deleteFiles(rcon, record, field, event, ...)
   dir = getwd(),
   file_prefix = TRUE,
   repeat_instance = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  ...
 )
 
 \method{importFiles}{redcapApiConnection}(
@@ -56,10 +53,7 @@ deleteFiles(rcon, record, field, event, ...)
   event = NULL,
   overwrite = TRUE,
   repeat_instance = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  ...
 )
 
 \method{deleteFiles}{redcapApiConnection}(
@@ -68,10 +62,7 @@ deleteFiles(rcon, record, field, event, ...)
   field = NULL,
   event = NULL,
   repeat_instance = NULL,
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  ...
 )
 }
 \arguments{
@@ -105,18 +96,6 @@ to the file name.  The prefix takes the form \verb{[record_id]-[event_name]-[fil
 The file name is always the same name of the file as it exists in REDCap.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 \code{exportFiles} invisibly returns the file path to which the exported

@@ -69,10 +69,8 @@ exportFileRepositoryListing <- function(rcon,
 exportFileRepositoryListing.redcapApiConnection <- function(rcon, 
                                                             folder_id = numeric(0), 
                                                             recursive = FALSE, 
-                                                            ...,
-                                                            error_handling = getOption("redcap_error_handling"),
-                                                            config = list(), 
-                                                            api_param = list()){
+                                                            ...)
+{
   # Argument validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -89,20 +87,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
   checkmate::assert_logical(x = recursive, 
                             len = 1, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   # Make Body List --------------------------------------------------
@@ -112,20 +97,12 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
                format = 'csv', 
                returnFormat = 'csv', 
                folder_id = folder_id)
-  
-  body <- body[lengths(body) > 0]
-  
+
   # Call the API ----------------------------------------------------
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  } 
-  
+  response <- makeApiCall(rcon, body, success_status_codes = c(200L, 400L), ...)
+  if(response$status_code == 400L)
+    return(FILE_REPOSITORY_EMPTY_FRAME)
+
   # Convert result to a data frame ----------------------------------
   FileRepository <- .fileRepositoryFrame(response, 
                                          folder_id)

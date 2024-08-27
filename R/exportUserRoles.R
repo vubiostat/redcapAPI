@@ -13,10 +13,8 @@ exportUserRoles <- function(rcon, ...){
 exportUserRoles.redcapApiConnection <- function(rcon, 
                                                 labels         = TRUE, 
                                                 form_rights    = TRUE, 
-                                                ..., 
-                                                error_handling = getOption("redcap_error_handling"), 
-                                                config         = list(), 
-                                                api_param      = list()){
+                                                ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -35,20 +33,7 @@ exportUserRoles.redcapApiConnection <- function(rcon,
                             len = 1, 
                             null.ok = FALSE, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -58,23 +43,11 @@ exportUserRoles.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv")
   
-  body <- body[lengths(body) > 0]
-  
   ###################################################################
   # Make API Call                                                ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
-  
-  UserRole <- as.data.frame(response)
-  
-  if (nrow(UserRole) == 0) return(REDCAP_USER_ROLE_STRUCTURE)
+  UserRole <- as.data.frame(makeApiCall(rcon, body, ...))
+
+  if (nrow(UserRole) == 0) return(redcapUserRoleStructure(rcon$version()))
  
   # The API returns the forms_export string twice.  We reduce it to once here
   temp <- UserRole$forms_export

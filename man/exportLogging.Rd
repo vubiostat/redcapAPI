@@ -11,8 +11,9 @@ exportLogging(
   user = character(0),
   record = character(0),
   dag = character(0),
-  beginTime = .POSIXct(character(0)),
-  endTime = .POSIXct(character(0)),
+  beginTime = as.POSIXct(character(0)),
+  endTime = as.POSIXct(character(0)),
+  batchInterval = NULL,
   ...
 )
 
@@ -24,10 +25,8 @@ exportLogging(
   dag = character(0),
   beginTime = as.POSIXct(character(0)),
   endTime = as.POSIXct(character(0)),
-  ...,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  batchInterval = NULL,
+  ...
 )
 }
 \arguments{
@@ -48,24 +47,22 @@ By default, logs are returned for all records.}
 By default, logs are returned for all data access groups.}
 
 \item{beginTime}{\code{POSIXct(0/1)}. When given, only
-logs recorded after this time will be returned.}
+logs recorded on or after this time will be returned. The time specified
+is rounded to minutes and ignores the timezone. This can cause issues
+if the caller and server computers are configured in different timezones.
+Least surprising behavior is making sure the date specified is encoded
+in the timezone of the REDCap server.}
 
 \item{endTime}{\code{POSIXct(0/1)}. When given, only logs
-recorded before this time will be returned.}
+recorded on or before this time will be returned. If using batchInterval
+it will only be before this time. See \code{beginTime} for details on time
+encoding.}
+
+\item{batchInterval}{\code{integerish(1)}. When provided will
+batch log pulls to intervals of this many days. Requires
+that beginTime is specified.}
 
 \item{...}{Arguments to pass to other methods}
-
-\item{error_handling}{\code{character(1)}. One of \code{c("error", "null")}.
-An option for how to handle errors returned by the API.
-see \code{\link[=redcapError]{redcapError()}}.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\code{\link[httr:POST]{httr::POST()}}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame with columns\tabular{ll}{

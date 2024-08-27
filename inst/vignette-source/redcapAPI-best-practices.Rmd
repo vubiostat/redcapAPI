@@ -103,7 +103,7 @@ solution.*
 ```{r unlock}
 library(redcapAPI)
 suppressWarnings(library(Hmisc))
-library(httr)
+library(curl)
 
 options(keyring_backend=keyring::backend_file) # Put in .Rprofile
 
@@ -111,7 +111,7 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI', # REDCap project 1
                sandbox_conn = 'SandboxAPI'),   # REDCap project 2
              keyring      = 'API_KEYs',
              envir        = 1,
-             url          = 'https://redcap.vanderbilt.edu/api/')  
+             url          = 'https://redcap.vumc.org/api/')  
 ```
 
 The first time this is called, it asks the user for a password that will be used
@@ -170,6 +170,45 @@ Once again, per our design goals, our choices and recommendations do not limit t
 
 If the easiest path is the best path, it will become the common path. We've
 done our best to make best security practice the easiest path.
+
+### Multiple Environments
+
+The problem naturally arises that one has multiple target environments with a different set of projects in REDCap. A common configuration is three environments: 'dev', 'qa', and 'prod'. This now conflicts with the goal of having a single set of code that requires no modification to work against these three environments. A simple solution exists if one uses environment variables. 
+
+What can be done is to use an environment variable to denote the project state to work against and switch out the names pulled from the keyring to get the API KEYs. This pulls the string from the defined environment variable and switchs
+
+```
+myenv <- Sys.getenv(MY_FABULOUS_PROJECT_ENV, 'dev') # Defaults to 'dev'
+
+dbnames <- if(myenv == 'dev')
+{
+  c(test_conn    = 'DevRedcapAPI',
+    sandbox_conn = 'DevSandboxAPI')
+} else if(myenv == 'qa')
+{
+  c(test_conn    = 'QARedcapAPI',
+    sandbox_conn = 'QASandboxAPI')
+} else if(myenv == 'prod')
+{
+  c(test_conn    = 'ProdRedcapAPI',
+    sandbox_conn = 'ProdSandboxAPI')
+} else stop("Unknown environment target in MY_FABULOUS_PROJECT_ENV")
+
+unlockREDCap(dbnames
+             keyring      = 'API_KEYs',
+             envir        = 1,
+             url          = 'https://redcap.vumc.org/api/')  
+```
+
+To switch between these one can use `usethis::edit_r_profile()` and add the following line:
+
+```
+Sys.setenv(MY_FABULOUS_PROJECT_ENV='dev')
+```
+
+After editing one must restart R for it to load this variable. This equips a project to use multiple names from a keyring to control which projects are utilized when running. 
+
+An alternative would be to do the same as above but switch out the keyring used and have a keyring for each environment. 
 
 ## The Connection Object (caching)
 
@@ -589,7 +628,15 @@ repeating instruments in projects that have complex repeating structures.
 Separating forms can be done via multiple calls to the API, or it 
 can be done in post-processing via `splitForms`. 
 
-FIXME: Make an example with splitForms after we finish the function.
+```{r split_forms}
+Records <- exportRecordsTyped(test_conn)
+ 
+x <- splitForms(Records, test_conn)
+names(x)
+
+class(x$dates_and_times)
+dim(x$dates_and_times)
+```
 
 *NOTE: The later section on `exportBulkRecords` might be a better option than using splitForms.*
 
@@ -895,25 +942,11 @@ vectorToApiBodyList(c(1, 3, 4), "arms")
 A call to export only a selection of arms from a project would look like this:
 
 ```{r, eval = FALSE}
-makeApiCall(test_conn, 
-            body = c(list(content = 'arm', 
-                          format = 'csv', 
-                          returnFormat = 'csv'), 
-                     vectorToApiBodyList(c(1, 3, 4), "arms")))
-```
-
-## Debugging Raw Connection
-
-The library from 2.7.3 up supports `httr` debugging. 
-
-```{r, echo=TRUE, message=TRUE, warning=TRUE, error=TRUE }
-library(httr)
-capture.output(
-with_config(verbose(data_out=FALSE, data_in=TRUE, ssl=TRUE),
-            { test <- exportRecordsTyped(test_conn, 
-                              records = 10:20, 
-                              forms = "text_fields") }),
-type="message")
+as.character(makeApiCall(test_conn, 
+                         body = c(list(content = 'arm', 
+                                  format = 'csv', 
+                                  returnFormat = 'csv'), 
+                         vectorToApiBodyList(c(1, 3, 4), "arms"))))
 ```
 
 

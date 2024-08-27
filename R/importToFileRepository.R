@@ -16,10 +16,8 @@ importToFileRepository <- function(rcon,
 importToFileRepository.redcapApiConnection <- function(rcon, 
                                                        file, 
                                                        folder_id = numeric(0),
-                                                       ..., 
-                                                       error_handling = getOption("redcap_error_handling"),
-                                                       config = list(), 
-                                                       api_param = list()){
+                                                       ...)
+{
   # Argument Validation ---------------------------------------------
   
   coll <- checkmate::makeAssertCollection()
@@ -36,20 +34,7 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                max.len = 1, 
                                any.missing = FALSE,
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_file_exists(x = file, 
@@ -62,19 +47,13 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   body <- list(content = "fileRepository", 
                action = "import", 
                returnFormat = "csv",
-               file = httr::upload_file(file), 
+               file = .curlUploadFile(file),
                folder_id = folder_id)
-  
-  body <- body[lengths(body) > 0]
-  
-  # Make the API Call -----------------------------------------------
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
+
   # flush the cached File Repository ------------------------------
   rcon$flush_fileRepository()
+  # Make the API Call -----------------------------------------------
+  response <- makeApiCall(rcon, body, ...)
   
   # Get the path of the file in the File Repository -----------------
   fileRepo <- rcon$fileRepository()

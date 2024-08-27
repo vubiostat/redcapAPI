@@ -15,10 +15,9 @@ importMetaData.redcapApiConnection <- function(rcon,
                                                data,
                                                ..., 
                                                field_types = REDCAP_METADATA_FIELDTYPE, # see redcapDataStructure
-                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE, # see redcapDataStructure
-                                               error_handling = getOption("redcap_error_handling"), 
-                                               config = list(), 
-                                               api_param = list()){
+                                               validation_types = REDCAP_METADATA_VALIDATION_TYPE # see redcapDataStructure
+                                               )
+{
   ###################################################################
   # Argument Validation 
   
@@ -36,20 +35,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   checkmate::assert_character(x = validation_types, 
                               add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   ###################################################################
@@ -100,7 +86,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   .isPropertyOnAppropriateField(field_name = data$field_name, 
                                 field_type = data$field_type, 
-                                permissible_field_type = c("text", "slider", "file"),
+                                permissible_field_type = c("text", "slider", "file", "dropdown"),
                                 property = data$text_validation_type_or_show_slider_number, 
                                 property_name = "text_validation_type_or_show_slider_number", 
                                 coll = coll)
@@ -121,23 +107,15 @@ importMetaData.redcapApiConnection <- function(rcon,
                format = 'csv', 
                returnFormat = 'csv', 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
   rcon$flush_metadata()
   rcon$flush_instruments()
   rcon$flush_fieldnames()
-  
-  response <- as.character(response)
-  
-  invisible(as.character(response))
+  invisible(as.character(
+    makeApiCall(rcon, body, ...)
+  ))
 }
 
 #####################################################################

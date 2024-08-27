@@ -7,7 +7,8 @@ exportSurveyReturnCode <- function(rcon,
                                    instrument, 
                                    event, 
                                    repeat_instance = 1, 
-                                   ...){
+                                   ...)
+{
   UseMethod("exportSurveyReturnCode")
 }
 
@@ -20,11 +21,8 @@ exportSurveyReturnCode.redcapApiConnection <- function(rcon,
                                                        instrument, 
                                                        event           = NULL, 
                                                        repeat_instance = 1, 
-                                                       ..., 
-                                                       error_handling  = getOption("redcap_error_handling"), 
-                                                       config          = list(), 
-                                                       api_param       = list()){
-  
+                                                       ...)
+{
   if (is.numeric(record)) record <- as.character(record)
   
   ###################################################################
@@ -56,20 +54,7 @@ exportSurveyReturnCode.redcapApiConnection <- function(rcon,
                                len = 1, 
                                any.missing = FALSE, 
                                add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   checkmate::assert_subset(x = instrument, 
@@ -93,17 +78,8 @@ exportSurveyReturnCode.redcapApiConnection <- function(rcon,
                event = event, 
                repeat_instance = repeat_instance, 
                returnFormat = "csv")
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Call the API                                                 ####
-  
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
-  
-  if (response$status_code != 200) return(redcapError(response, error_handling))
-  
-  as.character(response)
+  as.character(makeApiCall(rcon, body, ...))
 }

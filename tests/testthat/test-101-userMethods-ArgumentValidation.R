@@ -2,6 +2,13 @@ context("User Methods Argument Validation")
 
 ProjectUser <- rcon$users()
 
+if(!EXPENDABLE_USER %in% ProjectUser)
+{
+  importUsers(rcon, data = data.frame(username = EXPENDABLE_USER, 
+                                      data_access_groups = 0))
+  ProjectUser <- rcon$users()
+}
+
 #####################################################################
 # Export Users                                                   ####
 
@@ -56,13 +63,10 @@ test_that(
 
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(exportUsers(rcon, 
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(exportUsers(rcon, 
                              config = list(1)), 
                  "'config': Must have names")
@@ -128,14 +132,10 @@ test_that(
 
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(importUsers(rcon, 
-                             data = ProjectUser,
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(importUsers(rcon, 
                              data = ProjectUser,
                              config = list(1)), 
@@ -181,14 +181,10 @@ test_that(
 
 
 test_that(
-  "Validate error_handling, config, api_param", 
+  "Validate config, api_param", 
   {
     local_reproducible_output(width = 200)
-    expect_error(deleteUsers(rcon, 
-                             users = EXPENDABLE_USER,
-                             error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
+
     expect_error(deleteUsers(rcon, 
                              users = EXPENDABLE_USER,
                              config = list(1)), 

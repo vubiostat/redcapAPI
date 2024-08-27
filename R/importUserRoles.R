@@ -15,10 +15,8 @@ importUserRoles <- function(rcon,
 importUserRoles.redcapApiConnection <- function(rcon, 
                                                 data,
                                                 consolidate = TRUE,
-                                                ...,
-                                                error_handling = getOption("redcap_error_handling"), 
-                                                config = list(), 
-                                                api_param = list()){
+                                                ...)
+{
   ###################################################################
   # Argument Validation                                          ####
   
@@ -36,26 +34,13 @@ importUserRoles.redcapApiConnection <- function(rcon,
                             len = 1, 
                             null.ok = FALSE, 
                             add = coll)
-  
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   
   
   checkmate::assert_subset(x = names(data), 
-                           choices = names(REDCAP_USER_ROLE_STRUCTURE), 
+                           choices = names(redcapUserRoleStructure(rcon$version())), 
                            add = coll)
   
   checkmate::reportAssertions(coll)
@@ -72,21 +57,12 @@ importUserRoles.redcapApiConnection <- function(rcon,
                format = "csv", 
                returnFormat = "csv", 
                data = writeDataForImport(data))
-  
-  body <- body[lengths(body) > 0]
-  
+
   ###################################################################
   # Make the API Call                                            ####
   
-  response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+  response <- makeApiCall(rcon, body, ...)
 
-  if (response$status_code != 200){
-    redcapError(response, 
-                 error_handling = error_handling)
-  }
-  
   # From REDCap 14.0.2 forward, caching can sometimes catch an NA role pre-definition
   roles <- c(NA)
   while(length(roles > 0) && any(is.na(roles)))

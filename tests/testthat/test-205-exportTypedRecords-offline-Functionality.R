@@ -22,10 +22,12 @@ test_that(
 test_that(
   "Only requested fields are returned", 
   {
-    these_fields <- c("record_id", "dropdown_test", "integer_test")
+    these_fields <-  c("record_id", "redcap_event_name", "redcap_repeat_instrument", 
+                       "redcap_repeat_instance", "redcap_data_access_group",
+                       "dropdown_test", "integer_test")
     Rec <- exportRecordsTyped(roff, 
                               fields = these_fields)
-    expect_true(all(c(these_fields, REDCAP_SYSTEM_FIELDS) %in% names(Rec)))
+    expect_true(all(c(these_fields) %in% names(Rec)))
   }
 )
 
@@ -136,6 +138,7 @@ test_that(
           meta_data = file.path(offline_files, "TestRedcapAPI_DataDictionary.csv"), 
           records = file.path(offline_files, "TestRedcapAPI_Records.csv"), 
           events = Evt,
+          version = NULL,
           project_info = data.frame(project_id = rcon$projectInformation()$project_id, 
                                     is_longitudinal = 1), 
           url = url

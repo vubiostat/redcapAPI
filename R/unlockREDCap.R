@@ -24,7 +24,9 @@
       rcon    <- redcapConnection(token=key, url=url, ...)
       version <- list(content = "version", format = "csv")
       # Test connection by checking version
-      response <- makeApiCall(rcon, body = version)
+      response <- makeApiCall(rcon, body = version,
+        success_status_codes=c(200L, 301L, 302L)
+      )
       
       # No redirect, this is success
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
@@ -33,7 +35,8 @@
       rcon <- redcapConnection(token=key, url=response$header$location, ...)
       
       # Test connection by checking version post redirect
-      response <- makeApiCall(rcon, body = version)
+      response <- makeApiCall(rcon, body = version,
+        success_status_codes=c(200L, 301L, 302L))
 
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))
@@ -46,7 +49,7 @@
          grepl("Could not connect to server", e))
         stop("Unable to connect to url '",url,"'. ", e$message)
         
-      if(grepl("403", e)) return(NULL)
+      if(grepl("403", e)) return(NULL) # Forbidden, i.e. bad API_KEY
       
       stop(e)
     }
@@ -86,7 +89,7 @@
   
   if(!file.exists(config_file)) return(list())
   
-  config <- read_yaml(config_file)
+  config <- yaml::read_yaml(config_file)
   if(is.null(config$redcapAPI)) stop(paste0("Config file '",config_file,"' does not contain required 'redcapAPI' entry"))
   config <- config$redcapAPI
   if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain required 'keys' entry under the 'redcapAPI' entry"))
@@ -144,7 +147,7 @@
 ##
 .unlockKeyring <- function(keyring, passwordFUN)
 {
-  state <- keyring_list()
+  state <- keyring::keyring_list()
   state <- state[state$keyring==keyring,]
   msg   <- paste0("Please enter password to unlock API keyring '",keyring, "'.")
   
@@ -162,7 +165,7 @@
       
       tryCatch(
         {
-          keyring_unlock(keyring, password)
+          keyring::keyring_unlock(keyring, password)
           .savePWGlobalEnv(password)
           locked <- FALSE
         },
@@ -180,7 +183,7 @@
                                    keyring, "'."))
     if(is.null(password) || password == '') stop(paste0("User cancelled creation of keyring '", keyring, "'."))
 
-    keyring_create(keyring, password)
+    keyring::keyring_create(keyring, password)
     .savePWGlobalEnv(password)
   }
 }
@@ -256,16 +259,6 @@
 #' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
-#' @importFrom getPass getPass
-#' @importFrom yaml read_yaml
-#' @importFrom keyring key_get
-#' @importFrom keyring key_list
-#' @importFrom keyring key_delete
-#' @importFrom keyring key_set_with_value
-#' @importFrom keyring keyring_create
-#' @importFrom keyring keyring_list
-#' @importFrom keyring keyring_unlock
-#' @importFrom keyring keyring_is_locked
 #' 
 #' @seealso 
 #' [redcapConnection()]
@@ -320,7 +313,7 @@ unlockREDCap    <- function(connections,
   # Open Connections
   dest <- lapply(seq_along(connections), function(i)
   {
-    stored <- connections[i] %in% key_list("redcapAPI", keyring)[,2]
+    stored <- connections[i] %in% keyring::key_list("redcapAPI", keyring)[,2]
     
     api_key <- if(stored)
     {
@@ -338,7 +331,7 @@ unlockREDCap    <- function(connections,
       conn <- .connectAndCheck(api_key, url, ...)
       if(is.null(conn))
       {
-        key_delete("redcapAPI", unname(connections[i]), keyring)
+        keyring::key_delete("redcapAPI", unname(connections[i]), keyring)
         api_key <- passwordFUN(paste0(
           "Invalid API_KEY for '", connections[i],
           "' in keyring '", keyring,
@@ -347,7 +340,7 @@ unlockREDCap    <- function(connections,
         if(is.null(api_key) || api_key == '') stop("unlockREDCap aborted")
       } else if(!stored)
       {
-        key_set_with_value( service="redcapAPI",
+        keyring::key_set_with_value( service="redcapAPI",
                             username=unname(connections[i]),
                             password=api_key,
                             keyring=keyring)

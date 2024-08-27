@@ -10,6 +10,29 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.10.0
+
+* Replace "httr" dependency with "curl"
+
+## 2.9.4
+
+* Minor code refactoring
+* Add test case for CI environment
+* Implemented GitHub Actions for automated source code checks.
+
+## 2.9.3
+
+* REDCap 14.4.0 changed user role structure.
+
+## 2.9.2
+
+* Improved date and datetime validation
+* Bug fix for importMetaData validation
+* Refactored error handling on API calls to reduce code footprint.
+* Added `redcap_survey_identifier` to system field list.
+* Bug fix for handling fields ending in '_complete' that are not form related.
+* Added batching method for exportLogging.
+
 ## 2.9.1
 
 * Added additional supported arguments to deleteRecords.

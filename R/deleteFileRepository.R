@@ -13,14 +13,13 @@ deleteFileRepository <- function(rcon,
 #' @order 6
 #' @export
 
-deleteFileRepository.redcapApiConnection <- function(rcon, 
-                                                     folder_id, 
-                                                     recursive      = FALSE,
-                                                     ..., 
-                                                     confirm        = c("ask", "no", "yes"),
-                                                     error_handling = getOption("redcap_error_handling"),
-                                                     config         = list(), 
-                                                     api_param      = list()){
+deleteFileRepository.redcapApiConnection <- function(
+  rcon, 
+  folder_id, 
+  recursive      = FALSE,
+  ..., 
+  confirm        = c("ask", "no", "yes"))
+{
   # Argument Validation ---------------------------------------------
   coll <- checkmate::makeAssertCollection()
   
@@ -41,20 +40,7 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
                                  choices = c("ask", "no", "yes"), 
                                  add = coll, 
                                  .var.name = "confirm")
-  
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
+
   checkmate::reportAssertions(coll)
   
   # Determine how many files will be deleted ------------------------
@@ -94,7 +80,7 @@ deleteFileRepository.redcapApiConnection <- function(rcon,
   
   for (i in seq_len(nrow(ToDelete))){
     deleteFromFileRepository(rcon, 
-                             doc_id = ToDelete$doc_id[i])
+                             doc_id = ToDelete$doc_id[i], ...)
   }
   
   rcon$flush_fileRepository()

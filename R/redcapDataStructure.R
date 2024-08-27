@@ -49,7 +49,8 @@ validateRedcapData <- function(data, redcap_data){
 REDCAP_SYSTEM_FIELDS <- c("redcap_event_name", 
                           "redcap_data_access_group", 
                           "redcap_repeat_instrument", 
-                          "redcap_repeat_instance")
+                          "redcap_repeat_instance",
+                          "redcap_survey_identifier")
 
 #' @rdname redcapDataStructures
 #' @export
@@ -202,29 +203,32 @@ REDCAP_METADATA_FIELDTYPE <- c("calc",
 
 #' @rdname redcapDataStructures
 #' @export
-REDCAP_METADATA_VALIDATION_TYPE <- c("alpha_only",
-                                     "date_dmy", 
-                                     "date_mdy", 
-                                     "date_ymd", 
-                                     "datetime_dmy", 
-                                     "datetime_mdy", 
-                                     "datetime_seconds_dmy", 
-                                     "datetime_seconds_mdy", 
-                                     "datetime_seconds_ymd", 
-                                     "datetime_ymd", 
-                                     "email", 
-                                     "integer", 
-                                     "number", 
-                                     "number_1dp", 
-                                     "number_1dp_comma_decimal", 
-                                     "number_2dp", 
-                                     "number_2dp_comma_decimal",
-                                     "phone", 
-                                     "signature",
-                                     "time", 
-                                     "time_hh_mm_ss",
-                                     "time_mm_ss",
-                                     "zipcode")
+REDCAP_METADATA_VALIDATION_TYPE <- c(
+  "alpha_only",
+  "autocomplete",
+  "date_dmy", 
+  "date_mdy", 
+  "date_ymd", 
+  "datetime_dmy", 
+  "datetime_mdy", 
+  "datetime_seconds_dmy", 
+  "datetime_seconds_mdy", 
+  "datetime_seconds_ymd", 
+  "datetime_ymd", 
+  "email", 
+  "integer", 
+  "number", 
+  "number_1dp", 
+  "number_1dp_comma_decimal", 
+  "number_2dp", 
+  "number_2dp_comma_decimal",
+  "phone", 
+  "signature",
+  "time", 
+  "time_hh_mm_ss",
+  "time_mm_ss",
+  "vmrn",
+  "zipcode")
 
 # Project Information -----------------------------------------------
 # Project Information Structure 
@@ -323,6 +327,7 @@ redcapUserStructure <- function(version)
              data_import_tool = character(0),
              data_comparison_tool = character(0),
              logging = character(0),
+             email_logging = if(is.null(version) || utils::compareVersion(version, "14.4.0") < 0) NULL else character(0),
              file_repository = character(0),
              data_quality_create = character(0),
              data_quality_execute = character(0),
@@ -359,6 +364,7 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
     "data_import_tool", 
     "data_comparison_tool", 
     "logging", 
+    "email_logging",
     "file_repository", 
     "data_quality_create", 
     "data_quality_execute", 
@@ -380,7 +386,8 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
 # User Roles --------------------------------------------------------
 # User Role Structure
 
-REDCAP_USER_ROLE_STRUCTURE <- 
+redcapUserRoleStructure <- function(version)
+{
   data.frame(unique_role_name = character(0),	
              role_label = character(0), 
              design = character(0),	
@@ -394,6 +401,7 @@ REDCAP_USER_ROLE_STRUCTURE <-
              data_import_tool = character(0),
              data_comparison_tool = character(0),
              logging = character(0),
+             email_logging = if(is.null(version) || utils::compareVersion(version, "14.4.0") < 0) NULL else character(0),
              file_repository = character(0),
              data_quality_create = character(0),
              data_quality_execute = character(0),
@@ -414,7 +422,7 @@ REDCAP_USER_ROLE_STRUCTURE <-
              random_dashboard = character(0),
              random_perform = character(0),
              stringsAsFactors = FALSE)
-
+}
 # User Role Table Access Variables
 
 REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <- 
@@ -430,6 +438,7 @@ REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <-
     "data_import_tool", 
     "data_comparison_tool", 
     "logging", 
+    "email_logging",
     "file_repository", 
     "data_quality_create", 
     "data_quality_execute", 
