@@ -113,7 +113,6 @@ importRecords.redcapApiConnection <- function(rcon,
                                               return_content     = c('count', 'ids', 'nothing', 'auto_ids'),
                                               force_auto_number  = FALSE,
                                               ...,
-<<<<<<< HEAD
                                               na                 = list(), 
                                               validation         = list(), 
                                               cast               = list(),
@@ -128,16 +127,6 @@ importRecords.redcapApiConnection <- function(rcon,
   if ("overwriteBehavior" %in% names(dots)) overwrite_behavior <- dots$overwriteBehavior
   if ("returnContent" %in% names(dots)) return_content <- dots$returnContent
   if ("batch.size" %in% names(dots)) batch_size <- dots$batch.size
-=======
-                                              batch.size        = -1,
-                                              error_handling = getOption("redcap_error_handling"), 
-                                              config = list(), 
-                                              api_param = list())
-{
-  if(is.null(attr(data, "castForImport")))
-    message("importRecords will change how it validates data in version 3.0.0.\n",
-            "We recommend preparing your data for import using castForImport .")
->>>>>>> main
   
    ##################################################################
   # Argument Validation

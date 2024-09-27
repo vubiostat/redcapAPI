@@ -64,9 +64,9 @@ when \code{force_auto_number = TRUE}}
 \item{na}{A named \code{list} of user specified functions to determine if the
 data is NA. This is useful when data is loaded that has coding for NA, e.g.
 -5 is NA. Keys must correspond to a truncated REDCap field type, i.e.
-{date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
+date_, datetime_, datetime_seconds_, time_mm_ss, time_hh_mm_ss, time, float,
 number, calc, int, integer, select, radio, dropdown, yesno, truefalse,
-checkbox, form_complete, sql, system}. The function will be provided the
+checkbox, form_complete, sql, system. The function will be provided the
 variables (x, field_name, coding). The function must return a vector of
 logicals matching the input. It defaults to \code{\link[=isNAorBlank]{isNAorBlank()}} for all
 entries.}
@@ -81,7 +81,9 @@ are not identified as NA will be passed to validation functions.}
 \item{cast}{A named \code{list} of user specified class casting functions. The
 same named keys are supported as the na argument. The function will be
 provided the variables (x, field_name, coding). The function must return a
-vector of logical matching the input length. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
+vector of logical matching the input length. The cast should match the validation,
+if one is using \code{raw_cast}, then \code{validation=skip_validation} is likely
+the desired intent. See \code{\link[=fieldValidationAndCasting]{fieldValidationAndCasting()}}}
 
 \item{skip_import}{\code{logical(1)}. When \code{TRUE}, the data will undergo validation
 and casting, but will not be sent to the project. This permits the user
@@ -92,6 +94,14 @@ in each batch of a batched export or import.  Non-positive numbers
 export/import the entire operation in a single batch.
 Batching may be beneficial to prevent tying up smaller servers.
 See Details.}
+
+\item{config}{A named \code{list}. Additional configuration parameters to pass to
+\link[curl:handle]{curl::handle_setopt}. These are appended to any parameters in
+\code{rcon$config}.}
+
+\item{api_param}{A named \code{list}. Additional API parameters to pass into the
+body of the API call. This provides users to execute calls with options
+that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame with the data after having been passed through

@@ -98,61 +98,9 @@ exportReports.redcapApiConnection <- function(rcon,
                                    api_param), 
                           config = config)
   
-<<<<<<< HEAD
   if (response$status_code != 200){
     redcapError(response, 
                 error_handling = error_handling)
-=======
-  if (response$status_code != 200) redcapError(response, error_handling)
-  
-  Report <- as.data.frame(response)
-  
-   ##################################################################
-  # Process the data
-
-  #* synchronize underscore codings between records and meta data
-  #* Only affects calls in REDCap versions earlier than 5.5.21
-  if (utils::compareVersion(version, "6.0.0") == -1) 
-    MetaData <- syncUnderscoreCodings(Report, MetaData)
-  
-
-  Report <- fieldToVar(records = Report, 
-                       meta_data = MetaData, 
-                       factors = factors, 
-                       dates = dates, 
-                       labels=labels,
-                       checkboxLabels = checkboxLabels,
-                       ...)
-  
-  
-  if (labels) 
-  {
-    field_names <- names(Report)
-    field_names <- unique(sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                              "\\1", field_names, perl = TRUE))
-    
-    # For reports, there is not check on the field names, since 
-    # the user may only select fields using the interface.
-    # However, [form]_complete fields do not appear in the 
-    # meta data and need to be removed to avoid an error.
-    # See #108
-    field_names <- field_names[field_names %in% MetaData$field_name]
-
-    suffixed <- checkbox_suffixes(fields = field_names,
-                                  meta_data = MetaData)
-
-    Report[suffixed$name_suffix] <-
-      mapply(nm = suffixed$name_suffix,
-             lab = suffixed$label_suffix,
-             FUN = function(nm, lab){
-               if(is.null(Report[[nm]])){
-                 warning("Missing field for suffix ", nm)
-               } else {
-                 labelVector::set_label(Report[[nm]], lab)
-               }
-             },
-             SIMPLIFY = FALSE)
->>>>>>> main
   }
   
   utils::read.csv(text = as.character(response), 
