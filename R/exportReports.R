@@ -4,9 +4,10 @@
 
 exportReports <- function(rcon, 
                           report_id, 
-                          raw_or_label          = c("raw", "label"),
-                          raw_or_label_headers  = c("raw", "label"),
-                          export_checkbox_label = FALSE,  
+                          raw_or_label = "raw", 
+                          raw_or_label_headers = "raw",
+                          export_checkbox_label = FALSE, 
+                          csv_delimiter = ",",
                           ...){
   UseMethod("exportReports")
 }
@@ -17,18 +18,15 @@ exportReports <- function(rcon,
 
 exportReports.redcapApiConnection <- function(rcon, 
                                               report_id, 
-                                              raw_or_label          = c("raw", "label"),
-                                              raw_or_label_headers  = c("raw", "label"),
-                                              export_checkbox_label = FALSE,  
-                                              ...,
-                                              csv_delimiter         = c(",", "\t", ";", "|", "^"), 
-                                              error_handling = getOption("redcap_error_handling"),
-                                              config         = list(), 
-                                              api_param      = list()){
+                                              raw_or_label = "raw", 
+                                              raw_or_label_headers = "raw",
+                                              export_checkbox_label = FALSE, 
+                                              csv_delimiter = ",",
+                                              ...){
   
-  if (is.character(report_id)) report_id <- as.numeric(report_id)
+  if (!is.numeric(report_id)) report_id <- as.numeric(report_id)
   
-  ###################################################################
+  ##################################################################
   # Argument Validation
   
   coll <- checkmate::makeAssertCollection()
@@ -39,6 +37,7 @@ exportReports.redcapApiConnection <- function(rcon,
   
   checkmate::assert_integerish(x = report_id,
                                len = 1,
+                               any.missing = FALSE,
                                add = coll)
   
   raw_or_label <- checkmate::matchArg(x = raw_or_label, 
@@ -61,49 +60,44 @@ exportReports.redcapApiConnection <- function(rcon,
                                        add = coll, 
                                        .var.name = "csv_delimiter")
   
-  error_handling <- checkmate::matchArg(x = error_handling, 
-                                        choices = c("null", "error"),
-                                        .var.name = "error_handling",
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-  
   checkmate::reportAssertions(coll)
   
-  ###################################################################
-  # Make the Body List                                           ####
+  ##################################################################
+  # Get required information
   
-  body <- list(content = "report", 
-               format = "csv", 
-               returnFormat = "csv",
+  MetaData <- rcon$metadata()
+  
+  #* for purposes of the export, we do not need the descriptive fields. 
+  #* Including them makes the process more error prone, so we'll ignore them.
+  MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]  
+  
+  version <- rcon$version()
+  
+  ##################################################################
+  # Make API Body List
+  
+  body <- list(token = rcon$token, 
+               content = 'report',
+               format = 'csv', 
+               returnFormat = 'csv', 
                report_id = report_id,
-               rawOrLabel = raw_or_label, 
-               rawOrLabelHeaders = raw_or_label_headers,
-               exportCheckboxLabel = tolower(export_checkbox_label), 
+               rawOrLabel = tolower(raw_or_label), 
+               rawOrLabelHeaders = tolower(raw_or_label_headers),
+               exportCheckboxLabel = tolower(export_checkbox_label),
                csvDelimiter = csv_delimiter)
   
   body <- body[lengths(body) > 0]
   
-  ###################################################################
-  # Make the API Call
+  ##################################################################
+  # Call the API
   
   response <- makeApiCall(rcon, 
-                          body = c(body, 
-                                   api_param), 
-                          config = config)
+                          body = body, 
+                          ...)
   
-  if (response$status_code != 200){
-    redcapError(response, 
-                error_handling = error_handling)
-  }
+  Report <- utils::read.csv(text = as.character(response), 
+                            stringsAsFactors = FALSE, 
+                            na.strings = "")
   
-  utils::read.csv(text = as.character(response), 
-                  stringsAsFactors = FALSE, 
-                  na.strings = "")
+  Report
 }

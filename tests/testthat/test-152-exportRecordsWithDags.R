@@ -17,6 +17,8 @@ importDags(rcon,
 ImportData$redcap_data_access_group <- rep(rcon$dags()$unique_group_name, 
                                            length.out = nrow(ImportData))
 
+ImportData <- ImportData[!names(ImportData) %in% c("file_upload_test", "signature_test")]
+
 importRecords(rcon, ImportData)
 
 #####################################################################

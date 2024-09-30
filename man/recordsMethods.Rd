@@ -9,46 +9,42 @@
 \alias{exportReports.redcapApiConnection}
 \title{Export Records and Reports}
 \usage{
-exportRecords(
-  rcon,
-  factors = TRUE,
-  labels = TRUE,
-  dates = TRUE,
-  drop = NULL,
-  checkboxLabels = FALSE,
-  ...
-)
+exportRecords(rcon, ...)
 
 exportReports(
   rcon,
   report_id,
-  raw_or_label = c("raw", "label"),
-  raw_or_label_headers = c("raw", "label"),
+  raw_or_label = "raw",
+  raw_or_label_headers = "raw",
   export_checkbox_label = FALSE,
+  csv_delimiter = ",",
   ...
 )
 
 \method{exportRecords}{redcapApiConnection}(
   rcon,
-  factors = TRUE,
-  labels = TRUE,
-  dates = TRUE,
-  drop = NULL,
-  checkboxLabels = FALSE,
-  ...
+  records = NULL,
+  fields = NULL,
+  forms = NULL,
+  events = NULL,
+  raw_or_label = c("raw", "label"),
+  raw_or_label_headers = c("raw", "label"),
+  export_checkbox_label = FALSE,
+  export_survey_fields = FALSE,
+  export_dags = FALSE,
+  ...,
+  batch_size = NULL,
+  csv_delimiter = c(",", "\\t", ";", "|", "^")
 )
 
 \method{exportReports}{redcapApiConnection}(
   rcon,
   report_id,
-  raw_or_label = c("raw", "label"),
-  raw_or_label_headers = c("raw", "label"),
+  raw_or_label = "raw",
+  raw_or_label_headers = "raw",
   export_checkbox_label = FALSE,
-  ...,
-  csv_delimiter = c(",", "\\t", ";", "|", "^"),
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  csv_delimiter = ",",
+  ...
 )
 }
 \arguments{
@@ -85,14 +81,6 @@ blank/empty (no value) if not checked.}
 \item{csv_delimiter}{\code{character}. One of
 \code{c(",", "\\t", ";", "|", "^")}. Designates the delimiter for the CSV
 file received from the API.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\link[curl:handle]{curl::handle_setopt}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 
 \item{export_survey_fields}{\code{logical(1)}. When \code{TRUE}, the survey identifier
 field (\code{redcap_survey_identifier}) and survey timestamp fields
@@ -159,7 +147,7 @@ longitudinal project, it would be prudent to use a smaller batch size.
 }
 \section{Functions}{
 \itemize{
-\item \code{exportRecords()}: Export data via a report.
+\item \code{exportRecords()}: Export records from a project.
 
 \item \code{exportReports()}: Export data via a report.
 

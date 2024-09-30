@@ -127,11 +127,13 @@ exportRecords.redcapApiConnection <- function(rcon,
                                 body          = body, 
                                 records       = records,  
                                 csv_delimiter = csv_delimiter, 
-                                batch_size    = batch_size)
+                                batch_size    = batch_size, 
+                                ...)
   } else {
     .exportRecordsTyped_Unbatched(rcon, 
                                   body          = body, 
                                   records       = records,  
-                                  csv_delimiter = csv_delimiter)
+                                  csv_delimiter = csv_delimiter, 
+                                  ...)
   }
 }

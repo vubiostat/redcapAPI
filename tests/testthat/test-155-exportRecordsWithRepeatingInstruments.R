@@ -28,6 +28,7 @@ importRepeatingInstrumentsEvents(rcon,
                                  data = RepeatInst)
 
 ImportData <- test_redcapAPI_Data
+ImportData <- ImportData[!names(ImportData) %in% c("file_upload_test", "signature_test")]
 importRecords(rcon, ImportData)
 
 #######################################################################

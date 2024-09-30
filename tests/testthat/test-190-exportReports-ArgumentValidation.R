@@ -18,7 +18,7 @@ test_that(
                                report_id = c(1, 2)), 
                  "Variable 'report_id': Must have length 1")
     expect_error(exportReports(rcon, 
-                               report_id = TRUE), 
+                               report_id = 1.2), 
                  "'report_id': Must be of type 'integerish'")
   }
 )
@@ -72,31 +72,31 @@ test_that(
   }
 )
 
-test_that(
-  "Validate error_handling, config, api_param", 
-  {
-    local_reproducible_output(width = 200)
-    expect_error(exportReports(rcon, 
-                               report_id = EXPORT_REPORTS_ID, 
-                               error_handling = "not an option"), 
-                 "'error[_]handling': Must be element of set [{]'null','error'[}]")
-    
-    expect_error(exportReports(rcon,
-                               report_id = EXPORT_REPORTS_ID,  
-                               config = list(1)), 
-                 "'config': Must have names")
-    expect_error(exportReports(rcon, 
-                               report_id = EXPORT_REPORTS_ID, 
-                               config = "not a list"), 
-                 "'config': Must be of type 'list'")
-    
-    expect_error(exportReports(rcon,
-                               report_id = EXPORT_REPORTS_ID,  
-                               api_param = list(1)), 
-                 "'api_param': Must have names")
-    expect_error(exportReports(rcon, 
-                               report_id = EXPORT_REPORTS_ID, 
-                               api_param = "not a list"), 
-                 "'api_param': Must be of type 'list'")
-  }
-)
+# test_that(
+#   "Validate error_handling, config, api_param", 
+#   {
+#     local_reproducible_output(width = 200)
+#     expect_error(exportReports(rcon, 
+#                                report_id = EXPORT_REPORTS_ID, 
+#                                error_handling = "not an option"), 
+#                  "'error[_]handling': Must be element of set [{]'null','error'[}]")
+#     
+#     expect_error(exportReports(rcon,
+#                                report_id = EXPORT_REPORTS_ID,  
+#                                config = list(1)), 
+#                  "'config': Must have names")
+#     expect_error(exportReports(rcon, 
+#                                report_id = EXPORT_REPORTS_ID, 
+#                                config = "not a list"), 
+#                  "'config': Must be of type 'list'")
+#     
+#     expect_error(exportReports(rcon,
+#                                report_id = EXPORT_REPORTS_ID,  
+#                                api_param = list(1)), 
+#                  "'api_param': Must have names")
+#     expect_error(exportReports(rcon, 
+#                                report_id = EXPORT_REPORTS_ID, 
+#                                api_param = "not a list"), 
+#                  "'api_param': Must be of type 'list'")
+#   }
+# )
