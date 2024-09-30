@@ -25,10 +25,7 @@ importRecords(
   validation = list(),
   cast = list(),
   skip_import = FALSE,
-  batch_size = NULL,
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  batch_size = NULL
 )
 }
 \arguments{
@@ -94,14 +91,6 @@ in each batch of a batched export or import.  Non-positive numbers
 export/import the entire operation in a single batch.
 Batching may be beneficial to prevent tying up smaller servers.
 See Details.}
-
-\item{config}{A named \code{list}. Additional configuration parameters to pass to
-\link[curl:handle]{curl::handle_setopt}. These are appended to any parameters in
-\code{rcon$config}.}
-
-\item{api_param}{A named \code{list}. Additional API parameters to pass into the
-body of the API call. This provides users to execute calls with options
-that may not otherwise be supported by \code{redcapAPI}.}
 }
 \value{
 Returns a data frame with the data after having been passed through

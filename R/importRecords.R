@@ -117,10 +117,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                               validation         = list(), 
                                               cast               = list(),
                                               skip_import        = FALSE,
-                                              batch_size         = NULL,
-                                              error_handling     = getOption("redcap_error_handling"), 
-                                              config             = list(), 
-                                              api_param          = list()){
+                                              batch_size         = NULL){
   
   dots <- list(...)
   
@@ -166,26 +163,13 @@ importRecords.redcapApiConnection <- function(rcon,
                                null.ok = TRUE,
                                add = coll)
   
-  error_handling <- checkmate::matchArg(x = error_handling,
-                                        choices = c("null", "error"), 
-                                        .var.name = "error_handling", 
-                                        add = coll)
-  
-  checkmate::assert_list(x = config, 
-                         names = "named", 
-                         add = coll)
-  
-  checkmate::assert_list(x = api_param, 
-                         names = "named", 
-                         add = coll)
-
   checkmate::reportAssertions(coll)
   
   # Remove survey identifiers
   data <- .importRecords_removeSurveyIdentifiers(data, rcon)
   
   # Validate Field Names
-  data <- .importRecords_validateFieldNames(data, rcon)
+  data <- .importRecords_validateFieldNames(data, rcon, coll)
   
   # Ensure record identifier is present and in proper position
   data <- .importRecords_positionRecordIdentifier(data, rcon, coll)
@@ -222,10 +206,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                                rcon = rcon, 
                                                data = data,
                                                return_content = return_content,
-                                               batch_size = batch_size,
-                                               error_handling = error_handling, 
-                                               api_param = api_param, 
-                                               config = config)
+                                               batch_size = batch_size)
 
     switch(return_content, 
            "count" = message(sprintf("Records imported: %s", responses)), 
@@ -249,14 +230,14 @@ importRecords.redcapApiConnection <- function(rcon,
   data[!names(data) %in% field_to_remove]
 }
 
-.importRecords_validateFieldNames <- function(data, rcon){
+.importRecords_validateFieldNames <- function(data, rcon, coll){
   with_complete_fields <- rcon$fieldnames()$export_field_name
   
   # Remove survey identifiers and data access group fields from data
   w.remove <- 
     which(names(data) %in% 
             c("redcap_survey_identifier",
-              paste0(unique(MetaData$form_name), "_timestamp")))
+              paste0(unique(rcon$metadata()$form_name), "_timestamp")))
   if (length(w.remove) > 0) data <- data[-w.remove]
   
   mchoices <- which(vapply(data, inherits, logical(1), 'mChoice'))
@@ -328,10 +309,7 @@ importRecords.redcapApiConnection <- function(rcon,
                                           rcon, 
                                           data, 
                                           return_content,
-                                          batch_size, 
-                                          error_handling, 
-                                          api_param, 
-                                          config){
+                                          batch_size){
   # Batch the data 
   if (length(batch_size) == 0){
     data_list <- list(data)
@@ -348,8 +326,7 @@ importRecords.redcapApiConnection <- function(rcon,
     this_body <- this_body[lengths(this_body) > 0]
  
     responses[[i]] <- makeApiCall(rcon, 
-                                  body = c(this_body, api_param), 
-                                  config = config)
+                                  body = this_body)
     
     if (responses[[i]]$status_code != 200){
       return(redcapError(responses[[i]], error_handling))
@@ -373,9 +350,7 @@ import_records_unbatched <- function(rcon,
                                      data, 
                                      overwriteBehavior,
                                      returnContent, 
-                                     force_auto_number,
-                                     config, 
-                                     api_param)
+                                     force_auto_number)
 {
   out <- data_frame_to_string(data)
   
@@ -403,8 +378,7 @@ import_records_unbatched <- function(rcon,
   # Call the API
   
   response <- makeApiCall(rcon, 
-                          body = c(body, api_param), 
-                          config = config)
+                          body = body)
   
   if (response$status_code == "200"){
     if (returnContent %in% c("ids", "auto_ids")){

@@ -3,16 +3,19 @@
 %   R/exportReports.R
 \name{recordsMethods}
 \alias{recordsMethods}
+\alias{exportRecords}
 \alias{exportReports}
+\alias{exportRecords.redcapApiConnection}
 \alias{exportReports.redcapApiConnection}
 \title{Export Records and Reports}
 \usage{
-exportReports(
+exportRecords(
   rcon,
-  report_id,
-  raw_or_label = c("raw", "label"),
-  raw_or_label_headers = c("raw", "label"),
-  export_checkbox_label = FALSE,
+  factors = TRUE,
+  labels = TRUE,
+  dates = TRUE,
+  drop = NULL,
+  checkboxLabels = FALSE,
   ...
 )
 
@@ -25,17 +28,14 @@ exportReports(
   ...
 )
 
-\method{exportReports}{redcapApiConnection}(
+\method{exportRecords}{redcapApiConnection}(
   rcon,
-  report_id,
-  raw_or_label = c("raw", "label"),
-  raw_or_label_headers = c("raw", "label"),
-  export_checkbox_label = FALSE,
-  ...,
-  csv_delimiter = c(",", "\\t", ";", "|", "^"),
-  error_handling = getOption("redcap_error_handling"),
-  config = list(),
-  api_param = list()
+  factors = TRUE,
+  labels = TRUE,
+  dates = TRUE,
+  drop = NULL,
+  checkboxLabels = FALSE,
+  ...
 )
 
 \method{exportReports}{redcapApiConnection}(
@@ -159,7 +159,7 @@ longitudinal project, it would be prudent to use a smaller batch size.
 }
 \section{Functions}{
 \itemize{
-\item \code{exportReports()}: Export data via a report.
+\item \code{exportRecords()}: Export data via a report.
 
 \item \code{exportReports()}: Export data via a report.
 

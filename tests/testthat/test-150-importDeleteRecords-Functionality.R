@@ -138,7 +138,7 @@ test_that(
     expect_error(importRecords(rcon, WithMChoice), 
                    ".*prereq_checkbox.*mChoice.*")
     expect_message(WithMChoice <- castForImport(WithMChoice, rcon), ".*mChoice.*dropped.*prereq_checkbox.*")
-    expect_equal(importRecords(rcon, WithMChoice), "1")
+    expect_message(importRecords(rcon, WithMChoice), "1")
     detach("package:Hmisc", unload = TRUE)
   }
 )
@@ -193,7 +193,7 @@ test_that(
     NewData <- exportRecordsTyped(rcon, cast = list(system = castRaw))
     NewData <- NewData[NewData$record_id == 1, 
                        c("record_id", "redcap_event_name", "date_ymd_test")]
-    expect_equal(importRecords(rcon, NewData), "1")
+    expect_message(importRecords(rcon, NewData), "1")
     
     NewMetaData$text_validation_min[w_var] <- NA_character_
     importMetaData(rcon, NewMetaData)
@@ -210,7 +210,7 @@ test_that(
     NewData <- NewData[NewData$record_id == 1, 
                        c("record_id", "redcap_event_name", 
                          "date_ymd_test")]
-    expect_equal(importRecords(rcon, NewData), "1")
+    expect_message(importRecords(rcon, NewData), "1")
     
     NewMetaData$text_validation_max[w_var] <- NA_character_
     importMetaData(rcon, NewMetaData)
@@ -233,7 +233,7 @@ test_that(
                                   cast = list(system = castRaw))
     NewData <- NewData[NewData$record_id == 1, 
                        c("record_id", "redcap_event_name", "datetime_ymd_hms_test")]
-    expect_equal(importRecords(rcon, NewData), "1")
+    expect_message(importRecords(rcon, NewData), "1")
     
     NewMetaData$text_validation_min[w_var] <- NA_character_
     importMetaData(rcon, NewMetaData)
@@ -249,7 +249,7 @@ test_that(
                                   cast = list(system = castRaw))
     NewData <- NewData[NewData$record_id == 1, 
                        c("record_id", "redcap_event_name", "datetime_ymd_hms_test")]
-    expect_equal(importRecords(rcon, NewData), "1")
+    expect_message(importRecords(rcon, NewData), "1")
     
     NewMetaData$text_validation_max[w_var] <- NA_character_
     importMetaData(rcon, NewMetaData)
