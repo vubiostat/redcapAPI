@@ -10,6 +10,10 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
+## 2.10.1
+
+* unlockREDCap no longer changes console focus
+
 ## 2.10.0
 
 * Replace "httr" dependency with "curl"
