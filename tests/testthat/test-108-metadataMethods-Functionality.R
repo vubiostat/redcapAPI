@@ -28,8 +28,24 @@ test_that(
     
     expect_equal(rcon$instruments()$instrument_name, 
                  unique(NextMetaData$form_name))
-    
-    # Clean up 
-    importMetaData(rcon, MetaData[1, ])
   }
 )
+
+
+test_that(
+  "Export Field Names testing", 
+  {
+    Fields <- exportFieldNames(rcon)
+    expect_true(nrow(Fields) > 0)
+    
+    Fields <- exportFieldNames(rcon, "record_id")
+    expect_true(nrow(Fields) == 1)
+    
+    Fields <- exportFieldNames(rcon, 
+                               fields = rcon$metadata()$field_name[1:2])
+    expect_true(nrow(Fields) == 2)
+  }
+)
+
+# Clean up 
+importMetaData(rcon, test_redcapAPI_MetaData[1, ])

@@ -13,7 +13,7 @@ exportFieldNames(rcon, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{fields}{\code{NULL} or \code{character(1)}. Field name to be returned.  By
+\item{fields}{\code{NULL} or \code{character}. Field name to be returned.  By
 default, all fields are returned.}
 
 \item{...}{Arguments to pass to other methods}

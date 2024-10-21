@@ -20,17 +20,19 @@ renameRecord(rcon, record_name, new_record_name, arm = NULL, ...)
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{record_name}{\code{character(1)} or \code{integerish(1)}.
+\item{record_name}{\code{character} or \code{integerish}.
 The name of an existing record in the project.}
 
-\item{new_record_name}{\code{character(1)} or \code{integerish(1)}.
-The new name to give to the record.}
+\item{new_record_name}{\code{character} or \code{integerish}.
+The new name to give to the record. Must have the same length as
+\code{record_name}.}
 
-\item{arm}{\code{character(1)} or \code{NULL}, an optional arm number.
+\item{arm}{\code{character} or \code{NULL}, an optional arm number.
 If \code{NULL}, then all records with same name across all arms on
 which it exists (if longitudinal with multiple arms) will be
 renamed to new record name, otherwise it will rename the record
-only in the specified arm.}
+only in the specified arm. When not \code{NULL}, it must have the same
+length as \code{record_name}.}
 
 \item{...}{Arguments to pass to other methods}
 }
@@ -39,7 +41,7 @@ only in the specified arm.}
 determined by looking up the highest record ID number in the
 project and incrementing it by 1.
 
-\code{renameRecord} invisibly returns a logical value that indicates if the
+\code{renameRecord} invisibly returns a logical vector that indicates if the
 operation was successful. Otherwise, an error is thrown.
 }
 \description{
