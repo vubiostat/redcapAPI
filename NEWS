@@ -12,6 +12,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.10.1
 
+* `unlockREDCap` no longer changes console focus
 * Vectorized `renameRecord` and `exportFieldNames`
 
 ## 2.10.0
