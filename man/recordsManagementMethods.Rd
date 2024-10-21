@@ -24,7 +24,7 @@ renameRecord(rcon, record_name, new_record_name, arm = NULL, ...)
 The name of an existing record in the project.}
 
 \item{new_record_name}{\code{character} or \code{integerish}.
-The new name to give to the record. Must have the same lenght as
+The new name to give to the record. Must have the same length as
 \code{record_name}.}
 
 \item{arm}{\code{character} or \code{NULL}, an optional arm number.
@@ -32,7 +32,7 @@ If \code{NULL}, then all records with same name across all arms on
 which it exists (if longitudinal with multiple arms) will be
 renamed to new record name, otherwise it will rename the record
 only in the specified arm. When not \code{NULL}, it must have the same
-length at \code{record_name}.}
+length as \code{record_name}.}
 
 \item{...}{Arguments to pass to other methods}
 }

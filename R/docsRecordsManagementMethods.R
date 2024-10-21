@@ -10,14 +10,14 @@
 #' @param record_name `character` or `integerish`. 
 #'   The name of an existing record in the project. 
 #' @param new_record_name `character` or `integerish`. 
-#'   The new name to give to the record. Must have the same lenght as
+#'   The new name to give to the record. Must have the same length as
 #'   `record_name`.
 #' @param arm `character` or `NULL`, an optional arm number. 
 #'   If `NULL`, then all records with same name across all arms on 
 #'   which it exists (if longitudinal with multiple arms) will be 
 #'   renamed to new record name, otherwise it will rename the record 
 #'   only in the specified arm. When not `NULL`, it must have the same 
-#'   length at `record_name`.
+#'   length as `record_name`.
 #'   
 #' @return
 #' `exportNextRecordName` returns an integerish value. The value is
