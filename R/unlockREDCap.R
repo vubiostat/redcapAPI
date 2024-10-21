@@ -356,8 +356,7 @@ unlockREDCap    <- function(connections,
   
    ###########################################################################
   ## Setup Internal Loop functions
-  args           <- list(...)
-  args$url       <- url
+  args <- c(key = NA, url = url, list(...))
   connectionFUNs <- replicate(length(connections), 
                               function(key)
                               {
