@@ -2,12 +2,23 @@
 % Please edit documentation in R/unlockREDCap.R
 \name{unlockREDCap}
 \alias{unlockREDCap}
+\alias{unlockOther}
 \title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
 unlockREDCap(
   connections,
   url,
   keyring,
+  envir = NULL,
+  passwordFUN = .default_pass(),
+  otherKeys = NULL,
+  ...
+)
+
+unlockOther(
+  connections,
+  keyring,
+  connectFUN = NULL,
   envir = NULL,
   passwordFUN = .default_pass(),
   ...
@@ -31,7 +42,15 @@ global environment. Will accept a number such a '1' for global as well.}
 \item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
 On MacOS it will use rstudioapi::askForPassword if available.}
 
+\item{otherKeys}{list. A list of other keys to retrieve. Each list element
+must be a list with name, variable and connectFUN keys. The connectFUN
+can be as simple as an id function \code{function(x) x} or something that
+constructs a connection object or calls \code{stop} if it's invalid.}
+
 \item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
+
+\item{connectFUN}{function. A function that takes a key and returns a connection.
+the function should call \code{stop} if the key is invalid in some manner.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise
@@ -87,6 +106,10 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
              keyring      = '<NAME_OF_KEY_RING_HERE>',
              envir        = globalenv(),
              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
+
+unlockOther(c(logging = 'SplunkKey'), 
+             keyring  = '<NAME_OF_KEY_RING_HERE>',
+             envir    = 1)
 }
 }
 \seealso{

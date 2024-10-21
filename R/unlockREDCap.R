@@ -196,7 +196,7 @@
 }
 
 # Main internal algorithm
-.unlockAPIKEY <- function(connections,
+.unlockAlgorithm <- function(connections,
                           connectionFUNs,
                           keyring,
                           envir,
@@ -312,6 +312,12 @@
 #' @param url character. The url of one's institutional REDCap server api. 
 #' @param passwordFUN function. Function to get the password for the keyring. Usually defaults `getPass::getPass`. 
 #'          On MacOS it will use rstudioapi::askForPassword if available. 
+#' @param otherKeys list. A list of other keys to retrieve. Each list element
+#'          must be a list with name, variable and connectFUN keys. The connectFUN
+#'          can be as simple as an id function `function(x) x` or something that 
+#'          constructs a connection object or calls `stop` if it's invalid. 
+#' @param connectFUN function. A function that takes a key and returns a connection. 
+#'          the function should call `stop` if the key is invalid in some manner.
 #' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
@@ -332,13 +338,19 @@
 #'              keyring      = '<NAME_OF_KEY_RING_HERE>',
 #'              envir        = globalenv(),
 #'              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
+#'
+#' unlockOther(c(logging = 'SplunkKey'), 
+#'              keyring  = '<NAME_OF_KEY_RING_HERE>',
+#'              envir    = 1)
 #' }
+#' @rdname unlockREDCap
 #' @export
 unlockREDCap    <- function(connections,
                             url,
                             keyring,
                             envir       = NULL,
                             passwordFUN = .default_pass(),
+                            otherKeys   = NULL,
                             ...)
 {
    ###########################################################################
@@ -363,10 +375,49 @@ unlockREDCap    <- function(connections,
 
    ###########################################################################
   ## Do it
-  .unlockAPIKEY(connections,
-                connectionFUNs,
-                keyring,
-                envir,
-                passwordFUN)
+  .unlockAlgorithm(connections,
+                   connectionFUNs,
+                   keyring,
+                   envir,
+                   passwordFUN)
+}
+
+#' @rdname unlockREDCap
+#' @export
+unlockOther    <- function(connections,
+                           keyring,
+                           connectFUN  = NULL,
+                           envir       = NULL,
+                           passwordFUN = .default_pass(),
+                           ...)
+{
+   ###########################################################################
+  # Check parameters passed to function
+  coll <- checkmate::makeAssertCollection()
+  
+  if(is.numeric(envir)) envir <- as.environment(envir)
+  
+  checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
+  checkmate::assert_function( x = passwordFUN,  null.ok = FALSE, add = coll)
+  checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
+  checkmate::assert_function( x = connectFUN,   null.ok = TRUE,  add = coll, nargs=1)
+  checkmate::reportAssertions(coll)
+  
+  if(is.null(connectFUN)) connectFUN <- function(x) x
+  
+   ###########################################################################
+  ## Setup Internal Loop functions
+  n <- length(connections)
+  connectionFUNs <- vector('list', n)
+  for(i in seq(n)) connectionFUNs[[i]] <- function(key) connectFUN(key, ...)
+
+   ###########################################################################
+  ## Do it
+  .unlockAlgorithm(connections,
+                   connectionFUNs,
+                   keyring,
+                   envir,
+                   passwordFUN)
 }
 
