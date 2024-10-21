@@ -63,7 +63,7 @@
   # Hacked work around for RStudio starting new session for everything
   if(requireNamespace("rstudioapi", quietly = TRUE) &&
      rstudioapi::isAvailable(child_ok=TRUE))
-    rstudioapi::sendToConsole(sprintf("Sys.setenv(REDCAPAPI_PW='%s')", password), execute = TRUE, echo=FALSE)
+    rstudioapi::sendToConsole(sprintf("Sys.setenv(REDCAPAPI_PW='%s')", password), execute = TRUE, echo=FALSE, focus=FALSE)
 }
 
 .clearPWGlobalEnv <- function()
@@ -72,7 +72,7 @@
   # Hacked work around for RStudio starting new session for everything
   if(requireNamespace("rstudioapi", quietly = TRUE) &&
      rstudioapi::isAvailable(child_ok=TRUE))
-    rstudioapi::sendToConsole('Sys.unsetenv("REDCAPAPI_PW")', execute = TRUE, echo=FALSE)
+    rstudioapi::sendToConsole('Sys.unsetenv("REDCAPAPI_PW")', execute = TRUE, echo=FALSE, focus=FALSE)
 }
 
 .getPWGlobalEnv <- function()
