@@ -22,3 +22,19 @@ test_that(
     expect_false("100" %in% Rec$record_id)
   }
 )
+
+
+test_that(
+  "Rename multiple records", 
+  {
+    expect_equal(renameRecord(rcon, 
+                              record_name = c("1", "2"), 
+                              new_record_name = c("101", "102")), 
+                 c(TRUE, TRUE))
+    
+    expect_equal(renameRecord(rcon, 
+                              record_name = c("101", "102"), 
+                              new_record_name = c("1", "2")), 
+                 c(TRUE, TRUE))
+  }
+)
