@@ -19,7 +19,6 @@
 ##
 .connectAndCheck <- function(key, url, ...)
 {
-  browser()
   tryCatch(
     { 
       rcon    <- redcapConnection(token=key, url=url, ...)
@@ -108,9 +107,7 @@
     if(length(key) > 1)
       stop(paste0("Config file '", config_file, "' has too may key entries for '", conn,"' under 'redcapAPI: keys:' specified."))
     
-    args     <- list(key=key)
-    if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
-    do.call(connectionFUNs[[i]], args)
+    do.call(connectionFUNs[[i]], list(key=key))
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
@@ -202,8 +199,8 @@
 .unlockAPIKEY <- function(connections,
                           connectionFUNs,
                           keyring,
-                          envir       = NULL,
-                          passwordFUN = .default_pass())
+                          envir,
+                          passwordFUN)
 {
   if(is.numeric(envir)) envir <- as.environment(envir)
 
@@ -359,9 +356,15 @@ unlockREDCap    <- function(connections,
   
    ###########################################################################
   ## Setup Internal Loop functions
+  args           <- list(...)
+  args$url       <- url
   connectionFUNs <- replicate(length(connections), 
-                              function(key) .connectAndCheck(key, url, ...))
-  
+                              function(key)
+                              {
+                                args$key <- key
+                                do.call('.connectAndCheck', args)
+                              })
+
    ###########################################################################
   ## Do it
   .unlockAPIKEY(connections,
