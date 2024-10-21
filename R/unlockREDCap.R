@@ -19,6 +19,7 @@
 ##
 .connectAndCheck <- function(key, url, ...)
 {
+  browser()
   tryCatch(
     { 
       rcon    <- redcapConnection(token=key, url=url, ...)
@@ -83,7 +84,7 @@
   #############################################################################
  ## unlock via YAML override if it exists
 ##
-.unlockYamlOverride <- function(connections, url, ...)
+.unlockYamlOverride <- function(connections, connectionFUNs)
 {
   config_file <- file.path("..", paste0(basename(getwd()),".yml"))
   
@@ -95,24 +96,21 @@
   if(is.null(config$keys))      stop(paste0("Config file '",config_file,"' does not contain required 'keys' entry under the 'redcapAPI' entry"))
   keys   <- config$keys
   
-  dest <- lapply(connections, function(conn) 
+  dest <- lapply(seq_along(connections), function(i)
   {
+    conn <- connections[i]
     key  <- keys[[conn]]
     
     if(is.null(key) || length(key)==0)
       stop(paste0("Config file '", config_file, "' does not have API_KEY for '", conn,"' under 'redcapAPI: keys:' specified."))
     if(!is.character(key))
-    {
       stop(paste0("Config file '", config_file, "' invalid entry for '", conn,"' under 'redcapAPI: keys:'."))
-    }
     if(length(key) > 1)
       stop(paste0("Config file '", config_file, "' has too may key entries for '", conn,"' under 'redcapAPI: keys:' specified."))
     
-    args     <- list(...)
-    args$key <- key
-    args$url <- url
+    args     <- list(key=key)
     if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
-    do.call(.connectAndCheck, args)
+    do.call(connectionFUNs[[i]], args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
@@ -121,7 +119,7 @@
   #############################################################################
  ## unlock via ENV override if it exists
 ##
-.unlockENVOverride <- function(connections, url, ...)
+.unlockENVOverride <- function(connections, connectionFUNs)
 {
   api_key_ENV <- sapply(connections, function(x) Sys.getenv(toupper(x)))
   
@@ -129,13 +127,10 @@
   
   if(any(api_key_ENV == ""))
     stop(paste("Some matching ENV variables found but missing:",paste0(toupper(connections[api_key_ENV=='']), collapse=", ")))
-  
-  dest <- lapply(api_key_ENV, function(conn) 
+
+  dest <- lapply(seq_along(connections), function(i)
   {
-    args     <- list(...)
-    args$key <- conn
-    args$url <- url
-    do.call(.connectAndCheck, args)
+    do.call(connectionFUNs[[i]], list(key = api_key_ENV[i]))
   })
   names(dest) <- if(is.null(names(api_key_ENV))) api_key_ENV else names(api_key_ENV)
   
@@ -201,6 +196,70 @@
   {
     rstudioapi::askForPassword
   } else getPass::getPass
+}
+
+# Main internal algorithm
+.unlockAPIKEY <- function(connections,
+                          connectionFUNs,
+                          keyring,
+                          envir       = NULL,
+                          passwordFUN = .default_pass())
+{
+  if(is.numeric(envir)) envir <- as.environment(envir)
+
+  # Use YAML config if it exists
+  dest <- .unlockYamlOverride(connections, connectionFUNs)
+  if(length(dest) > 0) 
+    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
+  
+  # Use ENV if it exists and YAML does not exist
+  dest <- .unlockENVOverride(connections, connectionFUNs)
+  if(length(dest) > 0)
+    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
+  
+  .unlockKeyring(keyring, passwordFUN)
+  
+  # Open Connections
+  dest <- lapply(seq_along(connections), function(i)
+  {
+    stored <- connections[i] %in% keyring::key_list("redcapAPI", keyring)[,2]
+    
+    api_key <- if(stored)
+    {
+      keyring::key_get("redcapAPI", connections[i], keyring)
+    } else 
+    {
+      passwordFUN(paste0("Please enter API_KEY for '", connections[i], "'."))
+    }
+    
+    if(is.null(api_key) || api_key == '') stop(paste("No API_KEY entered for", connections[i]))
+    
+    conn <- NULL
+    while(is.null(conn))
+    {
+      conn <- (connectionFUNs[[i]])(api_key) # .connectAndCheck(api_key, url, ...)
+      if(is.null(conn))
+      {
+        keyring::key_delete("redcapAPI", unname(connections[i]), keyring)
+        api_key <- passwordFUN(paste0(
+          "Invalid API_KEY for '", connections[i],
+          "' in keyring '", keyring,
+          "'. Possible causes include: mistyped, renewed, or revoked.",
+          " Please enter a new key or cancel to abort."))
+        if(is.null(api_key) || api_key == '') stop("unlockAPIKEY aborted")
+      } else if(!stored)
+      {
+        keyring::key_set_with_value( service="redcapAPI",
+                            username=unname(connections[i]),
+                            password=api_key,
+                            keyring=keyring)
+      }
+    }
+    conn
+  })
+  names(dest) <- if(is.null(names(connections))) connections else names(connections)
+  
+  if(is.null(envir)) dest else list2env(dest, envir=envir)
 }
 
 #' Open REDCap connections using cryptolocker for storage of API_KEYs.
@@ -297,59 +356,18 @@ unlockREDCap    <- function(connections,
   checkmate::assert_function( x = passwordFUN,  null.ok = FALSE, add = coll)
   checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
   checkmate::reportAssertions(coll)
-
-  # Use YAML config if it exists
-  dest <- .unlockYamlOverride(connections, url, ...)
-  if(length(dest) > 0) 
-    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
   
-  # Use ENV if it exists and YAML does not exist
-  dest <- .unlockENVOverride(connections, url, ...)
-  if(length(dest) > 0)
-    return(if(is.null(envir)) dest else list2env(dest, envir=envir))
+   ###########################################################################
+  ## Setup Internal Loop functions
+  connectionFUNs <- replicate(length(connections), 
+                              function(key) .connectAndCheck(key, url, ...))
   
-  .unlockKeyring(keyring, passwordFUN)
-  
-  # Open Connections
-  dest <- lapply(seq_along(connections), function(i)
-  {
-    stored <- connections[i] %in% keyring::key_list("redcapAPI", keyring)[,2]
-    
-    api_key <- if(stored)
-    {
-      keyring::key_get("redcapAPI", connections[i], keyring)
-    } else 
-    {
-      passwordFUN(paste0("Please enter REDCap API_KEY for '", connections[i], "'."))
-    }
-    
-    if(is.null(api_key) || api_key == '') stop(paste("No API_KEY entered for", connections[i]))
-    
-    conn <- NULL
-    while(is.null(conn))
-    {
-      conn <- .connectAndCheck(api_key, url, ...)
-      if(is.null(conn))
-      {
-        keyring::key_delete("redcapAPI", unname(connections[i]), keyring)
-        api_key <- passwordFUN(paste0(
-          "Invalid API_KEY for '", connections[i],
-          "' in keyring '", keyring,
-          "'. Possible causes include: mistyped, renewed, or revoked.",
-          " Please enter a new key or cancel to abort."))
-        if(is.null(api_key) || api_key == '') stop("unlockREDCap aborted")
-      } else if(!stored)
-      {
-        keyring::key_set_with_value( service="redcapAPI",
-                            username=unname(connections[i]),
-                            password=api_key,
-                            keyring=keyring)
-      }
-    }
-    conn
-  })
-  names(dest) <- if(is.null(names(connections))) connections else names(connections)
-  
-  if(is.null(envir)) dest else list2env(dest, envir=envir)
+   ###########################################################################
+  ## Do it
+  .unlockAPIKEY(connections,
+                connectionFUNs,
+                keyring,
+                envir,
+                passwordFUN)
 }
 
