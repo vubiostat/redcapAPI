@@ -48,4 +48,4 @@ test_that(
 )
 
 # Clean up 
-importMetaData(rcon, MetaData[1, ])
+importMetaData(rcon, test_redcapAPI_MetaData[1, ])
