@@ -356,13 +356,10 @@ unlockREDCap    <- function(connections,
   
    ###########################################################################
   ## Setup Internal Loop functions
-  args <- c(key = NA, url = url, list(...))
-  connectionFUNs <- replicate(length(connections), 
-                              function(key)
-                              {
-                                args$key <- key
-                                do.call('.connectAndCheck', args)
-                              })
+  n <- length(connections)
+  connectionFUNs <- vector('list', n)
+  for(i in seq(n))
+    connectionFUNs[[i]] <- function(key) .connectAndCheck(key, url, ...)
 
    ###########################################################################
   ## Do it
