@@ -136,8 +136,7 @@ test_that(
     stub(.unlockYamlOverride, "file.exists", TRUE)
     stub(.unlockYamlOverride, "yaml::read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
-    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
-    x <- .unlockYamlOverride(c("TestRedcapAPI", "Sandbox"), url)
+    x <- .unlockYamlOverride(c("TestRedcapAPI", "Sandbox"), list(function(...) TRUE, function(...) TRUE))
     expect_true(x$TestRedcapAPI)
     expect_true(x$Sandbox)
   }
@@ -149,8 +148,7 @@ test_that(
     stub(.unlockYamlOverride, "file.exists", TRUE)
     stub(.unlockYamlOverride, "yaml::read_yaml",
                   list(redcapAPI=list(keys=list(TestRedcapAPI='xyz', Sandbox='xyz'))))
-    stub(.unlockYamlOverride, ".connectAndCheck", TRUE)
-    x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
+    x <- .unlockYamlOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), list(function(...) TRUE, function(...) TRUE))
     expect_true(x$rcon)
     expect_true(x$sand)
   }
@@ -179,7 +177,8 @@ test_that(
   {
     stub(.unlockENVOverride, "Sys.getenv", "xyz")
     stub(.unlockENVOverride, ".connectAndCheck", TRUE)
-    x <- .unlockENVOverride(c("TestRedcapAPI", "Sandbox"), url)
+    x <- .unlockENVOverride(c("TestRedcapAPI", "Sandbox"),
+                            list(function(...) TRUE, function(...) TRUE))
     expect_true(x$TestRedcapAPI)
     expect_true(x$Sandbox)
   }
@@ -190,7 +189,8 @@ test_that(
   {
     stub(.unlockENVOverride, "Sys.getenv", "xyz")
     stub(.unlockENVOverride, ".connectAndCheck", TRUE)
-    x <- .unlockENVOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), url)
+    x <- .unlockENVOverride(c(rcon="TestRedcapAPI", sand="Sandbox"), 
+                            list(function(...) TRUE, function(...) TRUE))
     expect_true(x$rcon)
     expect_true(x$sand)
   }
@@ -369,14 +369,14 @@ test_that(
 )
 
 test_that(
-  "unlockREDCap asks for API_KEY if not stored, opens connection and stores",
+  ".unlockAlgorithm asks for API_KEY if not stored, opens connection and stores",
   {
     m <- mock(TRUE)
-    stub(unlockREDCap, ".unlockYamlOverride", list()) # No yaml
+    stub(.unlockAlgorithm, ".unlockYamlOverride", list()) # No yaml
     
-    stub(unlockREDCap, "keyring::key_list",
+    stub(.unlockAlgorithm, "keyring::key_list",
          data.frame(service="recapAPI", username="Nadda"))
-    stub(unlockREDCap, "keyring::key_set_with_value", m)
+    stub(.unlockAlgorithm, "keyring::key_set_with_value", m)
     
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; "xyz"}
@@ -384,14 +384,12 @@ test_that(
 
     n <- mock(TRUE)
 
-    with_mocked_bindings(
-      {
-        x <- unlockREDCap(
-          c(rcon="George"), url, keyring="API_KEYs",
-          passwordFUN=passwordFUN)
-      },
-      .connectAndCheck = n,
-    )
+    x <- .unlockAlgorithm(
+      c(rcon="George"), 
+      list(n),
+      keyring="API_KEYs",
+      envir=NULL,
+      passwordFUN=passwordFUN)
 
     expect_true("rcon" %in% names(x))
     expect_true(x$rcon)
