@@ -32,7 +32,7 @@
 #' [redcapConnection()]
 #' @export
 #' @examples
-#' \donotrun{
+#' \dontrun{
 #' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
 #' }
 connectAndCheck <- function(key, url, ...)

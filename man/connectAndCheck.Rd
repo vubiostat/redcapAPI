@@ -23,7 +23,7 @@ If the API key is invalid it will return NULL.
 If the URL is invalid or there are multiple redirects it will call \code{stop}.
 }
 \examples{
-\donotrun{
+\dontrun{
 connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
 }
 }
