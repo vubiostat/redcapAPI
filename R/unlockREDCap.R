@@ -382,14 +382,14 @@ unlockREDCap    <- function(connections,
                    passwordFUN)
 }
 
-#' @rdname unlockREDCap
+#' @rdname unlockKeys
 #' @export
-unlockOther    <- function(connections,
-                           keyring,
-                           connectFUN  = NULL,
-                           envir       = NULL,
-                           passwordFUN = .default_pass(),
-                           ...)
+unlockKeys <- function(connections,
+                       keyring,
+                       connectFUN  = NULL,
+                       envir       = NULL,
+                       passwordFUN = .default_pass(),
+                       ...)
 {
    ###########################################################################
   # Check parameters passed to function
