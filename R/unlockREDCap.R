@@ -50,7 +50,10 @@ connectAndCheck <- function(key, url, ...)
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
       
       # Handle redirect
-      rcon <- redcapConnection(token=key, url=response$header$location, ...)
+      rcon <- redcapConnection(
+        token = key,
+        url   = paste0(response$header$location, '/api/'),
+        ...)
       
       # Test connection by checking version post redirect
       response <- makeApiCall(rcon, body = version,
