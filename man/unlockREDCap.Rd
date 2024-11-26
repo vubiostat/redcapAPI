@@ -2,7 +2,7 @@
 % Please edit documentation in R/unlockREDCap.R
 \name{unlockREDCap}
 \alias{unlockREDCap}
-\alias{unlockOther}
+\alias{unlockKeys}
 \title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
 unlockREDCap(
@@ -15,7 +15,7 @@ unlockREDCap(
   ...
 )
 
-unlockOther(
+unlockKeys(
   connections,
   keyring,
   connectFUN = NULL,
@@ -107,7 +107,7 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
              envir        = globalenv(),
              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 
-unlockOther(c(logging = 'SplunkKey'), 
+unlockKeys(c(logging = 'SplunkKey'), 
              keyring  = '<NAME_OF_KEY_RING_HERE>',
              envir    = 1)
 }

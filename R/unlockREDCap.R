@@ -17,7 +17,25 @@
   ###########################################################################
  ## Connection function
 ##
-.connectAndCheck <- function(key, url, ...)
+#' Connect to REDCap and verify connection
+#' 
+#' A function that given an API_KEY and a url will create a `redcapConnection`
+#' object and verify that it is working with a version call.
+#' If the API key is invalid it will return NULL.
+#' If the URL is invalid or there are multiple redirects it will call `stop`. 
+#' 
+#' @param key The API key used to connect.
+#' @param url The url of the REDCap server.
+#' @param ... Additional arguments passed to redcapConnection
+#' @return redcapConnection established or NULL if key is invalid.
+#' @seealso 
+#' [redcapConnection()]
+#' @export
+#' @examples
+#' \dontrun{
+#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
+#' }
+connectAndCheck <- function(key, url, ...)
 {
   tryCatch(
     { 
@@ -234,7 +252,7 @@
     conn <- NULL
     while(is.null(conn))
     {
-      conn <- (connectionFUNs[[i]])(api_key) # .connectAndCheck(api_key, url, ...)
+      conn <- (connectionFUNs[[i]])(api_key) # was connectAndCheck(api_key, url, ...)
       if(is.null(conn))
       {
         keyring::key_delete("redcapAPI", unname(connections[i]), keyring)
@@ -339,7 +357,7 @@
 #'              envir        = globalenv(),
 #'              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
 #'
-#' unlockOther(c(logging = 'SplunkKey'), 
+#' unlockKeys(c(logging = 'SplunkKey'), 
 #'              keyring  = '<NAME_OF_KEY_RING_HERE>',
 #'              envir    = 1)
 #' }
@@ -371,7 +389,7 @@ unlockREDCap    <- function(connections,
   n <- length(connections)
   connectionFUNs <- vector('list', n)
   for(i in seq(n))
-    connectionFUNs[[i]] <- function(key) .connectAndCheck(key, url, ...)
+    connectionFUNs[[i]] <- function(key) connectAndCheck(key, url, ...)
 
    ###########################################################################
   ## Do it
@@ -382,7 +400,7 @@ unlockREDCap    <- function(connections,
                    passwordFUN)
 }
 
-#' @rdname unlockKeys
+#' @rdname unlockREDCap
 #' @export
 unlockKeys <- function(connections,
                        keyring,
