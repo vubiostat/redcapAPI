@@ -45,9 +45,7 @@ Imports:
     labelVector,
     lubridate,
     mime,
-    keyring,
-    getPass,
-    yaml
+    shelter
 LazyLoad: yes
 Suggests: testthat (>= 3.0.0), Hmisc, rstudioapi, mockery
 URL: https://github.com/vubiostat/redcapAPI
