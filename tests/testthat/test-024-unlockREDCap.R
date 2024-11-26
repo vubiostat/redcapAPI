@@ -69,7 +69,12 @@ test_that(
 
 test_that(
   "connectAndCheck errors with bad url",
-  expect_error(connectAndCheck("key", "badurl"), "Unable to connect")
+  expect_error(connectAndCheck("key", "badurl"), "Invalid URL provided")
+)
+
+test_that(
+  "connectAndCheck errors with valid url but not a REDCap server",
+  expect_error(connectAndCheck("key", "https://google.com"), "refused connection")
 )
 
 test_that(
