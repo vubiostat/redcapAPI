@@ -54,6 +54,7 @@ Other contributors:
   \item Bradley Johnson [contributor]
   \item Philip Chase [contributor]
   \item Paddy Tobias [contributor]
+  \item Michael Chirico [contributor]
 }
 
 }

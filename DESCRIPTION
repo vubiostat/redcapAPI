@@ -22,7 +22,8 @@ Authors@R: c(
     person("Cole", "Beck", role = "ctb"),
     person("Bradley", "Johnson", role="ctb"),
     person("Philip", "Chase", role="ctb"),
-    person("Paddy", "Tobias", role = "ctb"))
+    person("Paddy", "Tobias", role = "ctb"),
+    person("Michael", "Chirico", role = "ctb"))
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
