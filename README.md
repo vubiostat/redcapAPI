@@ -136,7 +136,7 @@ There are several vignettes with helpful information and examples to explore. Th
 
 ## Dependencies
 
-[](./inst/image/dependencies.png)!
+![Dependency Plot](./inst/image/dependencies.png "Dependency Plot")
 
 ## Back Matter
 
