@@ -48,7 +48,7 @@ Imports:
     mime,
     shelter
 LazyLoad: yes
-Suggests: testthat (>= 3.0.0), Hmisc, rstudioapi, mockery
+Suggests: testthat (>= 3.0.0), Hmisc, mockery
 URL: https://github.com/vubiostat/redcapAPI
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8
