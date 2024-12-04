@@ -24,7 +24,7 @@ If the URL is invalid or there are multiple redirects it will call \code{stop}.
 }
 \examples{
 \dontrun{
-connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
+connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE>")
 }
 }
 \seealso{

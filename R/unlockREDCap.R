@@ -33,7 +33,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
+#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE>")
 #' }
 connectAndCheck <- function(key, url, ...)
 {
