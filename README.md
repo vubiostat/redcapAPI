@@ -134,6 +134,10 @@ There are several vignettes with helpful information and examples to explore. Th
 * redcapAPI-best-practices 
 * redcapAPI-offline-connection 
 
+## Dependencies
+
+[](./inst/image/dependencies.png)!
+
 ## Back Matter
 
 *NOTE*: Ownership transfer of this package to [VUMC Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics) is complete.
