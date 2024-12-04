@@ -20,6 +20,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * `unlockREDCap` no longer changes console focus
 * Vectorized `renameRecord` and `exportFieldNames`
 * Exporting `connectAndCheck` function to establish connections
+* Improved error messages when misspecified URL is provided.
+* Fix for redirected URLs
 
 ## 2.10.0
 

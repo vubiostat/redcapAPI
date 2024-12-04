@@ -5,12 +5,12 @@ library(curl)
 
 h <- new_handle(timeout = 1L)
 redirect <- structure(
-  list(url = "https://test.xyz/api",
+  list(url = "https://test.xyz/api/",
        status_code = 302L,
        content = "",
        headers=structure(list(
          'content-type'="text/csv; charset=utf-8",
-         'location'=url
+         'location'=gsub('\\/api\\/', '', url)
        ),
        class = c("insensitive", "list")),
   class = "response")
@@ -29,10 +29,11 @@ test_that(
   "connectAndCheck deals with redirect 301 status",
   {
     redirectCall <- TRUE
+    redirect$status_code = 301L
     stub(connectAndCheck, "makeApiCall", function(...)
       if(redirectCall) { redirectCall <<- FALSE; redirect  } else {makeApiCall(...)})
 
-    rcon <- connectAndCheck(rcon$token, "https://test.xyz/api")
+    rcon <- connectAndCheck(rcon$token, "https://test.xyz/api/")
     expect_equal(rcon$url, url)
   }
 )
@@ -44,7 +45,7 @@ test_that(
     stub(connectAndCheck, "makeApiCall", function(...)
       if(redirectCall) { redirectCall <<- FALSE; redirect  } else {makeApiCall(...)})
 
-    rcon <- connectAndCheck(rcon$token, "https://test.xyz/api")
+    rcon <- connectAndCheck(rcon$token, "https://test.xyz/api/")
     expect_equal(rcon$url, url)
   }
 )
@@ -69,7 +70,12 @@ test_that(
 
 test_that(
   "connectAndCheck errors with bad url",
-  expect_error(connectAndCheck("key", "badurl"), "Unable to connect")
+  expect_error(connectAndCheck("key", "badurl"), "Invalid URL provided")
+)
+
+test_that(
+  "connectAndCheck errors with valid url but not a REDCap server",
+  expect_error(connectAndCheck("key", "https://google.com"), "refused connection")
 )
 test_that(
   "unlockREDCap pulls API_KEY and opens connection from keyring returning as list",

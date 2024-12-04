@@ -50,7 +50,10 @@ connectAndCheck <- function(key, url, ...)
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
       
       # Handle redirect
-      rcon <- redcapConnection(token=key, url=response$header$location, ...)
+      rcon <- redcapConnection(
+        token = key,
+        url   = paste0(response$header$location, '/api/'),
+        ...)
       
       # Test connection by checking version post redirect
       response <- makeApiCall(rcon, body = version,
@@ -59,13 +62,17 @@ connectAndCheck <- function(key, url, ...)
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))
       
+
       rcon
     },
     error = function(e)
     {
-      if(grepl("Could not resolve host",     e) ||
+      if(grepl("Could not resolve host",     e)  ||
          grepl("Could not connect to server", e))
-        stop("Unable to connect to url '",url,"'. ", e$message)
+        stop("Invalid URL provided '",url,"'. Unable to resolve or route.\n", e$message)
+      
+      if(grepl("405", e$message) )
+        stop("URL '",url,"' refused connection. Not acting like a REDCap server.\n", e$message)
         
       if(grepl("403", e)) return(NULL) # Forbidden, i.e. bad API_KEY
       
