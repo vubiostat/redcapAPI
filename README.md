@@ -134,6 +134,12 @@ There are several vignettes with helpful information and examples to explore. Th
 * redcapAPI-best-practices 
 * redcapAPI-offline-connection 
 
+## Dependencies
+
+We strive to keep the dependency chain as minimal as possible. This reduces potential breakage due to downstream packages getting changed and minimizes install time. 
+
+![Dependency Plot](./inst/image/dependencies.png "Dependency Plot")
+
 ## Back Matter
 
 *NOTE*: Ownership transfer of this package to [VUMC Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics) is complete.

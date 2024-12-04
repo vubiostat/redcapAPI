@@ -1,7 +1,7 @@
 Package: redcapAPI
 Type: Package
 Title: Interface to 'REDCap'
-Version: 2.10.1
+Version: 2.11.0
 Authors@R: c(
     person("Benjamin", "Nutter", email = "benjamin.nutter@gmail.com", 
            role = c("ctb", "aut")),
@@ -46,11 +46,9 @@ Imports:
     labelVector,
     lubridate,
     mime,
-    keyring,
-    getPass,
-    yaml
+    shelter
 LazyLoad: yes
-Suggests: testthat (>= 3.0.0), Hmisc, rstudioapi, mockery
+Suggests: testthat (>= 3.0.0), Hmisc, mockery
 URL: https://github.com/vubiostat/redcapAPI
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8
