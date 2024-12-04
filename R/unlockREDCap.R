@@ -33,7 +33,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE")
+#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE>")
 #' }
 connectAndCheck <- function(key, url, ...)
 {
@@ -220,8 +220,8 @@ connectAndCheck <- function(key, url, ...)
 ## when knitting from RStudio, ugh.
 .default_pass <- function()
 {
-  if(grepl('mac', tolower(utils::osVersion))        &&
-     requireNamespace("rstudioapi", quietly = TRUE) &&
+  if(isTRUE(grepl('mac', tolower(utils::osVersion))) &&
+     requireNamespace("rstudioapi", quietly = TRUE)  &&
      rstudioapi::isAvailable(child_ok=TRUE))
   {
     rstudioapi::askForPassword
