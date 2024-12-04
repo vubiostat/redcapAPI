@@ -17,7 +17,25 @@
   ###########################################################################
  ## Connection function
 ##
-.connectAndCheck <- function(key, url, ...)
+#' Connect to REDCap and verify connection
+#' 
+#' A function that given an API_KEY and a url will create a `redcapConnection`
+#' object and verify that it is working with a version call.
+#' If the API key is invalid it will return NULL.
+#' If the URL is invalid or there are multiple redirects it will call `stop`. 
+#' 
+#' @param key The API key used to connect.
+#' @param url The url of the REDCap server.
+#' @param ... Additional arguments passed to redcapConnection
+#' @return redcapConnection established or NULL if key is invalid.
+#' @seealso 
+#' [redcapConnection()]
+#' @export
+#' @examples
+#' \dontrun{
+#' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE>")
+#' }
+connectAndCheck <- function(key, url, ...)
 {
   tryCatch(
     { 
@@ -112,7 +130,7 @@
     args$key <- key
     args$url <- url
     if(!is.null(config$args)) args <- utils::modifyList(args, config$args)
-    do.call(.connectAndCheck, args)
+    do.call(connectAndCheck, args)
   })
   names(dest) <- if(is.null(names(connections))) connections else names(connections)
   
@@ -135,7 +153,7 @@
     args     <- list(...)
     args$key <- conn
     args$url <- url
-    do.call(.connectAndCheck, args)
+    do.call(connectAndCheck, args)
   })
   names(dest) <- if(is.null(names(api_key_ENV))) api_key_ENV else names(api_key_ENV)
   
@@ -328,7 +346,7 @@ unlockREDCap    <- function(connections,
     conn <- NULL
     while(is.null(conn))
     {
-      conn <- .connectAndCheck(api_key, url, ...)
+      conn <- connectAndCheck(api_key, url, ...)
       if(is.null(conn))
       {
         keyring::key_delete("redcapAPI", unname(connections[i]), keyring)
