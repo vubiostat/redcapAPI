@@ -4,7 +4,14 @@
 \alias{unlockREDCap}
 \title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
-unlockREDCap(connections, url, keyring, envir = NULL, ...)
+unlockREDCap(
+  connections,
+  url,
+  keyring,
+  envir = NULL,
+  service = "redcapAPI",
+  ...
+)
 }
 \arguments{
 \item{connections}{character vector. A list of strings that define the
@@ -21,11 +28,9 @@ The name in the returned list is this name.}
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
+\item{service}{character. The name to use in a yaml file for locating keys.}
 
-\item{connectFUN}{function. A function that takes a key and returns a connection.
-the function should call \code{stop} if unable to connect to the URL.
-The function should return NULL if the API_KEY is invalid.}
+\item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
 \value{
 If \code{envir} is NULL returns a list of opened connections. Otherwise

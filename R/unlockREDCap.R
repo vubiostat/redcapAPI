@@ -131,10 +131,8 @@ connectAndCheck <- function(key, url, ...)
 #'          which returns the keys as a list. Use [globalenv()] to assign in the
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
+#' @param service character. The name to use in a yaml file for locating keys.
 #' @param url character. The url of one's institutional REDCap server api. 
-#' @param connectFUN function. A function that takes a key and returns a connection. 
-#'          the function should call `stop` if unable to connect to the URL.
-#'          The function should return NULL if the API_KEY is invalid. 
 #' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
