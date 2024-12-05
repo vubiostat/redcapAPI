@@ -12,6 +12,7 @@
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #' @param success_status_codes `integerish` A vector of success codes to ignore
 #'   for error handling. Defaults to c(200L).
+#' @param redirect `logical(1)` Is redirection on the request allowed?
 #' @param ... This will capture `api_param` (if specified) which will modify the body of the 
 #'   the specified body of the request. It also captures `config` which will get
 #'   passed to curl::handle_setopt.
@@ -142,6 +143,7 @@ makeApiCall <- function(rcon,
                         body   = list(), 
                         url    = NULL,
                         success_status_codes = 200L,
+                        redirect = TRUE,
                         ...)
 {
   # Pull config, api_param from ...
@@ -176,6 +178,10 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+  
+  checkmate::assert_logical(x   = redirect,
+                            len = 1,
+                            add = coll)
 
   checkmate::reportAssertions(coll)
   
@@ -221,7 +227,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
+    if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -262,7 +268,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    makeApiCall(rcon, body, response$headers$location, ...)
+    makeApiCall(rcon, body, response$header$location, ...)
   } else 
     response # The not redirected case
 }

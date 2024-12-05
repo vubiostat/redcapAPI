@@ -10,7 +10,7 @@ redirect <- structure(
        content = "",
        headers=structure(list(
          'content-type'="text/csv; charset=utf-8",
-         'location'=gsub('\\/api\\/', '', url)
+         'location'=url
        ),
        class = c("insensitive", "list")),
   class = "response")
