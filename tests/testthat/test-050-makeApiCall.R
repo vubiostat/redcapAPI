@@ -20,6 +20,24 @@ test_that(
 )
 
 test_that(
+  "makeApiCall will not allow a non-logical redirect parameter",
+  {
+    expect_error(
+      makeApiCall(rcon,  body = list(format = "csv"), url='xyz.com', redirect=23),
+      "redirect.*Must be of type 'logical'")
+  }
+)
+
+test_that(
+  "makeApiCall will not allow more than one redirect parameter",
+  {
+    expect_error(
+      makeApiCall(rcon,  body = list(format = "csv"), url='xyz.com', redirect=c(TRUE, TRUE)),
+      "redirect.*Must have length 1")
+  }
+)
+
+test_that(
   ".makeApiCall_isRetryEligible returns appropriate logical values", 
   {
     response <- makeApiCall(rcon, 

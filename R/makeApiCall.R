@@ -12,6 +12,7 @@
 #' @param url `character(1)` A url string to hit. Defaults to rcon$url.
 #' @param success_status_codes `integerish` A vector of success codes to ignore
 #'   for error handling. Defaults to c(200L).
+#' @param redirect `logical(1)` Is redirection on the request allowed?
 #' @param ... This will capture `api_param` (if specified) which will modify the body of the 
 #'   the specified body of the request. It also captures `config` which will get
 #'   passed to curl::handle_setopt.
@@ -177,6 +178,10 @@ makeApiCall <- function(rcon,
   checkmate::assert_list(x = api_param, 
                          names = "named", 
                          add = coll)
+  
+  checkmate::assert_logical(x   = redirect,
+                            len = 1,
+                            add = coll)
 
   checkmate::reportAssertions(coll)
   
