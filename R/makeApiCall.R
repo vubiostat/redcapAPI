@@ -142,6 +142,7 @@ makeApiCall <- function(rcon,
                         body   = list(), 
                         url    = NULL,
                         success_status_codes = 200L,
+                        redirect = TRUE,
                         ...)
 {
   # Pull config, api_param from ...
@@ -221,7 +222,7 @@ makeApiCall <- function(rcon,
       message(paste0(">>>\n", as.character(response), "<<<\n"))
     }
     
-    response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
+    if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
     
     is_retry_eligible <- .makeApiCall_isRetryEligible(response)
     
@@ -262,7 +263,7 @@ makeApiCall <- function(rcon,
     }
     
     # Good for a single call
-    makeApiCall(rcon, body, response$headers$location, ...)
+    makeApiCall(rcon, body, response$header$location, ...)
   } else 
     response # The not redirected case
 }
