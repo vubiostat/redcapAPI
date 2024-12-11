@@ -3,6 +3,9 @@ context("makeApiCall Argument Validation")
 library(mockery)
 library(curl)
 
+url     <- rcon$url   # Should not be required but it is
+
+
 # Note: This file will only test that arguments fail appropriately, or
 # that submethods perform as expected. the makeApiCall function 
 # is ubiquitous throughout the package. If we break it, it's bound

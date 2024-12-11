@@ -3,6 +3,9 @@ context("unlockREDCap")
 library(mockery)
 library(curl)
 
+url     <- rcon$url   # Should not be required but it is
+
+
 h <- new_handle(timeout = 1L)
 redirect <- structure(
   list(url = "https://test.xyz/api/",
