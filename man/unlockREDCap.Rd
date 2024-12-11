@@ -9,7 +9,7 @@ unlockREDCap(
   url,
   keyring,
   envir = NULL,
-  passwordFUN = .default_pass(),
+  service = "redcapAPI",
   ...
 )
 }
@@ -28,8 +28,7 @@ The name in the returned list is this name.}
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
-On MacOS it will use rstudioapi::askForPassword if available.}
+\item{service}{character. The name to use in a yaml file for locating keys.}
 
 \item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
