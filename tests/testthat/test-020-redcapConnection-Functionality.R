@@ -12,6 +12,8 @@ API_KEY <-
     keyring::key_get('redcapAPI', testdb, 'API_KEYs')
   }
 
+url     <- rcon$url   # Should not be required but it is
+
 
 test_that("redcapApiConnection can be created",
           expect_class(
