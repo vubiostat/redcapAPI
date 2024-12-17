@@ -44,6 +44,8 @@
 #' [exportInstruments()],\cr
 #' [exportMappings()],\cr
 #' [importMappings()]
+#' 
+#' @export
 
 exportPdf <- function(rcon, 
                       dir, 
