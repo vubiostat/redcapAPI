@@ -58,7 +58,6 @@ exportPdf <- function(rcon,
 
 #' @rdname exportPdf
 #' @export
-
 exportPdf.redcapApiConnection <- function(rcon,
                                           dir,
                                           filename       = "redcap_forms_download",
