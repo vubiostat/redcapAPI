@@ -1,22 +1,22 @@
 context("Instruments, Mappings, Export PDF Argument Functionality")
 
 # Set up arms and events for testing importMappings data
-load(file.path(test_path("testdata", 
+load(file.path(test_path("testdata",
                          "test_redcapAPI_MetaData.Rdata")))
-load(file.path(test_path("testdata", 
+load(file.path(test_path("testdata",
                          "test_redcapAPI_Data.Rdata")))
 
-Arms <- data.frame(arm_num = 1:2, 
-                   name = c("Arm 1", "Arm 2"), 
+Arms <- data.frame(arm_num = 1:2,
+                   name = c("Arm 1", "Arm 2"),
                    stringsAsFactors = FALSE)
 
-Events <- data.frame(event_name = c("event_1", 
-                                    "event_2", 
-                                    "event_1"), 
-                     arm_num = c(1, 1, 2), 
-                     unique_event_name = c("event_1_arm_1", 
-                                           "event_2_arm_2", 
-                                           "event_1_arm_2"), 
+Events <- data.frame(event_name = c("event_1",
+                                    "event_2",
+                                    "event_1"),
+                     arm_num = c(1, 1, 2),
+                     unique_event_name = c("event_1_arm_1",
+                                           "event_2_arm_2",
+                                           "event_1_arm_2"),
                      stringsAsFactors = FALSE)
 purgeProject(rcon, purge_all = TRUE)
 importMetaData(rcon, test_redcapAPI_MetaData)
@@ -24,18 +24,18 @@ importArms(rcon, data = Arms)
 importEvents(rcon, data = Events)
 importProjectInformation(rcon, data = data.frame(is_longitudinal = 1))
 
-Mapping <- data.frame(arm_num = c(1, 1, 1, 2, 2, 2), 
-                      unique_event_name = c("event_1_arm_1", 
-                                            "event_1_arm_1", 
-                                            "event_2_arm_1", 
-                                            "event_1_arm_2", 
-                                            "event_1_arm_2", 
-                                            "event_1_arm_2"), 
-                      form = c("record_id", 
-                               "text_fields", 
-                               "multiple_choice", 
-                               "record_id", 
-                               "numbers", 
+Mapping <- data.frame(arm_num = c(1, 1, 1, 2, 2, 2),
+                      unique_event_name = c("event_1_arm_1",
+                                            "event_1_arm_1",
+                                            "event_2_arm_1",
+                                            "event_1_arm_2",
+                                            "event_1_arm_2",
+                                            "event_1_arm_2"),
+                      form = c("record_id",
+                               "text_fields",
+                               "multiple_choice",
+                               "record_id",
+                               "numbers",
                                "branching_logic"),
                       stringsAsFactors = FALSE)
 
@@ -43,15 +43,15 @@ RecordToImport <- test_redcapAPI_Data[test_redcapAPI_Data$record_id %in% 1:3, ]
 RecordToImport <- RecordToImport[is.na(RecordToImport$repeat_question_1), ]
 RecordToImport <- RecordToImport[names(RecordToImport) %in% rcon$metadata()$field_name]
 # castForImport only needed until 3.0.0
-RecordToImport <- castForImport(RecordToImport, rcon, 
+RecordToImport <- castForImport(RecordToImport, rcon,
                                 validation = list(bioportal = valSkip),
-                                cast = list(number_1dp = as.numeric, 
-                                            number_2dp = as.numeric, 
-                                            number_1dp_comma_decimal = as.numeric, 
-                                            number_2dp_comma_decimal = as.numeric, 
+                                cast = list(number_1dp = as.numeric,
+                                            number_2dp = as.numeric,
+                                            number_1dp_comma_decimal = as.numeric,
+                                            number_2dp_comma_decimal = as.numeric,
                                             bioportal = as.character))
 importRecords(
-  rcon, 
+  rcon,
   RecordToImport[,!names(RecordToImport) %in% c("signature_test", "file_upload_test"),drop=FALSE])
 
 #####################################################################
@@ -66,22 +66,22 @@ test_that(
 )
 
 test_that(
-  "Validate config, api_param", 
+  "Validate config, api_param",
   {
     local_reproducible_output(width = 200)
-   
-    expect_error(exportMappings(rcon, 
-                                config = list(1)), 
+
+    expect_error(exportMappings(rcon,
+                                config = list(1)),
                  "'config': Must have names")
-    expect_error(exportMappings(rcon, 
-                                config = "not a list"), 
+    expect_error(exportMappings(rcon,
+                                config = "not a list"),
                  "'config': Must be of type 'list'")
-    
-    expect_error(exportMappings(rcon, 
-                                api_param = list(1)), 
+
+    expect_error(exportMappings(rcon,
+                                api_param = list(1)),
                  "'api_param': Must have names")
-    expect_error(exportMappings(rcon, 
-                                api_param = "not a list"), 
+    expect_error(exportMappings(rcon,
+                                api_param = "not a list"),
                  "'api_param': Must be of type 'list'")
   }
 )
@@ -149,38 +149,38 @@ test_that(
                          dir = temp_dir,
                          events = "event_1_arm_1",
                          instruments = "multiple_choice")
-    expect_equal(save_to, 
-                 file.path(temp_dir, 
+    expect_equal(save_to,
+                 file.path(temp_dir,
                            "redcap_forms_download_blank.pdf"))
-       
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
+
+    expect_error(exportPdf(rcon,
+                           dir = tempdir(),
+                           record = 10,
+                           events = "event_1_arm_1",
                            instruments = "branching_logic",
-                           config = list(1)), 
+                           config = list(1)),
                  "'config': Must have names")
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
+    expect_error(exportPdf(rcon,
+                           dir = tempdir(),
+                           record = 10,
+                           events = "event_1_arm_1",
                            instruments = "branching_logic",
-                           config = "not a list"), 
+                           config = "not a list"),
                  "'config': Must be of type 'list'")
-    
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
+
+    expect_error(exportPdf(rcon,
+                           dir = tempdir(),
+                           record = 10,
+                           events = "event_1_arm_1",
                            instruments = "branching_logic",
-                           api_param = list(1)), 
+                           api_param = list(1)),
                  "'api_param': Must have names")
-    expect_error(exportPdf(rcon, 
-                           dir = tempdir(), 
-                           record = 10, 
-                           events = "event_1_arm_1", 
+    expect_error(exportPdf(rcon,
+                           dir = tempdir(),
+                           record = 10,
+                           events = "event_1_arm_1",
                            instruments = "branching_logic",
-                           api_param = "not a list"), 
+                           api_param = "not a list"),
                  "'api_param': Must be of type 'list'")
   }
 )
@@ -192,8 +192,8 @@ test_that(
     save_to <- exportPdf(rcon,
                          dir = temp_dir,
                          events = "event_1_arm_1")
-    expect_equal(save_to, 
-                 file.path(temp_dir, 
+    expect_equal(save_to,
+                 file.path(temp_dir,
                            "redcap_forms_download_blank.pdf"))
   }
 )
@@ -207,8 +207,8 @@ test_that(
                          record = 1,
                          events = "event_1_arm_1",
                          instruments = "multiple_choice")
-    expect_equal(save_to, 
-                 file.path(temp_dir, 
+    expect_equal(save_to,
+                 file.path(temp_dir,
                            "redcap_forms_download_record_1.pdf"))
   }
 )
@@ -221,8 +221,8 @@ test_that(
                          dir = temp_dir,
                          record = 1,
                          events = "event_1_arm_1")
-    expect_equal(save_to, 
-                 file.path(temp_dir, 
+    expect_equal(save_to,
+                 file.path(temp_dir,
                            "redcap_forms_download_record_1.pdf"))
   }
 )
@@ -234,8 +234,8 @@ test_that(
     save_to <- exportPdf(rcon,
                          dir = temp_dir,
                          all_records = TRUE)
-    expect_equal(save_to, 
-                 file.path(temp_dir, 
+    expect_equal(save_to,
+                 file.path(temp_dir,
                            "redcap_forms_download_all_records.pdf"))
   }
 )

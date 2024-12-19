@@ -4,7 +4,14 @@
 \alias{makeApiCall}
 \title{Make REDCap API Calls}
 \usage{
-makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
+makeApiCall(
+  rcon,
+  body = list(),
+  url = NULL,
+  success_status_codes = 200L,
+  redirect = TRUE,
+  ...
+)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
@@ -16,6 +23,8 @@ makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
 
 \item{success_status_codes}{\code{integerish} A vector of success codes to ignore
 for error handling. Defaults to c(200L).}
+
+\item{redirect}{\code{logical(1)} Is redirection on the request allowed?}
 
 \item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
 the specified body of the request. It also captures \code{config} which will get
@@ -58,11 +67,11 @@ returns that response.
 \dontrun{
   url <- "Enter your API URL here"
   token <- "Enter your API token here"
-  
-  rcon <- redcapConnection(url = url, 
+
+  rcon <- redcapConnection(url = url,
                            token = token)
-                           
-  MetaData <- 
+
+  MetaData <-
     makeApiCall(rcon = rcon,
                body = list(content = "metadata",
                            format = "csv",
@@ -75,7 +84,7 @@ returns that response.
 
   # Call to export Meta Data (Data Dictionary) for specific fields
 
-  fields <- vectorToApiBodyList(vector = c("row_purpose", 
+  fields <- vectorToApiBodyList(vector = c("row_purpose",
                                            "prereq_radio"),
                                 parameter_name = "fields")
   MetaData <-
@@ -146,8 +155,8 @@ returns that response.
   Records <- read.csv(text = as.character(Records),
                       stringsAsFactors = FALSE,
                       na.strings = "")
-                      
- 
+
+
 }
 
 }

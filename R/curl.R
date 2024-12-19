@@ -25,7 +25,8 @@
     fields     = cfg$fields,
     options    = modifyList(list(timeout_ms = 3e5,
                                  useragent  = .curlDefaultUa(),
-                                 post       = TRUE),
+                                 post       = TRUE,
+                                 followlocation = FALSE),
                             cfg$options),
     auth_token = token,
     output     = structure(list(), class = c("write_memory", "write_function"))
