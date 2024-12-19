@@ -69,6 +69,9 @@ exportPdf.redcapApiConnection <- function(rcon,
 {
   if (is.numeric(record)) record <- as.character(record)
 
+  dots      <- list(...)
+  config    <- if("config"    %in% names(dots)) dots$config else list()
+
    ##################################################################
   # Argument Validation
 
@@ -111,6 +114,10 @@ exportPdf.redcapApiConnection <- function(rcon,
                             any.missing = FALSE,
                             add = coll)
 
+  checkmate::assert_list(x = config,
+                         names = "named",
+                         add = coll)
+
   checkmate::reportAssertions(coll)
 
   checkmate::assert_directory_exists(x = dir,
@@ -144,7 +151,9 @@ exportPdf.redcapApiConnection <- function(rcon,
    ##################################################################
   # Call the API
 
-  response <- makeApiCall(rcon, body, ...)
+  config[['options']] <- list(followlocation=TRUE) # Necessary for this call
+
+  response <- makeApiCall(rcon, body, config=config, ...)
   filename <-
     if (all_records)
       paste0(filename, "_all_records.pdf")

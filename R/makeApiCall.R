@@ -267,8 +267,6 @@ makeApiCall <- function(rcon,
       message(paste("Temporary 302 redirect", response$url, "to", response$headers$location))
     }
 
-    browser()
-
     # Good for a single call
     makeApiCall(rcon, body, response$header$location, redirect=FALSE, ...)
   } else
