@@ -151,16 +151,17 @@ For command line users create an `.Rprofile` file in one's home directory [simpl
 containing the following base function override:
 
 ```
-options(keyring_backend=keyring::backend_file)
+qfun <- function (save = "no", status = 0, runLast = TRUE)
+  .Internal(quit(save, status, runLast))
 
-utils::assignInNamespace(
-  "q",
-  function(save="no", status=0, runLast=TRUE)
-  {
-    .Internal(quit(save, status, runLast))
-  },
-  "base"
-)
+pkg    <- 'base'
+oldfun <- 'q'
+pkgenv <- as.environment(paste0("package:", pkg))
+unlockBinding(oldfun, pkgenv)
+utils::assignInNamespace(oldfun, qfun, ns = pkg, envir = pkgenv)
+assign(oldfun, qfun, pkgenv)
+lockBinding(oldfun, pkgenv) 
+rm(pkg, oldfun, pkgenv)
 ```
 
 More details on keyring management are in the `keyring` package. If one forgets their password, 
