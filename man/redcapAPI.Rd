@@ -55,6 +55,7 @@ Other contributors:
   \item Philip Chase [contributor]
   \item Paddy Tobias [contributor]
   \item Michael Chirico [contributor]
+  \item William Sharp [contributor]
 }
 
 }
