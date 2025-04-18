@@ -172,11 +172,11 @@ Rules:
 
 redcapAPI A rich API client for interfacing REDCap to R
 
-Copyright (C) 2012 Jeffrey Horner, Vanderbilt University Medical Center
+Copyright (C) 2012 Jeffrey Horner, Vanderbilt University
 
 Copyright (C) 2013-2022 Benjamin Nutter
 
-Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University Medical Center
+Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
