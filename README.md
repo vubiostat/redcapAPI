@@ -44,6 +44,8 @@ Core concerns handled by the library:
 | Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    | 
 | Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
 
+For REDCap projects with data too large to export to R and load directly into memory, the [**redquack**](https://dylanpieper.github.io/redquack/) R package offers a solution. This tool transfers data from REDCap in manageable chunks to a local DuckDB file.
+
 ## Quick Start Guide
 
 There are 2 basic functions that are key to understanding the core approach:
