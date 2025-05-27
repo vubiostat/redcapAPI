@@ -142,3 +142,23 @@ test_that(
     )
   }
 )
+
+md <- data.frame(
+  field_name = c('record_id','badfield'),
+  form_name = 'test',
+  field_type = c('text','text'),
+  select_choices_or_calculations = c(NA, NA)
+)
+logic <- list(record_id = NA, badfield = expression(stop('logic fail!')))
+r <- data.frame(record_id = 1:2, badfield = 'stop', test_complete = 2)
+o <- data.frame(record_id = 1:2, badfield = FALSE, test_complete = 2)
+
+test_that(
+  "Missing value checks should handle errors in branching logic",
+  {
+    local_reproducible_output(width = 200)
+    expect_identical(
+	  redcapAPI:::.missingSummary_isMissingInField(r, md, logic), o
+    )
+  }
+)
