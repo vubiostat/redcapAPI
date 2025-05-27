@@ -220,7 +220,9 @@ missingSummary_offline <- function(records,
         # If the `[form]_complete` is non-missing:
         #    The branching logic is satisfied: return the missingness of the value
         #    The branching logic is not satisfied: return FALSE
-        ans <- !is.na(records_orig[[tmp_form]]) & eval(this_logic, records_orig)
+        #    The branching logic produces errors: return FALSE
+        branch_eval <- tryCatch(eval(this_logic, records_orig), error = function(e) FALSE)
+        ans <- !is.na(records_orig[[tmp_form]]) & branch_eval
         ans_ix <- which(ans)
         if(length(ans_ix) > 0L) {
           if(is_cb[i]) {
