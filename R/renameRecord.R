@@ -34,29 +34,55 @@ renameRecord.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_character(x = record_name, 
-                              len = 1, 
                               add = coll)
   
   checkmate::assert_character(x = new_record_name, 
-                              len = 1, 
+                              len = length(record_name), 
                               add = coll)
   
   checkmate::assert_character(x = arm, 
-                              len = 1, 
+                              len = length(record_name), 
                               null.ok = TRUE, 
                               add = coll)
 
   checkmate::reportAssertions(coll)
   
+  
+  ###################################################################
+  # Rename the records
+
+  results <- 
+    mapply(.renameRecordApiCall, 
+           record_name = record_name, 
+           new_record_name = new_record_name, 
+           arm = if (is.null(arm)) lapply(record_name, function(r) NULL)
+                 else arm,
+           MoreArgs = list(rcon = rcon),
+           ...,
+           SIMPLIFY = TRUE, 
+           USE.NAMES = FALSE)
+  
+  invisible(results)
+}
+
+
+#####################################################################
+# Unexported                                                     ####
+
+.renameRecordApiCall <- function(rcon, 
+                                 record_name, 
+                                 new_record_name, 
+                                 arm, 
+                                 ...){
   ###################################################################
   # API Body List                                                ####
-  
+
   body <- list(content = "record", 
                action = "rename", 
                record = record_name, 
                new_record_name = new_record_name, 
                arm = arm)
-
+  
   ###################################################################
   # Call the API                                                 ####
   invisible('1' == as.character(makeApiCall(rcon, body, ...)))

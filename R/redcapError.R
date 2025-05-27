@@ -31,10 +31,10 @@ redcapError <- function(x)
   # Translate network error codes to user relevant message
   if (grepl("Connection reset by peer", error_message) || 
       grepl("Timeout was reached", error_message))
-    stop(paste0(.RESET_BY_PEER, ": ", as.character(x)))
+    stop(paste0(.RESET_BY_PEER, ": ", error_message))
   
   # Otherwise just stop with code
-  stop(paste0(x$status_code, ": ", as.character(x)))
+  stop(paste0(x$status_code, ": ", error_message))
 }
 
 .RESET_BY_PEER <- "A network error has occurred. This can happen when too much data is requested causing a timeout (consider batching), or when REDCap is having trouble servicing requests. It may also be a misconfigured proxy or network routing congestion."

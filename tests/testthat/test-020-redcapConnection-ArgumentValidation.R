@@ -1,6 +1,7 @@
 context("redcapConnection Argument Validation")
 
 API_KEY <- rcon$token
+url     <- rcon$url   # Should not be required but it is
 
 #####################################################################
 # Argument Validation                                            ####

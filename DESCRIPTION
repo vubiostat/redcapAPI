@@ -1,7 +1,7 @@
 Package: redcapAPI
 Type: Package
 Title: Interface to 'REDCap'
-Version: 2.9.5
+Version: 2.10.3
 Authors@R: c(
     person("Benjamin", "Nutter", email = "benjamin.nutter@gmail.com", 
            role = c("ctb", "aut")),
@@ -22,7 +22,9 @@ Authors@R: c(
     person("Cole", "Beck", role = "ctb"),
     person("Bradley", "Johnson", role="ctb"),
     person("Philip", "Chase", role="ctb"),
-    person("Paddy", "Tobias", role = "ctb"))
+    person("Paddy", "Tobias", role = "ctb"),
+    person("Michael", "Chirico", role = "ctb"),
+    person("William", "Sharp", role="ctb"))
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
@@ -40,9 +42,11 @@ Depends:
 Imports:
     checkmate,
     chron,
-    httr,
+    curl,
+    jsonlite,
     labelVector,
     lubridate,
+    mime,
     keyring,
     getPass,
     yaml
@@ -52,4 +56,4 @@ URL: https://github.com/vubiostat/redcapAPI
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

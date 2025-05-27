@@ -2,6 +2,13 @@ context("User Methods Argument Validation")
 
 ProjectUser <- rcon$users()
 
+if(!EXPENDABLE_USER %in% ProjectUser)
+{
+  importUsers(rcon, data = data.frame(username = EXPENDABLE_USER, 
+                                      data_access_groups = 0))
+  ProjectUser <- rcon$users()
+}
+
 #####################################################################
 # Export Users                                                   ####
 

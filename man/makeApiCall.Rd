@@ -4,12 +4,19 @@
 \alias{makeApiCall}
 \title{Make REDCap API Calls}
 \usage{
-makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
+makeApiCall(
+  rcon,
+  body = list(),
+  url = NULL,
+  success_status_codes = 200L,
+  redirect = TRUE,
+  ...
+)
 }
 \arguments{
 \item{rcon}{A \code{redcapConnection} object.}
 
-\item{body}{\code{list} List of parameters to be passed to \code{\link[httr:POST]{httr::POST()}}'s
+\item{body}{\code{list} List of parameters to be passed to \link[curl:curl]{curl::curl}'s
 \code{body} argument}
 
 \item{url}{\code{character(1)} A url string to hit. Defaults to rcon$url.}
@@ -17,9 +24,11 @@ makeApiCall(rcon, body = list(), url = NULL, success_status_codes = 200L, ...)
 \item{success_status_codes}{\code{integerish} A vector of success codes to ignore
 for error handling. Defaults to c(200L).}
 
+\item{redirect}{\code{logical(1)} Is redirection on the request allowed?}
+
 \item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
 the specified body of the request. It also captures \code{config} which will get
-passed to httr::POST.}
+passed to curl::handle_setopt.}
 }
 \description{
 Constructs and executes API calls to the REDCap API. These
@@ -41,8 +50,9 @@ options to the API that require an array need to be built using
 \code{vectorToApiBodyList}; options that are not an array can be entered
 directly (see examples).
 
-The config list is a list of parameters to pass to \code{\link[httr:POST]{httr::POST()}}.
-Refer to documentation there for details.
+The config list is a list of parameter overrides that reflect the curl
+request object. The most commonly used elements of this list
+is \code{options} or maybe \code{headers}.
 
 Using the settings stored in the \code{redcapConnection} object, a response
 code of 408 (Request Timeout), 500 (Internal Server Error),
@@ -57,11 +67,11 @@ returns that response.
 \dontrun{
   url <- "Enter your API URL here"
   token <- "Enter your API token here"
-  
-  rcon <- redcapConnection(url = url, 
+
+  rcon <- redcapConnection(url = url,
                            token = token)
-                           
-  MetaData <- 
+
+  MetaData <-
     makeApiCall(rcon = rcon,
                body = list(content = "metadata",
                            format = "csv",
@@ -74,7 +84,7 @@ returns that response.
 
   # Call to export Meta Data (Data Dictionary) for specific fields
 
-  fields <- vectorToApiBodyList(vector = c("row_purpose", 
+  fields <- vectorToApiBodyList(vector = c("row_purpose",
                                            "prereq_radio"),
                                 parameter_name = "fields")
   MetaData <-
@@ -145,8 +155,8 @@ returns that response.
   Records <- read.csv(text = as.character(Records),
                       stringsAsFactors = FALSE,
                       na.strings = "")
-                      
- 
+
+
 }
 
 }

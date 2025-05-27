@@ -6,7 +6,7 @@
 #' 
 #' @param url `character(1)`. URL for the user's REDCap database API.  
 #' @param token `character(1)` REDCap API token
-#' @param config A list to be passed to [httr::POST()].  This allows the 
+#' @param config A list to be passed to [curl::handle_setopt].  This allows the 
 #'   user to set additional configurations for the API calls, such as 
 #'   certificates, SSL version, etc. For the majority of users, this does 
 #'   not need to be altered.
@@ -81,7 +81,7 @@
 #' project for which the user wishes to use the API.
 #' 
 #' Additional Curl option can be set in the `config` argument.  See the documentation
-#' for [httr::config()] and [httr::httr_options()] for more Curl options.
+#' for [curl::handle_setopt] for more curl options.
 #' 
 #' ## Specific to Offline Connections
 #' 
@@ -170,7 +170,7 @@
 
 redcapConnection <- function(url = getOption('redcap_api_url'),
                              token,
-                             config = .get_httr_config(),
+                             config = NULL,
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
                              retry_quietly = TRUE)
@@ -187,7 +187,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   
   checkmate::assert_list(x = config,
                          names = 'named',
-                         add = coll)
+                         add = coll,
+                         null.ok=TRUE)
   
   checkmate::assert_integerish(x = retries, 
                                len = 1, 
@@ -206,6 +207,9 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                             add = coll)
   
   checkmate::reportAssertions(coll)
+  
+  config <- if(is.null(config)) .curlConfig(url, token) else
+                                .curlMergeConfig(.curlConfig(url, token), config)
   
   u <- url
   t <- token
@@ -1053,12 +1057,4 @@ print.redcapOfflineConnection <- function(x, ...){
   } else {
     file
   }
-}
-
-.get_httr_config <- function()
-{
-  config <- httr::config()
-  class(config) <- "list"
-  
-  config[lengths(config) > 0]
 }

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 of those wishing to collect data, from surveys to running clinical trials. Once the data is 
 collected the statistician or data scientist is responsible for summarizing the collected data 
 into reports. [R](https://www.r-project.org/) being a useful tool for this purpose, the department of
-Biostatistics at Vanderbilt University Medical Center has provided the community with the 
+Biostatistics at Vanderbilt University has provided the community with the 
 package [`redcapAPI`](https://cran.r-project.org/package=redcapAPI) to facilitate using REDCap from R. 
 
 `redcapAPI` has undergone significant growth over time, causing its previous code and interface 
@@ -103,7 +103,7 @@ solution.*
 ```{r unlock}
 library(redcapAPI)
 suppressWarnings(library(Hmisc))
-library(httr)
+library(curl)
 
 options(keyring_backend=keyring::backend_file) # Put in .Rprofile
 
@@ -942,25 +942,11 @@ vectorToApiBodyList(c(1, 3, 4), "arms")
 A call to export only a selection of arms from a project would look like this:
 
 ```{r, eval = FALSE}
-makeApiCall(test_conn, 
-            body = c(list(content = 'arm', 
-                          format = 'csv', 
-                          returnFormat = 'csv'), 
-                     vectorToApiBodyList(c(1, 3, 4), "arms")))
-```
-
-## Debugging Raw Connection
-
-The library from 2.7.3 up supports `httr` debugging. 
-
-```{r, echo=TRUE, message=TRUE, warning=TRUE, error=TRUE }
-library(httr)
-capture.output(
-with_config(verbose(data_out=FALSE, data_in=TRUE, ssl=TRUE),
-            { test <- exportRecordsTyped(test_conn, 
-                              records = 10:20, 
-                              forms = "text_fields") }),
-type="message")
+as.character(makeApiCall(test_conn, 
+                         body = c(list(content = 'arm', 
+                                  format = 'csv', 
+                                  returnFormat = 'csv'), 
+                         vectorToApiBodyList(c(1, 3, 4), "arms"))))
 ```
 
 
@@ -984,7 +970,7 @@ Thanks to all those that have made this effort possible for `redcapAPI` as an R 
 * **Benjamin Nutter**
 * Savannah Obregon
 * Jeremy Stephens
-* The Biostatistics department at Vanderbilt University Medical Center
+* The Biostatistics Department at Vanderbilt University
 * The R-Project and CRAN team
-* The REDCap Team at Vanderbilt University Medical Center
+* The REDCap Team at Vanderbilt University
 * National Institutes of Health (NIH/NCATS UL1 TR000445)

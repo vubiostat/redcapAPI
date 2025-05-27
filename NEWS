@@ -10,13 +10,31 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 * The `cleanseMetaData` function is being discontinued.
 
-## 2.9.5
+## 2.10.3
 
 * Update `missingSummary` to support "missing checkbox" under special branching scenario.
+
+## 2.10.2
+
+* When a project is deleted, the records no longer show in the logs as deleted with the current version of REDCap (15.2.0). Removed test of logs for deleted records
+
+## 2.10.1
+
+* `unlockREDCap` no longer changes console focus
+* Vectorized `renameRecord` and `exportFieldNames`
+* Exporting `connectAndCheck` function to establish connections
+* Improved error messages when misspecified URL is provided.
+* Fix for redirected URLs
+
+## 2.10.0
+
+* Replace `httr` dependency with `curl`
 
 ## 2.9.4
 
 * Minor code refactoring
+* Add test case for CI environment
+* Implemented GitHub Actions for automated source code checks.
 
 ## 2.9.3
 

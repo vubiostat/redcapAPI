@@ -3,6 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10602052.svg)](https://doi.org/10.5281/zenodo.10602052)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+![r-cmd-check.yml](https://github.com/vubiostat/redcapAPI/actions/workflows/r-cmd-check.yml/badge.svg?branch=main)
 
 redcapAPI
 =========
@@ -24,24 +25,24 @@ Core concerns handled by the library:
 
 ## Comparison to Other REDCap Packages
 
-| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM |
-|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|
-| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
-| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
-| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
-| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
-| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
-| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |
-| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    | 
-| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
+| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM | redquack         |
+|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|:----------------:|
+| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) | ![](https://cranlogs.r-pkg.org/badges/grand-total/redquack) |
+| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |   ✅    |
+| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |   ❌    |
+| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |   ❌    |
+| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |   ❌    |
+| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |   ✅    |
+| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |   ❌    |
+| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ✅    |
+| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |   ✅    |
+| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ✅    |
+| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |   ❌    |
 
 ## Quick Start Guide
 
@@ -55,7 +56,8 @@ Here's a typical call for these two:
 ```
 library(redcapAPI)
 
-options(keyring_backend=keyring::backend_file) # Put in .Rprofile
+# IMPORTANT: Put the following line in .Rprofile `usethis::edit_r_profile()`
+options(keyring_backend=keyring::backend_file)
 
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
@@ -170,11 +172,11 @@ Rules:
 
 redcapAPI A rich API client for interfacing REDCap to R
 
-Copyright (C) 2012 Jeffrey Horner, Vanderbilt University Medical Center
+Copyright (C) 2012 Jeffrey Horner, Vanderbilt University
 
 Copyright (C) 2013-2022 Benjamin Nutter
 
-Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University Medical Center
+Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

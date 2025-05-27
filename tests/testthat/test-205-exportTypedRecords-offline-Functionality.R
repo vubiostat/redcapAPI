@@ -1,5 +1,7 @@
 context("Export Typed Records Offline Functionality")
 
+url     <- rcon$url   # Should not be required but it is
+
 load(file.path(test_path("testdata"), "RedcapProject_test_redcapAPI.Rdata"))
 
 suppressWarnings({

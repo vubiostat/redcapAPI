@@ -10,5 +10,5 @@ test:
     - cp $KEYRING tests/testthat.yml
     - apt-get update
     - apt-get install -y libsecret-1-dev libsodium-dev
-    - R --no-save -e "install.packages(c('devtools','checkmate','chron','httr','labelVector','lubridate','keyring','getPass','yaml','Hmisc','mockery'))"
+    - R --no-save -e "install.packages(c('devtools','checkmate','chron','curl','labelVector','lubridate','keyring','getPass','yaml','Hmisc','mockery','mime','jsonlite'))"
     - R --no-save -e "Sys.setenv(CI=1); devtools::test(stop_on_failure=TRUE)"
