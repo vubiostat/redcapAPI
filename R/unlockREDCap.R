@@ -127,11 +127,11 @@ connectAndCheck <- function(key, url, ...)
 #' @param envir environment. The target environment for the connections. Defaults to NULL
 #'          which returns the keys as a list. Use [globalenv()] to assign in the
 #'          global environment. Will accept a number such a '1' for global as well.
-#' @param keyring character. Potential keyring, not used by default.
-#' @param service character. The name to use in a yaml file for locating keys.
+#' @param keyring character(1). Name of keyring.
+#' @param service character(1). The name to use in a yaml file for locating keys.
 #'          Should rarely if ever be changed.
 #'          Defaults to 'redcapAPI'.
-#' @param url character. The url of one's institutional REDCap server api.
+#' @param url character(1). The url of one's institutional REDCap server api.
 #' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
@@ -168,11 +168,11 @@ unlockREDCap    <- function(connections,
 
   if(is.numeric(envir)) envir <- as.environment(envir)
 
-  checkmate::assert_character(x = url,          null.ok = FALSE, add = coll)
-  checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = url,          null.ok = FALSE, add = coll, len=1)
+  checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll, len=1)
   checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
   checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
-  checkmate::assert_character(x = service,       null.ok = FALSE, add = coll)
+  checkmate::assert_character(x = service,      null.ok = FALSE, add = coll, len=1)
   checkmate::reportAssertions(coll)
 
    ###########################################################################

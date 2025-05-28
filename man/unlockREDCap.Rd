@@ -20,15 +20,15 @@ name should correspond to a REDCap project for traceability, but
 it can be named anything one desires.
 The name in the returned list is this name.}
 
-\item{url}{character. The url of one's institutional REDCap server api.}
+\item{url}{character(1). The url of one's institutional REDCap server api.}
 
-\item{keyring}{character. Potential keyring, not used by default.}
+\item{keyring}{character(1). Name of keyring.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{service}{character. The name to use in a yaml file for locating keys.
+\item{service}{character(1). The name to use in a yaml file for locating keys.
 Should rarely if ever be changed.
 Defaults to 'redcapAPI'.}
 
