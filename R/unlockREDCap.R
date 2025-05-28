@@ -177,7 +177,7 @@ unlockREDCap    <- function(connections,
 
    ###########################################################################
   ## Do it
-  unlockKeys(connections,
+  shelter::unlockKeys(connections,
              keyring,
              function(key) connectAndCheck(key, url, ...),
              envir=envir,
