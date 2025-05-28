@@ -120,3 +120,45 @@ test_that(
                                                           forms = "branching_logic")))
   }
 )
+
+# Test internal function for checkbox -------------------------------
+
+md <- data.frame(
+  field_name = c('record_id','cb1','cb2','cb3'),
+  form_name = 'test',
+  field_type = c('text','checkbox','checkbox','checkbox'),
+  select_choices_or_calculations = c(NA, '1, yes | 2, no', '1, yes | 2, no', '1, yes | 2, no')
+)
+logic <- list(record_id = NA, cb1 = NA, cb2 = expression(TRUE), cb3 = expression(TRUE))
+r <- data.frame(record_id = 1:2, cb1___1 = 0, cb1___2 = 0:1, cb2___1 = 0, cb2___2 = 0:1, cb3___1 = 0, cb3___2 = 0:1, test_complete = 2)
+o <- data.frame(record_id = 1:2, cb1___1 = FALSE, cb1___2 = FALSE, cb2 = c(TRUE, FALSE), cb3 = c(TRUE, FALSE), test_complete = 2)
+
+test_that(
+  "Missing values in checkbox groups are correctly identified around branching logic",
+  {
+    local_reproducible_output(width = 200)
+    expect_identical(
+	  redcapAPI:::.missingSummary_isMissingInField(r, md, logic), o
+    )
+  }
+)
+
+md <- data.frame(
+  field_name = c('record_id','badfield'),
+  form_name = 'test',
+  field_type = c('text','text'),
+  select_choices_or_calculations = c(NA, NA)
+)
+logic <- list(record_id = NA, badfield = expression(stop('logic fail!')))
+r <- data.frame(record_id = 1:2, badfield = 'stop', test_complete = 2)
+o <- data.frame(record_id = 1:2, badfield = FALSE, test_complete = 2)
+
+test_that(
+  "Missing value checks should handle errors in branching logic",
+  {
+    local_reproducible_output(width = 200)
+    expect_identical(
+	  redcapAPI:::.missingSummary_isMissingInField(r, md, logic), o
+    )
+  }
+)

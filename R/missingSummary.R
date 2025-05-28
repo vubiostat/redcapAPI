@@ -163,60 +163,98 @@ missingSummary_offline <- function(records,
                                              meta_data, 
                                              logic){
   records <- records_orig
-  
+  ignore_fld <- c(REDCAP_SYSTEM_FIELDS, meta_data$field_name[1])
+  rec_name <- names(records)
+  # Remove checkbox suffixes. This allows logic to be matched to the field.
+  # defined in constants.R
+  rec_name_cb <- sub(REGEX_CHECKBOX_FIELD_NAME, "\\1", rec_name, perl = TRUE)
+  rec_name_clean <- sub("___[[:print:]]", "", rec_name)
+  # get each field's metadata row number
+  md_row <- match(rec_name_clean, meta_data$field_name)
+  # identify checkbox groups
+  is_cb <- !is.na(md_row) & meta_data[md_row, "field_type"] == "checkbox"
+  cb_grp <- unique(rec_name_cb[is_cb])
+  cb_grp_id <- match(rec_name_cb, cb_grp, nomatch = 0)
+  cb_logic_grp <- vector('list', length(cb_grp))
+  names(cb_logic_grp) <- cb_grp
+  # get the name of the form on which the field is saved
+  form_comp <- paste0(meta_data[md_row, "form_name"], "_complete")
+  # is this always true? rec_name_cb == rec_name_clean
+
   for (i in seq_along(records)){
     # Actual field name
-    this_field <- names(records)[i]
-    # Remove checkbox suffixes. This allows logic to be matched to the field.
-    this_field_base <- sub(REGEX_CHECKBOX_FIELD_NAME, #defined in constants.R 
-                           "\\1", this_field, perl = TRUE)
+    this_field <- rec_name[i]
     # get the logic expression for this iteration of the loop
-    this_logic <- logic[[this_field_base]]
-    
+    this_logic <- logic[[rec_name_cb[i]]]
+    tmp_form <- form_comp[i]
+
     # We are only going to look at fields that are informative as missing.
     # we skip fixed fields (see unexported) and the ID variable.
-    if (!this_field %in% c(REDCAP_SYSTEM_FIELDS, 
-                           meta_data$field_name[1]) & 
-        !is.null(this_logic)){
-   
-      # get the name of the form on which the field is saved
-      tmp_form <- meta_data$form_name[meta_data$field_name == 
-                                        sub("___[[:print:]]", "", names(records)[i])]
-      tmp_form <- paste0(tmp_form, "_complete")
-      
+    if (!this_field %in% ignore_fld & !is.null(this_logic)) {
       # NOTE: in the result, TRUE means the value is missing
       #                      FALSE means the value is non-missing
-      if (tmp_form == "_complete"){
-        # If we are here, we did not find a matching form name. We will 
-        # assume variables not on a form are always non-missing.
-        records[[i]] <- rep(FALSE, nrow(records))
-      }
-      else if (!tmp_form %in% names(records)){
-        # If we are here, we are evaluating a `[form]_complete` field. 
-        # We just want to know if it is missing or not.
-        records[[i]] <- is.na(records[[i]])
+      if (tmp_form == "NA_complete") {
+        # I doubt these scenarios are possible
+        # this_logic would be NULL and skipped
+        if(grepl('_complete$', this_field)) {
+          # If we are here, we are evaluating a `[form]_complete` field.
+          # We just want to know if it is missing or not.
+          records[[i]] <- is.na(records[[i]])
+        } else {
+          # If we are here, we did not find a matching form name. We will
+          # assume variables not on a form are always non-missing.
+          records[[i]] <- rep(FALSE, nrow(records))
+        }
+      } else if (!tmp_form %in% rec_name){
+          # can this scenario occur?
+          # no `[form]_complete` to evaluate, check missingness of value
+          records[[i]] <- is.na(records[[i]])
       } else if (!is.expression(this_logic)) {
         # If we are here, there is not branching logic. 
         # If the `[form]_complete` field is missing, we return FALSE
         # If the `[form]_complete` is non-missing, we return the missingness of the value
-        records[[i]] <- ifelse(test = is.na(records_orig[[tmp_form]]), 
-                               yes = FALSE, 
-                               no = is.na(records_orig[[i]]))
-      }
-      else
-      {
+        records[[i]] <- !is.na(records_orig[[tmp_form]]) & is.na(records_orig[[i]])
+      } else {
         # Here we have branching logic.
         # If the `[form]_complete` field is missing, we return FALSE
         # If the `[form]_complete` is non-missing:
         #    The branching logic is satisfied: return the missingness of the value
-        #    The branchign logic is not satisfied: return FALSE
-        records[[i]] <- ifelse(test = is.na(records_orig[[tmp_form]]),
-                               yes = FALSE,
-                               no = ifelse(test = with(records_orig, eval(this_logic)), 
-                                           yes = is.na(records_orig[[i]]),
-                                           no = FALSE))
+        #    The branching logic is not satisfied: return FALSE
+        #    The branching logic produces errors: return FALSE
+        branch_eval <- tryCatch(eval(this_logic, records_orig), error = function(e) FALSE)
+        ans <- !is.na(records_orig[[tmp_form]]) & branch_eval
+        ans_ix <- which(ans)
+        if(length(ans_ix) > 0L) {
+          if(is_cb[i]) {
+            # special case for checkbox group
+            # examine all columns
+            cb_grp_name <- cb_grp[cb_grp_id[i]]
+            if(is.null(cb_logic_grp[[cb_grp_name]]$missing)) {
+              cb_dat <- records_orig[ans_ix, cb_grp_id == cb_grp_id[i], drop = FALSE]
+              # return TRUE if nothing is checked
+              cb_no_checks <- rowSums(cb_dat != "0", na.rm = TRUE) == 0
+              cb_logic_grp[[cb_grp_name]]$missing <- unname(cb_no_checks)
+            }
+            ans[ans_ix] <- cb_logic_grp[[cb_grp_name]]$missing
+          } else {
+            ans[ans_ix] <- is.na(records_orig[[i]][ans_ix])
+          }
+        }
+        records[[i]] <- ans
       }
     }
+  }
+  # only post-logic checkbox groups will have length; remove others
+  cb_logic_grp <- cb_logic_grp[lengths(cb_logic_grp) > 0L]
+  # remove redundant records and rename
+  if(length(cb_logic_grp) > 0L) {
+    coi <- lapply(names(cb_logic_grp), function(i) which(match(i, cb_grp) == cb_grp_id))
+    noi <- lapply(coi, function(i) rec_name[i])
+    cnoi <- vapply(coi, function(i) rec_name_cb[i][1], character(1))
+    c_rm <- unlist(lapply(coi, function(i) i[-1]))
+    records <- records[,-c_rm]
+    c_rename <- match(vapply(noi, `[`, character(1), 1), names(records))
+    names(records)[c_rename] <- cnoi
   }
   records
 }
