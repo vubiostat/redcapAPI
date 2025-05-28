@@ -18,17 +18,17 @@
  ## Connection function
 ##
 #' Connect to REDCap and verify connection
-#' 
+#'
 #' A function that given an API_KEY and a url will create a `redcapConnection`
 #' object and verify that it is working with a version call.
 #' If the API key is invalid it will return NULL.
-#' If the URL is invalid or there are multiple redirects it will call `stop`. 
-#' 
+#' If the URL is invalid or there are multiple redirects it will call `stop`.
+#'
 #' @param key The API key used to connect.
 #' @param url The url of the REDCap server.
 #' @param ... Additional arguments passed to redcapConnection
 #' @return redcapConnection established or NULL if key is invalid.
-#' @seealso 
+#' @seealso
 #' [redcapConnection()]
 #' @export
 #' @examples
@@ -38,30 +38,30 @@
 connectAndCheck <- function(key, url, ...)
 {
   tryCatch(
-    { 
+    {
       rcon    <- redcapConnection(token=key, url=url, ...)
       version <- list(content = "version", format = "csv")
       # Test connection by checking version
       response <- makeApiCall(rcon, body = version,
         success_status_codes=c(200L, 301L, 302L)
       )
-      
+
       # No redirect, this is success
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
-      
+
       # Handle redirect
       rcon <- redcapConnection(
         token = key,
         url   = paste0(response$header$location, '/api/'),
         ...)
-      
+
       # Test connection by checking version post redirect
       response <- makeApiCall(rcon, body = version,
         success_status_codes=c(200L, 301L, 302L))
 
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))
-      
+
 
       rcon
     },
@@ -70,12 +70,12 @@ connectAndCheck <- function(key, url, ...)
       if(grepl("Could not resolve host",     e)  ||
          grepl("Could not connect to server", e))
         stop("Invalid URL provided '",url,"'. Unable to resolve or route.\n", e$message)
-      
+
       if(grepl("405", e$message) )
         stop("URL '",url,"' refused connection. Not acting like a REDCap server.\n", e$message)
-        
+
       if(grepl("403", e)) return(NULL) # Forbidden, i.e. bad API_KEY
-      
+
       stop(e)
     }
   )
@@ -90,19 +90,16 @@ connectAndCheck <- function(key, url, ...)
 #' work, it will request again. On later executions it will use an open keyring
 #' to retrieve all API_KEYs or for a password if the keyring is currently
 #' locked.
-#' 
+#'
 #' If one forgets the password to this keyring, or wishes to start over:
-#' `keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")`
-#' 
-#' Consistent behavior requires `options(keyring_backend=keyring::backend_file)` to
-#' be set. It is recommended to place this in `~/.Rprofile`.
-#' 
+#' `shelter::keyring_delete("<NAME_OF_KEY_RING_HERE>")`
+#'
 #' For production servers where the password must be stored in a readable
 #' plain text file, it will search for `../<basename>.yml`. DO NOT USE
 #' this unless one is a sysadmin, as this defeats the security and purpose of
 #' a local encrypted file. The expected structure of this yaml file is
 #' as follows:
-#' 
+#'
 #' \preformatted{
 #' other-config-stuff1: blah blah
 #' redcapAPI:
@@ -112,19 +109,19 @@ connectAndCheck <- function(key, url, ...)
 #' other-config-stuff2: blah blah
 #' other-config-stuff3: blah blah
 #' }
-#' 
+#'
 #' For production servers the use of ENV variables is also supported. The connection
-#' string is converted to upper case for the search of ENV. If a YAML 
+#' string is converted to upper case for the search of ENV. If a YAML
 #' and ENV variable both exist, the YAML will take precedence.
-#' 
+#'
 #' IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 #' as this *is* writing the API_KEY to a local file in clear text because
 #' connection objects contain the unlocked key in memory. Tips
-#' are provided in `vignette("redcapAPI-best-practices")`. 
+#' are provided in `vignette("redcapAPI-best-practices")`.
 #'
 #' @param connections character vector. A list of strings that define the
 #'          connections with associated API_KEYs to load into environment. Each
-#'          name should correspond to a REDCap project for traceability, but 
+#'          name should correspond to a REDCap project for traceability, but
 #'          it can be named anything one desires.
 #'          The name in the returned list is this name.
 #' @param envir environment. The target environment for the connections. Defaults to NULL
@@ -132,14 +129,16 @@ connectAndCheck <- function(key, url, ...)
 #'          global environment. Will accept a number such a '1' for global as well.
 #' @param keyring character. Potential keyring, not used by default.
 #' @param service character. The name to use in a yaml file for locating keys.
-#' @param url character. The url of one's institutional REDCap server api. 
+#'          Should rarely if ever be changed.
+#'          Defaults to 'redcapAPI'.
+#' @param url character. The url of one's institutional REDCap server api.
 #' @param \dots Additional arguments passed to [redcapConnection()].
 #' @return If `envir` is NULL returns a list of opened connections. Otherwise
 #'         connections are assigned into the specified `envir`.
-#' 
-#' @seealso 
+#'
+#' @seealso
 #' [redcapConnection()]
-#' 
+#'
 #' ## Vignettes
 #' `vignette("redcapAPI-best-practices")`, \cr
 #' `vignette("redcapAPI-getting-started-connecting")`
@@ -147,12 +146,12 @@ connectAndCheck <- function(key, url, ...)
 #' @examples
 #' \dontrun{
 #' options(keyring_backend=keyring::backend_file) # Put in .Rprofile
-#' 
+#'
 #' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
 #'                sandbox_conn = 'SandboxAPI'),
 #'              keyring      = '<NAME_OF_KEY_RING_HERE>',
 #'              envir        = globalenv(),
-#'              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
+#'              url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/')
 #' }
 #' @export
 #' @importFrom shelter unlockKeys
@@ -166,16 +165,16 @@ unlockREDCap    <- function(connections,
    ###########################################################################
   # Check parameters passed to function
   coll <- checkmate::makeAssertCollection()
-  
+
   if(is.numeric(envir)) envir <- as.environment(envir)
-  
+
   checkmate::assert_character(x = url,          null.ok = FALSE, add = coll)
   checkmate::assert_character(x = keyring,      null.ok = FALSE, add = coll)
   checkmate::assert_character(x = connections,  null.ok = FALSE, add = coll)
   checkmate::assert_class(    x = envir,        null.ok = TRUE,  add = coll, classes="environment")
   checkmate::assert_character(x = service,       null.ok = FALSE, add = coll)
   checkmate::reportAssertions(coll)
-  
+
    ###########################################################################
   ## Do it
   unlockKeys(connections,

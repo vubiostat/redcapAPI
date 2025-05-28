@@ -28,7 +28,9 @@ The name in the returned list is this name.}
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
 
-\item{service}{character. The name to use in a yaml file for locating keys.}
+\item{service}{character. The name to use in a yaml file for locating keys.
+Should rarely if ever be changed.
+Defaults to 'redcapAPI'.}
 
 \item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
@@ -47,10 +49,7 @@ locked.
 }
 \details{
 If one forgets the password to this keyring, or wishes to start over:
-\code{keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")}
-
-Consistent behavior requires \code{options(keyring_backend=keyring::backend_file)} to
-be set. It is recommended to place this in \verb{~/.Rprofile}.
+\code{shelter::keyring_delete("<NAME_OF_KEY_RING_HERE>")}
 
 For production servers where the password must be stored in a readable
 plain text file, it will search for \verb{../<basename>.yml}. DO NOT USE
@@ -85,7 +84,7 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = '<NAME_OF_KEY_RING_HERE>',
              envir        = globalenv(),
-             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
+             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/')
 }
 }
 \seealso{
