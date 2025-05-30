@@ -42,10 +42,11 @@ connectAndCheck <- function(key, url, ...)
       rcon    <- redcapConnection(token=key, url=url, ...)
       version <- list(content = "version", format = "csv")
       # Test connection by checking version
-      response <- makeApiCall(rcon,
-                              body = version,
-                              success_status_codes=c(200L, 301L, 302L),
-                              redirect=FALSE
+      response <- makeApiCall(
+        rcon,
+        body = version,
+        success_status_codes=c(200L, 301L, 302L),
+        redirect=FALSE
       )
 
       # No redirect, this is success
@@ -58,8 +59,12 @@ connectAndCheck <- function(key, url, ...)
         ...)
 
       # Test connection by checking version post redirect
-      response <- makeApiCall(rcon, body = version,
-                              success_status_codes=c(200L, 301L, 302L), redirect=FALSE)
+      response <- makeApiCall(
+        rcon,
+        body = version,
+        success_status_codes=c(200L, 301L, 302L),
+        redirect=FALSE
+      )
 
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))
