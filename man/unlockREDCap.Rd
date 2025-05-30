@@ -4,14 +4,7 @@
 \alias{unlockREDCap}
 \title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
-unlockREDCap(
-  connections,
-  url,
-  keyring,
-  envir = NULL,
-  passwordFUN = .default_pass(),
-  ...
-)
+unlockREDCap(connections, url, keyring, envir = NULL, ...)
 }
 \arguments{
 \item{connections}{character vector. A list of strings that define the
@@ -20,16 +13,13 @@ name should correspond to a REDCap project for traceability, but
 it can be named anything one desires.
 The name in the returned list is this name.}
 
-\item{url}{character. The url of one's institutional REDCap server api.}
+\item{url}{character(1). The url of one's institutional REDCap server api.}
 
-\item{keyring}{character. Potential keyring, not used by default.}
+\item{keyring}{character(1). Name of keyring.}
 
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
-
-\item{passwordFUN}{function. Function to get the password for the keyring. Usually defaults \code{getPass::getPass}.
-On MacOS it will use rstudioapi::askForPassword if available.}
 
 \item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
@@ -48,10 +38,7 @@ locked.
 }
 \details{
 If one forgets the password to this keyring, or wishes to start over:
-\code{keyring::keyring_delete("<NAME_OF_KEY_RING_HERE>")}
-
-Consistent behavior requires \code{options(keyring_backend=keyring::backend_file)} to
-be set. It is recommended to place this in \verb{~/.Rprofile}.
+\code{shelter::keyring_delete("<NAME_OF_KEY_RING_HERE>")}
 
 For production servers where the password must be stored in a readable
 plain text file, it will search for \verb{../<basename>.yml}. DO NOT USE
@@ -86,7 +73,7 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = '<NAME_OF_KEY_RING_HERE>',
              envir        = globalenv(),
-             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/') 
+             url          = 'https://<INSTITUTIONS_REDCAP_DOMAIN>/api/')
 }
 }
 \seealso{

@@ -173,7 +173,8 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                              config = NULL,
                              retries = 5, 
                              retry_interval = 2^(seq_len(retries)), 
-                             retry_quietly = TRUE)
+                             retry_quietly = TRUE,
+                             ...)
 {
   coll <- checkmate::makeAssertCollection()
   

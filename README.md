@@ -56,9 +56,6 @@ Here's a typical call for these two:
 ```
 library(redcapAPI)
 
-# IMPORTANT: Put the following line in .Rprofile `usethis::edit_r_profile()`
-options(keyring_backend=keyring::backend_file)
-
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
              envir       = globalenv(),
@@ -133,6 +130,12 @@ There are several vignettes with helpful information and examples to explore. Th
 * redcapAPI-missing-data-detection 
 * redcapAPI-best-practices 
 * redcapAPI-offline-connection 
+
+## Dependencies
+
+We strive to keep the dependency chain as minimal as possible. This reduces potential breakage due to downstream packages getting changed and minimizes install time. 
+
+![Dependency Plot](./inst/image/dependencies.png "Dependency Plot")
 
 ## Back Matter
 
