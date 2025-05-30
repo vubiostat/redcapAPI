@@ -23,7 +23,7 @@ test_that(
   "connectAndCheck returns result of redcapConnection",
   {
     stub(connectAndCheck, "redcapConnection", rcon)
-  
+
     expect_identical(connectAndCheck("key", "url"), rcon)
   }
 )
@@ -57,7 +57,7 @@ test_that(
   "connectAndCheck does not allow for more than one redirect",
   {
     stub(connectAndCheck, "makeApiCall", redirect)
-    
+
     expect_error(connectAndCheck(rcon$token, "https://test.xyz/api"))
   }
 )
@@ -98,11 +98,11 @@ test_that(
     calls <- 0
     passwordFUN <- function(...) {calls <<- calls + 1; ""}
     e <- new.env()
-    
+
     expect_silent(unlockREDCap(
       c(rcon=testdb), url, keyring="API_KEYs",
       envir=e, passwordFUN=passwordFUN))
-    
+
     expect_true(exists("rcon", envir=e))
     expect_class(e[["rcon"]], "redcapApiConnection")
     expect_true(calls == 0) # No password requests

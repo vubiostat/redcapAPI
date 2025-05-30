@@ -21,7 +21,7 @@ test_that("unlockREDCap only accepts URL character(1)",
                  keyring      = '<NAME_OF_KEY_RING_HERE>',
                  envir        = globalenv(),
                  url          = character(0)),
-    "Variable 'url': Must have length 1, but has length 0'")
+    "Variable 'url': Must have length 1, but has length 0")
 
   expect_error(
     unlockREDCap(c(test_conn    = 'TestRedcapAPI',
@@ -30,38 +30,6 @@ test_that("unlockREDCap only accepts URL character(1)",
                  envir        = globalenv(),
                  url          = c("a", "b")),
     "Variable 'url': Must have length 1, but has length 2")
-})
-
-test_that("unlockREDCap only accepts service character(1)",
-{
-  local_reproducible_output(width = 200)
-
-  expect_error(
-    unlockREDCap(c(test_conn    = 'TestRedcapAPI',
-                   sandbox_conn = 'SandboxAPI'),
-                 keyring      = '<NAME_OF_KEY_RING_HERE>',
-                 envir        = globalenv(),
-                 service      = TRUE,
-                 url          = "url"),
-    "Variable 'service': Must be of type 'character', not 'logical'")
-
-  expect_error(
-    unlockREDCap(c(test_conn    = 'TestRedcapAPI',
-                   sandbox_conn = 'SandboxAPI'),
-                 keyring      = '<NAME_OF_KEY_RING_HERE>',
-                 envir        = globalenv(),
-                 service      = character(0),
-                 url          = "url"),
-    "Variable 'service': Must have length 1, but has length 0'")
-
-  expect_error(
-    unlockREDCap(c(test_conn    = 'TestRedcapAPI',
-                   sandbox_conn = 'SandboxAPI'),
-                 keyring      = '<NAME_OF_KEY_RING_HERE>',
-                 envir        = globalenv(),
-                 service      = c("a", "b"),
-                 url          = "url"),
-    "Variable 'service': Must have length 1, but has length 2")
 })
 
 test_that("unlockREDCap only accepts keyring character(1)",
@@ -82,7 +50,7 @@ test_that("unlockREDCap only accepts keyring character(1)",
                  envir        = globalenv(),
                  keyring      = character(0),
                  url          = "url"),
-    "Variable 'keyring': Must have length 1, but has length 0'")
+    "Variable 'keyring': Must have length 1, but has length 0")
 
   expect_error(
     unlockREDCap(c(test_conn    = 'TestRedcapAPI',
@@ -101,5 +69,5 @@ test_that("unlockREDCap only accepts envir environment",
                  keyring      = '<NAME_OF_KEY_RING_HERE>',
                  envir        = TRUE,
                  url          = "url"),
-    "Variable 'envir': Must be of class 'environment', but has class 'logical'")
+    "Variable 'envir': Must inherit from class 'environment', but has class 'logical'")
 })

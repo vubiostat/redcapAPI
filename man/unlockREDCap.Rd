@@ -4,14 +4,7 @@
 \alias{unlockREDCap}
 \title{Open REDCap connections using cryptolocker for storage of API_KEYs.}
 \usage{
-unlockREDCap(
-  connections,
-  url,
-  keyring,
-  envir = NULL,
-  service = "redcapAPI",
-  ...
-)
+unlockREDCap(connections, url, keyring, envir = NULL, ...)
 }
 \arguments{
 \item{connections}{character vector. A list of strings that define the
@@ -27,10 +20,6 @@ The name in the returned list is this name.}
 \item{envir}{environment. The target environment for the connections. Defaults to NULL
 which returns the keys as a list. Use \code{\link[=globalenv]{globalenv()}} to assign in the
 global environment. Will accept a number such a '1' for global as well.}
-
-\item{service}{character(1). The name to use in a yaml file for locating keys.
-Should rarely if ever be changed.
-Defaults to 'redcapAPI'.}
 
 \item{\dots}{Additional arguments passed to \code{\link[=redcapConnection]{redcapConnection()}}.}
 }
