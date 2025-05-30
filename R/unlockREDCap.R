@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Vanderbilt University Medical Center,
+# Copyright (C) 2021-2025 Vanderbilt University,
 # Shawn Garbett, Cole Beck, Hui Wu, Benjamin Nutter, Savannah Obregon
 #
 # This program is free software: you can redistribute it and/or modify
