@@ -16,7 +16,6 @@
 #   of the name "TestRedcapAPI"
 
 library(checkmate) # for additional expect_* functions.
-library(keyring)
 
 # usethis::edit_r_profile() # <== This will always find .Rprofile
 
