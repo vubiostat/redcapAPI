@@ -3,9 +3,6 @@ test:
   image: rocker/r-ver:latest
   tags:
     - staging
-  only:
-    - main
-    - master
   script:
     - cp $KEYRING tests/testthat.yml
     - apt-get update
