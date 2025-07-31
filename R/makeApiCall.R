@@ -326,7 +326,7 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
 
   # Check content type
-  if(grepl("doctype html", substr(mapped, 1, 30)))
+  if(grepl("doctype\\s+html", substr(mapped, 1, 30)))
   {
     x <- tempfile("htmlresponse.html")
     writeLines(mapped, x)
