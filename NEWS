@@ -14,6 +14,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 * Better handling of unexpected html responses from REDCap.
 * Improved CSV formatting for API imports. Properly deals with escaped quoting.
+* Allow for overlapping mapping in radio import validation.
 
 ## 2.11.0
 
