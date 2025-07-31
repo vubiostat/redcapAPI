@@ -12,7 +12,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.11.1
 
-* Better handling of html responses from REDCap.
+* Better handling of unexpected html responses from REDCap.
+* Improved CSV formatting for API imports. Properly deals with escaped quoting.
 
 ## 2.11.0
 
