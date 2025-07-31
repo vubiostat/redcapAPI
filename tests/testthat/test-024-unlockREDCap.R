@@ -10,7 +10,7 @@ h <- new_handle(timeout = 1L)
 redirect <- structure(
   list(url = "https://test.xyz/api/",
        status_code = 302L,
-       content = "",
+       content = writeBin("", raw()),
        headers=structure(list(
          'content-type'="text/csv; charset=utf-8",
          'location'=url
@@ -80,6 +80,30 @@ test_that(
   "connectAndCheck errors with valid url but not a REDCap server",
   expect_error(connectAndCheck("key", "https://google.com"), "refused connection")
 )
+
+test_that(
+  "connectAndCheck errors if given HTML and not a version",
+  {
+    local_reproducible_output(width = 200)
+    stub(connectAndCheck, "makeApiCall", function(...)
+    {
+      structure(
+        list(url = "https://test.xyz/api/",
+             status_code = 200L,
+             content = writeBin("<html></html>", raw()),
+             headers=structure(list(
+               'content-type'="text/csv; charset=utf-8",
+               'location'=url
+             ),
+             class = c("insensitive", "list")),
+        class = "response")
+      )
+    })
+    stub(connectAndCheck, "browseURL", function(...) {})
+    expect_error(connectAndCheck("key", "https://test.xyz/api/"), "Server URL responded with web page")
+  }
+)
+
 test_that(
   "unlockREDCap pulls API_KEY and opens connection from keyring returning as list",
   {

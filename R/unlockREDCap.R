@@ -55,7 +55,7 @@ connectAndCheck <- function(key, url, ...)
         x <- tempfile("htmlresponse.html")
         writeLines(mapped, x)
         browseURL(paste0("file://",x))
-        stop("Server URL responsed with web page. Check URL.")
+        stop("Server URL responded with web page. Check URL.")
       }
 
       # No redirect, this is success
@@ -81,7 +81,7 @@ connectAndCheck <- function(key, url, ...)
         x <- tempfile("htmlresponse.html")
         writeLines(mapped, x)
         browseURL(paste0("file://",x))
-        stop("Server URL responsed with web page. Check URL.")
+        stop("Server URL responded with web page. Check URL.")
       }
 
       if(response$status_code %in% c(301L, 302L))
