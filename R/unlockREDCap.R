@@ -49,6 +49,15 @@ connectAndCheck <- function(key, url, ...)
         redirect=FALSE
       )
 
+      mapped <- readBin(response$content, character())
+      if(grepl("html", mapped))
+      {
+        x <- tempfile("htmlresponse.html")
+        writeLines(mapped, x)
+        browseURL(paste0("file://",x))
+        stop("Server URL responded with web page. Check URL.")
+      }
+
       # No redirect, this is success
       if(!response$status_code %in% c(301L, 302L)) return(rcon)
 
@@ -65,6 +74,15 @@ connectAndCheck <- function(key, url, ...)
         success_status_codes=c(200L, 301L, 302L),
         redirect=FALSE
       )
+
+      mapped <- readBin(response$content, character())
+      if(grepl("html", mapped))
+      {
+        x <- tempfile("htmlresponse.html")
+        writeLines(mapped, x)
+        browseURL(paste0("file://",x))
+        stop("Server URL responded with web page. Check URL.")
+      }
 
       if(response$status_code %in% c(301L, 302L))
         stop(paste("Too many redirects from", url))

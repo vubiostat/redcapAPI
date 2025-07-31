@@ -325,6 +325,15 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
                   enc, 'UTF-8', '\U25a1')
   if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
 
+  # Check content type
+  if(grepl("doctype\\s+html", substr(mapped, 1, 30)))
+  {
+    x <- tempfile("htmlresponse.html")
+    writeLines(mapped, x)
+    browseURL(paste0("file://",x))
+    stop("Expecting CSV response, but REDCap server returned html. Sending output to browser. Is the url connection valid?")
+  }
+
   # First check is very fast check to see if the first 10 bytes are empty space
   # Second check is followup to see if it's entirely empty space (verify)
   if(grepl("^\\s*$", substr(mapped, 1, 10)) &&
