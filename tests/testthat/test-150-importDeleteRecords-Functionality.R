@@ -291,3 +291,28 @@ test_that(
 )
 
 #purgeProject(rcon, purge_all = TRUE)
+
+#####################################################################
+# Test data_frame_to_string Functionality                        ####
+
+test_that(
+  "Convert data frames to a CSV string", 
+  {
+    # Sample data frame to be converted
+    sample_data <- data.frame(
+      id = 1:3,
+      name = c("alpha", "beta'", 'gamma"'),
+      value = c(1, 2, 3)
+    )
+    
+    # Expected CSV output string
+    expected_output <- '"id","name","value"\n1,"alpha",1\n2,"beta\'",2\n3,"gamma""",3'
+    
+    # Call the internal function to convert the data frame
+    # We use ::: to access the non-exported function
+    actual_output <- redcapAPI:::data_frame_to_string(sample_data)
+    
+    # Assert that the actual output matches the expected output
+    expect_equal(actual_output, expected_output)
+  }
+)
