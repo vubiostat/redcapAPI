@@ -10,7 +10,7 @@ load(file.path(test_path("testdata"),
                "test_redcapAPI_Events.Rdata"))
 
 fields <- c("record_id", "letters_only_test", "number_test", "date_dmy_test", 
-            "left_operand", "calc_squared", 
+            "left_operand", "calc_squared", "text_test",
             "prereq_checkbox___1", "prereq_checkbox___2", 
             "prereq_checkbox___3", "prereq_checkbox___4")
 MetaData <- test_redcapAPI_MetaData[test_redcapAPI_MetaData$field_name %in% fields |
