@@ -189,20 +189,14 @@ makeApiCall <- function(rcon,
   if(!is.null(url)) config$url <- url
 
   # Functional Code -------------------------------------------------
+  do_verbose <- !is.null(config$options$verbose) && isTRUE(config$options$verbose)
 
   for (i in seq_len(rcon$retries()))
   {
     response <-
       tryCatch(
       {
-          if("options" %in% names(config)         &&
-             "verbose" %in% names(config$options) &&
-             is.logical(config$options$verbose)   &&
-             config$options$verbose
-          )
-          {
-            message(paste0(">>>\n", as.character(body$content), "\n<<<\n"))
-          }
+        if(do_verbose) message(paste0(">>>\n", as.character(body$content), "\n<<<\n"))
         .curlPost(body = body, config = config)
       },
       error=function(e)
@@ -222,14 +216,7 @@ makeApiCall <- function(rcon,
         }
       })
 
-    if("options" %in% names(config)         &&
-       "verbose" %in% names(config$options) &&
-       is.logical(config$options$verbose)   &&
-       config$options$verbose
-      )
-    {
-      message(paste0(">>>\n", as.character(response), "\n<<<\n"))
-    }
+    if(do_verbose) message(paste0(">>>\n", as.character(response), "\n<<<\n"))
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
 
