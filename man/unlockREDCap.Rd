@@ -64,11 +64,12 @@ IMPORTANT: Make sure that R is set to NEVER save workspace to .RData
 as this \emph{is} writing the API_KEY to a local file in clear text because
 connection objects contain the unlocked key in memory. Tips
 are provided in \code{vignette("redcapAPI-best-practices")}.
+
+To debug an entire session via what is called / returned from the server,
+add the argument \code{config=list(options=list(verbose=TRUE))} to the call.
 }
 \examples{
 \dontrun{
-options(keyring_backend=keyring::backend_file) # Put in .Rprofile
-
 unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = '<NAME_OF_KEY_RING_HERE>',

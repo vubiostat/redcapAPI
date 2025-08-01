@@ -35,6 +35,7 @@
 #' \dontrun{
 #' connectAndCheck("<AN API KEY HERE>", "<REDCAP URL HERE>")
 #' }
+#' @importFrom utils browseURL
 connectAndCheck <- function(key, url, ...)
 {
   tryCatch(
@@ -143,6 +144,9 @@ connectAndCheck <- function(key, url, ...)
 #' connection objects contain the unlocked key in memory. Tips
 #' are provided in `vignette("redcapAPI-best-practices")`.
 #'
+#' To debug an entire session via what is called / returned from the server,
+#' add the argument `config=list(options=list(verbose=TRUE))` to the call.
+#'
 #' @param connections character vector. A list of strings that define the
 #'          connections with associated API_KEYs to load into environment. Each
 #'          name should correspond to a REDCap project for traceability, but
@@ -166,8 +170,6 @@ connectAndCheck <- function(key, url, ...)
 #'
 #' @examples
 #' \dontrun{
-#' options(keyring_backend=keyring::backend_file) # Put in .Rprofile
-#'
 #' unlockREDCap(c(test_conn    = 'TestRedcapAPI',
 #'                sandbox_conn = 'SandboxAPI'),
 #'              keyring      = '<NAME_OF_KEY_RING_HERE>',
@@ -198,7 +200,7 @@ unlockREDCap    <- function(connections,
   ## Do it
   shelter::unlockKeys(connections,
              keyring,
-             function(key) connectAndCheck(key, url, ...),
+             function(key, ...) connectAndCheck(key, url, ...),
              envir=envir,
              yaml_tag='redcapAPI',
              ...)

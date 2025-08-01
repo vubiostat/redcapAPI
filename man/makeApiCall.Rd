@@ -65,11 +65,7 @@ returns that response.
 }
 \examples{
 \dontrun{
-  url <- "Enter your API URL here"
-  token <- "Enter your API token here"
-
-  rcon <- redcapConnection(url = url,
-                           token = token)
+  unlockREDCap(c(rcon="My Project Name"), "http://apiurlhere", "mykeyringname")
 
   MetaData <-
     makeApiCall(rcon = rcon,
