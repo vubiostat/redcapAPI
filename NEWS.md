@@ -16,6 +16,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Improved CSV formatting for API imports. Properly deals with escaped quoting.
 * Allow for overlapping mapping in radio import validation.
 * Restored debug mode for API call/response. Just add `config=list(options=list(verbose=TRUE))` to `unlockREDCap` or any call.
+* Added experimental `exportSAS`.
 
 ## 2.11.0
 
