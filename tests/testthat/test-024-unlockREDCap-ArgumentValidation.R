@@ -63,6 +63,7 @@ test_that("unlockREDCap only accepts keyring character(1)",
 
 test_that("unlockREDCap only accepts envir environment",
 {
+  local_reproducible_output(width = 200)
   expect_error(
     unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                    sandbox_conn = 'SandboxAPI'),
