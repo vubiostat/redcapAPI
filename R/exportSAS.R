@@ -19,7 +19,7 @@
 #' bulk of the export before formatting for SAS. \dots are supplied to
 #' exportBulkRecords so full user inversion of control still applies.
 #'
-#' @return A vector of exported data set names prefixed with "data_".
+#' @return A vector of exported data set names.
 #' @export
 #'
 #' @seealso

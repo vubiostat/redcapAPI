@@ -15,7 +15,7 @@ Defaults to current working directory.}
 \item{...}{Arguments to pass to other methods}
 }
 \value{
-A vector of exported data set names prefixed with "data_".
+A vector of exported data set names.
 }
 \description{
 This creates a csv for each form and a SAS script that will
