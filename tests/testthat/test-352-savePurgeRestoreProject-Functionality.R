@@ -64,14 +64,13 @@ test_that(
     })
 
     unlink(rdata_file)
-    #unlink(temp_dir)
   }
 )
 
 test_that(
   "Preserve a project to CSV files",
   {
-    temp_dir <- tempdir()
+    temp_dir <- file.path(tempdir(), "test352tmp")
 
     expect_true(preserveProject(rcon,
                                 save_as = "csv",
@@ -117,9 +116,6 @@ test_that(
       })
     })
 
-    for (cf in csv_files){
-      unlink(cf)
-    }
-    #unlink(temp_dir)
+    unlink(temp_dir, recursive=TRUE)
   }
 )
