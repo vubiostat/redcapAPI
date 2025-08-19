@@ -1,11 +1,9 @@
-## DEPRECATION NOTICES
+## 3.0.0
 
-A future release of version 3.0.0 will introduce several breaking changes!
-
-* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`
-* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
-* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
-* The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
+* The `exportRecords` function is replaced with `exportRecordsTyped`
+* The `importRecords` function is replaced with `castForImport` to prepare data for import. Validation logs will no longer be printed.
+* The `redcapFactor` class is discontinued.
+* The `recodeCheck` function is discontinued. Please use `recastRecords` instead.
 
 ## 2.11.2
 
