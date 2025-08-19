@@ -6,7 +6,6 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
 * The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
 * The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
-* The `exportProjectInfo` and `exportBundle` functions are being discontinued. Their functionality is replaced by caching values on the connection object.
 
 ## 2.11.2
 
