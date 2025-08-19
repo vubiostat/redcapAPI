@@ -86,44 +86,44 @@ with the output.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
-save_to_dir <- tempdir() 
+
+save_to_dir <- tempdir()
 
 # Export files for multiple records
 # Results are returned invisibly - saving to an object is
 #   helpful to be able to view the results
 
-Export <- 
-  exportFilesMultiple(rcon, 
-                      record = 1:4, 
-                      field = "file_upload_field", 
-                      event = "event_1_arm_1", 
-                      dir = save_to_dir)
-Export 
-                    
-# Export files for multiple instances
-
-Export <- 
-  exportFilesMultiple(rcon, 
-                      record = 1, 
-                      field = "file_upload_field", 
-                      event = "event_1_arm_1", 
-                      repeat_instance = 1:4, 
+Export <-
+  exportFilesMultiple(rcon,
+                      record = 1:4,
+                      field = "file_upload_field",
+                      event = "event_1_arm_1",
                       dir = save_to_dir)
 Export
-                    
+
+# Export files for multiple instances
+
+Export <-
+  exportFilesMultiple(rcon,
+                      record = 1,
+                      field = "file_upload_field",
+                      event = "event_1_arm_1",
+                      repeat_instance = 1:4,
+                      dir = save_to_dir)
+Export
+
 # Export files for multiple records, fields, events, and instances
 
-Export <- 
-  exportFilesMultiple(rcon, 
-                      record = 1:10, 
-                      field = c("registration", "waiver"), 
-                      events = c("event_1_arm_1", "event_2_arm_1"), 
-                      repeat_instance = 1:3, 
+Export <-
+  exportFilesMultiple(rcon,
+                      record = 1:10,
+                      field = c("registration", "waiver"),
+                      events = c("event_1_arm_1", "event_2_arm_1"),
+                      repeat_instance = 1:3,
                       dir = save_to_dir)
 Export
 }

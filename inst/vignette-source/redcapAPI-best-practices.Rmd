@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 of those wishing to collect data, from surveys to running clinical trials. Once the data is 
 collected the statistician or data scientist is responsible for summarizing the collected data 
 into reports. [R](https://www.r-project.org/) being a useful tool for this purpose, the department of
-Biostatistics at Vanderbilt University Medical Center has provided the community with the 
+Biostatistics at Vanderbilt University has provided the community with the 
 package [`redcapAPI`](https://cran.r-project.org/package=redcapAPI) to facilitate using REDCap from R. 
 
 `redcapAPI` has undergone significant growth over time, causing its previous code and interface 
@@ -151,16 +151,17 @@ For command line users create an `.Rprofile` file in one's home directory [simpl
 containing the following base function override:
 
 ```
-options(keyring_backend=keyring::backend_file)
+qfun <- function (save = "no", status = 0, runLast = TRUE)
+  .Internal(quit(save, status, runLast))
 
-utils::assignInNamespace(
-  "q",
-  function(save="no", status=0, runLast=TRUE)
-  {
-    .Internal(quit(save, status, runLast))
-  },
-  "base"
-)
+pkg    <- 'base'
+oldfun <- 'q'
+pkgenv <- as.environment(paste0("package:", pkg))
+unlockBinding(oldfun, pkgenv)
+utils::assignInNamespace(oldfun, qfun, ns = pkg, envir = pkgenv)
+assign(oldfun, qfun, pkgenv)
+lockBinding(oldfun, pkgenv) 
+rm(pkg, oldfun, pkgenv)
 ```
 
 More details on keyring management are in the `keyring` package. If one forgets their password, 
@@ -970,7 +971,7 @@ Thanks to all those that have made this effort possible for `redcapAPI` as an R 
 * **Benjamin Nutter**
 * Savannah Obregon
 * Jeremy Stephens
-* The Biostatistics department at Vanderbilt University Medical Center
+* The Biostatistics Department at Vanderbilt University
 * The R-Project and CRAN team
-* The REDCap Team at Vanderbilt University Medical Center
+* The REDCap Team at Vanderbilt University
 * National Institutes of Health (NIH/NCATS UL1 TR000445)

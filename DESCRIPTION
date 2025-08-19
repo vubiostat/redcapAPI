@@ -22,7 +22,9 @@ Authors@R: c(
     person("Cole", "Beck", role = "ctb"),
     person("Bradley", "Johnson", role="ctb"),
     person("Philip", "Chase", role="ctb"),
-    person("Paddy", "Tobias", role = "ctb"))
+    person("Paddy", "Tobias", role = "ctb"),
+    person("Michael", "Chirico", role = "ctb"),
+    person("William", "Sharp", role="ctb"))
 Maintainer: Shawn Garbett <shawn.garbett@vumc.org>
 Description: Access data stored in 'REDCap' databases using the Application
     Programming Interface (API).  'REDCap' (Research Electronic Data CAPture;
@@ -45,11 +47,9 @@ Imports:
     labelVector,
     lubridate,
     mime,
-    keyring,
-    getPass,
-    yaml
+    shelter (>= 0.2.1)
 LazyLoad: yes
-Suggests: testthat (>= 3.0.0), Hmisc, rstudioapi, mockery
+Suggests: testthat (>= 3.0.0), Hmisc, mockery
 URL: https://github.com/vubiostat/redcapAPI
 BugReports: https://github.com/vubiostat/redcapAPI/issues
 Encoding: UTF-8

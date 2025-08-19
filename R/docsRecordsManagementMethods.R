@@ -7,22 +7,24 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param record_name `character(1)` or `integerish(1)`. 
+#' @param record_name `character` or `integerish`. 
 #'   The name of an existing record in the project. 
-#' @param new_record_name `character(1)` or `integerish(1)`. 
-#'   The new name to give to the record. 
-#' @param arm `character(1)` or `NULL`, an optional arm number. 
+#' @param new_record_name `character` or `integerish`. 
+#'   The new name to give to the record. Must have the same length as
+#'   `record_name`.
+#' @param arm `character` or `NULL`, an optional arm number. 
 #'   If `NULL`, then all records with same name across all arms on 
 #'   which it exists (if longitudinal with multiple arms) will be 
 #'   renamed to new record name, otherwise it will rename the record 
-#'   only in the specified arm.
+#'   only in the specified arm. When not `NULL`, it must have the same 
+#'   length as `record_name`.
 #'   
 #' @return
 #' `exportNextRecordName` returns an integerish value. The value is
 #'   determined by looking up the highest record ID number in the 
 #'   project and incrementing it by 1. 
 #'
-#' `renameRecord` invisibly returns a logical value that indicates if the 
+#' `renameRecord` invisibly returns a logical vector that indicates if the 
 #'   operation was successful. Otherwise, an error is thrown.
 #'   
 #'   

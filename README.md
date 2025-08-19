@@ -25,24 +25,24 @@ Core concerns handled by the library:
 
 ## Comparison to Other REDCap Packages
 
-| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM |
-|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|
-| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) |
-| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |
-| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |
-| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |
-| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
-| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |
-| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |
-| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |
-| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    | 
-| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |
+| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM | redquack         |
+|--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|:----------------:|
+| CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) | ![](https://cranlogs.r-pkg.org/badges/grand-total/redquack) |
+| Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |   ✅    |
+| Import Data From R       |    ✅     |   ✅    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Sparse Block Splitting   |    ✅     |   ✅    |       ❌       |    ✅      |     ✅       |    ✅    |   ❌    |
+| Field Labeling           |    ✅     |   ❌    |       ❌       |    ✅      |     ❌       |    ✅    |   ❌    |
+| Attribute Processing     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Logical Expression Query |  partial  |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |   ❌    |
+| Tidy/Tibble Support      |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |   ✅    |
+| Data Summary             |    ❌     |   ❌    |       ❌       |    ❌      |     ✅       |    ❌    |   ❌    |
+| Type Conversion Callbacks|    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| API Failure Auto-Retry   |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ✅    |
+| Secure API Key Storage   |    ✅     |   ❌    |       ✅       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Validation Reporting     |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ❌    |
+| Extensive Test Suite     |    ✅     |   ✅    |       ❌       |    ❌      |     ✅       |    ❌    |   ✅    |
+| Logfile Processing       |    ✅     |   ❌    |       ❌       |    ❌      |     ❌       |    ❌    |   ✅    |
+| Offline Calculated Fields|    ❌     |   ❌    |       ❌       |    ❌      |     ❌       |    ✅    |   ❌    |
 
 ## Quick Start Guide
 
@@ -55,9 +55,6 @@ Here's a typical call for these two:
 
 ```
 library(redcapAPI)
-
-# IMPORTANT: Put the following line in .Rprofile `usethis::edit_r_profile()`
-options(keyring_backend=keyring::backend_file)
 
 unlockREDCap(c(rcon    = '<MY PROJECT NAME>'),
              keyring     = 'API_KEYs',
@@ -134,6 +131,12 @@ There are several vignettes with helpful information and examples to explore. Th
 * redcapAPI-best-practices 
 * redcapAPI-offline-connection 
 
+## Dependencies
+
+We strive to keep the dependency chain as minimal as possible. This reduces potential breakage due to downstream packages getting changed and minimizes install time. 
+
+![Dependency Plot](./inst/image/dependencies.png "Dependency Plot")
+
 ## Back Matter
 
 *NOTE*: Ownership transfer of this package to [VUMC Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics) is complete.
@@ -172,11 +175,11 @@ Rules:
 
 redcapAPI A rich API client for interfacing REDCap to R
 
-Copyright (C) 2012 Jeffrey Horner, Vanderbilt University Medical Center
+Copyright (C) 2012 Jeffrey Horner, Vanderbilt University
 
 Copyright (C) 2013-2022 Benjamin Nutter
 
-Copyright (C) 2023-2024 Benjamin Nutter, Shawn Garbett, Vanderbilt University Medical Center
+Copyright (C) 2023-2025 Benjamin Nutter, Shawn Garbett, Vanderbilt University
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

@@ -8,7 +8,7 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' @param fields `NULL` or `character(1)`. Field name to be returned.  By 
+#' @param fields `NULL` or `character`. Field name to be returned.  By 
 #'   default, all fields are returned.
 #' 
 #' @details
@@ -89,7 +89,6 @@ exportFieldNames.redcapApiConnection <- function(rcon,
                           add = coll)
   
   checkmate::assert_character(x = fields,
-                              max.len = 1,
                               add = coll)
 
   checkmate::reportAssertions(coll)
@@ -100,14 +99,16 @@ exportFieldNames.redcapApiConnection <- function(rcon,
                                         coll = coll)
   }
 
-  # Build the Body List ---------------------------------------------
-  body <- list(content = 'exportFieldNames', 
-               format = 'csv',
-               returnFormat = 'csv', 
-               field = fields)
-  
-  # Make the API Call -----------------------------------------------
-  as.data.frame(makeApiCall(rcon, body, ...))
+  if (length(fields) > 0){
+    result <- 
+      lapply(fields, 
+             FUN = function(f, r, ...) .exportFieldNamesApiCall(r, f, ...),
+             r = rcon,
+             ...)
+    do.call("rbind", result)
+  } else {
+    .exportFieldNamesApiCall(rcon, fields = fields, ...) 
+  }
 }
 
 # Unexported --------------------------------------------------------
@@ -116,9 +117,23 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   # Get project metadata
   MetaData <- rcon$metadata()
   
-  if (!all(fields %in% MetaData$field_name)){
+  no_match <- fields[!fields %in% MetaData$field_name]
+  if (length(no_match) > 0){
     coll$push(sprintf("Field does not exist in the database: %s", 
-                      fields))
+                      no_match))
     checkmate::reportAssertions(coll)
   }
+}
+
+.exportFieldNamesApiCall <- function(rcon, fields, ...){
+  # Build the Body List ---------------------------------------------
+  body <- list(content = 'exportFieldNames', 
+               format = 'csv',
+               returnFormat = 'csv', 
+               field = fields)
+  
+  # Make the API Call -----------------------------------------------
+  read.csv(text = as.character(makeApiCall(rcon, body, ...)), 
+           na.strings = "", 
+           stringsAsFactors = FALSE)
 }

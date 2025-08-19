@@ -13,7 +13,8 @@ redcapConnection(
   config = NULL,
   retries = 5,
   retry_interval = 2^(seq_len(retries)),
-  retry_quietly = TRUE
+  retry_quietly = TRUE,
+  ...
 )
 
 \method{print}{redcapApiConnection}(x, ...)
@@ -63,9 +64,9 @@ the number of retries.}
 \item{retry_quietly}{\code{logical(1)}. When \code{FALSE}, messages will
 be shown giving the status of the API calls. Defaults to \code{TRUE}.}
 
-\item{x}{\code{redcapConnection} object to be printed}
-
 \item{...}{arguments to pass to other methods}
+
+\item{x}{\code{redcapConnection} object to be printed}
 
 \item{meta_data}{Either a \code{character} giving the file from which the
 metadata can be read, or a \code{data.frame}.}

@@ -5,22 +5,20 @@
 #
 # This helper will pull the required values from a keyring
 # similar to how `rccola` works for security purposes.
-# This package cannot depend on `rccola` without creating 
+# This package cannot depend on `rccola` without creating
 # a circular dependency so minimal code is copied locally
-# 
+#
 # To duplicate our test database see: inst/extdata
 #
-# Create a keyring: 
-# This will create a keyring "API_KEYs"
-# It will name it the service "redcapAPI"
+# Create a shelter key store:
+# This will create a secret keyring "API_KEYs"
 # It will ask to save an API_KEY in this ring (there can be multiple!)
 #   of the name "TestRedcapAPI"
-  
+
 library(checkmate) # for additional expect_* functions.
-library(keyring)
-  
+
 # usethis::edit_r_profile() # <== This will always find .Rprofile
-  
+
 # Override using the environment variables:
 #
 # * REDCAP_URL: Your institutions URL
@@ -60,7 +58,7 @@ unlockREDCap(
 #     a5   = "ThomasTest",    # pid 178186, Sys.setenv(REPORT_IDS='384516,384517')
 #     a6   = "ShawnTest",     # pid 188425, Sys.setenv(REPORT_IDS=417554)
 #     a7   = "DQTest"         # pid 133406, Sys.setenv(REPORT_IDS=NULL)
-#     ), 
+#     ),
 #   url=url, keyring='API_KEYs')
 
 missing_codes <- rcon$projectInformation()$missing_data_codes
