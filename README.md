@@ -25,7 +25,7 @@ Core concerns handled by the library:
 
 ## Comparison to Other REDCap Packages
 
-| Feature                  | redcapAPI | REDCapR | REDCapExporter | tidyREDCap | REDCapTidieR | REDCapDM | redquack         |
+| <sub>Feature</sub>  | <sub>redcapAPI</sub> | <sub>REDCapR</sub> | <sub>REDCapExporter</sub> | <sub>tidyREDCap</sub> | <sub>REDCapTidieR</sub> | <sub>REDCapDM</sub> | <sub>redquack</sub> |
 |--------------------------|:---------:|:-------:|:--------------:|:----------:|:------------:|:--------:|:----------------:|
 | CRAN Downloads           |  ![](https://cranlogs.r-pkg.org/badges/grand-total/redcapAPI) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapExporter) | ![](https://cranlogs.r-pkg.org/badges/grand-total/tidyREDCap) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapTidieR) | ![](https://cranlogs.r-pkg.org/badges/grand-total/REDCapDM) | ![](https://cranlogs.r-pkg.org/badges/grand-total/redquack) |
 | Export Data To R         |    ✅     |   ✅    |       ✅       |    ✅      |     ✅       |    ✅    |   ✅    |
