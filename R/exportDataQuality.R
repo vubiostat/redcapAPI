@@ -121,7 +121,7 @@ exportDataQuality.redcapApiConnection <-
   }
   dq_dat <- do.call(rbind, dq_info)
   res_dat <- do.call(rbind, res_info)
-  if(is.null(dq_dat) || length(dq_dat) ==0) return(empty_dq)
+  if(is.null(dq_dat) || nrow(dq_dat)==0) return(empty_dq)
   merge(dq_dat, res_dat, all.x = TRUE)
 }
 
