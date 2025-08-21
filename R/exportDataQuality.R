@@ -101,8 +101,10 @@ exportDataQuality.redcapApiConnection <-
     username = NA
   )[FALSE,]
 
+  empty_out <- cbind(empty_dq, empty_res[,setdiff(names(empty_res), 'status_id')])
+
   lr <- length(result)
-  if(lr == 0) return(empty_dq)
+  if(lr == 0) return(empty_out)
 
   dq_info <- vector('list', lr)
   res_info <- vector('list', lr)
@@ -121,7 +123,7 @@ exportDataQuality.redcapApiConnection <-
   }
   dq_dat <- do.call(rbind, dq_info)
   res_dat <- do.call(rbind, res_info)
-  if(is.null(dq_dat) || nrow(dq_dat)==0) return(empty_dq)
+  if(is.null(dq_dat) || nrow(dq_dat)==0) return(empty_out)
   merge(dq_dat, res_dat, all.x = TRUE)
 }
 
