@@ -9,6 +9,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.11.2
 
+* Fixed bug in `exportDataQuality` when no quality issues exist.
 * Deprecated functions `exportProjectInfo` and `exportBundle` have been removed.
 * Fixed offline test that was having issue on Windows.
 * Fixed bug in exportFilesMultiple.
