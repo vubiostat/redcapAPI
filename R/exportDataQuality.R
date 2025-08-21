@@ -101,8 +101,11 @@ exportDataQuality.redcapApiConnection <-
     username = NA
   )[FALSE,]
 
-  dq_info <- vector('list', length(result))
-  res_info <- vector('list', length(result))
+  lr <- length(result)
+  if(lr == 0) return(empty_dq)
+
+  dq_info <- vector('list', lr)
+  res_info <- vector('list', lr)
   for(i in seq_along(result)) {
     tmp <- result[[i]]
     res_i <- lapply(tmp$resolutions, function(i) {
@@ -118,7 +121,7 @@ exportDataQuality.redcapApiConnection <-
   }
   dq_dat <- do.call(rbind, dq_info)
   res_dat <- do.call(rbind, res_info)
-  if(is.null(dq_dat) || nrow(dq_dat) == 0) dq_dat <- empty_dq
+  if(length(dq_dat) == 0) return(empty_dq)
   merge(dq_dat, res_dat, all.x = TRUE)
 }
 
