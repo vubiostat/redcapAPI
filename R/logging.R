@@ -77,7 +77,6 @@ splunk_logger_FUN <- function(
   {
     if(log_levels[toupper(level)] <  current_log_level()) return(invisible(NULL))
 
-    browser()
     packet         <- list(...)
     packet$time    <- Sys.time()
     packet$level   <- level
