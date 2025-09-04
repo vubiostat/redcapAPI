@@ -43,7 +43,7 @@ current_logger <- function(...)
   {
     if(grepl("Timeout was reached", e$message))
     {
-      warning("Due to timeout disabling logging.")
+      warning("Due to timeout disabling logging.") # FIXME: SHould this be a stop?
       options(redcapAPI_logger='')
       structure(
         list(
@@ -81,38 +81,20 @@ splunk_logger_FUN <- function(
     packet$time    <- Sys.time()
     packet$level   <- level
     packet$project <- project
+    packet$system  <- Sys.info()['nodename']
 
     .splunkPost(token, url, packet)
   }
 }
 
-.find_first_exported_call_from_package <- function(pkg)
+.call_stack_environ <- function()
 {
-  # Get the list of exported objects (symbols) from the package
-  exported <- getNamespaceExports(pkg)
-  ns_env   <- asNamespace(pkg)
+  vapply(seq_len(sys.nframe()),
+         function(i) environmentName(environment(sys.function(i))), character(1))
+}
 
-  # Loop over call stack
-  for (i in seq_along(sys.calls()))
-  {
-    call <- sys.call(i)
-    fun  <- sys.function(i)
-
-    # Try to find the name of the function if it's named
-    if (is.symbol(call[[1]]) || is.call(call[[1]]))
-    {
-      fun_name <- deparse(call[[1]])
-
-      # Try to find the object in the package namespace
-      if (exists(fun_name, envir = ns_env, inherits = FALSE))
-      {
-        exported_fun <- get(fun_name, envir = ns_env)
-
-        # Check if it's exported and ident
-        if (fun_name %in% exported && identical(fun, exported_fun)) return(call)
-      }
-    }
-  }
-
-  return(NULL)
+.call_from_package <- function(pkg)
+{
+  ix <- which(.call_stack_environ() == pkg)[1]
+  if(is.na(ix)) NA else sys.call(ix)
 }
