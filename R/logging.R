@@ -58,7 +58,7 @@ current_logger <- function(...)
     }
   })
   if(resp$status_code != 200L)
-    warning(paste("Splunk logging call failed", response$status_code))
+    warning(paste("Splunk logging call failed", resp$status_code))
   invisible(resp)
 }
 
@@ -77,12 +77,15 @@ splunk_logger_FUN <- function(
   {
     if(log_levels[toupper(level)] <  current_log_level()) return(invisible(NULL))
 
-    packet         <- list(...)
-    packet$time    <- Sys.time()
-    packet$level   <- level
-    packet$project <- project
-    packet$system  <- Sys.info()['nodename']
-
+    # https://docs.splunk.com/Documentation/Splunk/latest/Data/FormateventsforHTTPEventCollector
+    packet <- list(
+      time       = Sys.time(),
+      host       = unname(Sys.info()['nodename']),
+      source     = project,
+      sourcetype = 'redcapAPI',
+      event      = list(severity=toupper(level),
+                        ...)
+    )
     .splunkPost(token, url, packet)
   }
 }
