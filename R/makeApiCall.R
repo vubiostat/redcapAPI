@@ -216,6 +216,13 @@ makeApiCall <- function(rcon,
         }
       })
 
+    logEvent("INFO", call=.callFromPackage('redcapAPI'),
+             status=response$status_code)
+    logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
+             status=response$status_code,
+             body=as.character(body$content),
+             response=as.character(response))
+
     if(do_verbose) message(paste0(">>>\n", as.character(response), "\n<<<\n"))
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
