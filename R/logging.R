@@ -86,7 +86,7 @@ logEvent <- function(severity, ...)
 
   checkmate::reportAssertions(coll)
 
-  f(severity, ...)
+  if(.log_levels[severity] >= .currentLogLevel()) f(severity, ...)
 }
 
 #' @importFrom jsonlite toJSON
@@ -140,8 +140,6 @@ logEvent <- function(severity, ...)
 
   function(level, ...)
   {
-    if(.log_levels[level] <  .currentLogLevel()) return(invisible(NULL))
-
     # https://docs.splunk.com/Documentation/Splunk/latest/Data/FormateventsforHTTPEventCollector
     packet <- list(
       time       = Sys.time(),
@@ -179,7 +177,7 @@ logWarning <- function(...)
 #' @export
 logStop <- function(...)
 {
-  logStop("ERROR", message=paste(...))
+  logEvent("ERROR", message=paste(...))
   stop(...)
 }
 
@@ -187,7 +185,7 @@ logStop <- function(...)
 #' @export
 logMessage <- function(...)
 {
-  logMessage("INFO", message=paste(...))
+  logEvent("INFO", message=paste(...))
   message(...)
 }
 

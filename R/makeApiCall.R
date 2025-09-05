@@ -196,7 +196,6 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        if(do_verbose) message(paste0(">>>\n", as.character(body$content), "\n<<<\n"))
         .curlPost(body = body, config = config)
       },
       error=function(e)
@@ -216,14 +215,17 @@ makeApiCall <- function(rcon,
         }
       })
 
+    redacted <- body
+    redacted$token <- '<REDACTED>'
+    redacted <- as.character(redacted)
+
+    if(do_verbose) message(paste0(">>>\n", redacted, "\n<<<\n"))
     logEvent("INFO", call=.callFromPackage('redcapAPI'),
              status=response$status_code)
     logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
              status=response$status_code,
-             body=as.character(body$content),
+             body=redacted,
              response=as.character(response))
-
-    if(do_verbose) message(paste0(">>>\n", as.character(response), "\n<<<\n"))
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
 
