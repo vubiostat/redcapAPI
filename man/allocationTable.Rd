@@ -137,17 +137,17 @@ randomization table.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
-allocationTable(rcon, 
-                random = "treatment_assignment", 
-                strata = c("demographic_group", "hospital_group"), 
-                replicates = 12, 
-                block.size = 4, 
-                seed.dev = 12345, 
+
+allocationTable(rcon,
+                random = "treatment_assignment",
+                strata = c("demographic_group", "hospital_group"),
+                replicates = 12,
+                block.size = 4,
+                seed.dev = 12345,
                 seed.prod = 54321)
 }
 

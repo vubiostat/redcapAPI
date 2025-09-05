@@ -3,115 +3,115 @@
 #' @export
 
 exportRecords <-
-  function(rcon, 
-           factors = TRUE, 
-           fields = NULL, 
-           forms = NULL, 
+  function(rcon,
+           factors = TRUE,
+           fields = NULL,
+           forms = NULL,
            records = NULL,
-           events = NULL, 
-           labels = TRUE, 
-           dates = TRUE, 
+           events = NULL,
+           labels = TRUE,
+           dates = TRUE,
            drop = NULL,
-           survey = TRUE, 
-           dag = TRUE, 
-           checkboxLabels = FALSE, 
-           colClasses = character(0), 
+           survey = TRUE,
+           dag = TRUE,
+           checkboxLabels = FALSE,
+           colClasses = character(0),
            ...)
-    
+
     UseMethod("exportRecords")
 
 #' @rdname recordsMethods
 #' @order 4
 #' @export
 
-exportRecords.redcapApiConnection <- 
-  function(rcon, 
-           factors            = TRUE, 
+exportRecords.redcapApiConnection <-
+  function(rcon,
+           factors            = TRUE,
            fields             = NULL,
            forms              = NULL,
-           records            = NULL, 
-           events             = NULL, 
-           labels             = TRUE, 
-           dates              = TRUE, 
+           records            = NULL,
+           events             = NULL,
+           labels             = TRUE,
+           dates              = TRUE,
            drop               = NULL,
-           survey             = TRUE, 
-           dag                = TRUE, 
+           survey             = TRUE,
+           dag                = TRUE,
            checkboxLabels     = FALSE,
-           colClasses         = character(0), 
+           colClasses         = character(0),
            ...,
            batch.size         = -1,
            form_complete_auto = TRUE)
 {
-  message("Please use exportRecordsTyped instead. exportRecords is will undergo breaking changes in version 3.0.0.")
+  logMessage("Please use exportRecordsTyped instead. exportRecords is will undergo breaking changes in version 3.0.0.")
 
   if (is.numeric(records)) records <- as.character(records)
 
    ##################################################################
   # Argument Validation
-  
+
   coll <- checkmate::makeAssertCollection()
 
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
-  
-  checkmate::assert_logical(x = factors, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = factors,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_character(x = fields, 
-                              any.missing = FALSE, 
+
+  checkmate::assert_character(x = fields,
+                              any.missing = FALSE,
                               null.ok = TRUE,
                               add = coll)
-  
-  checkmate::assert_character(x = forms, 
-                              any.missing = FALSE, 
-                              null.ok = TRUE, 
+
+  checkmate::assert_character(x = forms,
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
-  
-  checkmate::assert_character(x = records, 
-                              any.missing = FALSE, 
-                              null.ok = TRUE, 
+
+  checkmate::assert_character(x = records,
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
-  
-  checkmate::assert_character(x = events, 
-                              any.missing = FALSE, 
-                              null.ok = TRUE, 
+
+  checkmate::assert_character(x = events,
+                              any.missing = FALSE,
+                              null.ok = TRUE,
                               add = coll)
-  
-  checkmate::assert_logical(x = labels, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = labels,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_logical(x = dates, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = dates,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_character(x = drop, 
-                              null.ok = TRUE, 
+
+  checkmate::assert_character(x = drop,
+                              null.ok = TRUE,
                               add = coll)
-  
-  checkmate::assert_logical(x = survey, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = survey,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_logical(x = dag, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = dag,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_logical(x = checkboxLabels, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = checkboxLabels,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
-  
-  checkmate::assert_logical(x = form_complete_auto, 
-                            len = 1, 
-                            any.missing = FALSE, 
+
+  checkmate::assert_logical(x = form_complete_auto,
+                            len = 1,
+                            any.missing = FALSE,
                             add = coll)
 
   checkmate::assert_integerish(x = batch.size,
@@ -121,15 +121,15 @@ exportRecords.redcapApiConnection <-
   if (is.list(colClasses)){
     colClasses <- unlist(colClasses)
   }
-  
-  checkmate::assert_character(x = colClasses, 
-                              names = "named", 
+
+  checkmate::assert_character(x = colClasses,
+                              names = "named",
                               add = coll)
 
   checkmate::reportAssertions(coll)
-  
+
   MetaData <- rcon$metadata()
-  
+
   #* for purposes of the export, we do not need the descriptive fields.
   #* Including them makes the process more error prone, so we'll ignore them.
   MetaData <- MetaData[!MetaData$field_type %in% "descriptive", ]
@@ -199,7 +199,7 @@ exportRecords.redcapApiConnection <-
 
    ##################################################################
   # Checkbox Suffixes
-  
+
   suffixed <-
     checkbox_suffixes(
       # The subset prevents `[form]_complete` fields from
@@ -229,11 +229,11 @@ exportRecords.redcapApiConnection <-
                exportSurveyFields = tolower(survey),
                exportDataAccessGroups = tolower(dag),
                returnFormat = 'csv')
-  
-  body <- c(body, 
-            vectorToApiBodyList(field_names, "fields"), 
-            vectorToApiBodyList(forms, "forms"), 
-            vectorToApiBodyList(events, "events"), 
+
+  body <- c(body,
+            vectorToApiBodyList(field_names, "fields"),
+            vectorToApiBodyList(forms, "forms"),
+            vectorToApiBodyList(events, "events"),
             vectorToApiBodyList(records, "records"))
 
    ##################################################################
@@ -274,21 +274,21 @@ exportRecords.redcapApiConnection <-
              lab = suffixed$label_suffix,
              FUN = function(nm, lab){
                if(is.null(Records[[nm]])){
-                 warning("Missing field for suffix ", nm)
+                 logWarning("Missing field for suffix ", nm)
                } else {
                  labelVector::set_label(Records[[nm]], lab)
                }
              },
              SIMPLIFY = FALSE)
   }
-  
-  
-  
+
+
+
   # drop
   if(length(drop)) {
     Records <- Records[!names(Records) %in% drop]
   } # end drop
-  
+
   Records
 }
 
@@ -301,7 +301,7 @@ unbatched <- function(rcon, body, id, colClasses, ...)
   colClasses <- colClasses[!vapply(colClasses,
                                    is.na,
                                    logical(1))]
-  
+
   as.data.frame(
     makeApiCall(rcon, body, ...),
     colClasses=colClasses
@@ -316,7 +316,7 @@ batched <- function(rcon, body, batch.size, id, colClasses, ...)
   colClasses <- colClasses[!vapply(colClasses,
                                    is.na,
                                    logical(1))]
-  
+
   #* 1. Get the IDs column
   #* 2. Restrict to unique IDs
   #* 3. Determine if the IDs look hashed (de-identified)
@@ -324,34 +324,34 @@ batched <- function(rcon, body, batch.size, id, colClasses, ...)
   #* 5. Read batches
   #* 6. Combine tables
   #* 7. Return full data frame
-  
-  
+
+
   #* 1. Get the IDs column
-  id_body <- c(body[!grepl("^fields", names(body))], 
+  id_body <- c(body[!grepl("^fields", names(body))],
                vectorToApiBodyList(id, "fields"))
-  
-  IDs <- makeApiCall(rcon, 
-                     body = body, 
+
+  IDs <- makeApiCall(rcon,
+                     body = body,
                      ...)
-  
+
   IDs <- as.data.frame(IDs, colClasses = colClasses[id])
 
   #* 2. Restrict to unique IDs
   unique_id <- unique(IDs[[id]])
-  
+
   #* 3. Determine if the IDs look hashed (de-identified)
   #* 4. Give warning about potential problems joining hashed IDs
   if (all(nchar(unique_id) == 32L))
   {
-    warning("The record IDs in this project appear to be de-identified. ",
-            "Subject data may not match across batches.")
+    logWarning("The record IDs in this project appear to be de-identified. ",
+               "Subject data may not match across batches.")
   }
-  
+
   #* Determine batch numbers for the IDs.
   batch.number <- rep(seq_len(ceiling(length(unique_id) / batch.size)),
                       each = batch.size,
                       length.out = length(unique_id))
-  
+
   #* Make a list to hold each of the batched calls
   #* Borrowed from http://stackoverflow.com/a/8099431/1017276
   batch_list <- vector("list", max(batch.number))
@@ -359,15 +359,15 @@ batched <- function(rcon, body, batch.size, id, colClasses, ...)
   #* 5. Read batches
   for (i in unique(batch.number))
   {
-    this_body <- c(body[!grepl("^records", names(body))], 
+    this_body <- c(body[!grepl("^records", names(body))],
                    vectorToApiBodyList(unique_id[batch.number == i], "records"))
-    
+
     this_response <- makeApiCall(rcon, body, ...)
     batch_list[[i]] <- as.data.frame(this_response, colClasses = colClasses)
 
     Sys.sleep(1)
   }
-  
+
   #* 6. Combine tables and return
   do.call("rbind", batch_list)
 }

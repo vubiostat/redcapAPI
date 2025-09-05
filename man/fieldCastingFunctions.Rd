@@ -175,36 +175,36 @@ avoiding the ambiguity resulting from the coding.
 \examples{
 \dontrun{
 # Using recastRecords after export
-Recs <- 
+Recs <-
   exportRecordsTyped(rcon) |>
-  recastRecords(rcon, 
+  recastRecords(rcon,
                 fields = "dropdown_test",
                 cast = list(dropdown = castCode))
-                
-                
+
+
 # Using castForImport
-castForImport(Records, 
+castForImport(Records,
               rcon)
-              
-              
+
+
 # Using castForImport to recast zero-coded checkbox values
-castForImport(Records, 
-              rcon, 
+castForImport(Records,
+              rcon,
               cast = list(checkbox = castCheckForImport(c("0", "Unchecked"))))
 
 
 # Using guessCast
 exportRecordsTyped(rcon,
                    validation=skip_validation,
-                   cast = raw_cast) |> 
-  guessCast(rcon, 
-            validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"), 
+                   cast = raw_cast) |>
+  guessCast(rcon,
+            validation=valRx("^[0-9]{1,4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"),
             cast=as.Date,
             threshold=0.6)
-            
-            
+
+
 # Using mChoiceCast
-exportRecordsTyped(rcon) |> 
+exportRecordsTyped(rcon) |>
   mChoiceCast(rcon)
 
 }

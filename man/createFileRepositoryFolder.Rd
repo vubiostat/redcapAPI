@@ -54,27 +54,27 @@ existing folder.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
+
 # Create a folder in the top-level directory
-createFileRepositoryFolder(rcon, 
+createFileRepositoryFolder(rcon,
                            name = "New Folder Name")
-                           
+
 # Create a folder in a subfolder
-createFileRepositoryFolder(rcon, 
-                           name = "New Folder Name", 
+createFileRepositoryFolder(rcon,
+                           name = "New Folder Name",
                            folder_id = 12345)
-                           
+
 # Create a folder assigned to a Data Access Group
-createFileRepositoryFolder(rcon, 
-                           name = "New Folder Name", 
+createFileRepositoryFolder(rcon,
+                           name = "New Folder Name",
                            dag_id = 678)
 }
 
-  
+
 }
 \seealso{
 \code{\link[=exportFromFileRepository]{exportFromFileRepository()}}, \cr

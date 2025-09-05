@@ -52,11 +52,13 @@
 #' if defined, otherwise the project will be the directory name that the
 #' code is executing from.
 #'
+#' There are also two helper functions `logWarning` and `logStop` which
+#' will call logging if enabled first, then warn or stop as requested.
+#'
 #' @param severity `string` One of the following: 'TRACE', 'DEBUG', 'INFO',
 #' 'WARN', or 'ERROR'
 #' @param ... Information to include in the log event. Each argument must
 #' have a name.
-#' @details
 #'
 #' @examples
 #' \dontrun{
@@ -153,7 +155,7 @@ logEvent <- function(severity, ...)
   }
 }
 
-.callStackEnviron <- function()
+.callStackEnvir <- function()
 {
   vapply(seq_len(sys.nframe()),
          function(i) environmentName(environment(sys.function(i))), character(1))
@@ -161,6 +163,31 @@ logEvent <- function(severity, ...)
 
 .callFromPackage <- function(pkg)
 {
-  ix <- which(.callStackEnviron() == pkg)[1]
+  ix <- which(.callStackEnvir() == pkg)[1]
   if(is.na(ix)) NA else sys.call(ix)
 }
+
+#' @rdname logEvent
+#' @export
+logWarning <- function(...)
+{
+  logEvent("WARN", message=paste(...))
+  warning(...)
+}
+
+#' @rdname logEvent
+#' @export
+logStop <- function(...)
+{
+  logStop("ERROR", message=paste(...))
+  stop(...)
+}
+
+#' @rdname logEvent
+#' @export
+logMessage <- function(...)
+{
+  logMessage("INFO", message=paste(...))
+  message(...)
+}
+

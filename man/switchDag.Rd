@@ -30,13 +30,13 @@ in the project.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
 
 # Switch the current user to the DAG "Facility Two"
-switchDag(rcon, 
+switchDag(rcon,
           dag = "facility_two")
 }
 }

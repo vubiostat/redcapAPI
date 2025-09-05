@@ -76,12 +76,12 @@ isZeroCodedCheckField("check_field___x")
 isZeroCodedCheckField("check_field___0")
 
 
-x <- factor(c(1, 0, 1, 0, 0), 
+x <- factor(c(1, 0, 1, 0, 0),
             levels = 0:1)
-warnOfZeroCodedCheckCasting(field_name = "check_field___0", 
+warnOfZeroCodedCheckCasting(field_name = "check_field___0",
                             x = x)
-                       
- 
+
+
 warnZeroCodedFieldPresent(c("check_field___x", "check_field___0"), TRUE)
 }
 }

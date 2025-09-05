@@ -56,7 +56,7 @@ connectAndCheck <- function(key, url, ...)
         x <- tempfile("htmlresponse.html")
         writeLines(mapped, x)
         browseURL(paste0("file://",x))
-        stop("Server URL responded with web page. Check URL.")
+        logStop("Server URL responded with web page. Check URL.")
       }
 
       # No redirect, this is success
@@ -82,11 +82,11 @@ connectAndCheck <- function(key, url, ...)
         x <- tempfile("htmlresponse.html")
         writeLines(mapped, x)
         browseURL(paste0("file://",x))
-        stop("Server URL responded with web page. Check URL.")
+        logStop("Server URL responded with web page. Check URL.")
       }
 
       if(response$status_code %in% c(301L, 302L))
-        stop(paste("Too many redirects from", url))
+        logStop(paste("Too many redirects from", url))
 
       rcon
     },
@@ -94,14 +94,14 @@ connectAndCheck <- function(key, url, ...)
     {
       if(grepl("Could not resolve host",     e)  ||
          grepl("Could not connect to server", e))
-        stop("Invalid URL provided '",url,"'. Unable to resolve or route.\n", e$message)
+        logStop("Invalid URL provided '",url,"'. Unable to resolve or route.\n", e$message)
 
       if(grepl("405", e$message) )
-        stop("URL '",url,"' refused connection. Not acting like a REDCap server.\n", e$message)
+        logStop("URL '",url,"' refused connection. Not acting like a REDCap server.\n", e$message)
 
       if(grepl("403", e)) return(NULL) # Forbidden, i.e. bad API_KEY
 
-      stop(e)
+      logStop(e)
     }
   )
 }

@@ -197,7 +197,7 @@ exportFilesMultiple.redcapApiConnection <- function(rcon,
       ResultsFrame$is_exported[i] <- FALSE
       ResultsFrame$error[i] <- this_attempt$output
       if (!quiet){
-        message(this_attempt$output)
+        logMessage(this_attempt$output)
       }
     }
   }

@@ -648,7 +648,7 @@ print_validation_message <- function(field_name, indices, message, logfile)
 
     if (logfile == "")
     {
-      message(message)
+      logMessage(message)
     }
     else
     {

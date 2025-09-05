@@ -119,28 +119,28 @@ used to represent both the code and the label.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
 
 # Import records
-NewData <- data.frame(record_id = c(1, 2, 3), 
-                      age = c(27, 43, 32), 
+NewData <- data.frame(record_id = c(1, 2, 3),
+                      age = c(27, 43, 32),
                       date_of_visit = rep(Sys.Date(), 3))
-importRecords(rcon, 
+importRecords(rcon,
               data = NewData)
-              
-              
-# Import records and save validation info to a file
-NewData <- data.frame(record_id = c(1, 2, 3), 
-                      age = c(27, 43, 32), 
-                      date_of_visit = rep(Sys.Date(), 3))
-importRecords(rcon, 
-              data = NewData, 
-              logfile = "import-validation-notes.txt")      
 
-} 
+
+# Import records and save validation info to a file
+NewData <- data.frame(record_id = c(1, 2, 3),
+                      age = c(27, 43, 32),
+                      date_of_visit = rep(Sys.Date(), 3))
+importRecords(rcon,
+              data = NewData,
+              logfile = "import-validation-notes.txt")
+
+}
 
 }
 \seealso{

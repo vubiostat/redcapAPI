@@ -2,9 +2,15 @@
 % Please edit documentation in R/logging.R
 \name{logEvent}
 \alias{logEvent}
+\alias{logWarning}
+\alias{logStop}
 \title{Log event}
 \usage{
 logEvent(severity, ...)
+
+logWarning(...)
+
+logStop(...)
 }
 \arguments{
 \item{severity}{\code{string} One of the following: 'TRACE', 'DEBUG', 'INFO',
@@ -28,6 +34,9 @@ ENV variables are set and if so, it automatically redirects the
 \code{redcapAPI_logger} to point at Splunk. It will also use SPLUNK_PROJECT
 if defined, otherwise the project will be the directory name that the
 code is executing from.
+
+There are also two helper functions \code{logWarning} and \code{logStop} which
+will call logging if enabled first, then warn or stop as requested.
 }
 \examples{
 \dontrun{
