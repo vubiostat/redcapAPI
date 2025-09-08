@@ -22,17 +22,17 @@ makeRedcapFactor <- function(x, coding, factors, var_name)
       attr(x,'redcapLabels') <- coding[, 2]
       attr(x,'redcapLevels') <-
         suppressWarnings(tryCatch(as.integer(coding[, 1]),
-                                  logWarning = function(cond) coding[, 1]))
+                                  warning = function(cond) coding[, 1]))
     }
     else
     {
       x <- suppressWarnings(tryCatch(as.integer(x),
-                                     logWarning = function(cond) as.character(x)))
+                                     warning = function(cond) as.character(x)))
       class(x) <- c("redcapFactor", class(x))
       attr(x,'redcapLabels') <- coding[, 2]
       attr(x,'redcapLevels') <-
         suppressWarnings(tryCatch(as.integer(coding[, 1]),
-                                  logWarning = function(cond) coding[, 1]))
+                                  warning = function(cond) coding[, 1]))
     }
   }
   else

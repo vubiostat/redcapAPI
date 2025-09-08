@@ -220,12 +220,17 @@ makeApiCall <- function(rcon,
     redacted <- as.character(redacted)
 
     if(do_verbose) message(paste0(">>>\n", redacted, "\n<<<\n"))
-    logEvent("INFO", call=.callFromPackage('redcapAPI'),
-             status=response$status_code)
-    logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
-             status=response$status_code,
-             body=redacted,
-             response=as.character(response))
+    if(.currentLogLevel() < 2)
+    {
+      logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
+               status=response$status_code,
+               body=redacted,
+               response=as.character(response))
+    } else
+    {
+      logEvent("INFO", call=.callFromPackage('redcapAPI'),
+               status=response$status_code)
+    }
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
 

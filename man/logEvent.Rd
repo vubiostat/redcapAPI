@@ -2,15 +2,26 @@
 % Please edit documentation in R/logging.R
 \name{logEvent}
 \alias{logEvent}
+\alias{createSplunkFUN}
 \alias{logWarning}
 \alias{logStop}
+\alias{logMessage}
 \title{Log event}
 \usage{
 logEvent(severity, ...)
 
+createSplunkFUN(
+  token = Sys.getenv("SPLUNK_TOKEN"),
+  url = Sys.getenv("SPLUNK_URL"),
+  project = Sys.getenv("SPLUNK_PROJECT"),
+  allowDebug = FALSE
+)
+
 logWarning(...)
 
 logStop(...)
+
+logMessage(...)
 }
 \arguments{
 \item{severity}{\code{string} One of the following: 'TRACE', 'DEBUG', 'INFO',
@@ -18,6 +29,14 @@ logStop(...)
 
 \item{...}{Information to include in the log event. Each argument must
 have a name.}
+
+\item{token}{\code{string} The API_KEY for calling logger.}
+
+\item{url}{\code{string} The url of the logging server}
+
+\item{project}{\code{string} The project name to appear in the logs}
+
+\item{allowDebug}{\code{logical(1)} Should debug mode be allowed when using the default SPLUNK function. Defaults to FALSE.}
 }
 \description{
 This is one of the more complex integration of services into the `redcapAPI``
@@ -37,6 +56,10 @@ code is executing from.
 
 There are also two helper functions \code{logWarning} and \code{logStop} which
 will call logging if enabled first, then warn or stop as requested.
+
+The function createSplunkFUN will create a SPLUNK logger callback function.
+It will pull 'SPLUNK_TOKEN', 'SPLUNK_URL' and 'SPLUNK_PROJECT' from ENV if
+the corresponding arguments are not specified.
 }
 \examples{
 \dontrun{

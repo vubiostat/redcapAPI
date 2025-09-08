@@ -55,10 +55,18 @@
 #' There are also two helper functions `logWarning` and `logStop` which
 #' will call logging if enabled first, then warn or stop as requested.
 #'
+#' The function createSplunkFUN will create a SPLUNK logger callback function.
+#' It will pull 'SPLUNK_TOKEN', 'SPLUNK_URL' and 'SPLUNK_PROJECT' from ENV if
+#' the corresponding arguments are not specified.
+#'
 #' @param severity `string` One of the following: 'TRACE', 'DEBUG', 'INFO',
 #' 'WARN', or 'ERROR'
 #' @param ... Information to include in the log event. Each argument must
 #' have a name.
+#' @param token `string` The API_KEY for calling logger.
+#' @param url `string` The url of the logging server
+#' @param project `string` The project name to appear in the logs
+#' @param allowDebug `logical(1)` Should debug mode be allowed when using the default SPLUNK function. Defaults to FALSE.
 #'
 #' @examples
 #' \dontrun{
@@ -68,7 +76,6 @@
 #'
 #' @export
 #' @rdname logEvent
-#' @importFrom checkmate makeAssertCollection assert_string assert_named
 logEvent <- function(severity, ...)
 {
   f <- getOption('redcapAPI_logger')
@@ -108,8 +115,11 @@ logEvent <- function(severity, ...)
   {
     if(grepl("Timeout was reached", e$message))
     {
-      warning("Due to timeout disabling logging.") # FIXME: SHould this be a stop?
-      options(redcapAPI_logger='')
+      warning("Due to timeout disabling SPLUNK logging. Falling back to STDERR")
+      options(redcapAPI_logger=function(severity, ...)
+      {
+        if(toupper(severity)=='WARN') warning(paste(list(...), collapse=" "))
+      })
       structure(
         list(
           status_code = 408L,
@@ -128,25 +138,28 @@ logEvent <- function(severity, ...)
 }
 
 # Creates a logger function for SPLUNK
-# Our Test URL "https://splunkinput.app.vumc.org/services/collector"
-.createSplunkFUN <- function(
-  token   = Sys.getenv('SPLUNK_TOKEN'),
-  url     = Sys.getenv('SPLUNK_URL'),
-  project = Sys.getenv('SPLUNK_PROJECT'))
+#' @rdname logEvent
+#' @export
+createSplunkFUN <- function(
+  token      = Sys.getenv('SPLUNK_TOKEN'),
+  url        = Sys.getenv('SPLUNK_URL'),
+  project    = Sys.getenv('SPLUNK_PROJECT'),
+  allowDebug = FALSE)
 {
   if(token   == '') stop("Splunk token not set when creating logging function.")
   if(url     == '') stop("Splunk url not set when creating logging function.")
   if(project == '') project <- basename(getwd())
 
-  function(level, ...)
+  function(severity, ...)
   {
+    if(!allowDebug && .log_levels[severity] <= 1) stop("DEBUG or TRACE logging is not allowed by default when using SPLUNK due to PHI/PII concerns")
     # https://docs.splunk.com/Documentation/Splunk/latest/Data/FormateventsforHTTPEventCollector
     packet <- list(
       time       = Sys.time(),
       host       = unname(Sys.info()['nodename']),
       source     = project,
       sourcetype = 'redcapAPI',
-      event      = list(severity=level,
+      event      = list(severity=severity,
                         ...)
     )
     .splunkPost(token, url, packet)

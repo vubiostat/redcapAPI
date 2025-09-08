@@ -11,16 +11,17 @@ packageStartupMessage(
   if(is.null(getOption('redcapAPI_log_level')))
     options(redcapAPI_log_level=Sys.getenv('REDCAPAPI_LOG_LEVEL', 'INFO'))
 
-  # If SPLUNK_TOKEN is set in the ENV, setup splunk, but
-  # only if the redcapAPI_logger function hasn't been already set
-  if(Sys.getenv('SPLUNK_TOKEN') != '')
+  # If a logger function is not set in options and SPLUNK_TOKEN is provided
+  if(is.null(getOption('redcapAPI_logger')) &&
+     Sys.getenv('SPLUNK_TOKEN') != '')
   {
+    # Setup Splunk logging if the SPLUNK_URL is given as well
     if(Sys.getenv('SPLUNK_URL') == '')
     {
       warning("SPLUNK_TOKEN is set but SPLUNK_URL is not. Unable to turn on Splunk logging.")
-    } else if(is.null(getOption('redcapAPI_logger')))
+    } else
     {
-      options(redcapAPI_logger = .createSplunkFUN())
+      options(redcapAPI_logger = createSplunkFUN())
     }
   }
 }
