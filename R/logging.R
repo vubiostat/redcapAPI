@@ -152,7 +152,7 @@ createSplunkFUN <- function(
 
   function(severity, ...)
   {
-    if(!allowDebug && .log_levels[severity] <= 1) stop("DEBUG or TRACE logging is not allowed by default when using SPLUNK due to PHI/PII concerns")
+    if(!allowDebug && .currentLogLevel() <= 1) stop("DEBUG or TRACE logging is not allowed by default when using SPLUNK due to PHI/PII concerns")
     # https://docs.splunk.com/Documentation/Splunk/latest/Data/FormateventsforHTTPEventCollector
     packet <- list(
       time       = Sys.time(),
