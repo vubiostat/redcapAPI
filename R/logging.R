@@ -105,7 +105,7 @@ logEvent <- function(severity, ...)
     "Authorization" = paste("Splunk", token),
     "Content-Type"  = "application/json"
   ))
-  handle_setopt(h, postfields = toJSON(body, auto_unbox=TRUE))
+  handle_setopt(h, postfields = jsonlite::toJSON(body, auto_unbox=TRUE))
   on.exit(curl::handle_reset(h), add = TRUE)
   resp <- tryCatch(
   {
