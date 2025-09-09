@@ -166,10 +166,12 @@ createSplunkFUN <- function(
   }
 }
 
+.ignorable <- c('logError','logWarning','logMessage','logEvent','makeAPICall')
 .callStackEnvir <- function()
 {
-  vapply(seq_len(sys.nframe()),
-         function(i) environmentName(environment(sys.function(i))), character(1))
+  funs <- vapply(seq_len(sys.nframe()), function(i) deparse(sys.call(i)[[1]]), character(1))
+  ix   <- which(!funs %in% .ignorable)
+  vapply(ix, function(i) environmentName(environment(sys.function(i))), character(1))
 }
 
 .callFromPackage <- function(pkg)
@@ -182,7 +184,7 @@ createSplunkFUN <- function(
 #' @export
 logWarning <- function(...)
 {
-  logEvent("WARN", message=paste(...))
+  logEvent("WARN", call=.callFromPackage('redcapAPI'), message=paste(...))
   warning(...)
 }
 
@@ -190,7 +192,7 @@ logWarning <- function(...)
 #' @export
 logStop <- function(...)
 {
-  logEvent("ERROR", message=paste(...))
+  logEvent("ERROR", call=.callFromPackage('redcapAPI'), message=paste(...))
   stop(...)
 }
 
@@ -198,7 +200,7 @@ logStop <- function(...)
 #' @export
 logMessage <- function(...)
 {
-  logEvent("INFO", message=paste(...))
+  logEvent("INFO", call=.callFromPackage('redcapAPI'), message=paste(...))
   message(...)
 }
 
