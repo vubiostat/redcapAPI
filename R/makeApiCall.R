@@ -196,7 +196,6 @@ makeApiCall <- function(rcon,
     response <-
       tryCatch(
       {
-        if(do_verbose) message(paste0(">>>\n", as.character(body$content), "\n<<<\n"))
         .curlPost(body = body, config = config)
       },
       error=function(e)
@@ -216,7 +215,22 @@ makeApiCall <- function(rcon,
         }
       })
 
-    if(do_verbose) message(paste0(">>>\n", as.character(response), "\n<<<\n"))
+    redacted <- body
+    redacted$token <- '<REDACTED>'
+    redacted <- as.character(redacted)
+
+    if(do_verbose) message(paste0(">>>\n", redacted, "\n<<<\n"))
+    if(.currentLogLevel() < 2)
+    {
+      logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
+               status=response$status_code,
+               body=redacted,
+               response=as.character(response))
+    } else
+    {
+      logEvent("INFO", call=.callFromPackage('redcapAPI'),
+               status=response$status_code)
+    }
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
 
@@ -252,10 +266,10 @@ makeApiCall <- function(rcon,
   {
     if(response$status_code == 301L)
     {
-      warning(paste("Permanent 301 redirect", response$url, "to", response$headers$location))
+      logWarning(paste("Permanent 301 redirect", response$url, "to", response$headers$location))
     } else
     {
-      message(paste("Temporary 302 redirect", response$url, "to", response$headers$location))
+      logMessage(paste("Temporary 302 redirect", response$url, "to", response$headers$location))
     }
 
     # Good for a single call
@@ -295,7 +309,7 @@ makeApiCall <- function(rcon,
 
   msg_part3 <- as.character(response)
 
-  message(msg_part1, msg_part2, msg_part3)
+  logMessage(msg_part1, msg_part2, msg_part3)
 }
 
 # Helper function to convert responses to character strings without crashing.
@@ -314,7 +328,7 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
     'ISO-8859-1' # [Default if unspecified](https://www.w3.org/International/articles/http-charset/index)
   mapped <- iconv(readBin(x$content, character()),
                   enc, 'UTF-8', '\U25a1')
-  if(grepl('\U25a1', mapped)) warning("Project contains invalid characters. Mapped to '\U25a1'.")
+  if(grepl('\U25a1', mapped)) logWarning("Project contains invalid characters. Mapped to '\U25a1'.")
 
   # Check content type
   if(grepl("doctype\\s+html", substr(mapped, 1, 30)))
@@ -322,7 +336,7 @@ as.data.frame.response <- function(x, row.names=NULL, optional=FALSE, ...)
     x <- tempfile("htmlresponse.html")
     writeLines(mapped, x)
     browseURL(paste0("file://",x))
-    stop("Expecting CSV response, but REDCap server returned html. Sending output to browser. Is the url connection valid?")
+    logStop("Expecting CSV response, but REDCap server returned html. Sending output to browser. Is the url connection valid?")
   }
 
   # First check is very fast check to see if the first 10 bytes are empty space

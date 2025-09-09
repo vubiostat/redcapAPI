@@ -220,7 +220,7 @@ exportSAS <- function(
   fld_types <- sort(unique(z1$field_type))
   fld_types_unk <- fld_types[!(fld_types %in% names(fld_format_in))]
   if(length(fld_types_unk)) {
-    warning(sprintf('unknown field types found (using SAS format $5000.): %s', paste(fld_types_unk, collapse = ', ')))
+    logWarning(sprintf('unknown field types found (using SAS format $5000.): %s', paste(fld_types_unk, collapse = ', ')))
     fld_format_in[fld_types_unk] <- '$5000.'
     fld_format_out[fld_types_unk] <- '$5000.'
   }
@@ -243,7 +243,7 @@ exportSAS <- function(
     if(fld_name %in% simple_checkbox) {
       fld_name <- 'simple_checkbox'
     }
-    if(any(duplicated(i$value))) warning(sprintf('field %s has discrepant labels/values; fix manually', fld_name))
+    if(any(duplicated(i$value))) logWarning(sprintf('field %s has discrepant labels/values; fix manually', fld_name))
     # check if any values are non-numeric
     has_char_vals <- any(grepl('[^0-9.-]', i$value))
     if(has_char_vals) {

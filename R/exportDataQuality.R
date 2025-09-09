@@ -56,7 +56,7 @@ exportDataQuality.redcapApiConnection <-
   },
   error = function(e)
   {
-    stop("Make sure the Data Quality API module is enabled in your project.")
+    logStop("Make sure the Data Quality API module is enabled in your project.")
   })
 
   .makeDq(result)

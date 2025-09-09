@@ -21,11 +21,11 @@ unchanged.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
+
 Records <- exportRecordsTyped(rcon)
 
 widerRepeated(Records, rcon)

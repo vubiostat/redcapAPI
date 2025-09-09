@@ -52,12 +52,12 @@ unlockREDCap(c(test_conn    = 'TestRedcapAPI',
                sandbox_conn = 'SandboxAPI'),
              keyring      = 'MyKeyring',
              envir        = globalenv(),
-             url          = 'https://<REDCAP_URL>/api/') 
+             url          = 'https://<REDCAP_URL>/api/')
 
 # After user interaction to unlock the local encrypted keyring
 # the global environment will contain the REDCap connections
 # `test_conn` and `sandbox_conn`
-# 
+#
 # Next the user wants to bulk specify importing all the forms
 # of interest and post process
 
@@ -74,7 +74,7 @@ exportBulkRecords(
            widerRepeating(rcon)
          }
  )
- 
+
 # The environment now contains the data.frames: `test.form1`, `test.form2`, `sand`.
 # Each of these were retrieved, possibly using the forms argument and all were
 # post processed in the same manner as specified by `post`.

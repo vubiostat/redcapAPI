@@ -64,11 +64,11 @@ and within reports utilizing markdown.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
+
 # Review the Invalid data frame after export
 Records <- exportRecordsTyped(rcon)
 reviewInvalidRecords(Records)
