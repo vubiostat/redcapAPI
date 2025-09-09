@@ -166,10 +166,18 @@ createSplunkFUN <- function(
   }
 }
 
-.ignorable <- c('logError','logWarning','logMessage','logEvent','makeAPICall')
+.ignorable <- c('logError','logWarning','logMessage','logEvent','makeApiCall', 'ignore')
 .callStackEnvir <- function()
 {
-  funs <- vapply(seq_len(sys.nframe()), function(i) deparse(sys.call(i)[[1]]), character(1))
+  funs <- vapply(
+    seq_len(sys.nframe()),
+    function(i)
+    {
+      x <- deparse(sys.call(i)[[1]])
+      if(length(x) > 1) 'ignore' else x
+    },
+    character(1))
+
   ix   <- which(!funs %in% .ignorable)
   vapply(ix, function(i) environmentName(environment(sys.function(i))), character(1))
 }
@@ -177,7 +185,7 @@ createSplunkFUN <- function(
 .callFromPackage <- function(pkg)
 {
   ix <- which(.callStackEnvir() == pkg)[1]
-  if(is.na(ix)) NA else deparse(sys.call(ix))
+  if(is.na(ix)) NA else deparse(sys.call(ix)[[1]])
 }
 
 #' @rdname logEvent
