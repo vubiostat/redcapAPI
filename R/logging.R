@@ -155,7 +155,7 @@ createSplunkFUN <- function(
     if(!allowDebug && .currentLogLevel() <= 1) stop("DEBUG or TRACE logging is not allowed by default when using SPLUNK due to PHI/PII concerns")
     # https://docs.splunk.com/Documentation/Splunk/latest/Data/FormateventsforHTTPEventCollector
     packet <- list(
-      time       = Sys.time(),
+      time       = as.numeric(Sys.time()),
       host       = unname(Sys.info()['nodename']),
       source     = project,
       sourcetype = 'redcapAPI',
@@ -175,7 +175,7 @@ createSplunkFUN <- function(
 .callFromPackage <- function(pkg)
 {
   ix <- which(.callStackEnvir() == pkg)[1]
-  if(is.na(ix)) NA else sys.call(ix)
+  if(is.na(ix)) NA else deparse(sys.call(ix))
 }
 
 #' @rdname logEvent
