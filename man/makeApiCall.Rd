@@ -10,6 +10,7 @@ makeApiCall(
   url = NULL,
   success_status_codes = 200L,
   redirect = TRUE,
+  log = TRUE,
   ...
 )
 }
@@ -25,6 +26,8 @@ makeApiCall(
 for error handling. Defaults to c(200L).}
 
 \item{redirect}{\code{logical(1)} Is redirection on the request allowed?}
+
+\item{log}{\code{logical(1)} Should this call the logging callback. Defaults to TRUE.}
 
 \item{...}{This will capture \code{api_param} (if specified) which will modify the body of the
 the specified body of the request. It also captures \code{config} which will get
@@ -75,8 +78,6 @@ returns that response.
   MetaData <- utils::read.csv(text = as.character(MetaData),
                               stringsAsFactors = FALSE,
                               na.strings = "")
-
-
 
   # Call to export Meta Data (Data Dictionary) for specific fields
 
