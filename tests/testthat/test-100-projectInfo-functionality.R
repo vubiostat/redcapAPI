@@ -38,7 +38,7 @@ test_that(
 
     n_imported <- importProjectInformation(rcon,
                                            CurrentInfo)
-    expect_equal(n_imported, "18")
+    expect_equal(n_imported, "19")
   }
 )
 
