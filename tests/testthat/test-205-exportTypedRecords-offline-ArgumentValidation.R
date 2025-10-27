@@ -1,14 +1,12 @@
-context("Export Typed Records Offline Argument Validation")
-
 load(file.path(test_path("testdata"), "RedcapProject_test_redcapAPI.Rdata"))
 
 suppressWarnings({
-  roff <- offlineConnection(meta_data = RedcapProject_test_redcapAPI$meta_data, 
-                            arms = RedcapProject_test_redcapAPI$arms, 
-                            events = RedcapProject_test_redcapAPI$events, 
-                            mapping = RedcapProject_test_redcapAPI$mappings, 
-                            project_info = RedcapProject_test_redcapAPI$project_information, 
-                            repeat_instrument = RedcapProject_test_redcapAPI$repeating_instruments, 
+  roff <- offlineConnection(meta_data = RedcapProject_test_redcapAPI$meta_data,
+                            arms = RedcapProject_test_redcapAPI$arms,
+                            events = RedcapProject_test_redcapAPI$events,
+                            mapping = RedcapProject_test_redcapAPI$mappings,
+                            project_info = RedcapProject_test_redcapAPI$project_information,
+                            repeat_instrument = RedcapProject_test_redcapAPI$repeating_instruments,
                             records = RedcapProject_test_redcapAPI$records)
 })
 
@@ -16,7 +14,7 @@ test_that(
   "Return an error if rcon is not a redcapConnection",
   {
     local_reproducible_output(width = 200)
-    expect_error(exportRecordsTyped.redcapOfflineConnection(mtcars), 
+    expect_error(exportRecordsTyped.redcapOfflineConnection(mtcars),
                  "'rcon': Must inherit from class 'redcapOfflineConnection'")
   }
 )
@@ -25,64 +23,64 @@ test_that(
   "Return an error if fields is not character or otherwise invalid",
   {
     local_reproducible_output(width = 200)
-    expect_error(exportRecordsTyped(roff, 
-                                    fields = 1), 
+    expect_error(exportRecordsTyped(roff,
+                                    fields = 1),
                  "'fields': Must be of type 'character'")
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    fields = "not a field"), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    fields = "not a field"),
                  "'fields': Must be a subset of")
   }
 )
 
 test_that(
-  "Return an error if drop_fields is not a character", 
+  "Return an error if drop_fields is not a character",
   {
     local_reproducible_output(width = 200)
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    drop_fields = 1), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    drop_fields = 1),
                  "'drop_fields': Must be of type 'character'")
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    drop_fields = "not a field"), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    drop_fields = "not a field"),
                  "'drop_fields': Must be a subset of")
   }
 )
 
 test_that(
-  "Return an error if forms is not a character", 
+  "Return an error if forms is not a character",
   {
     local_reproducible_output(width = 200)
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    forms = 1), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    forms = 1),
                  "'forms': Must be of type 'character'")
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    forms = "not a field"), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    forms = "not a field"),
                  "'forms': Must be a subset of")
   }
 )
 
 test_that(
-  "Return an error if records is not character or numeric", 
+  "Return an error if records is not character or numeric",
   {
     local_reproducible_output(width = 200)
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    records = list(123)), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    records = list(123)),
                  "'records': Must be of type 'character'")
   }
 )
 
 test_that(
-  "Return an error if events is not a character", 
+  "Return an error if events is not a character",
   {
     local_reproducible_output(width = 200)
-    
-    expect_error(exportRecordsTyped(roff, 
-                                    events = 1), 
+
+    expect_error(exportRecordsTyped(roff,
+                                    events = 1),
                  "'events': Must be of type 'character'")
   }
 )

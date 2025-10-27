@@ -1,5 +1,3 @@
-context("unlockREDCap")
-
 library(mockery)
 library(curl)
 

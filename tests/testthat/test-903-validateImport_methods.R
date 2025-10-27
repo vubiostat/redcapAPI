@@ -1,4 +1,3 @@
-context("validateteImport_methods")
 
 # validate_import_checkbox ------------------------------------------
 

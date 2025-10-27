@@ -1,23 +1,21 @@
-context("Export Typed Reports Argument Validation")
-
 #####################################################################
 # exportReportsTyped                                             ####
 
 test_that(
-  "Return an error if rcon is not a redcapConnection", 
+  "Return an error if rcon is not a redcapConnection",
   {
     local_reproducible_output(width = 200)
-    expect_error(exportReportsTyped("not an rcon"), 
+    expect_error(exportReportsTyped("not an rcon"),
                  "no applicable method for 'exportReportsTyped'")
   }
 )
 
 test_that(
-  "Return an error if report_id is not integerish(1)", 
+  "Return an error if report_id is not integerish(1)",
   {
     local_reproducible_output(width = 200)
-    expect_error(exportReportsTyped(rcon, 
-                                    report_id = c(123, 456)), 
+    expect_error(exportReportsTyped(rcon,
+                                    report_id = c(123, 456)),
                  "'report_id': Must have length 1")
   }
 )
@@ -98,7 +96,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(exportReportsTyped(rcon,
-                                    report_id = 123, 
+                                    report_id = 123,
                                     config=1:3),
                  "'config'[:] Must be of type 'list'")
     expect_error(exportReportsTyped(rcon,
@@ -128,11 +126,11 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(exportReportsTyped(rcon,
-                                    report_id = 123, 
+                                    report_id = 123,
                                     csv_delimiter="*"),
                  "'csv_delimiter'[:] Must be element of set")
     expect_error(exportReportsTyped(rcon,
-                                    report_id = 123, 
+                                    report_id = 123,
                                     csv_delimiter=",,"),
                  "'csv_delimiter'[:] Must be element of set")
   }

@@ -281,6 +281,7 @@ PROJECT_INFO_FIELDS_EDITABLE <-
     "project_grant_number",
     "project_pi_firstname",
     "project_pi_lastname",
+    "project_pi_email",
     "display_today_now_button",
     "bypass_branching_erase_field_prompt")
 

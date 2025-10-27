@@ -1,5 +1,3 @@
-context("exportBulkRecords")
-
 test_that("Requires Connection",{
   expect_error(exportBulkRecords(), "lcon")
   expect_error(exportBulkRecords(FALSE), "lcon")
@@ -37,7 +35,7 @@ test_that("post must be a 2 argument function",{
 test_that("returns list of records",{
   Recs <- exportBulkRecords(list("test"=rcon))
   expect_list(Recs)
-  for(i in rcon$instruments()$instrument_name) 
+  for(i in rcon$instruments()$instrument_name)
     expect_true(paste0("test_", i) %in% names(Recs))
   expect_data_frame(Recs[["test_dates_and_times"]])
 })
@@ -88,7 +86,7 @@ test_that("calls post",{
                             post=function(recs,rcon) {"y"})
   expect_true(Recs[["test_dates_and_times"]] == "y")
   expect_true(Recs[["test_randomization"]] == "y")
-  
+
 })
 
 test_that("Fails for logical forms",{

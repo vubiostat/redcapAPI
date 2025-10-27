@@ -1,5 +1,3 @@
-context("unlockREDCap argument validation")
-
 library(mockery)
 library(curl)
 

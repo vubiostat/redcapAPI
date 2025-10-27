@@ -1,5 +1,3 @@
-context("Preserve, Purge, and Restore Projects Functionality")
-
 #####################################################################
 # preserveProject                                                ####
 
