@@ -39,7 +39,7 @@ test_that(
   {
     local_reproducible_output(width = 200)
     expect_error(importUserRoleAssignments("not an rcon",
-                                           data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE),
+                                           data = redcapUserRoleAssignmentStructure(rcon$version())),
                  "no applicable method for 'importUserRoleAssignments'")
   }
 )
@@ -103,23 +103,23 @@ test_that(
     local_reproducible_output(width = 200)
 
     expect_error(importUserRoleAssignments(rcon,
-                                           data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE,
+                                           data = redcapUserRoleAssignmentStructure(rcon$version()),
                                            user_roles = "user-role",
                                            config = list(1)),
                  "'config': Must have names")
     expect_error(importUserRoleAssignments(rcon,
-                                           data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE,
+                                           data = redcapUserRoleAssignmentStructure(rcon$version()),
                                            user_roles = "user-role",
                                            config = "not a list"),
                  "'config': Must be of type 'list'")
 
     expect_error(importUserRoleAssignments(rcon,
-                                           data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE,
+                                           data = redcapUserRoleAssignmentStructure(rcon$version()),
                                            user_roles = "user-role",
                                            api_param = list(1)),
                  "'api_param': Must have names")
     expect_error(importUserRoleAssignments(rcon,
-                                           data = REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE,
+                                           data = redcapUserRoleAssignmentStructure(rcon$version()),
                                            user_roles = "user-role",
                                            api_param = "not a list"),
                  "'api_param': Must be of type 'list'")

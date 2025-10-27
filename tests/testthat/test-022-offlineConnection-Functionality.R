@@ -229,13 +229,15 @@ test_that(
               row.names = FALSE)
 
     # From data frame
-    roff <- offlineConnection(user_role_assignment = this_data)
+    roff <- offlineConnection(
+      user_role_assignment = this_data, version=rcon$version())
 
     expect_true(roff$has_user_role_assignment())
 
     # From File
     roff <-
-        offlineConnection(user_role_assignment = this_file_name)
+      offlineConnection(
+        user_role_assignment = this_file_name, version=rcon$version())
     unlink(this_file_name)
 
     expect_true(roff$has_user_role_assignment())
@@ -298,14 +300,14 @@ test_that(
               row.names = FALSE)
 
     # From data frame
-    roff <- expect_no_error(offlineConnection(project_info = this_data))
+    roff <- expect_no_error(offlineConnection(project_info = this_data, version=rcon$version()))
 
     expect_true(roff$has_projectInformation())
 
     # From File
     roff <-
       expect_no_error(
-        offlineConnection(project_info = this_file_name))
+        offlineConnection(project_info = this_file_name, version=rcon$version()))
     unlink(this_file_name)
     expect_true(roff$has_projectInformation())
   }
@@ -330,7 +332,7 @@ test_that(
               row.names = FALSE)
 
     # From data frame
-    roff <- expect_no_error(offlineConnection(file_repo = this_data))
+    roff <- expect_no_error(offlineConnection(file_repo = this_data, version=rcon$version()))
 
     expect_true(roff$has_fileRepository())
 
@@ -480,7 +482,7 @@ test_that(
     file <- file.path(filedir, "TestRedcapAPI_UserRoleAssignments.csv")
 
     roff <-
-        expect_silent(offlineConnection(user_role_assignment = file))
+        expect_warning(offlineConnection(user_role_assignment = file))
 
     expect_true(roff$has_user_role_assignment())
   }
