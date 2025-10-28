@@ -10,6 +10,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.11.4
 
 * Updated to allow for `project_pi_email` as an allowed field of project info.
+* Updated to allow for `data_access_group` as part of user role assignment.
 
 ## 2.11.3
 
