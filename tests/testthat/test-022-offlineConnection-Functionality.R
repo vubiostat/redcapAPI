@@ -223,21 +223,21 @@ test_that(
   "User Role Assignment loads from data frame and file",
   {
     this_file_name <- tempfile("test_offline_user_roles_assign_")
-    this_data <- rcon$user_role_assignment()
+    this_data <- rcon$user_role_assignment()[,1:2]
     write.csv(this_data,
               this_file_name,
               row.names = FALSE)
 
     # From data frame
     roff <- offlineConnection(
-      user_role_assignment = this_data, version=rcon$version())
+      user_role_assignment = this_data)
 
     expect_true(roff$has_user_role_assignment())
 
     # From File
     roff <-
       offlineConnection(
-        user_role_assignment = this_file_name, version=rcon$version())
+        user_role_assignment = this_file_name)
     unlink(this_file_name)
 
     expect_true(roff$has_user_role_assignment())
@@ -332,7 +332,7 @@ test_that(
               row.names = FALSE)
 
     # From data frame
-    roff <- expect_no_error(offlineConnection(file_repo = this_data, version=rcon$version()))
+    roff <- expect_no_error(offlineConnection(file_repo = this_data))
 
     expect_true(roff$has_fileRepository())
 
