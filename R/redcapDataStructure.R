@@ -260,7 +260,7 @@ function(version)
              project_grant_number = character(0),
              project_pi_firstname = character(0),
              project_pi_lastname = character(0),
-             project_pi_email = if(is.null(version) || utils::compareVersion(version, "15.8.2") <= 0) NULL else character(0),
+             project_pi_email = if(is.null(version) || utils::compareVersion(version, "15.8.2") < 0) NULL else character(0),
              display_today_now_button = character(0),
              missing_data_codes = character(0),
              external_modules = character(0),
@@ -467,6 +467,6 @@ redcapUserRoleAssignmentStructure <- function(version)
 {
   data.frame(username = character(0),
              unique_role_name = character(0),
-             data_access_group = if(is.null(version) || utils::compareVersion(version, "15.8.2") <= 0) NULL else character(0),
+             data_access_group = if(is.null(version) || utils::compareVersion(version, "15.8.2") < 0) NULL else character(0),
              stringsAsFactors = FALSE)
 }
