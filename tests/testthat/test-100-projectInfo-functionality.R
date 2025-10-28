@@ -38,7 +38,7 @@ test_that(
 
     n_imported <- importProjectInformation(rcon,
                                            CurrentInfo)
-    expect_equal(n_imported, "19")
+    expect_equal(n_imported, if(is.null(rcon$version()) || utils::compareVersion(rcon$version(), "15.8.2") < 0) "18" else "19")
   }
 )
 
