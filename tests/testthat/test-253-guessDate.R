@@ -1,5 +1,3 @@
-context("guessCast.R")
-
 x <- data.frame(
   x=c("xyz", "2023-01-01", "", "2003-12-12", "2003-12-12", "2012-10-10")
 )
@@ -55,6 +53,6 @@ test_that(
     expect_error(guessDate(x, rcon, quiet=TRUE,validation=TRUE), "Variable 'validation'")
     expect_error(guessDate(x, rcon, quiet=TRUE,cast=TRUE), "Variable 'cast'")
     expect_error(guessDate(x, rcon, quiet=TRUE,threshold=TRUE), "Variable 'threshold'")
-    
+
   }
 )

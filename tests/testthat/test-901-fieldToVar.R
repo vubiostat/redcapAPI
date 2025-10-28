@@ -1,17 +1,15 @@
-context("fieldToVar")
-
-importRecords(rcon, 
-              data.frame(record_id = 1, 
-                         date_dmy_test = "2023-02-24", 
-                         date_mdy_test = "2023-02-24", 
-                         date_ymd_test = "2023-02-24", 
-                         time_hhmm_test = "12:04:55", 
-                         time_mmss_test = "00:02:45", 
-                         datetime_dmy_hm_test = "2023-02-24 12:04", 
-                         datetime_mdy_hm_test = "2023-02-24 12:04", 
-                         datetime_ymd_hm_test = "2023-02-24 12:04", 
-                         datetime_dmy_hms_test = "2023-02-24 12:40:50", 
-                         datetime_mdy_hms_test = "2023-02-24 12:40:50", 
+importRecords(rcon,
+              data.frame(record_id = 1,
+                         date_dmy_test = "2023-02-24",
+                         date_mdy_test = "2023-02-24",
+                         date_ymd_test = "2023-02-24",
+                         time_hhmm_test = "12:04:55",
+                         time_mmss_test = "00:02:45",
+                         datetime_dmy_hm_test = "2023-02-24 12:04",
+                         datetime_mdy_hm_test = "2023-02-24 12:04",
+                         datetime_ymd_hm_test = "2023-02-24 12:04",
+                         datetime_dmy_hms_test = "2023-02-24 12:40:50",
+                         datetime_mdy_hms_test = "2023-02-24 12:40:50",
                          datetime_ymd_hms_test = "2023-02-24 12:40:50"))
 
 # pull data for tests with handler

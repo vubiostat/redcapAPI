@@ -1,5 +1,3 @@
-context("Instruments, Mappings, Export PDF Argument Functionality")
-
 # Set up arms and events for testing importMappings data
 load(file.path(test_path("testdata",
                          "test_redcapAPI_MetaData.Rdata")))

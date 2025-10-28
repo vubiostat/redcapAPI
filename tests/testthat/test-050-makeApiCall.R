@@ -1,5 +1,3 @@
-context("makeApiCall Argument Validation")
-
 library(mockery)
 library(curl)
 

@@ -1,5 +1,3 @@
-context("recastRecords.R")
-
 fields <- c("dropdown_test",
             "radio_test",
             "checkbox_test",

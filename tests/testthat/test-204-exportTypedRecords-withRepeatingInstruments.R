@@ -1,27 +1,25 @@
-context("Export Typed Records with Repeating Events and Instruments Functionality")
-
 #####################################################################
 # Prepare data with Repeating Instruments                        ####
 
 load(file.path(test_path("testdata"),
                "test_redcapAPI_MetaData.Rdata"))
-load(file.path(test_path("testdata"), 
+load(file.path(test_path("testdata"),
                "test_redcapAPI_Data.Rdata"))
 
-importMetaData(rcon, 
+importMetaData(rcon,
                test_redcapAPI_MetaData)
 
 forms <- rcon$instruments()$instrument_name
-Mappings <- data.frame(arm_num = rep(1, length(forms)), 
-                       unique_event_name = rep("event_1_arm_1", length(forms)), 
+Mappings <- data.frame(arm_num = rep(1, length(forms)),
+                       unique_event_name = rep("event_1_arm_1", length(forms)),
                        form = forms)
-importMappings(rcon, 
+importMappings(rcon,
                data = Mappings)
 
-RepeatInst <- data.frame(event_name = "event_1_arm_1", 
+RepeatInst <- data.frame(event_name = "event_1_arm_1",
                          form_name = "repeating_instrument")
 
-importRepeatingInstrumentsEvents(rcon, 
+importRepeatingInstrumentsEvents(rcon,
                                  data = RepeatInst)
 
 # castForImport only needed until 3.0.0
@@ -31,7 +29,7 @@ ImportData <- castForImport(test_redcapAPI_Data,
                             cast = list(number_1dp = as.numeric,
                                         number_2dp = as.numeric,
                                         number_1dp_comma_decimal = as.numeric,
-                                        number_2dp_comma_decimal = as.numeric, 
+                                        number_2dp_comma_decimal = as.numeric,
                                         bioportal = as.character))
 
 importRecords(rcon, ImportData)
@@ -40,7 +38,7 @@ importRecords(rcon, ImportData)
 # Export Records with Repeating Instruments                        ####
 
 test_that(
-  "Exported data has repeating instruments", 
+  "Exported data has repeating instruments",
   {
     Rec <- exportRecordsTyped(rcon)
     expect_true(any(!is.na(Rec$redcap_repeat_instrument)))
@@ -49,21 +47,21 @@ test_that(
 )
 
 test_that(
-  "Repeating Instrument name can be labelled or raw", 
+  "Repeating Instrument name can be labelled or raw",
   {
-    Rec <- exportRecordsTyped(rcon, 
+    Rec <- exportRecordsTyped(rcon,
                               forms = "repeating_instrument")
-    
-    expect_equal(levels(Rec$redcap_repeat_instrument), 
+
+    expect_equal(levels(Rec$redcap_repeat_instrument),
                  rcon$instruments()$instrument_label)
-    
-    
-    
-    Rec <- exportRecordsTyped(rcon, 
-                              forms = "repeating_instrument", 
+
+
+
+    Rec <- exportRecordsTyped(rcon,
+                              forms = "repeating_instrument",
                               cast = raw_cast)
-    
-    expect_equal(unique(Rec$redcap_repeat_instrument), 
+
+    expect_equal(unique(Rec$redcap_repeat_instrument),
                  "repeating_instrument")
   }
 )
@@ -87,7 +85,7 @@ test_that(
                               fields = "record_id",
                               dag=TRUE)
     expect_equal(names(Rec),
-                 c("record_id", "redcap_event_name", "redcap_repeat_instrument", 
+                 c("record_id", "redcap_event_name", "redcap_repeat_instrument",
                   "redcap_repeat_instance", "redcap_data_access_group"))
 
     # 3. User requests actual fields + system fields.
@@ -96,19 +94,19 @@ test_that(
     #        available in the project
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = c("record_id", "redcap_event_name", 
+                              fields = c("record_id", "redcap_event_name",
                                          "number_test"))
-    expect_equal(names(Rec), 
+    expect_equal(names(Rec),
                  c("record_id", "redcap_event_name", "number_test"))
 
     # 4. User requests only system fields
     #    Return only system fields
 
     Rec <- exportRecordsTyped(rcon,
-                              fields = c("redcap_event_name", 
+                              fields = c("redcap_event_name",
                                          "redcap_data_access_group"))
     expect_equal(names(Rec),
-                 c("redcap_event_name", 
+                 c("redcap_event_name",
                    "redcap_data_access_group"))
   }
 )
@@ -164,7 +162,7 @@ test_that(
   {
     expect_true(
       nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=TRUE)) <
-        nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=FALSE)) 
+        nrow(exportRecordsTyped(rcon, fields="treatment", filter_empty_rows=FALSE))
     )
   }
 )

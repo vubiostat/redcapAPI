@@ -30,7 +30,8 @@ validateRedcapData <- function(data, redcap_data){
   in_structure_and_not_data <- setdiff(names(redcap_data),
                                        names(data))
 
-  if (length(in_structure_and_not_data) > 0){
+  if (length(in_structure_and_not_data) > 0)
+  {
     logWarning("The following names in the REDCap data structure are not in 'data'. \n",
             "Downstream functions may not operate as expected. {",
             paste0(in_structure_and_not_data, collapse = ", "), "}\n")
@@ -233,7 +234,10 @@ REDCAP_METADATA_VALIDATION_TYPE <- c(
 # Project Information -----------------------------------------------
 # Project Information Structure
 
-REDCAP_PROJECT_INFORMATION_STRUCTURE <-
+# REDCAP_PROJECT_INFORMATION_STRUCTURE <-
+redcapProjectInformationStructure <-
+function(version)
+{
   data.frame(project_id = character(0),
              project_title = character(0),
              creation_time = character(0),
@@ -256,11 +260,13 @@ REDCAP_PROJECT_INFORMATION_STRUCTURE <-
              project_grant_number = character(0),
              project_pi_firstname = character(0),
              project_pi_lastname = character(0),
+             project_pi_email = if(is.null(version) || utils::compareVersion(version, "15.8.2") < 0) NULL else character(0),
              display_today_now_button = character(0),
              missing_data_codes = character(0),
              external_modules = character(0),
              bypass_branching_erase_field_prompt = character(0),
              stringsAsFactors = FALSE)
+}
 
 # This is the list of fields recognized for updates in importProjectInformation
 
@@ -281,6 +287,7 @@ PROJECT_INFO_FIELDS_EDITABLE <-
     "project_grant_number",
     "project_pi_firstname",
     "project_pi_lastname",
+    "project_pi_email",
     "display_today_now_button",
     "bypass_branching_erase_field_prompt")
 
@@ -455,7 +462,11 @@ REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <-
 
 # User-Role Assignment Structure
 
-REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <-
+# REDCAP_USER_ROLE_ASSIGNMENT_STRUCTURE <-
+redcapUserRoleAssignmentStructure <- function(version)
+{
   data.frame(username = character(0),
              unique_role_name = character(0),
+             data_access_group = if(is.null(version) || utils::compareVersion(version, "15.8.2") < 0) NULL else character(0),
              stringsAsFactors = FALSE)
+}

@@ -1,5 +1,3 @@
-context("ExportSAS")
-
 load(file.path(test_path("testdata"),
                "test_redcapAPI_MetaData.Rdata"))
 load(file.path(test_path("testdata"),
