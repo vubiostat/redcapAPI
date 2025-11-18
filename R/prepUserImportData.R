@@ -206,11 +206,11 @@ prepUserImportData_extractFormName <- function(x, instrument){
   forms <- lapply(forms, 
                   function(f) sub("[:].+$", "", f))
   
+  # instrument should be found in every element of x/forms
   instrument_present <- logical(length(instrument))
-  
   for (i in seq_along(instrument_present)){
     instrument_present[i] <- 
-      all(vapply(forms, function(f) instrument[i] %in% forms[[i]], logical(1)))
+      all(vapply(forms, function(f) instrument[i] %in% f, logical(1)))
   }
   
   instrument[instrument_present]
@@ -222,33 +222,41 @@ prepUserImportData_validateAllFormsPresent <- function(data,
                                                        instrument,
                                                        consolidate, 
                                                        coll){
-  # If consolidating, we need to make sure that all of the forms are present
-  # in both form access and data export access.
   if (consolidate){
+    # If consolidating, we need to make sure that all of the forms are present
+    # in both form access and data export access.
     form_access_forms <- sub("_form_access$", "", form_access_field)
     export_access_forms <- sub("_export_access$", "", export_access_field)
+  } else {
+    # if not consolidating forms, we need to make sure all of the forms are 
+    # represented in the standard format
+    has_forms <- 'forms' %in% names(data)
+    has_forms_x <- 'forms_export' %in% names(data)
+    if(!has_forms && !has_forms_x) return(invisible(NULL))
+    if(has_forms) {
+      form_access_forms <- prepUserImportData_extractFormName(data$forms, instrument)
+    } else {
+      form_access_forms <- instrument
+    }
+    if(has_forms_x) {
+      export_access_forms <- prepUserImportData_extractFormName(data$forms_export, instrument)
+    } else {
+      export_access_forms <- instrument
+    }
   }
+  # setdiff should be empty
+  miss_form_access <- setdiff(instrument, form_access_forms)
+  miss_form_export_access <- setdiff(instrument, export_access_forms)
   
-  # if not consolidating forms, we need to make sure all of the forms are 
-  # represented in the standard format
-  
-  if (!consolidate){
-    form_access_forms <- prepUserImportData_extractFormName(data$forms, instrument)
-    export_access_forms <- prepUserImportData_extractFormName(data$forms_export, instrument)
-  }
-  
-  all_form_access <- all(form_access_forms %in% instrument)
-  all_export_access <- all(export_access_forms %in% instrument)
-  
-  if (!all_form_access){
+  if (length(miss_form_access) > 0L){
     msg <- sprintf("At least one user is missing an entry for the form(s): %s", 
-                   paste0(setdiff(instrument, all_form_access), collapse = ", "))
+                   paste0(miss_form_access, collapse = ", "))
     coll$push(msg)
   }
   
-  if (!all_export_access){
+  if (length(miss_form_export_access) > 0L){
     msg <- sprintf("At least one user is missing an export entry for the form(s): %s", 
-                   paste0(setdiff(instrument, all_export_access), collapse = ", "))
+                   paste0(miss_form_export_access, collapse = ", "))
     coll$push(msg)
   }
 }
