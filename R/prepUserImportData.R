@@ -210,7 +210,7 @@ prepUserImportData_extractFormName <- function(x, instrument){
   
   for (i in seq_along(instrument_present)){
     instrument_present[i] <- 
-      all(vapply(forms, function(f) instrument[i] %in% forms[[i]], logical(1)))
+      all(vapply(forms, function(f) instrument[i] %in% f, logical(1)))
   }
   
   instrument[instrument_present]
