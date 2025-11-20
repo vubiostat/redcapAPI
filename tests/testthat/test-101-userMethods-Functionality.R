@@ -82,12 +82,14 @@ test_that(
                 data = data.frame(username = EXPENDABLE_USER,
                                   data_export = 1,
                                   forms = c("record_id:0"),
-                                  forms_export = "record_id:0"),
+	# leaving an instrument off implicitly sets permission to 0
+                                  forms_export = ""),
                 consolidate = FALSE)
 
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(grepl("record_id:0",Users$forms))
+    expect_true(grepl("record_id:0",Users$forms_export))
   }
 )
 
