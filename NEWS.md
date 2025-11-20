@@ -10,7 +10,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.11.5
 
 * Cleaned up logic within `prepUserImportData_validateAllFormsPresent`.
-* Fixed bug in `prepUserImportData_extractFormName`.
+* Deleted `prepUserImportData_extractFormName`.
 
 ## 2.11.4
 

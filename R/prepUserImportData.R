@@ -201,21 +201,6 @@ prepUserImportData_consolidateAccess <- function(d, suffix){
   apply(d, MARGIN = 1, FUN = paste0, collapse = ",")
 }
 
-prepUserImportData_extractFormName <- function(x, instrument){
-  forms <- strsplit(x, ",")
-  forms <- lapply(forms, 
-                  function(f) sub("[:].+$", "", f))
-  
-  # instrument should be found in every element of x/forms
-  instrument_present <- logical(length(instrument))
-  for (i in seq_along(instrument_present)){
-    instrument_present[i] <- 
-      all(vapply(forms, function(f) instrument[i] %in% f, logical(1)))
-  }
-  
-  instrument[instrument_present]
-}
-
 prepUserImportData_validateAllFormsPresent <- function(data, 
                                                        form_access_field, 
                                                        export_access_field, 
@@ -228,21 +213,11 @@ prepUserImportData_validateAllFormsPresent <- function(data,
     form_access_forms <- sub("_form_access$", "", form_access_field)
     export_access_forms <- sub("_export_access$", "", export_access_field)
   } else {
-    # if not consolidating forms, we need to make sure all of the forms are 
-    # represented in the standard format
-    has_forms <- 'forms' %in% names(data)
-    has_forms_x <- 'forms_export' %in% names(data)
-    if(!has_forms && !has_forms_x) return(invisible(NULL))
-    if(has_forms) {
-      form_access_forms <- prepUserImportData_extractFormName(data$forms, instrument)
-    } else {
-      form_access_forms <- instrument
-    }
-    if(has_forms_x) {
-      export_access_forms <- prepUserImportData_extractFormName(data$forms_export, instrument)
-    } else {
-      export_access_forms <- instrument
-    }
+    # Prior to redcapAPI version 2.11.5, functionality surrounding consolidate=FALSE
+    # did not work properly. See GH issue #474.
+    # It was determined that the validation checking was unnecessary.
+    # As a result the function "prepUserImportData_extractFormName" was removed.
+    return(invisible(NULL))
   }
   # setdiff should be empty
   miss_form_access <- setdiff(instrument, form_access_forms)
