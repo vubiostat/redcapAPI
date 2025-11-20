@@ -80,29 +80,27 @@ prepUserImportData <- function(data,
   
   checkmate::reportAssertions(coll)
   
-  primary_fields <- names(data)
-  primary_fields <- primary_fields[!grepl("(_export_access|_form_access)$", 
-                                          primary_fields)]
-  
+  all_fields <- names(data)
+  form_access_field <- grep('_form_access$', all_fields, value = TRUE)
+  export_access_field <- grep('_export_access$', all_fields, value = TRUE)
+  primary_fields <- setdiff(all_fields, c(form_access_field, export_access_field))
+
   checkmate::assert_subset(x = primary_fields, 
                            choices = c(if (user_role) names(redcapUserRoleStructure(rcon$version())) else names(redcapUserStructure(rcon$version())), 
                                        "data_export"), 
                            add = coll)
   
   checkmate::reportAssertions(coll)
-  
-  form_access_field <- names(data)[grepl("_form_access$", names(data))]
-  export_access_field <- names(data)[grepl("_export_access$", names(data))]
-  instrument <- rcon$instruments()$instrument_name
-  
-  prepUserImportData_validateAllFormsPresent(data = data, 
-                                             form_access_field = form_access_field, 
-                                             export_access_field = export_access_field, 
-                                             instrument = instrument,
-                                             consolidate = consolidate, 
-                                             coll = coll)
-  
-  checkmate::reportAssertions(coll)
+
+  # Prior to redcapAPI version 2.11.5, functionality surrounding form validation
+  # did not work properly. See GH issue #474.
+  # Specifically user permissions for forms and forms export were checked against
+  # the list of all instruments. The prior design was to generate an error
+  # if one of the instruments was not present.
+  # The current design is to let REDCap API handle the missing instruments,
+  # which will set the permissions to "No Access".
+  # The functions "prepUserImportData_validateAllFormsPresent" and
+  # "prepUserImportData_extractFormName" were removed with this change.
 
   ###################################################################
   # Functional Code                                              ####
@@ -119,7 +117,7 @@ prepUserImportData <- function(data,
   fields_to_remove <- c("email", "lastname", "firstname", 
                         "data_access_group_id")
   data <- data[!names(data) %in% fields_to_remove]
-  
+
   # Convert values to numeric
   
   for (nm in names(data)){
@@ -199,39 +197,4 @@ prepUserImportData_consolidateAccess <- function(d, suffix){
   }
   
   apply(d, MARGIN = 1, FUN = paste0, collapse = ",")
-}
-
-prepUserImportData_validateAllFormsPresent <- function(data, 
-                                                       form_access_field, 
-                                                       export_access_field, 
-                                                       instrument,
-                                                       consolidate, 
-                                                       coll){
-  if (consolidate){
-    # If consolidating, we need to make sure that all of the forms are present
-    # in both form access and data export access.
-    form_access_forms <- sub("_form_access$", "", form_access_field)
-    export_access_forms <- sub("_export_access$", "", export_access_field)
-  } else {
-    # Prior to redcapAPI version 2.11.5, functionality surrounding consolidate=FALSE
-    # did not work properly. See GH issue #474.
-    # It was determined that the validation checking was unnecessary.
-    # As a result the function "prepUserImportData_extractFormName" was removed.
-    return(invisible(NULL))
-  }
-  # setdiff should be empty
-  miss_form_access <- setdiff(instrument, form_access_forms)
-  miss_form_export_access <- setdiff(instrument, export_access_forms)
-  
-  if (length(miss_form_access) > 0L){
-    msg <- sprintf("At least one user is missing an entry for the form(s): %s", 
-                   paste0(miss_form_access, collapse = ", "))
-    coll$push(msg)
-  }
-  
-  if (length(miss_form_export_access) > 0L){
-    msg <- sprintf("At least one user is missing an export entry for the form(s): %s", 
-                   paste0(miss_form_export_access, collapse = ", "))
-    coll$push(msg)
-  }
 }
