@@ -88,3 +88,11 @@ test_that(
                  "'retry_quietly': Must be of type 'logical'")
   }
 )
+
+test_that(
+  "Trailing slash is added to url if not present",
+  {
+    expect_no_error(redcapConnection(url = substr(url, 1, nchar(url)-1), token=API_KEY))
+    expect_no_error(connectAndCheck(rcon$token, substr(rcon$url, 1, nchar(rcon$url)-1)))
+  }
+)
