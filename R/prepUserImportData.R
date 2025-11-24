@@ -209,7 +209,7 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "154"=154)
   }
 
-  as.numeric(map[as.character(x)])
+  map[as.character(x)]
 }
 
 prepUserImportData_consolidateAccess <- function(d, suffix){
