@@ -10,7 +10,8 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.11.5
 
 * Deleted functions `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName`.
-* Updated user role permissions to use new number based on version
+* Enhanced logging of exporting records.
+* Updated user role permissions to use new number based on version.
 * Adds trailing slash when calling unlockREDCap to url if not present.
 
 ## 2.11.4
