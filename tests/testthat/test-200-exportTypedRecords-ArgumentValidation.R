@@ -1,5 +1,3 @@
-context("Export Typed Records Argument Validation")
-
 #####################################################################
 # Export Records Typed
 
@@ -57,7 +55,7 @@ test_that(
     local_reproducible_output(width = 200)
     WithCharacter <- exportRecordsTyped(rcon, records = c("1", "2"))
     WithNumeric <- exportRecordsTyped(rcon, records = c(1, 2))
-    
+
     expect_identical(WithCharacter,
                      WithNumeric)
     expect_error(exportRecordsTyped(rcon, records = TRUE),
@@ -217,7 +215,7 @@ test_that(
 )
 
 test_that(
-  "exportRecordsTyped expects single logical for filter_empty_rows", 
+  "exportRecordsTyped expects single logical for filter_empty_rows",
   {
     local_reproducible_output(width = 200)
     expect_error(exportRecordsTyped(rcon, filter_empty_rows=1),

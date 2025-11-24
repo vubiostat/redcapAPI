@@ -1,21 +1,18 @@
-context("mChoiceCast.R")
-
-
 require(Hmisc)
 
 
 test_that(
   "mChoice type conversion for checkbox with Hmisc attached",
   {
-    skip_if(!requireNamespace("Hmisc", quietly=TRUE), 
+    skip_if(!requireNamespace("Hmisc", quietly=TRUE),
             "Hmisc is required to test mChoice type conversion")
-    
-    rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="labelled") 
+
+    rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="labelled")
     expect_class(rec$prereq_checkbox, "mChoice")
-    
+
     rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, style="coded")
     expect_class(rec$prereq_checkbox, "mChoice")
-    
+
   }
 )
 
@@ -33,7 +30,7 @@ test_that(
     rec <- exportRecordsTyped(rcon)
     attr(rec, "something") <- "wicked"
     rec <- mChoiceCast(rec, rcon, style="coded")
-    
+
     expect_equal(attr(rec, "something"), "wicked")
   }
 )
@@ -94,10 +91,10 @@ detach("package:Hmisc", unload=TRUE)
 test_that(
   "mChoice with no Hmisc warns user if requested",
   {
-    expect_warning(rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon), "Hmisc") 
-    
+    expect_warning(rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon), "Hmisc")
+
     expect_warning(rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, "coded"), "Hmisc")
-    
+
     expect_warning(rec <- exportRecordsTyped(rcon) |> mChoiceCast(rcon, "labelled"), "Hmisc")
   }
 )

@@ -38,6 +38,7 @@
 #' @importFrom utils browseURL
 connectAndCheck <- function(key, url, ...)
 {
+  if(!grepl("\\/$", url)) url <- paste0(url, "/")
   tryCatch(
     {
       rcon    <- redcapConnection(token=key, url=url, ...)

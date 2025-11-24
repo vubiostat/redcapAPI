@@ -1,19 +1,16 @@
-context("Project Information Methods Functionality")
-
-
 #####################################################################
 # exportProjectInformation functionality
 
 test_that(
-  "Export project information", 
+  "Export project information",
   {
     Project <- exportProjectInformation(rcon)
-    
+
     # These constants are defined in redcapDataStructure.R
-    expect_true(all(names(Project) %in% c(PROJECT_INFO_FIELDS_EDITABLE, 
+    expect_true(all(names(Project) %in% c(PROJECT_INFO_FIELDS_EDITABLE,
                                           PROJECT_INFO_FIELDS_FIXED)))
-    
-    expect_data_frame(Project, 
+
+    expect_data_frame(Project,
                       nrows = 1)
   }
 )
@@ -24,24 +21,24 @@ test_that(
 CurrentInfo <- rcon$projectInformation()
 
 test_that(
-  "Import new values", 
+  "Import new values",
   {
-    NewInfo <- data.frame(project_pi_lastname = "Not Garbett", 
+    NewInfo <- data.frame(project_pi_lastname = "Not Garbett",
                           display_today_now_button = 0)
-    
-    n_imported <- importProjectInformation(rcon, 
+
+    n_imported <- importProjectInformation(rcon,
                                             NewInfo)
     expect_equal(n_imported, "2")
-    
-    n_imported <- importProjectInformation(rcon, 
+
+    n_imported <- importProjectInformation(rcon,
                                            NewInfo)
     expect_equal(n_imported, "2")
-    
-    # cleanup 
-    
-    n_imported <- importProjectInformation(rcon, 
+
+    # cleanup
+
+    n_imported <- importProjectInformation(rcon,
                                            CurrentInfo)
-    expect_equal(n_imported, "18")
+    expect_equal(n_imported, if(is.null(rcon$version()) || utils::compareVersion(rcon$version(), "15.8.2") < 0) "18" else "19")
   }
 )
 

@@ -7,6 +7,17 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
 * The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
 
+## 2.11.5
+
+* Deleted functions `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName`.
+* Updated user role permissions to use new number based on version
+* Adds trailing slash when calling unlockREDCap to url if not present.
+
+## 2.11.4
+
+* Updated to allow for `project_pi_email` as an allowed field of project info.
+* Updated to allow for `data_access_group` as part of user role assignment.
+
 ## 2.11.3
 
 * Added injectable log function for use in production environments or debugging.

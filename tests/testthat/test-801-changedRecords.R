@@ -1,5 +1,3 @@
-context("changedRecords Functionality")
-
 test_that(
   "Return an error when rcon is not a redcapConnection object",
   {
