@@ -186,7 +186,7 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "Read Only"=2,
      "2"=2,
      "View survey responses and Edit records"=1,
-     "1"=2,
+     "1"=1,
      "Edit survey responses and records"=3,
      "3"=3)
   } else
