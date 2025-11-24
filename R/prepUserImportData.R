@@ -177,8 +177,6 @@ prepUserImportData_castExportAccess <- function(x){
 #' @importFrom utils compareVersion
 prepUserImportData_castFormAccess <- function(rcon, x)
 {
-  x <- as.character(x)
-
   map <- if(utils::compareVersion("15.6.0", rcon$version()) == 1)
   {
    c("No Access"=0,
@@ -211,7 +209,7 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "154"=154)
   }
 
-  as.numeric(map[x])
+  as.numeric(map[as.character(x)])
 }
 
 prepUserImportData_consolidateAccess <- function(d, suffix){
