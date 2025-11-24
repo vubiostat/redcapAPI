@@ -10,6 +10,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 ## 2.11.5
 
 * Deleted functions `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName`.
+* Updated user role permissions to use new number based on version
 
 ## 2.11.4
 
