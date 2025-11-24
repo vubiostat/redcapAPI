@@ -109,7 +109,7 @@ test_that(
     local_reproducible_output(width = 200)
     expect_error(importUsers(rcon,
                              data = mtcars),
-                 "'names[(]data[)]': Must be a subset of")
+                 "names[(]data[)] has invalid columns mpg, cyl, disp, hp, drat")
   }
 )
 
