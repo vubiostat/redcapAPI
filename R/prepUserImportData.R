@@ -122,7 +122,12 @@ prepUserImportData <- function(data,
 
   for (nm in names(data)){
     data[[nm]] <-
-      if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
+      if (nm == 'data_access_group'){
+        # don't convert DAG into numeric
+        # it qualifies as REDCAP_USER_TABLE_ACCESS_VARIABLES
+        # possibly convert to numeric but leave NA?
+        data[[nm]]
+      } else if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
         prepUserImportData_castAccessVariable(data[[nm]])
       } else if (nm %in% form_access_field){
         prepUserImportData_castFormAccess(rcon, data[[nm]])
