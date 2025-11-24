@@ -182,29 +182,36 @@ prepUserImportData_castFormAccess <- function(rcon, x)
   map <- if(utils::compareVersion("15.6.0", rcon$version()) == 1)
   {
    c("No Access"=0,
+     "0"=0,
      "Read Only"=2,
+     "2"=2,
      "View survey responses and Edit records"=1,
-     "Edit survey responses and records"=3)
+     "1"=2,
+     "Edit survey responses and records"=3,
+     "3"=3)
   } else
   {
     # Note the old values are supposed to work as well,
     # the first specified one takes priority
    c("No Access"=128,
-     "No Access"=0,
+     "128"=128,
+     "0"=128,
      "Read Only"=129,
-     "Read Only"=2,
+     "129"=129,
+     "2"=129,
      "View survey responses and Edit records"=130,
-     "View survey responses and Edit records"=1,
+     "130"=130,
+     "1"=130,
      "Edit survey responses and records"=138,
-     "Edit survey responses and records"=3,
+     "138"=138,
+     "3"=138,
      "View survey responses and Edit or Delete records"=146,
-     "Edit or Delete Survey responses and records"=154)
+     "146"=146,
+     "Edit or Delete Survey responses and records"=154,
+     "154"=154)
   }
 
-  for(i in seq_along(map))
-    x[which(x %in% c(names(map)[i], map[i]))] <- map[i]
-
-  as.numeric(x)
+  as.numeric(map[x])
 }
 
 prepUserImportData_consolidateAccess <- function(d, suffix){
