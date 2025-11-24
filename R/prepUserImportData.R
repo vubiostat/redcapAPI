@@ -190,7 +190,7 @@ prepUserImportData_castFormAccess <- function(rcon, x)
     # Note the old values are supposed to work as well,
     # the first specified one takes priority
    c("No Access"=128,
-     "No Access"=1,
+     "No Access"=0,
      "Read Only"=129,
      "Read Only"=2,
      "View survey responses and Edit records"=130,
