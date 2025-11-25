@@ -55,8 +55,8 @@
 prepUserImportData <- function(data,
                                rcon,
                                consolidate = TRUE,
-                               user_role = FALSE){
-
+                               user_role = FALSE)
+{
   ###################################################################
   # Argument Validation                                          ####
 
@@ -115,7 +115,7 @@ prepUserImportData <- function(data,
   # Remove fields that cannot be updated
 
   fields_to_remove <- c("email", "lastname", "firstname",
-                        "data_access_group_id")
+                        "data_access_group_id", "data_access_group", "data_access_groups")
   data <- data[!names(data) %in% fields_to_remove]
 
   # Convert values to numeric
@@ -194,8 +194,6 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "3"=3)
   } else
   {
-    # Note the old values are supposed to work as well,
-    # the first specified one takes priority
    c("No Access"=128,
      "128"=128,
      "0"=128,
@@ -214,14 +212,20 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "154"=154)
   }
 
+  #x           <- map[as.character(x)]
+  #x[is.na(x)] <- 0
+  #x
+
   map[as.character(x)]
 }
 
-prepUserImportData_consolidateAccess <- function(d, suffix){
-  for (i in seq_along(d)){
+prepUserImportData_consolidateAccess <- function(d, suffix)
+{
+  for (i in seq_along(d))
+  {
     this_name <- sub(suffix, "", names(d)[i])
-    d[[i]] <- sprintf("%s:%s", this_name, d[[i]])
+    d[[i]] <- ifelse(is.na(d[[i]]), NA, sprintf("%s:%s", this_name, d[[i]]))
   }
 
-  apply(d, MARGIN = 1, FUN = paste0, collapse = ",")
+  apply(d, MARGIN = 1, FUN = function(x) paste0(x[!is.na(x)], collapse = ","))
 }
