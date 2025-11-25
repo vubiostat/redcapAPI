@@ -16,6 +16,7 @@
 #' @param ... This will capture `api_param` (if specified) which will modify the body of the
 #'   the specified body of the request. It also captures `config` which will get
 #'   passed to curl::handle_setopt.
+#' @param log `logical(1)` Should this call the logging callback. Defaults to TRUE.
 #' @details The intent of this function is to provide an approach to execute
 #'   calls to the REDCap API that is both consistent and flexible. Importantly,
 #'   this provides a framework for making calls to the API using features that
@@ -54,8 +55,6 @@
 #'   MetaData <- utils::read.csv(text = as.character(MetaData),
 #'                               stringsAsFactors = FALSE,
 #'                               na.strings = "")
-#'
-#'
 #'
 #'   # Call to export Meta Data (Data Dictionary) for specific fields
 #'
@@ -135,12 +134,14 @@
 #' }
 #'
 #' @export
-makeApiCall <- function(rcon,
-                        body   = list(),
-                        url    = NULL,
-                        success_status_codes = 200L,
-                        redirect = TRUE,
-                        ...)
+makeApiCall <- function(
+  rcon,
+  body                 = list(),
+  url                  = NULL,
+  success_status_codes = 200L,
+  redirect             = TRUE,
+  log                  = TRUE,
+  ...)
 {
   # Pull config, api_param from ...
   dots      <- list(...)
@@ -176,6 +177,10 @@ makeApiCall <- function(rcon,
                          add = coll)
 
   checkmate::assert_logical(x   = redirect,
+                            len = 1,
+                            add = coll)
+
+  checkmate::assert_logical(x   = log,
                             len = 1,
                             add = coll)
 
@@ -220,16 +225,19 @@ makeApiCall <- function(rcon,
     redacted <- as.character(redacted)
 
     if(do_verbose) message(paste0(">>>\n", redacted, "\n<<<\n"))
-    if(.currentLogLevel() < 2)
+    if(log)
     {
-      logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
-               status=response$status_code,
-               body=redacted,
-               response=as.character(response))
-    } else
-    {
-      logEvent("INFO", call=.callFromPackage('redcapAPI'),
-               status=response$status_code)
+      if(.currentLogLevel() < 2)
+      {
+        logEvent("DEBUG", call=.callFromPackage('redcapAPI'),
+                 status=response$status_code,
+                 body=redacted,
+                 response=as.character(response))
+      } else
+      {
+        logEvent("INFO", call=.callFromPackage('redcapAPI'),
+                 status=response$status_code)
+      }
     }
 
     if(redirect) response <- .makeApiCall_handleRedirect(rcon, body, response, ...)
