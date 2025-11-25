@@ -48,8 +48,16 @@ exportRecordsTyped.redcapApiConnection <-
     warn_zero_coded = TRUE,
     ...,
     csv_delimiter  = ",",
-    batch_size     = NULL)
+    batch_size     = 100L)
 {
+  logEvent("INFO", call='exportRecordsTyped',
+           redcap_title=rcon$project()$project_title,
+           fields=fields, drop_fields=drop_fields, forms=forms,
+           records=records,events=events,survey=survey,dag=dag,
+           date_begin=date_begin, date_end=date_end,
+           filter_empty_rows=filter_empty_rows,
+           batch_size=batch_size)
+
   if (is.numeric(records)) records <- as.character(records)
 
    ###########################################################################
@@ -640,7 +648,14 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
   response <- makeApiCall(rcon,
                           body = c(body,
                                    vectorToApiBodyList(records, "records")),
+                          log=FALSE,
                           ...)
+  logEvent("INFO", call='.exportRecordsTyped_Unbatched',
+           status=response$status_code,
+           records=records,
+           body=body)
+  logEvent("DEBUG", call='.exportRecordsTyped_Unbatched',
+           response=response) # response has PHI/PII
 
   response <- as.data.frame(response,
                             colClasses = "character",
@@ -670,7 +685,12 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
                                                  outputFormat = "csv"),
                                             vectorToApiBodyList(target_field,
                                                                 "fields")),
+                                   log=FALSE,
                                    ...)
+    logEvent("INFO", call='.exportRecordsTyped_Batched',
+             status=record_response$status_code,
+             body=body,
+             response=as.character(record_response))
 
     records <- as.data.frame(record_response, sep = csv_delimiter)
 

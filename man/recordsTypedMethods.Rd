@@ -41,7 +41,7 @@ exportReportsTyped(rcon, report_id, ...)
   warn_zero_coded = TRUE,
   ...,
   csv_delimiter = ",",
-  batch_size = NULL
+  batch_size = 100L
 )
 
 \method{exportRecordsTyped}{redcapOfflineConnection}(
