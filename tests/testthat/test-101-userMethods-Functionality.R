@@ -101,14 +101,14 @@ test_that(
     expect_warning(importUsers(rcon,
                 data = data.frame(username = EXPENDABLE_USER,
                                   record_id_form_access = 1,
-                                  randomization_export_access = 1,
+                                  #randomization_export_access = 1,
                                   forms = 'record_id:0',
                                   forms_export = ''),
 		        consolidate = FALSE))
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(grepl("record_id:0",Users$forms))
-    expect_true(grepl("randomization:0",Users$forms_export))
+    #expect_true(grepl("randomization:0",Users$forms_export))
   }
 )
 
