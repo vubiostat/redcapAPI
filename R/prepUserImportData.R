@@ -55,8 +55,8 @@
 prepUserImportData <- function(data,
                                rcon,
                                consolidate = TRUE,
-                               user_role = FALSE){
-
+                               user_role = FALSE)
+{
   ###################################################################
   # Argument Validation                                          ####
 
@@ -115,14 +115,23 @@ prepUserImportData <- function(data,
   # Remove fields that cannot be updated
 
   fields_to_remove <- c("email", "lastname", "firstname",
-                        "data_access_group_id")
+                        "data_access_group_id", "data_access_group") #?, "data_access_groups")
   data <- data[!names(data) %in% fields_to_remove]
 
   # Convert values to numeric
 
   for (nm in names(data)){
     data[[nm]] <-
-      if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
+      if (nm == 'data_access_group'){
+        # as of version 2.11.5, DAG is in "fields_to_remove"
+        # this chunk will never be run
+        # in the future we may handle it, so leaving the information below
+
+        # don't convert DAG into numeric
+        # it qualifies as REDCAP_USER_TABLE_ACCESS_VARIABLES
+        # possibly convert to numeric but leave NA?
+        data[[nm]]
+      } else if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
         prepUserImportData_castAccessVariable(data[[nm]])
       } else if (nm %in% form_access_field){
         prepUserImportData_castFormAccess(rcon, data[[nm]])
@@ -189,8 +198,6 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "3"=3)
   } else
   {
-    # Note the old values are supposed to work as well,
-    # the first specified one takes priority
    c("No Access"=128,
      "128"=128,
      "0"=128,
@@ -208,15 +215,18 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "Edit or Delete Survey responses and records"=154,
      "154"=154)
   }
-
+  # NA values are not handled here by design
+  # values not found in "map" will also return NA
   map[as.character(x)]
 }
 
-prepUserImportData_consolidateAccess <- function(d, suffix){
-  for (i in seq_along(d)){
+prepUserImportData_consolidateAccess <- function(d, suffix)
+{
+  for (i in seq_along(d))
+  {
     this_name <- sub(suffix, "", names(d)[i])
-    d[[i]] <- sprintf("%s:%s", this_name, d[[i]])
+    d[[i]] <- ifelse(is.na(d[[i]]), NA, sprintf("%s:%s", this_name, d[[i]]))
   }
 
-  apply(d, MARGIN = 1, FUN = paste0, collapse = ",")
+  apply(d, MARGIN = 1, FUN = function(x) paste0(x[!is.na(x)], collapse = ","))
 }

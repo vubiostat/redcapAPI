@@ -378,6 +378,7 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
     "data_quality_execute",
     "api_export",
     "api_import",
+    "api_modules",
     "mobile_app",
     "mobile_app_download_data",
     "record_create",
