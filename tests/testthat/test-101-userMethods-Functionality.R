@@ -91,24 +91,22 @@ test_that(
     expect_true(grepl("record_id:0",Users$forms))
     expect_true(grepl("record_id:0",Users$forms_export))
 
-    # Update data_access_group to "No Assignment"
-    # need another test for legitimate DAG assignment; how to do this?
-    importUsers(rcon,
-                data = data.frame(username = EXPENDABLE_USER,
-                                  data_access_group = NA_character_))
-
     # consolidated format when consolidate is FALSE
     expect_warning(importUsers(rcon,
                 data = data.frame(username = EXPENDABLE_USER,
                                   record_id_form_access = 1,
-                                  #randomization_export_access = 1,
                                   forms = 'record_id:0',
                                   forms_export = ''),
 		        consolidate = FALSE))
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(grepl("record_id:0",Users$forms))
-    #expect_true(grepl("randomization:0",Users$forms_export))
+
+    # NEED TO ADD TWO TESTS
+    # Update data_access_group to "No Assignment"
+    # functionality not supported as of version 2.11.5
+    # Update data_access_group to a legitimate DAG
+    # functionality not supported as of version 2.11.5
   }
 )
 

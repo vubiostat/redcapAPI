@@ -123,6 +123,10 @@ prepUserImportData <- function(data,
   for (nm in names(data)){
     data[[nm]] <-
       if (nm == 'data_access_group'){
+        # as of version 2.11.5, DAG is in "fields_to_remove"
+        # this chunk will never be run
+        # in the future we may handle it, so leaving the information below
+
         # don't convert DAG into numeric
         # it qualifies as REDCAP_USER_TABLE_ACCESS_VARIABLES
         # possibly convert to numeric but leave NA?
@@ -211,11 +215,8 @@ prepUserImportData_castFormAccess <- function(rcon, x)
      "Edit or Delete Survey responses and records"=154,
      "154"=154)
   }
-
-  #x           <- map[as.character(x)]
-  #x[is.na(x)] <- 0
-  #x
-
+  # NA values are not handled here by design
+  # values not found in "map" will also return NA
   map[as.character(x)]
 }
 
