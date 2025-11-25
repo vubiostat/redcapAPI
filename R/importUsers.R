@@ -39,12 +39,27 @@ importUsers.redcapApiConnection <- function(rcon,
   form_access_names <- sprintf("%s_form_access", form_names)
   form_export_names <- sprintf("%s_export_access", form_names)
 
+  if(!consolidate) {
+    extra_access <- intersect(names(data), form_access_names)
+    extra_export <- intersect(names(data), form_export_names)
+    if(length(extra_access) > 0L) {
+      m <- sprintf('Form Access variables [%s] should generally not be set when consolidate = FALSE',
+                   paste(extra_access, collapse = ','))
+      warning(m)
+    }
+    if(length(extra_export) > 0L) {
+      m <- sprintf('Form Export variables [%s] should generally not be set when consolidate = FALSE',
+                   paste(extra_export, collapse = ','))
+      warning(m)
+    }
+  }
+
   invalid_col_names <-
     names(data)[!names(data) %in%
-                c(names(redcapUserStructure(rcon$version())),
-                  form_access_names,
-                  form_export_names,
-                  "data_export")]
+                  c(names(redcapUserStructure(rcon$version())),
+                    form_access_names,
+                    form_export_names,
+                    "data_export")]
   checkmate::assert_vector(x=invalid_col_names,
                            len=0,
                            add = coll,
