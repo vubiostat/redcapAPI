@@ -14,7 +14,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Updated user role permissions to use new number based on version.
 * Adds trailing slash when calling unlockREDCap to url if not present.
 * Added `data_access_group_label` to allowed user attributes.
-* Added but then removed `data_quality_resolution` to allowed user attributes. It no longer seems necessary.
+* Added `data_quality_resolution` to allowed user attributes. It may be unnecessary.
 
 ## 2.11.4
 
