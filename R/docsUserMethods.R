@@ -91,8 +91,9 @@
 #' | `firstname`| The user's first name.                                      |
 #' | `lastname` | The user's last name.                                       |
 #' | `expiration` | The date at which the user's access to the project will expire. |
-#' | `data_access_group` | The text name of the Data Access Group to which the user is assigned. |
+#' | `data_access_group` | The cleaned text name of the Data Access Group to which the user is assigned. |
 #' | `data_access_group_id` | The REDCap assigned unique identifier of the Data Access Group.|
+#' | `data_access_group_label` | The text name of the Data Access Group to which the user is assigned. |
 #' | `design`   | Boolean flag indicating if the user has permissions to utilize the project design modules. |
 #' | `alerts`   | Boolean flag indicating if the user has permissions to utlize the alerts tools.|
 #' | `user_right` | Boolean flag indicating if the user has permissions to modify user rights. |
@@ -104,11 +105,13 @@
 #' | `data_import_tool` | Boolean flag indicating if the user has permissions to use the data import tool.|
 #' | `data_comparison_tool` | Boolean flag indicating if the user has permissions to use the data comparison tool.|
 #' | `logging`  | Boolean flag indicating if the user has permissions to view the project logs (audit trail).|
+#' | `email_logging` | Boolean flag indicating if the user has privileges. |
 #' | `file_repository` | Boolean flag indicating if the user has permissions to access the project file repository.|
 #' | `data_quality_create` | Boolean flag indicating if the user has permission create new data quality rules. |
 #' | `data_quality_execute` | Boolean flag indicating if the user has permission to execute data quality rules.|
 #' | `api_export` | Boolean flag indicating if the user has API export privileges. |
 #' | `api_import` | Boolean flag indicating if the user has API import privileges.|
+#' | `api_modules` | Boolean flag indicating if the user has privileges. |
 #' | `mobile_app` | Boolean flag indicating if the user has permissions to use the mobile app.|
 #' | `mobile_app_download_data` | Boolean flag indicating if the user has permissions to download data on the mobile app.|
 #' | `record_create` | Boolean flag indicating if the user has permission to create new records.|
@@ -117,6 +120,7 @@
 #' | `lock_records_all_forms` | Boolean flag indicating if the user has permission to lock records across all forms. |
 #' | `lock_records` | Boolean flag indicating if the user has permission to lock a records on individual forms.  |
 #' | `lock_records_customization` | Boolean flag indicating if the user has permission to customize record locking. |
+#' | `mycap_participants` | Boolean flag indicating if the user has privileges. |
 #' | `random_setup` | Boolean flag indicating if the user has permission to set up randomization rules. |
 #' | `random_dashboard` | Boolean flag indicating if the user has permission to view the randomization dashboard.|
 #' | `random_perform` | Boolean flag indicating if the user has permission to perform record randomization.|
