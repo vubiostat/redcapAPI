@@ -339,7 +339,7 @@ redcapUserStructure <- function(version)
              file_repository = character(0),
              data_quality_create = character(0),
              data_quality_execute = character(0),
-             # data_quality_resolution = character(0),
+             data_quality_resolution = character(0),
              api_export = character(0),
              api_import = character(0),
              api_modules=if(is.null(version) || utils::compareVersion(version, "14.0.3") < 0) NULL else character(0),
