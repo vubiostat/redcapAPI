@@ -82,6 +82,13 @@ test_that(
 
     importUsers(rcon, data = data.frame(username = EXPENDABLE_USER,
                                         data_access_groups = 1))
+    
+    # Import shouldn't affect role assignment
+    UsersWithRoles <- rcon$user_role_assignment()
+    CurrentRole <- UsersWithRoles[UsersWithRoles[,'username'] == EXPENDABLE_USER, 'unique_role_name']
+    # This should be true even if importUsers fails
+    # Need a test that triggers an error during API call
+    expect_equal(CurrentRole, THIS_ROLE)
 
     NewUser <- exportUsers(rcon, labels = FALSE)
     NewUser <- NewUser[NewUser$username == EXPENDABLE_USER, ]

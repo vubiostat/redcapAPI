@@ -70,9 +70,24 @@ importUsers.redcapApiConnection <- function(rcon,
   ###################################################################
   # Check for Users Assigned to User Role                        ####
   
-  OrigUserRoleAssign <- rcon$user_role_assignment()
+  UsersWithRoles <- rcon$user_role_assignment()[,c('username','unique_role_name')]
+  UsersWithRoles <- UsersWithRoles[!is.na(UsersWithRoles$unique_role_name), ]
+  UsersWithConflict <- 
+    UsersWithRoles[UsersWithRoles$username %in% data[,'username'], ]
 
-  user_conflict_exists <- .importUsers_detectUserRoleConflict(rcon, data)
+  ###################################################################
+  # Restore and refresh                                          ####
+  if (nrow(UsersWithConflict) > 0){
+    # Why is role set to missing before the "user" API call, then reset to original?
+    # GH issue 206
+    # "Users in roles cannot have their privileges modified via the 'Import User' API method."
+    EmptyRoles <- UsersWithConflict
+    EmptyRoles$unique_role_name <- NA_character_
+    importUserRoleAssignments(rcon, EmptyRoles)
+
+    on.exit(importUserRoleAssignments(rcon, UsersWithConflict),
+            add = TRUE)
+  }
   
   ###################################################################
   # Build the body list                                          ####
@@ -87,36 +102,5 @@ importUsers.redcapApiConnection <- function(rcon,
   rcon$flush_users()
   response <- makeApiCall(rcon, body, ...)
   
-  ###################################################################
-  # Restore and refresh                                          ####
-  if (user_conflict_exists){
-    importUserRoleAssignments(rcon, 
-                              data = OrigUserRoleAssign[1:2])
-  }
-  
   invisible(as.character(response))
-}
-
-
-#####################################################################
-# Unexported                                                     ####
-
-.importUsers_detectUserRoleConflict <- function(rcon, data){
-  UsersAssignedRoles <- rcon$user_role_assignment()
-  UsersAssignedRoles <- 
-    UsersAssignedRoles[!is.na(UsersAssignedRoles$unique_role_name), ]
-  UsersWithConflict <- 
-    UsersAssignedRoles[UsersAssignedRoles$username %in% data$username, ]
-  
-  user_conflict_exists <- nrow(UsersWithConflict) > 0
-  
-  if (user_conflict_exists){
-    UsersWithConflict$unique_role_name <- rep(NA_character_, 
-                                              nrow(UsersWithConflict))
-    
-    importUserRoleAssignments(rcon, 
-                              data = UsersWithConflict[1:2])
-  }
-  
-  user_conflict_exists
 }
