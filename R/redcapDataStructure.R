@@ -323,6 +323,7 @@ redcapUserStructure <- function(version)
              expiration = as.POSIXct(character(0)),
              data_access_group = character(0),
              data_access_group_id = character(0),
+             data_access_group_label = if(is.null(version) || utils::compareVersion(version, "16.0.0") < 0) NULL else character(0),
              design = character(0),
              alerts = character(0),
              user_rights = character(0),
