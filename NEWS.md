@@ -9,10 +9,11 @@ A future release of version 3.0.0 will introduce several breaking changes!
 
 ## 2.11.5
 
-* Deleted functions `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName`.
-* Enhanced logging of exporting records.
-* Updated user role permissions to use new number based on version.
-* Adds trailing slash when calling unlockREDCap to url if not present.
+* `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName` functions are removed.
+* Enhanced logging of exporting records to include `record_id` and other non-PHI info.
+* Updated user role permissions to use new numbering scheme based on REDCap version.
+* `unlockREDCap` adds trailing slash to url if not present.
+* `importUsers` improved error message when invalid columns are provided.
 * Added `data_access_group_label` to allowed user attributes.
 * Added `data_quality_resolution` to allowed user attributes. It may be unnecessary.
 
