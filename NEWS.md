@@ -1,5 +1,14 @@
 # redcapAPI (development version)
 
+## DEPRECATION NOTICES
+
+A future release of version 3.0.0 will introduce several breaking changes!
+
+* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`
+* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
+* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
+* The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
+
 # 2.11.5
 
 * `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName` functions are removed.
@@ -9,15 +18,6 @@
 * `importUsers` improved error message when invalid columns are provided.
 * Added `data_access_group_label` to allowed user attributes.
 * Added `data_quality_resolution` to allowed user attributes. It may be unnecessary.
-
-## DEPRECATION NOTICES
-
-A future release of version 3.0.0 will introduce several breaking changes!
-
-* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`
-* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
-* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
-* The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
 
 # 2.11.4
 
