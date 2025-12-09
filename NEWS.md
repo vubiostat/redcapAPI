@@ -1,13 +1,4 @@
-## DEPRECATION NOTICES
-
-A future release of version 3.0.0 will introduce several breaking changes!
-
-* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`
-* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
-* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
-* The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
-
-## 2.11.5
+# 2.11.5
 
 * `prepUserImportData_validateAllFormsPresent` and `prepUserImportData_extractFormName` functions are removed.
 * Enhanced logging of exporting records to include `record_id` and other non-PHI info.
@@ -17,23 +8,32 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Added `data_access_group_label` to allowed user attributes.
 * Added `data_quality_resolution` to allowed user attributes. It may be unnecessary.
 
-## 2.11.4
+## DEPRECATION NOTICES
+
+A future release of version 3.0.0 will introduce several breaking changes!
+
+* The `exportRecords` function interface will be replaced. Please switch your processes to `exportRecordsTyped`
+* The `importRecords` function interface will be replaced to utilize `castForImport` to prepare data for import. Validation logs will no longer be printed.
+* The `redcapFactor` class is being discontinued with all its supporting methods (including `redcapFactorFlip`). Please use `recastRecords` instead.
+* The `recodeCheck` function is being discontinued. Please use `recastRecords` instead.
+
+# 2.11.4
 
 * Updated to allow for `project_pi_email` as an allowed field of project info.
 * Updated to allow for `data_access_group` as part of user role assignment.
 
-## 2.11.3
+# 2.11.3
 
 * Added injectable log function for use in production environments or debugging.
 
-## 2.11.2
+# 2.11.2
 
 * Fixed bug in `exportDataQuality` when no quality issues exist.
 * Deprecated functions `exportProjectInfo` and `exportBundle` have been removed.
 * Fixed offline test that was having issue on Windows.
 * Fixed bug in `exportFilesMultiple`.
 
-## 2.11.1
+# 2.11.1
 
 * Better handling of unexpected html responses from REDCap.
 * Improved CSV formatting for API imports. Properly deals with escaped quoting.
@@ -41,19 +41,19 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Restored debug mode for API call/response. Just add `config=list(options=list(verbose=TRUE))` to `unlockREDCap` or any call.
 * Added experimental `exportSAS`.
 
-## 2.11.0
+# 2.11.0
 
 * `unlockREDCap` internal code is now in package `shelter`.
 
-## 2.10.3
+# 2.10.3
 
 * Update `missingSummary` to support "missing checkbox" under special branching scenario.
 
-## 2.10.2
+# 2.10.2
 
 * When a project is deleted, the records no longer show in the logs as deleted with the current version of REDCap (15.2.0). Removed test of logs for deleted records
 
-## 2.10.1
+# 2.10.1
 
 * `unlockREDCap` no longer changes console focus
 * Vectorized `renameRecord` and `exportFieldNames`
@@ -61,21 +61,21 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Improved error messages when misspecified URL is provided.
 * Fix for redirected URLs
 
-## 2.10.0
+# 2.10.0
 
 * Replace `httr` dependency with `curl`
 
-## 2.9.4
+# 2.9.4
 
 * Minor code refactoring
 * Add test case for CI environment
 * Implemented GitHub Actions for automated source code checks.
 
-## 2.9.3
+# 2.9.3
 
 * REDCap 14.4.0 changed user role structure.
 
-## 2.9.2
+# 2.9.2
 
 * Improved date and datetime validation
 * Bug fix for importMetaData validation
@@ -84,19 +84,19 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Bug fix for handling fields ending in '_complete' that are not form related.
 * Added batching method for exportLogging.
 
-## 2.9.1
+# 2.9.1
 
 * Added additional supported arguments to deleteRecords.
 * Changed the default to `dag=FALSE` for exportRecordsTyped.
 * exportRecordsTyped more robust against some forms of corrupted meta data.
 * Added a new feature exportDataQuality for pulling queries from the DataQuality module.
 
-## 2.9.0
+# 2.9.0
 
 * Refactor of missingSummary to use exportRecordsTyped. This is a breaking change in prep of 3.0.0.
 * Added handling of url redirects (301,302) on makeApiCall.
 
-## 2.8.5
+# 2.8.5
 
 * importRecords stops when provided fields not in the project.
 * Filtering empty records will use mapping if available
@@ -104,11 +104,11 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * unlockREDCap will now search for ENV variables.
 * New importFileToRecord which will import a file and create the record if it doesn't exist.
 
-## 2.8.4
+# 2.8.4
 
 * Patch to reading HTTP data. When non UTF-8 characters are sent, they get mapped to '□'.
 
-## 2.8.3
+# 2.8.3
 
 * Patch to date range handling that was breaking on new REDCap projects since version 14.0.2 of the REDCap server.
 * Improved speed / memory usage for empty row exclusion.
@@ -116,7 +116,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Fixed checkbox handling to be consistent with data export tool.
 * Added `skip_validation` function to complement `raw_cast`.
 
-## 2.8.2
+# 2.8.2
 
 * Extends casting and validation to text fields validated with the BioPortal Ontology service.
 * Extends casting and validation to sql fields.
@@ -126,7 +126,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Added helper function `changedRecords`.
 * Added `assembleCodebook`, which mimics the codebook in the REDCap UI in the form of a data frame.
 
-## 2.8.1
+# 2.8.1
 
 * New functions for project management: createRedcapProject, exportProjectXml
 * Additional timeout trap for request retry strategy.
@@ -138,7 +138,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Bug fix: Batching records no longer has the potential to produce duplicated records when a record ID has data in multiple events. (See Issue 262)
 * Extends `preserveProject` and adds `readPreservedProject` to assist with preparing data for offline users.
 
-## 2.8.0
+# 2.8.0
 
 * Changed `importArms` and `importEvents` to use `data` argument for consistency. Backward compatible via `...`.
 * Added several functions for manipulating DAGs.
@@ -152,11 +152,11 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * Add several functions for exporting Survey links and return codes
 * Replaced deprecated function with_mock with with_mocked_bindings
 
-## 2.7.5
+# 2.7.5
 
 * added filter_empty_rows flag to exportRecordsTyped.
 
-## 2.7.4
+# 2.7.4
 
 * Fixed upper/lower case for AND/OR in parseBranchingLogic
 * Added a `system` field type for mapping with `castLabel` and `castRaw`.
@@ -166,7 +166,7 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * export/import handles the 'now' and 'today' validation words for dates and date/times.
 * unlockREDCap: major refactor / rewrite. Many edges cases handled gracefully with better error messaging. Now with less password requests.
 
-## 2.7.3
+# 2.7.3
 
 * dags: Added ability to get DAG information from connection object, e.g. `rcon$dags()`
 * exportBulkRecords: When no forms are specified, it defaults to all instruments for the project.
@@ -174,17 +174,17 @@ A future release of version 3.0.0 will introduce several breaking changes!
 * mChoiceCast: Added configurable dropping of choice fields that were aggregated. Defaults to drop.
 * unlockREDCap: Defaults to RStudio password prompt if available. Uses `askpass` option. General improvements in error messages.
 
-## 2.7.2
+# 2.7.2
 
 * Spelling/Grammar cleanup
 * `envir` parameter allows passing a number of the environment
 * New functions use pre-existing error handling strategy.
 
-## 2.7.1
+# 2.7.1
 
 Version bump for CRAN publication
 
-## Changes in Version 2.7.0
+# 2.7.0
 
 * The new function exportRecordsTyped is now available as a replacement for the existing exportRecords. It is a breaking change in interface--but provides
 far better stability in calling--full inversion of control over casting, retries through the connection object, and a clear error report as part of the final dataframe. Please take a moment to read the documentation on exportRecordsTyped and start moving over to using it over exportRecords.
@@ -194,18 +194,18 @@ far better stability in calling--full inversion of control over casting, retries
 * added exportReportsTyped. Similar to exportRecordsTyped. * Helper function exportBulkRecords for bulk calls to exportRecordsTyped.
 
 
-## Changes in Version 2.6.2
+# 2.6.2
 
 * Added retry parameter to connection object. On timeouts and gateway failures it retries 5 times now by default.
 * Cleanup from emergency patches.
 
-## Changes in Version 2.6.1
+# 2.6.1
 
 * Emergency fix. REDCap latest version changed its API calling syntax.
 * Fix to choice name parsing when only a single choice is specified.
 * Fix to importMethod validators when event=NULL
 
-## Changes in Version 2.6.0
+# 2.6.0
 
 * A set of functions to deal with file import / export in REDCap
   * exportFileRepositoryListing
@@ -217,7 +217,7 @@ far better stability in calling--full inversion of control over casting, retries
   * importFileRepository
   * deleteFileRepository
 
-## Changes in Version 2.5.0
+# 2.5.0
 
 * IMPORTANT: The upcoming 3.0.0 release will be a breaking change for exportRecords. This is needed for full inversion of control to the user over type casting.
 * Fully removed deprecated redcapDbConnection
@@ -245,37 +245,41 @@ There are also flush_all and refresh_all methods.
 * Greatly expanded test coverage
 * mChoice class addition if Hmisc is installed
 
-## Changes in Version 2.4.2
+# 2.4.2
 
 * Added a missingSummary function that deals with branching logic.
 * Fixed bug in delete records.
 * Fixed bug date handling for NA in date conversion of time_hh_mm_ss
 
-## Changes in Version 2.4.0
+# 2.4.0
 
 * Added handlers overrides for type conversion based on REDCap field type.
 
-## Change in Ownership 2.3.3
+# 2.3.3
 
 Transfer from Benjamin Nutter to VUMC Biostatistics.
 
-## Changes in Version 2.3
+# 2.3.0
+
 * Bug fix: Unmapped suffixes do not cause crashes, only warnings.
 
-## Changes in Version 2.2
+# 2.2.0
+
 * BREAKING CHANGE: The `dev_allocate` and `prod_allocate` elements of the
   object returned by `allocationTable` have been named `dev_allocation` and
   `prod_allocation`, respectively.
 * Bug fix: `importRecords` now handles data with repeating forms correctly.
 * New feature: UTF-8 Characters may be stripped from the data dictionary.
 
-## Change up to Version 2.1 (2018-03-03)
+# 2.1.0 (2018-03-03)
+
 * Bug fix: Add `[form]_complete` fields
 * Bug fix: Include `[form]_complete` fields in Reports
 * New feature: `[form]_complete` fields may be explicitly requested.
 * New feature: Automatic selection of `[form]_complete` fields may be turned off.
 
-## Changes in Version 2.0 (2017-01-18)
+# 2.0.0 (2017-01-18)
+
 * redcapDbConnection methods are being deprecated.  To our knowledge, no one
   is using these methods, and we do not believe they would work as previously
   coded anyway. The methods definitions continue to be reserved although
@@ -318,18 +322,22 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
 * Codebase has been standardized and given a cleaner format (yeah, that's totally
   subjective)
 
-## Changes in Version 1.3.5 (2017-01-20)
+# 1.3.5 (2017-01-20)
+
   * Bug fixes from @tobadia. (Issue #79)
 
-## Changes in Version 1.3.2 (2015-12-09)
+# 1.3.2 (2015-12-09)
+
   * Bug fix. Changed the call to fieldToVar in exportReports; was incorrectly referencing the meta_data field names. Thanks to Will Campbell for finding this bug.
 
-## Changes in Version 1.3.1 (2015-07-05)
+# 1.3.1 (2015-07-05)
+
   * Changed the default `config` argument in `redcapConnection` from `config=list()`
     to `config=httr::config()`.
   * Added code to allow all errors from `apiCall` to be returned correctly.
 
-## Changes in Version 1.3 (2015-03-04)
+# 1.3 (2015-03-04)
+
   * The Maintainer has been changed to Stephen Lane
   * Bug fix: The REDCap API Error message for `exportEvents`, `exportArms`, and
     `exportMappings` changed between versions 5.x and 6.0.  In 5.x, the error
@@ -339,7 +347,8 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
     of returning the character string with the error.  The bug fix accommodates
     the error messages from both 5.x and 6.0+.
 
-## Changes in Version 1.2 (2015-02-01)
+# 1.2 (2015-02-01)
+
   * Code has been rewritten to make use of the `roxygen2` documentation style.
   * The function 'allocationTable' is added.  This assists in producing
     allocation tables for the randomization module.
@@ -347,7 +356,8 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
     included.  These produce output identical to the API calls, but
     operate based on the csv's downloaded via the user interface.
 
-## Changes in Version 1.1 (2014-10-01)
+# 1.1 (2014-10-01)
+
   * redcapAPI now depends on R 3.0.0 or higher
   * A bug fix was added.  When specifying the 'fields' and 'forms' arguments
     in 'exportRecords', only the variables in 'fields' were being converted
@@ -358,7 +368,8 @@ Transfer from Benjamin Nutter to VUMC Biostatistics.
     field.  This reflects the addition of some of the label functions in
     Hmisc being explicitly exported, making them available to import.
 
-## Changes in Version 1.0.1 (2014-10-20)
+# 1.0.1 (2014-10-20)
+
   * Bug fix: in `importRecords` meta data was not previously exported
     when a project info object was not provided.  This is now corrected
   * Bug fix: in `exportRecords` and `exportReports`, the checkbox labels
