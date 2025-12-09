@@ -15,3 +15,6 @@
 ^Meta$
 ^\.zenodo.json$
 ^\.github$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
+^revdep$

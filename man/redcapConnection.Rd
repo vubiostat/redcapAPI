@@ -225,7 +225,7 @@ will be used to replace the existing component. See examples.
 }
 \examples{
 \dontrun{
-rcon <- redcapConnection(url = [YOUR_REDCAP_URL], 
+rcon <- redcapConnection(url = [YOUR_REDCAP_URL],
                          token = [API_TOKEN])
 
 exportRecords(rcon)
@@ -247,15 +247,15 @@ meta_data_file <- "path/to/meta_data_file.csv"
 records_file <- "path/to/records_file.csv"
 events_file <- "path/to/events_file.csv"
 
-ProjectInfo <- data.frame(project_id = 12345, 
+ProjectInfo <- data.frame(project_id = 12345,
                           is_longitudinal = 1)
 
-off_conn <- offlineConnection(meta_data = meta_data_file, 
+off_conn <- offlineConnection(meta_data = meta_data_file,
                               records = records_file,
-                              project_info = ProjectInfo, 
-                              version = [YOUR_REDCAP_VERSION_NUMBER], 
+                              project_info = ProjectInfo,
+                              version = [YOUR_REDCAP_VERSION_NUMBER],
                               url = [YOUR_REDCAP_URL])
-                              
+
 off_conn$metadata()
 off_conn$records()
 off_conn$projectInformation()

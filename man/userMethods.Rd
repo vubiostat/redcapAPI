@@ -56,8 +56,9 @@ the consolidated values (as provided by the API export) are utilized.}
    \code{firstname} \tab The user's first name. \cr
    \code{lastname} \tab The user's last name. \cr
    \code{expiration} \tab The date at which the user's access to the project will expire. \cr
-   \code{data_access_group} \tab The text name of the Data Access Group to which the user is assigned. \cr
+   \code{data_access_group} \tab The cleaned text name of the Data Access Group to which the user is assigned. \cr
    \code{data_access_group_id} \tab The REDCap assigned unique identifier of the Data Access Group. \cr
+   \code{data_access_group_label} \tab The text name of the Data Access Group to which the user is assigned. \cr
    \code{design} \tab Boolean flag indicating if the user has permissions to utilize the project design modules. \cr
    \code{alerts} \tab Boolean flag indicating if the user has permissions to utlize the alerts tools. \cr
    \code{user_right} \tab Boolean flag indicating if the user has permissions to modify user rights. \cr
@@ -69,11 +70,13 @@ the consolidated values (as provided by the API export) are utilized.}
    \code{data_import_tool} \tab Boolean flag indicating if the user has permissions to use the data import tool. \cr
    \code{data_comparison_tool} \tab Boolean flag indicating if the user has permissions to use the data comparison tool. \cr
    \code{logging} \tab Boolean flag indicating if the user has permissions to view the project logs (audit trail). \cr
+   \code{email_logging} \tab Boolean flag indicating if the user has privileges. \cr
    \code{file_repository} \tab Boolean flag indicating if the user has permissions to access the project file repository. \cr
    \code{data_quality_create} \tab Boolean flag indicating if the user has permission create new data quality rules. \cr
    \code{data_quality_execute} \tab Boolean flag indicating if the user has permission to execute data quality rules. \cr
    \code{api_export} \tab Boolean flag indicating if the user has API export privileges. \cr
    \code{api_import} \tab Boolean flag indicating if the user has API import privileges. \cr
+   \code{api_modules} \tab Boolean flag indicating if the user has privileges. \cr
    \code{mobile_app} \tab Boolean flag indicating if the user has permissions to use the mobile app. \cr
    \code{mobile_app_download_data} \tab Boolean flag indicating if the user has permissions to download data on the mobile app. \cr
    \code{record_create} \tab Boolean flag indicating if the user has permission to create new records. \cr
@@ -82,6 +85,7 @@ the consolidated values (as provided by the API export) are utilized.}
    \code{lock_records_all_forms} \tab Boolean flag indicating if the user has permission to lock records across all forms. \cr
    \code{lock_records} \tab Boolean flag indicating if the user has permission to lock a records on individual forms. \cr
    \code{lock_records_customization} \tab Boolean flag indicating if the user has permission to customize record locking. \cr
+   \code{mycap_participants} \tab Boolean flag indicating if the user has privileges. \cr
    \code{random_setup} \tab Boolean flag indicating if the user has permission to set up randomization rules. \cr
    \code{random_dashboard} \tab Boolean flag indicating if the user has permission to view the randomization dashboard. \cr
    \code{random_perform} \tab Boolean flag indicating if the user has permission to perform record randomization. \cr

@@ -31,28 +31,28 @@ received from \code{exportUsers}.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
 
 
 # Prep user data
-NewData <- data.frame(username = "target_user", 
-                      design = 1, 
-                      api_export = "Access", 
-                      api_import = "No Access", 
+NewData <- data.frame(username = "target_user",
+                      design = 1,
+                      api_export = "Access",
+                      api_import = "No Access",
                       surveys_enabled = 0)
-prepUserImportData(data = NewData, 
+prepUserImportData(data = NewData,
                    rcon = rcon)
-                   
+
 # Prep user role data
-NewData <- data.frame(unique_role_name = "target_user", 
-                      design = 1, 
-                      api_export = "Access", 
-                      api_import = "No Access", 
+NewData <- data.frame(unique_role_name = "target_user",
+                      design = 1,
+                      api_export = "Access",
+                      api_import = "No Access",
                       surveys_enabled = 0)
-prepUserImportData(data = NewData, 
+prepUserImportData(data = NewData,
                    rcon = rcon)
 }
 
