@@ -236,6 +236,22 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                   length.out = rtry)
   rtry_q <- retry_quietly
 
+  # CSV delimiter state for this connection -------------------------
+  getCsvDelimiterAPI <- function(csv_delimiter) {
+  	csv_delimiter_api <- switch(
+  		csv_delimiter,
+  		","  = "comma",
+  		"\t" = "tab",
+  		";"  = "semicolon",
+  		"|"  = "pipe",
+  		"^"  = "caret",
+  		"comma"
+  	)
+  	csv_delimiter_api
+  }
+  csv_delim <- ","
+  csv_delim_api <- getCsvDelimiterAPI(csv_delim)
+
   getter <- function(export, ...){
     switch(export,
            "metadata" = exportMetaData(rc),
@@ -397,9 +413,22 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                                   len = 1,
                                   any.missing = FALSE)
         rtry_q <<- rq
-      }
+      },
+
+      set_csv_delimiter = function(d) {
+      	checkmate::assert_choice(
+      		x = d,
+      		choices = c(",", "\t", ";", "|", "^")
+      	)
+      	csv_delim <<- d
+      	csv_delim_api <<- getCsvDelimiterAPI(csv_delim)
+      },
+      csv_delimiter = function() csv_delim,
+      csv_delimiter_api = function() csv_delim_api
     )
   class(rc) <- c("redcapApiConnection", "redcapConnection")
+  # Initialize csv_delimiter with default
+  rc$set_csv_delimiter(",")
   rc
 }
 
