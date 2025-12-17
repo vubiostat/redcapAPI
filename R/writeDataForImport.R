@@ -5,9 +5,11 @@
 #'   of a CSV for import through the API.
 #'   
 #' @param data `data.frame` to be imported to the API
-#' 
+#' @param csv_delimiter `character(1)` Delimiter used to separate fields in the generated CSV
+#'   string. Defaults to `","`.
+#'
 
-writeDataForImport <- function(data){
+writeDataForImport <- function(data, csv_delimiter = ","){
   coll <- checkmate::makeAssertCollection()
   
   checkmate::assert_data_frame(x = data, 
@@ -17,10 +19,13 @@ writeDataForImport <- function(data){
   
   output <- 
     utils::capture.output(
-      utils::write.csv(data,
-                       file = "",
-                       na = "",
-                       row.names = FALSE)
+      utils::write.table(data,
+                         file = "",
+                         sep = csv_delimiter,
+                         na = "",
+                         row.names = FALSE,
+                         col.names = TRUE,
+                         qmethod = "double")
     )
   
   paste0(output, collapse = "\n")
