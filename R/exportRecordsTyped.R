@@ -47,7 +47,7 @@ exportRecordsTyped.redcapApiConnection <-
     filter_empty_rows = TRUE,
     warn_zero_coded = TRUE,
     ...,
-    csv_delimiter  = ",",
+    csv_delimiter  = rcon$csv_delimiter(),
     batch_size     = 100L)
 {
   logEvent("INFO", call='exportRecordsTyped',
@@ -682,7 +682,8 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
     record_response <- makeApiCall(rcon,
                                    body = c(list(content = "record",
                                                  format = "csv",
-                                                 outputFormat = "csv"),
+                                                 outputFormat = "csv",
+                                                 csvDelimiter = rcon$csv_delimiter_api()),
                                             vectorToApiBodyList(target_field,
                                                                 "fields")),
                                    log=FALSE,

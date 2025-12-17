@@ -30,9 +30,10 @@ exportProjectInformation.redcapApiConnection <- function(rcon,
   
   body <- list(content = 'project',
                format = 'csv',
-               returnFormat = 'csv')
+               returnFormat = 'csv',
+               csvDelimiter = rcon$csv_delimiter_api())
 
    ##################################################################
   # Call the API
-  as.data.frame(makeApiCall(rcon, body, ...))
+  as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 }
