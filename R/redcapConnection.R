@@ -405,7 +405,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       set_csv_delimiter = function(d) {
       	checkmate::assert_choice(
       		x = d,
-      		choices = c(",", "\t", ";", "|", "^")
+      		choices = c(",", ";", "\t", " ", "|", "^")
       	)
       	csv_delim <<- d
       },

@@ -42,7 +42,7 @@
 #'   Otherwise, records created or modified after this date will be returned.
 #' @param date_end `POSIXct(1)` or `NULL`. Ignored if `NULL` (default). 
 #'   Otherwise, records created or modified before this date will be returned.
-#' @param csv_delimiter `character`. One of `c(",", "\t", ";", "|", "^")`. Designates the
+#' @param csv_delimiter `character`. One of `c(",", ";", "\t", " ", "|", "^")`. Designates the
 #'   delimiter for the CSV file received from the API.
 #' @param batch_size `integerish(1)` or `NULL`. When `NULL`,
 #'   all records are pulled. Otherwise, the records all pulled in batches of this size.
