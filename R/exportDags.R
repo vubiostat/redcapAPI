@@ -11,28 +11,29 @@ exportDags <- function(rcon, ...){
 #' @order 4
 #' @export
 
-exportDags.redcapApiConnection <- function(rcon, 
+exportDags.redcapApiConnection <- function(rcon,
                                            ...)
 {
   ###################################################################
   # Argument Validation                                          ####
-  
+
   coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_class(x = rcon, 
-                          classes = "redcapApiConnection", 
+
+  checkmate::assert_class(x = rcon,
+                          classes = "redcapApiConnection",
                           add = coll)
 
   checkmate::reportAssertions(coll)
-  
+
   ###################################################################
   # Make the API Body list                                       ####
-  
-  body <- list(content = "dag", 
-               format = "csv", 
-               returnFormat = "csv")
+
+  body <- list(content = "dag",
+               format = "csv",
+               returnFormat = "csv",
+               csvDelimiter = rcon$csv_delimiter())
 
   ###################################################################
   # Call the API                                                 ####
-  as.data.frame(makeApiCall(rcon, body, ...))
+  as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 }

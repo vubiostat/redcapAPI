@@ -59,7 +59,7 @@ exportReportsTyped.redcapApiConnection <- function(rcon,
                          add = coll)
 
   csv_delimiter <- checkmate::matchArg(x = csv_delimiter, 
-                                       choices = c(",", "\t", ";", "|", "^"),
+                                       choices = c(",", ";", "\t", " ", "|", "^"),
                                        .var.name = "csv_delimiter",
                                        add = coll)
   

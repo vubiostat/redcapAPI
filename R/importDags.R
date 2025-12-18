@@ -53,7 +53,7 @@ importDags.redcapApiConnection <- function(rcon,
                action = "import", 
                format = "csv", 
                returnFormat = "csv", 
-               data = writeDataForImport(data))
+               data = writeDataForImport(data, csv_delimiter = rcon$csv_delimiter()))
 
   ###################################################################
   # Call the API                                                 ####

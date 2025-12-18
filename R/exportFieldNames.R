@@ -135,5 +135,6 @@ exportFieldNames.redcapApiConnection <- function(rcon,
   # Make the API Call -----------------------------------------------
   read.csv(text = as.character(makeApiCall(rcon, body, ...)), 
            na.strings = "", 
-           stringsAsFactors = FALSE)
+           stringsAsFactors = FALSE,
+           sep = rcon$csv_delimiter())
 }
