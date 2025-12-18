@@ -56,6 +56,7 @@ Other contributors:
   \item Paddy Tobias [contributor]
   \item Michael Chirico [contributor]
   \item William Sharp [contributor]
+  \item Alexander Strübing [contributor]
 }
 
 }

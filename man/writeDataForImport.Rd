@@ -4,10 +4,13 @@
 \alias{writeDataForImport}
 \title{Prepare a Data Frame for Import Through the API}
 \usage{
-writeDataForImport(data)
+writeDataForImport(data, csv_delimiter = ",")
 }
 \arguments{
 \item{data}{\code{data.frame} to be imported to the API}
+
+\item{csv_delimiter}{\code{character(1)} Delimiter used to separate fields in the generated CSV
+string. Defaults to \code{","}.}
 }
 \description{
 Converts a dataframe into a character value in the format
