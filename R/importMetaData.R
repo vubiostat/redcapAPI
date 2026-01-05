@@ -55,7 +55,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   duplicate_field_name <- data$field_name[duplicated(data$field_name)]
   
-  if (any(duplicate_field_name)){
+  if (length(duplicate_field_name) > 0L){
     coll$push(sprintf("The following have duplicate field names: {%s}", 
                       duplicate_field_name))
   }
