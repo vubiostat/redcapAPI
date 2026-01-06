@@ -1,6 +1,7 @@
 # redcapAPI (development version)
 
 * `exportDags`, `exportFieldNames`, `exportProjectInformation`, `exportReportsTyped`, `importDags`, `writeDataForImport`, and `exportRecordsTYped` now have a `csv_delimiter` parameter to control delimiter utilized.
+* `importMetaData` bug fix when given duplicate names to exit and warn user properly.
 
 ## DEPRECATION NOTICES
 
