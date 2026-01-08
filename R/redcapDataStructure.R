@@ -464,7 +464,10 @@ REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES <-
     "record_delete",
     "lock_records_customization",
     "lock_records",
-    "lock_records_all_forms")
+    "lock_records_all_forms",
+    "random_setup",
+    "random_dashboard",
+    "random_perform")
 
 # User-Role Assignment Structure
 
