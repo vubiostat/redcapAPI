@@ -3,6 +3,7 @@
 * `exportDags`, `exportFieldNames`, `exportProjectInformation`, `exportReportsTyped`, `importDags`, `writeDataForImport`, and `exportRecordsTyped` now have a `csv_delimiter` parameter to control delimiter utilized.
 * `importMetaData` bug fix when given duplicate names to exit and warn user properly.
 * `redcapUserRoleStructure` allows new `alerts`, `api_modules`, and `data_quality_resolution` attributes.
+* `exportUsers` properly handles the columns random_setup, random_dashboard and random_perform.
 
 ## DEPRECATION NOTICES
 
