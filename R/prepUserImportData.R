@@ -115,7 +115,7 @@ prepUserImportData <- function(data,
   # Remove fields that cannot be updated
 
   fields_to_remove <- c("email", "lastname", "firstname",
-                        "data_access_group_id", "data_access_group") #?, "data_access_groups")
+                        "data_access_group_id")
   data <- data[!names(data) %in% fields_to_remove]
 
   # Convert values to numeric
