@@ -90,6 +90,12 @@ prepUserImportData <- function(data,
                                        "data_export"),
                            add = coll)
 
+  if('data_access_group' %in% all_fields) {
+    checkmate::assert_subset(x = data$data_access_group,
+                            choices = c(rcon$dags()$unique_group_name, NA_character_),
+                            add = coll)
+  }
+
   checkmate::reportAssertions(coll)
 
   # Prior to redcapAPI version 2.11.5, functionality surrounding form validation
@@ -114,24 +120,17 @@ prepUserImportData <- function(data,
 
   # Remove fields that cannot be updated
 
+  # while "data_access_group_id" and "data_access_group_label" are available from exportUsers
+  # the DAG is set with "data_access_group"
   fields_to_remove <- c("email", "lastname", "firstname",
-                        "data_access_group_id", "data_access_group") #?, "data_access_groups")
+                        "data_access_group_id", "data_access_group_label")
   data <- data[!names(data) %in% fields_to_remove]
 
   # Convert values to numeric
 
   for (nm in names(data)){
     data[[nm]] <-
-      if (nm == 'data_access_group'){
-        # as of version 2.11.5, DAG is in "fields_to_remove"
-        # this chunk will never be run
-        # in the future we may handle it, so leaving the information below
-
-        # don't convert DAG into numeric
-        # it qualifies as REDCAP_USER_TABLE_ACCESS_VARIABLES
-        # possibly convert to numeric but leave NA?
-        data[[nm]]
-      } else if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
+      if (nm %in% REDCAP_USER_TABLE_ACCESS_VARIABLES){
         prepUserImportData_castAccessVariable(data[[nm]])
       } else if (nm %in% form_access_field){
         prepUserImportData_castFormAccess(rcon, data[[nm]])

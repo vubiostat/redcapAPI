@@ -44,12 +44,12 @@ importUsers.redcapApiConnection <- function(rcon,
     if(length(extra_access) > 0L) {
       m <- sprintf('Form Access variables [%s] should generally not be set when consolidate = FALSE',
                    paste(extra_access, collapse = ','))
-      warning(m)
+      logWarning(m)
     }
     if(length(extra_export) > 0L) {
       m <- sprintf('Form Export variables [%s] should generally not be set when consolidate = FALSE',
                    paste(extra_export, collapse = ','))
-      warning(m)
+      logWarning(m)
     }
   }
 
@@ -65,8 +65,24 @@ importUsers.redcapApiConnection <- function(rcon,
   data <- prepUserImportData(data,
                              rcon = rcon,
                              consolidate = consolidate)
-  
-  
+
+  ###################################################################
+  # Check prior user DAG if blank                                ####
+  DagAsgmt <- rcon$dag_assignment()
+  UsersWithDags <- DagAsgmt[!is.na(DagAsgmt[,'redcap_data_access_group']), 'username']
+  if('data_access_group' %in% names(data)) {
+    UsersNoDag <- data[is.na(data[,'data_access_group']), 'username']
+  } else {
+    # if no DAG column, everyone is set to blank
+    UsersNoDag <- data[,'username']
+  }
+  WarnUserDag <- intersect(UsersNoDag, UsersWithDags)
+  if(length(WarnUserDag) > 0L) {
+    m <- sprintf('Users with previous data access group (DAG) assignments will no longer be assigned a DAG. They will now be able to view all records: [%s]',
+                  paste(WarnUserDag, collapse = ','))
+    logWarning(m)
+  }
+
   ###################################################################
   # Check for Users Assigned to User Role                        ####
   
