@@ -4,6 +4,7 @@
 * `importMetaData` bug fix when given duplicate names to exit and warn user properly.
 * `redcapUserRoleStructure` allows new `alerts`, `api_modules`, and `data_quality_resolution` attributes.
 * `exportUsers` properly handles the columns random_setup, random_dashboard and random_perform.
+* `importUsers` data_access_group is no longer excluded from user import. This caused issues with removing DAG assignments on imports.
 
 ## DEPRECATION NOTICES
 
