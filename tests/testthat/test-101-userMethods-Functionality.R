@@ -142,7 +142,7 @@ test_that(
                  DagAsgmt[DagAsgmt[,'username'] == EXPENDABLE_USER, 'redcap_data_access_group'])
 
     # Update data_access_group to "No Assignment"
-    Users[,'data_access_group'] <- 'NA_character_'
+    Users[,'data_access_group'] <- NA_character_
     # warning indicates this gives view access to all records
     expect_warning(importUsers(rcon, data = Users), 'view all records')
     DagAsgmt <- exportUserDagAssignments(rcon)
