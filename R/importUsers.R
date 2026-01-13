@@ -116,6 +116,7 @@ importUsers.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_users()
+  rcon$flush_dag_assignment()
   response <- makeApiCall(rcon, body, ...)
   
   invisible(as.character(response))

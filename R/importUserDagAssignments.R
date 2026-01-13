@@ -75,6 +75,7 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
 
   ###################################################################
   # Make the API Call                                            ####
+  rcon$flush_dag_assignment()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))
