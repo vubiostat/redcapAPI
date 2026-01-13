@@ -16,6 +16,15 @@ test_that(
     # Verify the user was added
     expect_true(EXPENDABLE_USER %in% rcon$users()$username)
 
+    # ensure export > import > export equality
+    # initial import fixes the state
+    importUsers(rcon, rcon$users())
+    Users <- exportUsers(rcon)
+    importUsers(rcon, Users)
+    # cache should be correct
+    expect_equal(rcon$users(), exportUsers(rcon))
+    expect_equal(rcon$users(), Users)
+
     # Modify the user permissions
 
     n_imported <- importUsers(rcon,
@@ -23,8 +32,8 @@ test_that(
                                                 alerts = 1))
     expect_equal(n_imported, "1")
 
-    Users <- exportUsers(rcon)
-    Users <- Users[rcon$users()$username %in% EXPENDABLE_USER, ]
+    Users <- rcon$users()
+    Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(Users$alerts %in% "Access")
   }
 )
@@ -82,7 +91,7 @@ test_that(
                 data = data.frame(username = EXPENDABLE_USER,
                                   data_export = 1,
                                   forms = c("record_id:0"),
-	# leaving an instrument off implicitly sets permission to 0
+    # leaving an instrument off implicitly sets permission to 0
                                   forms_export = ""),
                 consolidate = FALSE)
 
@@ -97,20 +106,60 @@ test_that(
                                   record_id_form_access = 1,
                                   forms = 'record_id:0',
                                   forms_export = ''),
-		        consolidate = FALSE))
+                consolidate = FALSE))
     Users <- exportUsers(rcon)
     Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(grepl("record_id:0",Users$forms))
-
-    # NEED TO ADD TWO TESTS
-    # Update data_access_group to "No Assignment"
-    # functionality not supported as of version 2.11.5
-    # Update data_access_group to a legitimate DAG
-    # functionality not supported as of version 2.11.5
   }
 )
 
+test_that(
+  "Import User DAG Assignments",
+  {
+    skip_if(!RUN_USER_TESTS,
+            "User tests without an expendable user could have negative consequences and are not run.")
 
+    if (EXPENDABLE_USER %in% rcon$users()$username){
+      deleteUsers(rcon,
+                  users = EXPENDABLE_USER)
+    }
+
+    importUsers(rcon,
+                data = data.frame(username = EXPENDABLE_USER))
+
+    # create temporary DAG; it probably already exists at this point
+    TmpDag <- !'test_dag_1' %in% exportDags(rcon)$unique_group_name
+    if(TmpDag) {
+      NewDag <- data.frame(data_access_group_name = 'test_dag_1',
+                           unique_group_name = NA_character_)
+      importDags(rcon, data = NewDag)
+    }
+
+    # Update data_access_group to a legitimate DAG
+    Users <- exportUsers(rcon)
+    Users <- Users[Users$username %in% EXPENDABLE_USER, ]
+    Users[,'data_access_group'] <- 'test_dag_1'
+    importUsers(rcon, data = Users)
+    DagAsgmt <- exportUserDagAssignments(rcon)
+    expect_equal('test_dag_1',
+                 DagAsgmt[DagAsgmt[,'username'] == EXPENDABLE_USER, 'redcap_data_access_group'])
+
+    # Update data_access_group to "No Assignment"
+    Users[,'data_access_group'] <- NA_character_
+    # warning indicates this gives view access to all records
+    expect_warning(importUsers(rcon, data = Users), 'view all records')
+    DagAsgmt <- exportUserDagAssignments(rcon)
+    expect_true(is.na(DagAsgmt[DagAsgmt[,'username'] == EXPENDABLE_USER, 'redcap_data_access_group']))
+
+    # Try a bad DAG
+    Users[,'data_access_group'] <- 'uncouth_dag'
+    expect_error(importUsers(rcon, data = Users))
+
+    if(TmpDag) {
+      deleteDags(rcon, 'test_dag_1')
+    }
+  }
+)
 
 test_that(
   "Export User Options",

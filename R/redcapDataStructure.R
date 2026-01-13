@@ -365,7 +365,7 @@ REDCAP_USER_TABLE_ACCESS_VARIABLES <-
   c("design",
     "alerts",
     "user_rights",
-    "data_access_group",
+    "data_access_groups",
     "reports",
     "stats_and_charts",
     "manage_survey_participants",
