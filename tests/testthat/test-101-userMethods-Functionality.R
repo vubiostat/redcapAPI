@@ -17,10 +17,13 @@ test_that(
     expect_true(EXPENDABLE_USER %in% rcon$users()$username)
 
     # ensure export > import > export equality
-    Users1 <- exportUsers(rcon)
-    importUsers(rcon, Users1)
-    Users2 <- exportUsers(rcon)
-    expect_equal(Users1, Users2)
+    # initial import fixes the state
+    importUsers(rcon, rcon$users())
+    Users <- exportUsers(rcon)
+    importUsers(rcon, Users)
+    # cache should be correct
+    expect_equal(rcon$users(), exportUsers(rcon))
+    expect_equal(rcon$users(), Users)
 
     # Modify the user permissions
 
@@ -29,8 +32,8 @@ test_that(
                                                 alerts = 1))
     expect_equal(n_imported, "1")
 
-    Users <- exportUsers(rcon)
-    Users <- Users[rcon$users()$username %in% EXPENDABLE_USER, ]
+    Users <- rcon$users()
+    Users <- Users[Users$username %in% EXPENDABLE_USER, ]
     expect_true(Users$alerts %in% "Access")
   }
 )
