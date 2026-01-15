@@ -5,6 +5,7 @@
 * `redcapUserRoleStructure` allows new `alerts`, `api_modules`, and `data_quality_resolution` attributes.
 * `exportUsers` properly handles the columns random_setup, random_dashboard and random_perform.
 * `importUsers` and `exportUsers` weren't handling data_access_group assignment properly.
+* Avoid errors when user role access columns are missing from export responses.
 
 ## DEPRECATION NOTICES
 
