@@ -148,3 +148,26 @@ test_that(
   }
 )
 
+test_that(
+  "exportUserRoles handles missing access columns",
+  {
+    mock_roles <- data.frame(unique_role_name = "role_1",
+                             role_label = "Role 1",
+                             user_rights = 1,
+                             forms_export = "form_1:0",
+                             stringsAsFactors = FALSE)
+
+    mockery::stub(exportUserRoles.redcapApiConnection,
+                  "makeApiCall",
+                  function(...) mock_roles)
+
+    UserRoles <- exportUserRoles(rcon,
+                                 labels = TRUE,
+                                 form_rights = FALSE)
+
+    expect_equal(UserRoles$user_rights,
+                 factor("Access", levels = c("No Access", "Access")))
+    expect_false("design" %in% names(UserRoles))
+  }
+)
+
