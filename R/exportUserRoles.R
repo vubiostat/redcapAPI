@@ -61,8 +61,9 @@ exportUserRoles.redcapApiConnection <- function(rcon,
   # Format UserRole properties                                   ####
   
   if (labels){
-    UserRole[REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES] <- 
-      lapply(UserRole[REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES], 
+    existing_vars <- intersect(REDCAP_USER_ROLE_TABLE_ACCESS_VARIABLES, names(UserRole))
+    UserRole[existing_vars] <- 
+      lapply(UserRole[existing_vars], 
              factor, 
              levels = 0:1, 
              labels = c("No Access", "Access"))
