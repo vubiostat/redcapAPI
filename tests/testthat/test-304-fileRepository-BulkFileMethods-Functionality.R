@@ -64,9 +64,10 @@ test_that(
                                                    confirm = "yes"),
                    "No files to delete")
 
+    ncols <- if(utils::compareVersion(rcon$version(), "16.0.8") < 0) 4 else 6
     expect_data_frame(Deleted,
                       nrows = 0,
-                      ncols = 4)
+                      ncols = ncols)
   }
 )
 
@@ -118,8 +119,8 @@ test_that(
                                     folder_id = 0,
                                     recursive = TRUE,
                                     confirm = "yes")
-
+    ncols <- if(utils::compareVersion(rcon$version(), "16.0.8") < 0) 4 else 6
     expect_data_frame(Deleted,
-                      ncols = 4)
+                      ncols = ncols)
   }
 )
