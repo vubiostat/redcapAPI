@@ -8,12 +8,12 @@
 # This is used for File Repository methods. Some calls result in a
 # result of an empty string or an error. At times we prefer to return
 # the empty frame to maintain consistency in outputs with recursive calls
-FILE_REPOSITORY_EMPTY_FRAME <-
+FILE_REPOSITORY_EMPTY_FRAME <- function(version)
   data.frame(folder_id = numeric(0),
              doc_id = numeric(0),
              name = character(0),
-             role = character(0),
-             dag = character(0),
+             role = if(is.null(version) || utils::compareVersion(rcon$version(), "16.0.8") < 0) NULL else character(0),
+             dag = if(is.null(version) || utils::compareVersion(rcon$version(), "16.0.8") < 0) NULL else character(0),
              parent_folder = numeric(0),
              stringsAsFactors = FALSE)
 

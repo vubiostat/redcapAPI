@@ -55,7 +55,7 @@ deleteFileRepository.redcapApiConnection <- function(
 
   if (files_to_delete == 0){
     logMessage("No files to delete in the requested folder(s)")
-    return(FILE_REPOSITORY_EMPTY_FRAME)
+    return(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
   }
 
   # Get confirmation ------------------------------------------------
@@ -71,7 +71,7 @@ deleteFileRepository.redcapApiConnection <- function(
 
   if (confirm == "no"){
     logMessage("Delete action cancelled by user.")
-    return(FILE_REPOSITORY_EMPTY_FRAME)
+    return(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
   }
 
   # Delete the files ------------------------------------------------

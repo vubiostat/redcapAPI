@@ -83,7 +83,7 @@ test_that(
 test_that(
   "Returns a data frame",
   {
-    ncols <- if(utils::compareVersion(rcon$version(), "16.0.8") < 0) 4 else 6
+    ncols <- ncol(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
     expect_data_frame(exportFileRepositoryListing(rcon),
                       ncols = ncols)
     expect_data_frame(exportFileRepositoryListing(rcon,
