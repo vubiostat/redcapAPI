@@ -83,10 +83,11 @@ test_that(
 test_that(
   "Returns a data frame",
   {
+    ncols <- ncol(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
     expect_data_frame(exportFileRepositoryListing(rcon),
-                      ncols = 4)
+                      ncols = ncols)
     expect_data_frame(exportFileRepositoryListing(rcon,
                                                   recursive = TRUE),
-                      ncols = 4)
+                      ncols = ncols)
   }
 )

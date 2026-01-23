@@ -479,3 +479,26 @@ redcapUserRoleAssignmentStructure <- function(version)
              data_access_group = if(is.null(version) || utils::compareVersion(version, "15.8.2") < 0) NULL else character(0),
              stringsAsFactors = FALSE)
 }
+
+
+# This is used for File Repository methods. Some calls result in a
+# result of an empty string or an error. At times we prefer to return
+# the empty frame to maintain consistency in outputs with recursive calls
+FILE_REPOSITORY_EMPTY_FRAME <- function(version)
+  data.frame(folder_id = numeric(0),
+             doc_id = numeric(0),
+             name = character(0),
+             role = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
+             dag = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
+             parent_folder = numeric(0),
+             stringsAsFactors = FALSE)
+
+# This is used for cases when an import/export/delete to the file repository
+# results in no changes and an empty frame is needed for the return
+
+FILE_IMPORT_EXPORT_EMPTY_FRAME <- function(version)
+  data.frame(directory = character(0),
+             filename = character(0),
+             role = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
+             dag = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
+             stringsAsFactors = FALSE)

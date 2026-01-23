@@ -64,9 +64,10 @@ test_that(
                                                    confirm = "yes"),
                    "No files to delete")
 
+    ncols <- ncol(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
     expect_data_frame(Deleted,
                       nrows = 0,
-                      ncols = 4)
+                      ncols = ncols)
   }
 )
 
@@ -118,8 +119,8 @@ test_that(
                                     folder_id = 0,
                                     recursive = TRUE,
                                     confirm = "yes")
-
+    ncols <- ncol(FILE_REPOSITORY_EMPTY_FRAME(rcon$version()))
     expect_data_frame(Deleted,
-                      ncols = 4)
+                      ncols = ncols)
   }
 )
