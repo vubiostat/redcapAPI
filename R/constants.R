@@ -12,8 +12,8 @@ FILE_REPOSITORY_EMPTY_FRAME <- function(version)
   data.frame(folder_id = numeric(0),
              doc_id = numeric(0),
              name = character(0),
-             role = if(is.null(version) || utils::compareVersion(rcon$version(), "16.0.8") < 0) NULL else character(0),
-             dag = if(is.null(version) || utils::compareVersion(rcon$version(), "16.0.8") < 0) NULL else character(0),
+             role = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
+             dag = if(is.null(version) || utils::compareVersion(version, "16.0.8") < 0) NULL else character(0),
              parent_folder = numeric(0),
              stringsAsFactors = FALSE)
 
