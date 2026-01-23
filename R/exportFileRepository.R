@@ -70,7 +70,7 @@ exportFileRepository.redcapApiConnection <- function(rcon,
 
   if (nrow(FileRepo) == 0){
     logMessage("No files or folders to download")
-    return(FILE_IMPORT_EXPORT_EMPTY_FRAME)
+    return(FILE_IMPORT_EXPORT_EMPTY_FRAME(rcon$version()))
   }
 
   # Export the File Repository --------------------------------------
