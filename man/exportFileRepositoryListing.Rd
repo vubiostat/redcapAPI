@@ -49,20 +49,20 @@ include contents of subfolders.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-             
+
 # Export the top-level listing of the File Repository
 exportFileRepositoryListing(rcon)
 
 # Export the complete listing of the File Repository
-exportFileRepositoryListing(rcon, 
+exportFileRepositoryListing(rcon,
                             recursive = TRUE)
-                            
+
 # Export the listing of a subfolder in the File Repository
-exportFileRepositoryListing(rcon, 
+exportFileRepositoryListing(rcon,
                             folder_id = 12345)
 }
 

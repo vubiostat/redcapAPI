@@ -14,6 +14,7 @@ redcapConnection(
   retries = 5,
   retry_interval = 2^(seq_len(retries)),
   retry_quietly = TRUE,
+  csv_delimiter = ",",
   ...
 )
 
@@ -63,6 +64,8 @@ the number of retries.}
 
 \item{retry_quietly}{\code{logical(1)}. When \code{FALSE}, messages will
 be shown giving the status of the API calls. Defaults to \code{TRUE}.}
+
+\item{csv_delimiter}{\code{character(1)}. The delimiter to use when reading a csv.}
 
 \item{...}{arguments to pass to other methods}
 
@@ -175,6 +178,9 @@ the entire cache and refresh the entire cache, respectively.
 The \code{externalCoding} elements relate to the code-label mappings of text fields
 with the external validation types (such as \code{sql} fields or text fields
 with BioPortal Ontology modules enabled).
+
+One can set the csv delimiter after creating a connection using
+a call like \code{rcon$set_csv_delimiter(";")}.
 \subsection{Specific to API Connections}{
 
 The \code{redcapApiConnection} object also stores the user preferences for
