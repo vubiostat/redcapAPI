@@ -105,7 +105,7 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
 
   # Convert result to a data frame ----------------------------------
   FileRepository <- .fileRepositoryFrame(response,
-                                         folder_id)
+                                         folder_id, rcon)
 
   # Recursive Call --------------------------------------------------
 
@@ -121,12 +121,14 @@ exportFileRepositoryListing.redcapApiConnection <- function(rcon,
 # Unexported --------------------------------------------------------
 
 .fileRepositoryFrame <- function(response,
-                                 folder_id){
+                                 folder_id,
+                                 rcon)
+{
   # If folder_id has length 0, set the parent to top-level
   parent <- if (length(folder_id) == 0) 0 else folder_id
 
   if (length(response$content) > 0){
-    response <- as.data.frame(response)
+    response <- as.data.frame(response, sep=rcon$csv_delimiter())
     response$parent_folder <- rep(parent,
                                   nrow(response))
   } else {
