@@ -7,10 +7,10 @@
 #' @inheritParams common-rcon-arg
 #' @inheritParams common-dot-args
 #' @inheritParams common-api-args
-#' 
-#' @return 
+#'
+#' @return
 #' Returns a data frame with the columns:
-#' 
+#'
 #' |                   |                                       |
 #' |-------------------|---------------------------------------|
 #' | `instrument_name`  | The REDCap generated instrument name. |
@@ -24,14 +24,14 @@
 #' [exportMappings()],\cr
 #' [importMappings()], \cr
 #' [exportPdf()]
-#' 
+#'
 #' @examples
 #' \dontrun{
-#' unlockREDCap(connections = c(rcon = "project_alias"), 
-#'              url = "your_redcap_url", 
-#'              keyring = "API_KEYs", 
+#' unlockREDCap(connections = c(rcon = "project_alias"),
+#'              url = "your_redcap_url",
+#'              keyring = "API_KEYs",
 #'              envir = globalenv())
-#'  
+#'
 #' exportInstruments(rcon)
 #' }
 #'
@@ -44,26 +44,26 @@ exportInstruments <- function(rcon, ...){
 #' @rdname exportInstruments
 #' @export
 
-exportInstruments.redcapApiConnection <- function(rcon, 
+exportInstruments.redcapApiConnection <- function(rcon,
                                                   ...)
 {
    ##################################################################
-  # Argument Validation 
+  # Argument Validation
   coll <- checkmate::makeAssertCollection()
-  
+
   checkmate::assert_class(x = rcon,
                           classes = "redcapApiConnection",
                           add = coll)
 
   checkmate::reportAssertions(coll)
-  
+
    ##################################################################
   # Make Body List
-  
+
   body <- list(content = 'instrument',
                format = 'csv')
 
    ##################################################################
   # Call the API
-  as.data.frame(makeApiCall(rcon, body, ...))
+  as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 }

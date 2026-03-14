@@ -3,7 +3,7 @@
 #' @order 1
 #' @export
 
-exportUserDagAssignments <- function(rcon, 
+exportUserDagAssignments <- function(rcon,
                                      ...){
   UseMethod("exportUserDagAssignments")
 }
@@ -11,31 +11,31 @@ exportUserDagAssignments <- function(rcon,
 #' @rdname dagAssignmentMethods
 #' @export
 
-exportUserDagAssignments.redcapApiConnection <- function(rcon, 
+exportUserDagAssignments.redcapApiConnection <- function(rcon,
                                                          ...)
 {
   ###################################################################
   # Argument Validation                                          ####
-  
+
   coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_class(x = rcon, 
-                          classes = "redcapApiConnection", 
+
+  checkmate::assert_class(x = rcon,
+                          classes = "redcapApiConnection",
                           add = coll)
 
   checkmate::reportAssertions(coll)
-  
+
   ###################################################################
   # Build the body list                                          ####
-  
-  body <- list(content = "userDagMapping", 
-               format = "csv", 
+
+  body <- list(content = "userDagMapping",
+               format = "csv",
                returnFormat = "csv")
 
   ###################################################################
   # Make the API Call                                            ####
-  
-  response <- as.data.frame(makeApiCall(rcon, body, ...))
+
+  response <- as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 
   if(nrow(response) == 0) REDCAP_DAG_ASSIGNMENT_STRUCTURE else response
 }

@@ -153,7 +153,7 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
   rcon$flush_fileRepository()
 
   # Prepare Output --------------------------------------------------
-  NewFolder <- as.data.frame(response)
+  NewFolder <- as.data.frame(response, sep = rcon$csv_delimiter())
 
   NewFolder$name <- rep(name, nrow(NewFolder))
 

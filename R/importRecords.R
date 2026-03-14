@@ -412,7 +412,7 @@ import_records_unbatched <- function(rcon,
   response <- makeApiCall(rcon, body, ...)
 
   if (returnContent %in% c("ids", "auto_ids"))
-    as.data.frame(response) else
+    as.data.frame(response, sep = rcon$csv_delimiter()) else
     as.character(response)
 }
 

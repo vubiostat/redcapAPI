@@ -96,3 +96,49 @@ test_that(
     expect_no_error(connectAndCheck(rcon$token, substr(rcon$url, 1, nchar(rcon$url)-1)))
   }
 )
+
+test_that(
+  "csv_delimiter cannot be NULL",
+  {
+    expect_error(redcapConnection(url = url, token=API_KEY, csv_delimiter=NULL),
+                 "'csv_delimiter': Must be of type 'character'")
+  }
+)
+
+test_that(
+  "csv_delimiter cannot be NA",
+  {
+    expect_error(redcapConnection(url = url, token=API_KEY, csv_delimiter=NA),
+                 "'csv_delimiter': Contains missing values")
+  }
+)
+
+test_that(
+  "csv_delimiter defaults to ','",
+  {
+    expect_no_error(testcon <- redcapConnection(url = url, token=API_KEY))
+    expect_equal(testcon$csv_delimiter(), ",")
+  }
+)
+
+test_that(
+  "csv_delimiter can be set afterward to ';'",
+  {
+    expect_no_error(testcon <- redcapConnection(url = url, token=API_KEY))
+    expect_no_error(testcon$set_csv_delimiter(";"))
+    expect_equal(testcon$csv_delimiter(), ";")
+  }
+)
+
+test_that(
+  "csv_delimiter cannot be set crazy value",
+  {
+    expect_error(redcapConnection(url = url, token=API_KEY, csv_delimiter="jimmyjohn"),
+                 "csv_delimiter")
+
+    expect_no_error(testcon <- redcapConnection(url = url, token=API_KEY))
+
+    expect_error(testcon$set_csv_delimiter("jimmyjohn"), "csv_delimiter")
+
+  }
+)

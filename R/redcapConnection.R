@@ -20,6 +20,7 @@
 #' @param retry_quietly `logical(1)`. When `FALSE`, messages will
 #'   be shown giving the status of the API calls. Defaults to `TRUE`.
 #' @param x `redcapConnection` object to be printed
+#' @param csv_delimiter `character(1)`. The delimiter to use when reading a csv.
 #' @param ... arguments to pass to other methods
 #'
 #' @details
@@ -65,6 +66,9 @@
 #' with the external validation types (such as `sql` fields or text fields
 #' with BioPortal Ontology modules enabled).
 #'
+#' One can set the csv delimiter after creating a connection using
+#' a call like `rcon$set_csv_delimiter(";")`.
+#'
 #' ## Specific to API Connections
 #'
 #' The `redcapApiConnection` object also stores the user preferences for
@@ -82,6 +86,7 @@
 #'
 #' Additional Curl option can be set in the `config` argument.  See the documentation
 #' for [curl::handle_setopt] for more curl options.
+#'
 #'
 #' ## Specific to Offline Connections
 #'
@@ -174,6 +179,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                              retries = 5,
                              retry_interval = 2^(seq_len(retries)),
                              retry_quietly = TRUE,
+                             csv_delimiter = ",",
                              ...)
 {
   coll <- checkmate::makeAssertCollection()
@@ -206,6 +212,12 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                             len = 1,
                             any.missing = FALSE,
                             add = coll)
+
+  checkmate::assert_character(x = csv_delimiter,
+                              len = 1,
+                              null.ok = FALSE,
+                              any.missing = FALSE,
+                              add = coll)
 
   checkmate::reportAssertions(coll)
 
@@ -405,15 +417,16 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       set_csv_delimiter = function(d) {
       	checkmate::assert_choice(
       		x = d,
-      		choices = c(",", ";", "\t", " ", "|", "^")
+      		choices = c(",", ";", "\t", " ", "|", "^"),
+      		.var.name='csv_delimiter'
       	)
       	csv_delim <<- d
       },
       csv_delimiter = function() csv_delim
     )
   class(rc) <- c("redcapApiConnection", "redcapConnection")
-  # Initialize csv_delimiter with default
-  rc$set_csv_delimiter(",")
+
+  rc$set_csv_delimiter(csv_delimiter)
   rc
 }
 

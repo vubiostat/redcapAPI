@@ -34,7 +34,7 @@ exportUserRoleAssignments.redcapApiConnection <- function(rcon,
   ###################################################################
   # Call the API                                                 ####
 
-  response <- as.data.frame(makeApiCall(rcon, body, ...))
+  response <- as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 
   if(nrow(response) == 0) redcapUserRoleAssignmentStructure(rcon$version()) else response
 }

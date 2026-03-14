@@ -49,7 +49,7 @@ exportUsers.redcapApiConnection <- function(rcon,
 
    ##################################################################
   # API Call
-  Users <- as.data.frame(makeApiCall(rcon, body, ...))
+  Users <- as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
 
   Users$forms_export <-
     sub(",registration[:]\\d{1}.+$", "", Users$forms_export)
