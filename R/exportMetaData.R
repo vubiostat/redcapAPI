@@ -54,5 +54,6 @@ exportMetaData.redcapApiConnection <- function(rcon,
                                 parameter_name = "forms"))
 
   # API Call --------------------------------------------------------
-  as.data.frame(makeApiCall(rcon, body, ...), sep = rcon$csv_delimiter())
+  # Metadata is always comma separated even under other LOCALES due to CSS
+  as.data.frame(makeApiCall(rcon, body, ...), sep = ",")
 }
