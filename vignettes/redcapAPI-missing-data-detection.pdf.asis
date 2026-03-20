@@ -1,0 +1,5 @@
+%\VignetteIndexEntry{Missing Data Detection with exportRecordsTyped}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+%\VignetteDepends{}
+%\VignetteEngine{R.rsp::asis}

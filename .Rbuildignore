@@ -12,9 +12,10 @@
 ^tests/testthat/local-token.R$
 ^tests/testthat/local-token.Rdata$
 ^doc$
-^Meta$
 ^\.zenodo.json$
 ^\.github$
+^\.git$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
 ^revdep$
+^vignettes/*\.pdf$

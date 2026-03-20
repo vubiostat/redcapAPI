@@ -1,0 +1,5 @@
+%\VignetteIndexEntry{Data Validation with exportRecordsTyped}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+%\VignetteDepends{}
+%\VignetteEngine{R.rsp::asis}

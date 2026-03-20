@@ -12,9 +12,9 @@ tests/testthat/local-token.Rdata
 .DS_Store
 sample_data
 *.Rproj
-/doc/
+#/doc/
 /Meta/
 vignettes/*.aux
 vignettes/*.log
 vignettes/*.tex
-vignettes/redcapAPI-*.pdf
+vignettes/*.pdf

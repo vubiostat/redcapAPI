@@ -1,0 +1,5 @@
+%\VignetteIndexEntry{Getting Started: Connecting to REDCap}
+%\VignetteKeywords{REDCap}
+%\VignettePackage{redcapAPI}
+%\VignetteDepends{}
+%\VignetteEngine{R.rsp::asis}
