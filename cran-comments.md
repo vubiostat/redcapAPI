@@ -5,13 +5,7 @@ Duration: 58.6s
 ❯ checking CRAN incoming feasibility ... [4s/20s] NOTE
   Maintainer: ‘Shawn Garbett <shawn.garbett@vumc.org>’
 
-  Size of tarball: 5009841 bytes
-
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
-
-## Version Contains Large Components
-
-We are getting Version contains large components (2.11.5.9000) in checks. We could pair back vignettes, but there is a planned major release that deletes all legacy code and breaks backward compatibility (from 4 years ago). Please publish this version as it contains some critical bug fixes for users.  Then we will work towards a smaller footprint for the next release.
 
 ## revdepcheck results
 
