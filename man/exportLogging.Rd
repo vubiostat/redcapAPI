@@ -81,20 +81,20 @@ data changes, project metadata changes, modification of user rights, etc.
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
-                    
-# Export all of the logging events       
+
+# Export all of the logging events
 exportLogging(rcon)
-  
+
 # Export all of the events for record '2'
-exportLogging(rcon, 
+exportLogging(rcon,
               record = "2")
-                
+
 # Export all of the events where a record was deleted
-exportLoging(rcon, 
+exportLoging(rcon,
              logtype = "record_delete")
 }
 }

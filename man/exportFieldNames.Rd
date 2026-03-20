@@ -45,16 +45,16 @@ export. (Signature fields also have the "file" type and are not included)
 }
 \examples{
 \dontrun{
-unlockREDCap(connections = c(rcon = "project_alias"), 
-             url = "your_redcap_url", 
-             keyring = "API_KEYs", 
+unlockREDCap(connections = c(rcon = "project_alias"),
+             url = "your_redcap_url",
+             keyring = "API_KEYs",
              envir = globalenv())
 
 # Export all of the field names
 exportFieldNames(rcon)
 
 # Export MetaData for a specific field
-exportFieldNames(rcon, 
+exportFieldNames(rcon,
                  fields = "checkbox_test")
 }
 }
