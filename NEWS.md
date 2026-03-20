@@ -1,4 +1,10 @@
-# redcapAPI (development version)
+# redcapAPI 2.12.0
+
+## Breaking changes
+
+* `unlockREDCap` upstream dependency on shelter now default to 'SHELTER_' prefix when looking for ENV variable overrides.
+
+## Minor improvements and fixes
 
 * `exportDags`, `exportFieldNames`, `exportProjectInformation`, `exportReportsTyped`, `importDags`, `writeDataForImport`, and `exportRecordsTyped` now have a `csv_delimiter` parameter to control delimiter utilized.
 * `importMetaData` bug fix when given duplicate names to exit and warn user properly.
@@ -7,7 +13,7 @@
 * `importUsers` and `exportUsers` weren't handling data_access_group assignment properly.
 * `exportUserRoles` now avoids errors when user role access columns are missing from export responses.
 * `exportFileRepositoryListing` returns a data.frame with 6 columns (was 4) from REDCap version 16.0.8 and up.
-* `unlockREDCap` upstream dependency on shelter now default to 'SHELTER_' prefix when looking for ENV variable overrides.
+* `redcapConnection` has better documentation on setting the CSV delimiter and this is respected through most calls except for ones that have been shown to be hard coded to commas by REDCap.
 
 ## DEPRECATION NOTICES
 
