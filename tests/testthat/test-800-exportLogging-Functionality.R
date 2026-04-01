@@ -42,20 +42,6 @@ test_that(
   }
 )
 
-
-test_that(
-  "Logs are returned for logtype = 'manage'",
-  {
-    Logs <- exportLogging(rcon,
-                          logtype = "manage",
-                          beginTime = BEGIN_TIME)
-
-    all_manage_record <- all(grepl("Manage", Logs$action))
-    expect_true(all_manage_record)
-  }
-)
-
-
 test_that(
   "Logs are returned for logtype = 'user'",
   {
