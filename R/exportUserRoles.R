@@ -49,14 +49,6 @@ exportUserRoles.redcapApiConnection <- function(rcon,
 
   if (nrow(UserRole) == 0) return(redcapUserRoleStructure(rcon$version()))
 
-  # The API returns the forms_export string twice.  We reduce it to once here
-  temp <- UserRole$forms_export
-  temp <- strsplit(temp, ",")
-  temp <- unlist(temp)
-  temp <- temp[!duplicated(temp)]
-  temp <- paste0(temp, collapse = ",")
-  UserRole$forms_export <- temp
-
   ###################################################################
   # Format UserRole properties                                   ####
 
