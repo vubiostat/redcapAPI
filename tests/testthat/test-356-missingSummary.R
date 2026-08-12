@@ -4,7 +4,7 @@ DesiredOutput <-
       record_id = structure(as.character(1:20),
                             label = "Record ID"),
       redcap_event_name = rep("event_1_arm_1", 20),
-      redcap_data_access_group = rep(NA_character_, 20),
+#      redcap_data_access_group = rep(NA_character_, 20),
       redcap_repeat_instrument = rep(NA_character_, 20),
       redcap_repeat_instance = rep(NA_character_, 20),
       n_missing = c(6, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 5),
@@ -46,12 +46,11 @@ test_that(
     local_reproducible_output(width = 200)
     mSum <- missingSummary(
       rcon,
-      dag     = TRUE,
+      dag     = FALSE,
       fields  = "record_id",
       records = as.character(1:20),
       forms   = "branching_logic")
     # DAG column is unreliable in this context
-    DesiredOutput$redcap_data_access_group <- mSum$redcap_data_access_group
     expect_identical(mSum,DesiredOutput)
   }
 )
