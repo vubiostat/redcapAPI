@@ -48,7 +48,7 @@ offlineConnection(
 
 \item{token}{\code{character(1)} REDCap API token}
 
-\item{config}{A list to be passed to \link[curl:handle]{curl::handle_setopt}.  This allows the
+\item{config}{A list to be passed to \link[curl:handle_setopt]{curl::handle_setopt}.  This allows the
 user to set additional configurations for the API calls, such as
 certificates, SSL version, etc. For the majority of users, this does
 not need to be altered.}
@@ -197,7 +197,7 @@ Tokens are specific to a project, and a token must be created for each
 project for which the user wishes to use the API.
 
 Additional Curl option can be set in the \code{config} argument.  See the documentation
-for \link[curl:handle]{curl::handle_setopt} for more curl options.
+for \link[curl:handle_setopt]{curl::handle_setopt} for more curl options.
 }
 
 \subsection{Specific to Offline Connections}{

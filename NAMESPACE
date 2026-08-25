@@ -222,33 +222,39 @@ export(vectorToApiBodyList)
 export(widerRepeated)
 import(checkmate)
 importFrom(chron,times)
-importFrom(curl,curl_fetch_memory)
-importFrom(curl,curl_version)
-importFrom(curl,form_file)
-importFrom(curl,handle_cookies)
-importFrom(curl,handle_reset)
-importFrom(curl,handle_setform)
-importFrom(curl,handle_setheaders)
-importFrom(curl,handle_setopt)
-importFrom(curl,new_handle)
-importFrom(curl,parse_headers_list)
-importFrom(jsonlite,fromJSON)
-importFrom(jsonlite,toJSON)
-importFrom(labelVector,get_label)
-importFrom(labelVector,is.labelled)
-importFrom(labelVector,set_label)
+importFrom(curl,
+  curl_fetch_memory,
+  curl_version,
+  form_file,
+  handle_cookies,
+  handle_reset,
+  handle_setheaders,
+  handle_setopt,
+  new_handle
+)
+importFrom(jsonlite,
+  fromJSON,
+  toJSON
+)
+importFrom(labelVector,
+  get_label,
+  is.labelled,
+  set_label
+)
 importFrom(lubridate,parse_date_time)
 importFrom(mime,guess_type)
 importFrom(shelter,unlockKeys)
 importFrom(stats,reshape)
-importFrom(utils,browseURL)
-importFrom(utils,capture.output)
-importFrom(utils,compareVersion)
-importFrom(utils,head)
-importFrom(utils,modifyList)
-importFrom(utils,osVersion)
-importFrom(utils,packageVersion)
-importFrom(utils,read.csv)
-importFrom(utils,tail)
-importFrom(utils,write.csv)
-importFrom(utils,write.table)
+importFrom(utils,
+  browseURL,
+  capture.output,
+  compareVersion,
+  head,
+  modifyList,
+  osVersion,
+  packageVersion,
+  read.csv,
+  tail,
+  write.csv,
+  write.table
+)
