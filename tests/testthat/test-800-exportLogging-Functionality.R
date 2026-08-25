@@ -2,18 +2,22 @@
 # Also, this needs to be in the timezone of the server, which ours is CDT
 # If another user wishes to automate these test this could be an ENV variable.
 systime <- as.POSIXct(Sys.time(), tz="America/Chicago")
-BEGIN_TIME <- as.POSIXct(
-  format(systime, format = "%Y-%m-%d %H:%M"), tz="America/Chicago") - 7*24*60*60
+CUR_TIME <- as.POSIXct(
+  format(systime, format = "%Y-%m-%d %H:%M"), tz="America/Chicago")
+BEGIN_TIME <-  CUR_TIME - 7*24*60*60
 RecentLog  <- exportLogging(rcon, beginTime=BEGIN_TIME)
 
 test_that(
   "Logs can be batched and match unbatched",
   {
-    endTime <- BEGIN_TIME+6*24*60*60-27*60 # End time is 27min less than 6 days to test final boundary
+    endTime <- CUR_TIME - 15*60 # End time is 15min less than current time
     BatchedLog <- exportLogging(rcon, beginTime=BEGIN_TIME, endTime=endTime, batchInterval=1)
     SameLog <- RecentLog[RecentLog$timestamp >= BEGIN_TIME & RecentLog$timestamp < endTime,]
 
-    skip_if(nrow(BatchedLog) == 0, "No logs for test window in past")
+    skip_if(nrow(RecentLog) == 0, "No logs for test window in past")
+
+    BatchedLog <- BatchedLog[order(BatchedLog$timestamp, BatchedLog$action),]
+    SameLog    <- SameLog[   order(SameLog$timestamp,   SameLog$action),]
 
     expect_equal(BatchedLog$timestamp, SameLog$timestamp)
     expect_equal(BatchedLog$action,    SameLog$action)
