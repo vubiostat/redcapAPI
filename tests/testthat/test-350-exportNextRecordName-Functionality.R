@@ -1,11 +1,12 @@
+
+
 test_that(
   "Return the next record name",
   {
-    Records <- exportRecords(rcon,
-                             fields = "record_id")
-    next_id <- max(as.numeric(Records$record_id)) + 1
-    # Since the test data base can be expected to
-    expect_equal(exportNextRecordName(rcon),
-                 next_id)
+    Records <- exportRecordsTyped(rcon, fields = "record_id")
+    next_id <- exportNextRecordName(rcon)
+    importRecords(rcon, data.frame(record_id=next_id, record_id_complete="2"))
+    Records <- exportRecordsTyped(rcon, fields = "record_id")
+    expect_contains(Records$record_id, next_id);
   }
 )
