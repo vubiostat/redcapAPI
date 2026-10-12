@@ -1,5 +1,7 @@
 # redcapAPI (development version)
 
+* Fixed bug in pulling batched data that has zero padded record ids. #521
+
 # redcapAPI 2.12.0
 
 ## Breaking changes
