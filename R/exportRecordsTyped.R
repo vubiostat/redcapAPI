@@ -693,7 +693,7 @@ exportRecordsTyped.redcapOfflineConnection <- function(rcon,
              body=body,
              response=as.character(record_response))
 
-    records <- as.data.frame(record_response, sep = csv_delimiter)
+    records <- as.data.frame(record_response, sep = csv_delimiter, colClasses='character')
 
     if (nrow(records) == 0)
     {

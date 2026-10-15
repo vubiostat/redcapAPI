@@ -679,6 +679,8 @@ mChoiceCast <- function(data,
   field_types[field_types == "text" &
                 grepl("BIOPORTAL", choices, ignore.case = TRUE)] <- "bioportal"
 
+  field_types[field_bases == rcon$metadata()$field_name[1]] <- "text"
+
   field_types
 }
 
