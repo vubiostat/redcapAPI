@@ -68,6 +68,7 @@ importArms.redcapApiConnection <- function(rcon,
   # still considered longitudinal
   rcon$flush_events()
   rcon$flush_projectInformation()  
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

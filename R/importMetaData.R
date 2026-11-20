@@ -113,6 +113,7 @@ importMetaData.redcapApiConnection <- function(rcon,
   rcon$flush_metadata()
   rcon$flush_instruments()
   rcon$flush_fieldnames()
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

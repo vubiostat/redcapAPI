@@ -75,6 +75,7 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
   # Make the API Call                                            ####
   rcon$flush_users()
   rcon$flush_user_role_assignment()
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

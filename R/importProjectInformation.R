@@ -54,6 +54,7 @@ importProjectInformation.redcapApiConnection <- function(rcon,
   rcon$flush_arms()
   rcon$flush_events()
   rcon$flush_projectInformation()
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))
