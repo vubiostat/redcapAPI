@@ -21,6 +21,8 @@
 #'   be shown giving the status of the API calls. Defaults to `TRUE`.
 #' @param x `redcapConnection` object to be printed
 #' @param csv_delimiter `character(1)`. The delimiter to use when reading a csv.
+#' @param read_only `logical(1)`. When `TRUE`, any attempts to import will
+#'   silently fail.
 #' @param ... arguments to pass to other methods
 #'
 #' @details
@@ -180,6 +182,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                              retry_interval = 2^(seq_len(retries)),
                              retry_quietly = TRUE,
                              csv_delimiter = ",",
+                             read_only = FALSE,
                              ...)
 {
   coll <- checkmate::makeAssertCollection()
@@ -219,6 +222,11 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
                               any.missing = FALSE,
                               add = coll)
 
+  checkmate::assert_logical(x = read_only,
+                            len = 1,
+                            any.missing = FALSE,
+                            add = coll)
+
   checkmate::reportAssertions(coll)
 
   config <- if(is.null(config)) .curlConfig(url, token) else
@@ -247,6 +255,7 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
   rtry_int <- rep(retry_interval,
                   length.out = rtry)
   rtry_q <- retry_quietly
+  ro_mode <- read_only
 
   # CSV delimiter state for this connection -------------------------
   csv_delim <- ","
@@ -415,14 +424,15 @@ redcapConnection <- function(url = getOption('redcap_api_url'),
       },
 
       set_csv_delimiter = function(d) {
-      	checkmate::assert_choice(
-      		x = d,
-      		choices = c(",", ";", "\t", " ", "|", "^"),
-      		.var.name='csv_delimiter'
-      	)
-      	csv_delim <<- d
+        checkmate::assert_choice(x = d,
+                                 choices = c(",", ";", "\t", " ", "|", "^"),
+                                 .var.name='csv_delimiter'
+        )
+        csv_delim <<- d
       },
-      csv_delimiter = function() csv_delim
+      csv_delimiter = function() csv_delim,
+
+      read_only = function() ro_mode
     )
   class(rc) <- c("redcapApiConnection", "redcapConnection")
 

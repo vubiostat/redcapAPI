@@ -61,6 +61,7 @@ importUserRoles.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   
+  if (rcon$read_only()) return()
   response <- makeApiCall(rcon, body, ...)
 
   # From REDCap 14.0.2 forward, caching can sometimes catch an NA role pre-definition

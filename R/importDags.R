@@ -58,6 +58,7 @@ importDags.redcapApiConnection <- function(rcon,
   ###################################################################
   # Call the API                                                 ####
   rcon$flush_dags()
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

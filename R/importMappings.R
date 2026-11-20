@@ -62,6 +62,7 @@ importMappings.redcapApiConnection <- function(rcon,
   ###################################################################
   # Call the API                                                 ####
   rcon$flush_mapping()  
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))
