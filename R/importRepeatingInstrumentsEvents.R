@@ -49,6 +49,7 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   # Call the API                                                 ####
   rcon$flush_projectInformation()
   rcon$flush_repeatInstrumentEvent()
+  if (rcon$read_only()) return()
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))
