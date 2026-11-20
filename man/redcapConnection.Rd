@@ -15,6 +15,7 @@ redcapConnection(
   retry_interval = 2^(seq_len(retries)),
   retry_quietly = TRUE,
   csv_delimiter = ",",
+  read_only = FALSE,
   ...
 )
 
@@ -66,6 +67,9 @@ the number of retries.}
 be shown giving the status of the API calls. Defaults to \code{TRUE}.}
 
 \item{csv_delimiter}{\code{character(1)}. The delimiter to use when reading a csv.}
+
+\item{read_only}{\code{logical(1)}. When \code{TRUE}, any attempts to import will
+silently fail.}
 
 \item{...}{arguments to pass to other methods}
 

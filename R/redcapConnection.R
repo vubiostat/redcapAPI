@@ -21,8 +21,8 @@
 #'   be shown giving the status of the API calls. Defaults to `TRUE`.
 #' @param x `redcapConnection` object to be printed
 #' @param csv_delimiter `character(1)`. The delimiter to use when reading a csv.
-#' @param read_only `logical(1)`. When `TRUE`, any attempts to import data or
-#'   files will silently fail.
+#' @param read_only `logical(1)`. When `TRUE`, any attempts to import will
+#'   silently fail.
 #' @param ... arguments to pass to other methods
 #'
 #' @details
