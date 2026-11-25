@@ -175,5 +175,10 @@ test_that(
     expect_warning(
       expect_null(importEvents(ro, Events)),
       'abort')
+    expect_warning(
+      expect_null(deleteEvents(
+        ro,
+        events = "event_1_arm_1")),
+      'abort')
   }
 )

@@ -243,6 +243,10 @@ test_that(
       expect_null(importRecords(rcon = ro,
                                 data = ImportData)),
       'abort')
+    expect_warning(
+      expect_null(deleteRecords(rcon = ro,
+                                records = 1)),
+      'abort')
   }
 )
 

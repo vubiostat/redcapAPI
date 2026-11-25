@@ -135,6 +135,11 @@ test_that(
         ro,
         data = redcapUserRoleStructure(rcon$version()))),
       'abort')
+    expect_warning(
+      expect_null(deleteUserRoles(
+        ro,
+        user_roles = 'role name')),
+      'abort')
   }
 )
 

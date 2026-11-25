@@ -2,8 +2,8 @@
 #' @order 3
 #' @export
 
-deleteUserRoles <- function(rcon, 
-                            user_roles, 
+deleteUserRoles <- function(rcon,
+                            user_roles,
                             ...){
   UseMethod("deleteUserRoles")
 }
@@ -12,43 +12,44 @@ deleteUserRoles <- function(rcon,
 #' @order 6
 #' @export
 
-deleteUserRoles.redcapApiConnection <- function(rcon, 
+deleteUserRoles.redcapApiConnection <- function(rcon,
                                                 user_roles,
                                                 ...)
 {
   ###################################################################
   # Argument Validation                                          ####
-  
+
   coll <- checkmate::makeAssertCollection()
-  
-  checkmate::assert_class(x = rcon, 
-                          classes = "redcapApiConnection", 
+
+  checkmate::assert_class(x = rcon,
+                          classes = "redcapApiConnection",
                           add = coll)
-  
-  checkmate::assert_character(x = user_roles, 
-                              null.ok = FALSE, 
-                              any.missing = FALSE, 
+
+  checkmate::assert_character(x = user_roles,
+                              null.ok = FALSE,
+                              any.missing = FALSE,
                               add = coll)
 
   checkmate::reportAssertions(coll)
-  
-  checkmate::assert_subset(x = user_roles, 
-                           choices = rcon$user_roles()$unique_role_name, 
-                           add = coll)
-  
-  checkmate::reportAssertions(coll)
-  
+
   if (rcon$read_only())
   {
     warning('deleteUserRoles() aborted. Read-only mode on connection.')
     return()
   }
 
+  checkmate::assert_subset(x = user_roles,
+                           choices = rcon$user_roles()$unique_role_name,
+                           add = coll)
+
+  checkmate::reportAssertions(coll)
+
+
   ###################################################################
   # Build the body list                                          ####
-  
-  body <- c(list(content = "userRole", 
-               action = "delete"), 
+
+  body <- c(list(content = "userRole",
+               action = "delete"),
             vectorToApiBodyList(user_roles, "roles"))
 
   ###################################################################

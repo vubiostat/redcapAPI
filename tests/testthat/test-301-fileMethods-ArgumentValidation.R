@@ -269,5 +269,11 @@ test_that(
                               file   = "helper-01-QASystemValues.R",
                               event  = "event_1_arm_1")),
       'abort')
+    expect_warning(
+      expect_null(deleteFiles(ro,
+                              record = 1,
+                              field  = 'file_upload_test',
+                              event  = 'event_1_arm_1')),
+      'abort')
   }
 )

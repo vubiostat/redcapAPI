@@ -49,6 +49,12 @@ test_that(
                             api_param = "not a list"),
                  "'api_param': Must be of type 'list'")
 
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(deleteDags(ro, ro$dags()$unique_group_name)),
+      'abort')
+
     deleted_groups <- rcon$dags()$unique_group_name
     n_deleted <- deleteDags(rcon,
                             deleted_groups)
@@ -56,3 +62,4 @@ test_that(
                  as.character(length(deleted_groups)))
   }
 )
+

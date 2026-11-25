@@ -162,6 +162,9 @@ test_that(
     expect_warning(
       expect_null(importUsers(ro, data=ProjectUser)),
       'abort')
+    expect_warning(
+      expect_null(deleteUsers(ro, users = EXPENDABLE_USER)),
+      'abort')
   }
 )
 

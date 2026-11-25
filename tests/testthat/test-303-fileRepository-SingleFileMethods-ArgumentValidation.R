@@ -179,6 +179,11 @@ test_that(
         file=local_file,
         folder_id=12)),
       'abort')
+    expect_warning(
+      expect_null(deleteFromFileRepository(
+        ro,
+        doc_id=123)),
+      'abort')
   }
 )
 
