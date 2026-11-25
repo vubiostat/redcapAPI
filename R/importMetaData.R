@@ -55,7 +55,8 @@ importMetaData.redcapApiConnection <- function(rcon,
   
   duplicate_field_name <- data$field_name[duplicated(data$field_name)]
   
-  if (length(duplicate_field_name) > 0L){
+  if (length(duplicate_field_name) > 0L)
+  {
     coll$push(sprintf("The following have duplicate field names: {%s}", 
                       duplicate_field_name))
   }
@@ -99,6 +100,12 @@ importMetaData.redcapApiConnection <- function(rcon,
                                 coll = coll)
 
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importMetaData() aborted. Read-only mode on connection.')
+    return()
+  }
   
   ###################################################################
   # Build the body list
@@ -113,10 +120,6 @@ importMetaData.redcapApiConnection <- function(rcon,
   rcon$flush_metadata()
   rcon$flush_instruments()
   rcon$flush_fieldnames()
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

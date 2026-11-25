@@ -45,6 +45,12 @@ importDags.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importDags() aborted. Read-only mode on connection.')
+    return()
+  }
   
   ###################################################################
   # Make the API Body list                                       ####
@@ -58,10 +64,6 @@ importDags.redcapApiConnection <- function(rcon,
   ###################################################################
   # Call the API                                                 ####
   rcon$flush_dags()
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

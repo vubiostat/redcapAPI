@@ -36,6 +36,12 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importRepeatingInstrumentsEvents() aborted. Read-only mode on connection.')
+    return()
+  }
   
   ###################################################################
   # Make the Body List                                           ####
@@ -49,10 +55,6 @@ importRepeatingInstrumentsEvents.redcapApiConnection <- function(rcon,
   # Call the API                                                 ####
   rcon$flush_projectInformation()
   rcon$flush_repeatInstrumentEvent()
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

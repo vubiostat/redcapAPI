@@ -61,6 +61,12 @@ importUsers.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importUsers() aborted. Read-only mode on connection.')
+    return()
+  }
   
   data <- prepUserImportData(data,
                              rcon = rcon,
@@ -117,10 +123,6 @@ importUsers.redcapApiConnection <- function(rcon,
   # Make the API Call                                            ####
   rcon$flush_users()
   rcon$flush_dag_assignment()
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   response <- makeApiCall(rcon, body, ...)
   
   invisible(as.character(response))

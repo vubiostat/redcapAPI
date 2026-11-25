@@ -129,3 +129,13 @@ test_that(
   }
 )
 
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importDags(ro, data = REDCAP_DAG_STRUCTURE)),
+      'abort')
+  }
+)

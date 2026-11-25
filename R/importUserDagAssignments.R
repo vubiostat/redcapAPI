@@ -50,6 +50,12 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  # Abort if Read Only
+  if (rcon$read_only())
+  {
+    warning('importUserDagAssignments() aborted. Read-only mode on connection.')
+    return()
+  }
   
   # Each username may appear only exactly once.
   
@@ -76,10 +82,7 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_dag_assignment()
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
+
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

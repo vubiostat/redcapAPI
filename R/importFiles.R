@@ -121,6 +121,12 @@ importFiles.redcapApiConnection <- function(rcon,
 
   checkmate::reportAssertions(coll)
 
+  if (rcon$read_only())
+  {
+    warning('importFiles() aborted. Read-only mode on connection.')
+    return()
+  }
+
    ###########################################################################
   # Build the body list
 
@@ -135,10 +141,6 @@ importFiles.redcapApiConnection <- function(rcon,
 
    ###########################################################################
   # Make the API Call
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   response <- makeApiCall(rcon, body, ...)
 
   invisible(response$status_code == 200L)

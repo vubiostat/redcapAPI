@@ -5,7 +5,8 @@
 importArms <- function(rcon, 
                        data, 
                        override = FALSE, 
-                       ...){
+                       ...)
+{
   UseMethod("importArms")
 }
 
@@ -51,6 +52,12 @@ importArms.redcapApiConnection <- function(rcon,
                               .var.name = "data$name")
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importArms() aborted. Read-only mode on connection.')
+    return()
+  }
       
    ##################################################################
   # Make API Body List
@@ -68,10 +75,6 @@ importArms.redcapApiConnection <- function(rcon,
   # still considered longitudinal
   rcon$flush_events()
   rcon$flush_projectInformation()  
-  if (rcon$read_only()) {
-    warning('No API call made in read-only mode.')
-    return()
-  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

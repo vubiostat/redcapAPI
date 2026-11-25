@@ -129,3 +129,12 @@ test_that(
                  "'arms': Must be of type 'character'")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(expect_null(importArms(ro, data=Arms)), 'abort')
+  }
+)
