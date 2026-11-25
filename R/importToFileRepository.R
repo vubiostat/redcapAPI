@@ -44,7 +44,7 @@ importToFileRepository.redcapApiConnection <- function(rcon,
 
   if (rcon$read_only())
   {
-    warning('No API call made in read-only mode.')
+    warning('importToFileRepository() aborted. Read-only mode on connection.')
     return()
   }
   

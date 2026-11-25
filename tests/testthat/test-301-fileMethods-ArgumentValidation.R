@@ -265,9 +265,9 @@ test_that(
     expect_warning(
       expect_null(importFiles(ro,
                               record = 1,
-                              field  = "file",
-                              file   = "filename",
-                              event  = "event1")),
+                              field  = "file_upload_test",
+                              file   = "helper-01-QASystemValues.R",
+                              event  = "event_1_arm_1")),
       'abort')
   }
 )

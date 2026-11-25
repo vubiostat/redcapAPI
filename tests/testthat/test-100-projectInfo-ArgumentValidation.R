@@ -162,3 +162,18 @@ test_that(
                  "'bypass_branching_erase_field_prompt' must be 0/1")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    NewInfo <- data.frame(project_pi_lastname = "Not Me",
+                          display_today_now_button = 0)
+
+    expect_warning(
+      expect_null(importProjectInformation(rcon = ro,
+                                 data = NewInfo)),
+      'abort')
+  }
+)
