@@ -130,5 +130,11 @@ test_that(
         ro,
         name='folder')),
       'abort')
+
+    expect_warning(
+      expect_null(importFileRepository(
+        ro,
+        dir=getwd())),
+      'abort')
   }
 )
