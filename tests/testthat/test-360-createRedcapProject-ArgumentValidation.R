@@ -150,3 +150,15 @@ test_that(
                  "'api_param': Must be of type 'list'")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$token <- paste0(sample(LETTERS, 64, replace=TRUE),collapse='')
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(createRedcapProject(ro, project_title='yo')),
+      'abort')
+  }
+)
