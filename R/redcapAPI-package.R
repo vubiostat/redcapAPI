@@ -19,7 +19,7 @@
 #' @import checkmate
 #' @importFrom chron times
 #' @importFrom curl curl_fetch_memory curl_version form_file handle_cookies handle_reset
-#' handle_setform handle_setheaders handle_setopt new_handle parse_headers_list
+#'   handle_setform handle_setheaders handle_setopt new_handle parse_headers_list
 #' @importFrom jsonlite fromJSON
 #' @importFrom labelVector get_label is.labelled set_label
 #' @importFrom lubridate parse_date_time
