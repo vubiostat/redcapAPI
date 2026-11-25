@@ -100,6 +100,10 @@ deleteFiles.redcapApiConnection <- function(rcon,
 
   ###########################################################################
   # Make the API Call
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   makeApiCall(rcon, body, ...)
   invisible(TRUE)
 }

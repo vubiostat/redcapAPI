@@ -85,5 +85,9 @@ renameRecord.redcapApiConnection <- function(rcon,
   
   ###################################################################
   # Call the API                                                 ####
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   invisible('1' == as.character(makeApiCall(rcon, body, ...)))
 }

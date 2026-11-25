@@ -52,6 +52,10 @@ deleteArms.redcapApiConnection <- function(rcon,
       rcon$flush_arms()
       rcon$flush_events()
       rcon$flush_projectInformation()
+      if (rcon$read_only()) {
+          warning('No API call made in read-only mode.')
+          return()
+      }
       as.character(makeApiCall(rcon, body, ...))
     } else
     {

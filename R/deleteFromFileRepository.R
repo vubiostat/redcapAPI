@@ -53,6 +53,10 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
 
   # Make the API Call -----------------------------------------------
   rcon$flush_fileRepository()
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   makeApiCall(rcon, body, ...)
   
   data.frame(directory = dirname(file_path), 
