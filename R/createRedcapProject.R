@@ -175,6 +175,12 @@ createRedcapProject.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  if (rcon$read_only())
+  {
+    warning('createRedcapProject() aborted. Read-only mode on connection.')
+    return()
+  }
+
   ###################################################################
   # Make the Project Settings Data Frame
   
