@@ -22,7 +22,7 @@
 #' @param x `redcapConnection` object to be printed
 #' @param csv_delimiter `character(1)`. The delimiter to use when reading a csv.
 #' @param read_only `logical(1)`. When `TRUE`, any attempts to import will
-#'   silently fail.
+#'   fail with a warning.
 #' @param ... arguments to pass to other methods
 #'
 #' @details

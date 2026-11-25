@@ -68,7 +68,10 @@ importArms.redcapApiConnection <- function(rcon,
   # still considered longitudinal
   rcon$flush_events()
   rcon$flush_projectInformation()  
-  if (rcon$read_only()) return()
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))

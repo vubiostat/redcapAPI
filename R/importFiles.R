@@ -135,7 +135,10 @@ importFiles.redcapApiConnection <- function(rcon,
 
    ###########################################################################
   # Make the API Call
-  if (rcon$read_only()) return()
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   response <- makeApiCall(rcon, body, ...)
 
   invisible(response$status_code == 200L)

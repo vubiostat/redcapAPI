@@ -68,8 +68,8 @@ be shown giving the status of the API calls. Defaults to \code{TRUE}.}
 
 \item{csv_delimiter}{\code{character(1)}. The delimiter to use when reading a csv.}
 
-\item{read_only}{\code{logical(1)}. When \code{TRUE}, any attempts to import will
-silently fail.}
+\item{read_only}{\code{logical(1)}. When \code{TRUE}, any attemtps to import will
+fail with a warning.}
 
 \item{...}{arguments to pass to other methods}
 
