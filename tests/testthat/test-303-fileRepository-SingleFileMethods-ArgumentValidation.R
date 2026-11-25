@@ -166,6 +166,22 @@ test_that(
   }
 )
 
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    local_file <- test_path("testdata", "FileForImportExportTesting.txt")
+
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importToFileRepository(
+        ro,
+        file=local_file,
+        folder_id=12)),
+      'abort')
+  }
+)
+
 #####################################################################
 # deleteFromFileRepository
 
