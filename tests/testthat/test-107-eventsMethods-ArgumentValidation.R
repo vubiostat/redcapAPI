@@ -166,3 +166,19 @@ test_that(
                  "'api_param': Must be of type 'list'")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importEvents(ro, Events)),
+      'abort')
+    expect_warning(
+      expect_null(deleteEvents(
+        ro,
+        events = "event_1_arm_1")),
+      'abort')
+  }
+)

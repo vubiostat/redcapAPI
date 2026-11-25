@@ -174,6 +174,18 @@ test_that(
   }
 )
 
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importMappings(rcon = ro,
+                                 data = rcon$mapping())),
+      'abort')
+  }
+)
+
 # Remove Arms and Mappings (cleanup)
 
 purgeProject(rcon,
@@ -271,3 +283,4 @@ test_that(
 
   }
 )
+

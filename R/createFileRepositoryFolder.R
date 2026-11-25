@@ -105,6 +105,11 @@ createFileRepositoryFolder.redcapApiConnection <- function(rcon,
 
   checkmate::reportAssertions(coll)
 
+  if (rcon$read_only()) {
+    warning('createFileRepositoryFolder() aborted. Read-only mode on connection.')
+    return()
+  }
+
   FileRepo <- rcon$fileRepository()
 
   if (length(folder_id) > 0 && isTRUE(!folder_id %in% FileRepo$folder_id)){

@@ -1,6 +1,7 @@
 # redcapAPI (development version)
 
 * Fixed bug in pulling batched data that has zero padded record ids. #521
+* Added readonly mode to connections #525
 
 # redcapAPI 2.12.0
 

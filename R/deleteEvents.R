@@ -32,6 +32,12 @@ deleteEvents.redcapApiConnection <- function(rcon,
 
   checkmate::reportAssertions(coll)
   
+  if (rcon$read_only())
+  {
+    warning('deleteEvents() aborted. Read-only mode on connection.')
+    return()
+  }
+
   ###################################################################
   # Make the API Body List
   

@@ -228,9 +228,11 @@ importFrom(curl,
   form_file,
   handle_cookies,
   handle_reset,
+  handle_setform,
   handle_setheaders,
   handle_setopt,
-  new_handle
+  new_handle,
+  parse_headers_list
 )
 importFrom(jsonlite,
   fromJSON,

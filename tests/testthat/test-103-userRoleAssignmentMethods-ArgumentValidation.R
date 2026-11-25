@@ -125,3 +125,17 @@ test_that(
                  "'api_param': Must be of type 'list'")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importUserRoleAssignments(
+        ro,
+        data = redcapUserRoleAssignmentStructure(rcon$version()),
+        user_roles = "user-role")),
+      'abort')
+  }
+)

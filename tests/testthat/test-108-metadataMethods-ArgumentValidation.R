@@ -359,3 +359,15 @@ test_that(
                  "The following fields should not have a value in 'select_choices_or_calculations': [{]date_field[}]")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importMetaData(rcon = ro,
+                                 data = REDCAP_METADATA_STRUCTURE)),
+      'abort')
+  }
+)

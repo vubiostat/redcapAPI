@@ -121,6 +121,12 @@ importFiles.redcapApiConnection <- function(rcon,
 
   checkmate::reportAssertions(coll)
 
+  if (rcon$read_only())
+  {
+    warning('importFiles() aborted. Read-only mode on connection.')
+    return()
+  }
+
    ###########################################################################
   # Build the body list
 

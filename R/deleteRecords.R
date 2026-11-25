@@ -119,7 +119,13 @@ deleteRecords.redcapApiConnection <- function(
   
   checkmate::reportAssertions(coll)
   
-   ##################################################################
+  if (rcon$read_only())
+  {
+    warning('deleteRecords() aborted. Read-only mode on connection.')
+    return()
+  }
+
+  ##################################################################
   # Build the Body List
   
   body <- list(content = "record",

@@ -322,6 +322,12 @@ import_records_batched <- function(rcon,
                                    force_auto_number,
                                    ...)
 {
+  if (rcon$read_only())
+  {
+    warning('importRecords() aborted. Read-only mode on connection.')
+    return()
+  }
+
   n.batch <- nrow(data) %/% batch.size + 1
 
   ID <- data.frame(row = 1:nrow(data))
@@ -388,6 +394,12 @@ import_records_unbatched <- function(rcon,
                                      force_auto_number,
                                      ...)
 {
+  if (rcon$read_only())
+  {
+    warning('importRecords() aborted. Read-only mode on connection.')
+    return()
+  }
+
   out <- data_frame_to_string(data)
 
   ## Reattach attributes

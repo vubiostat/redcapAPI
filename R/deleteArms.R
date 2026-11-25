@@ -38,6 +38,12 @@ deleteArms.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  if (rcon$read_only())
+  {
+    warning('deleteArms() aborted. Read-only mode on connection.')
+    return()
+  }
+
   ###################################################################
   # Make API Body List
   body <- c(list(content = "arm",

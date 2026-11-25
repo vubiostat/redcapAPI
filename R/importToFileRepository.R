@@ -41,6 +41,12 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                                 add = coll)
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only())
+  {
+    warning('importToFileRepository() aborted. Read-only mode on connection.')
+    return()
+  }
   
   # Make the Body List ----------------------------------------------
   
@@ -50,8 +56,10 @@ importToFileRepository.redcapApiConnection <- function(rcon,
                file = .curlUploadFile(file),
                folder_id = folder_id)
 
+
   # flush the cached File Repository ------------------------------
   rcon$flush_fileRepository()
+
   # Make the API Call -----------------------------------------------
   response <- makeApiCall(rcon, body, ...)
   

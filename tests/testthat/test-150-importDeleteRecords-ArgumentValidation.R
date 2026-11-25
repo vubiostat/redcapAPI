@@ -234,6 +234,23 @@ test_that(
   }
 )
 
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importRecords(rcon = ro,
+                                data = ImportData)),
+      'abort')
+    expect_warning(
+      expect_null(deleteRecords(rcon = ro,
+                                records = 1)),
+      'abort')
+  }
+)
+
+
 #####################################################################
 # Delete Records Argument Validation                             ####
 importRecords(rcon, ImportData)

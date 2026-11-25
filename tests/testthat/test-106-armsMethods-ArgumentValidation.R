@@ -106,8 +106,27 @@ test_that(
   }
 )
 
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(expect_null(importArms(ro, data=Arms)), 'abort')
+  }
+)
+
 #####################################################################
 # Delete Arms Validation
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    ro$arms      <- function() {return(data.frame(arm_num=1,name='Arm 1'))} # Additional stub
+    expect_warning(expect_null(deleteArms(ro, arms=1)), 'abort')
+  }
+)
 
 test_that(
   "Return an error when rcon is not redcapApiConnection",

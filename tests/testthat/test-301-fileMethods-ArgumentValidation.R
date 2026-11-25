@@ -256,3 +256,24 @@ test_that(
                  "'repeat_instance': Must have length 1")
   }
 )
+
+test_that(
+  "Warn and abort with NULL when connection is read only",
+  {
+    ro <- rcon
+    ro$read_only <- function() {return(TRUE)}
+    expect_warning(
+      expect_null(importFiles(ro,
+                              record = 1,
+                              field  = "file_upload_test",
+                              file   = "helper-01-QASystemValues.R",
+                              event  = "event_1_arm_1")),
+      'abort')
+    expect_warning(
+      expect_null(deleteFiles(ro,
+                              record = 1,
+                              field  = 'file_upload_test',
+                              event  = 'event_1_arm_1')),
+      'abort')
+  }
+)

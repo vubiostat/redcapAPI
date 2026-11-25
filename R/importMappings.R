@@ -50,6 +50,12 @@ importMappings.redcapApiConnection <- function(rcon,
                            add = coll)
   
   checkmate::reportAssertions(coll)
+
+  if (rcon$read_only()) 
+  {
+    warning('importMappings() aborted. Read-only mode on connection.')
+    return()
+  }
   
   ###################################################################
   # Make the API Body List                                       ####

@@ -62,6 +62,12 @@ importUserRoleAssignments.redcapApiConnection <- function(rcon,
 
   checkmate::reportAssertions(coll)
 
+  if (rcon$read_only())
+  {
+    warning('imoprtUserRoleAssignment() aborted. Read-only mode on connection.')
+    return()
+  }
+
   ###################################################################
   # API Body List                                                ####
 
