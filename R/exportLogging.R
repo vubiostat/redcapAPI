@@ -176,7 +176,7 @@ exportLogging.redcapApiConnection <- function(
   )
 
   # Testing has shown that logging csv is hardcoded to comma in other LOCALES
-  Log <- as.data.frame(makeApiCall(rcon, body, ...), sep = ",")
+  Log <- as.data.frame(makeApiCall(rcon, body, ...), colClasses='character', sep = ",")
 
   timezone <-
     if(length(beginTime) > 0 &&

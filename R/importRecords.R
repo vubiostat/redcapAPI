@@ -360,6 +360,10 @@ import_records_batched <- function(rcon,
 
    ##################################################################
   # Call the API
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   responses <- vector("list", length = length(out))
 
   allvalid <- TRUE
@@ -409,6 +413,10 @@ import_records_unbatched <- function(rcon,
 
    ##################################################################
   # Call the API
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   response <- makeApiCall(rcon, body, ...)
 
   if (returnContent %in% c("ids", "auto_ids"))
