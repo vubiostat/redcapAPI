@@ -39,6 +39,12 @@ deleteFromFileRepository.redcapApiConnection <- function(rcon,
     checkmate::reportAssertions(coll)
   }
   
+  if (rcon$read_only())
+  {
+    warning('deleteFromFileRepository() aborted. Read-only mode on connection.')
+    return()
+  }
+
   # Get the file path of the file repository file -------------------
   
   file_path <- fileRepositoryPath(doc_id = doc_id, 

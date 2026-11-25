@@ -39,6 +39,12 @@ deleteDags.redcapApiConnection <- function(rcon,
   
   checkmate::reportAssertions(coll)
   
+  if (rcon$read_only())
+  {
+    warning('deleteDags() aborted. Read-only mode on connection.')
+    return()
+  }
+
   ###################################################################
   # Make the API Body list                                       ####
   
