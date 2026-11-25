@@ -53,7 +53,10 @@ importToFileRepository.redcapApiConnection <- function(rcon,
   # flush the cached File Repository ------------------------------
   rcon$flush_fileRepository()
   # Make the API Call -----------------------------------------------
-  if (rcon$read_only()) return()
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   response <- makeApiCall(rcon, body, ...)
   
   # Get the path of the file in the File Repository -----------------

@@ -76,7 +76,10 @@ importUserDagAssignments.redcapApiConnection <- function(rcon,
   ###################################################################
   # Make the API Call                                            ####
   rcon$flush_dag_assignment()
-  if (rcon$read_only()) return()
+  if (rcon$read_only()) {
+    warning('No API call made in read-only mode.')
+    return()
+  }
   invisible(as.character(
     makeApiCall(rcon, body, ...)
   ))
